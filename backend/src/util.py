@@ -251,3 +251,17 @@ def is_admin(data, user):
             if user["permission_id"] == 1:
                 return True
     return False
+
+def workspace_reset():
+    """
+    Resets the workspace state
+    ERRORS
+    - None
+    Parameters:
+        None
+    Returns:
+        {}  dict
+    """
+    # Wipe data
+    wipe_data()
+    return {}

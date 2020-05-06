@@ -199,3 +199,122 @@ def user_profile_sethandle(token, handle_str):
     # Saves data into data storage
     save_data(data)
     return {}
+
+def users_all(token):
+    """
+    Returns a list of all users and their associated details
+    ERRORS:
+    - Invalid token
+    Parameters:
+        token      str
+    Returns: {
+        List of dictionaries, where each dictionary contains types u_id, email, name_first,
+        name_last, handle_str, profile_img_url
+        users  list(dict)
+    }
+    """
+    # Gets data from data storage
+    data = get_data()
+    # Access error if token is invalid
+    if verify_token(token) is False:
+        raise AccessError(description="token passed in is not a valid token")
+    # Get all users into a list, database prints other info as well
+    users = []
+    for user in data["users"]:
+        users.append({
+            'u_id': user["u_id"],
+            'email': user["email"],
+            'name_first': user["name_first"],
+            'name_last': user["name_last"],
+            'handle_str': user["handle_str"]
+        },)
+    # Returns all users from database
+    return {
+        'users': users
+    }
+
+
+def admin_user_remove(token, u_id):
+    """
+    Given a User by their user ID, remove the user from the slackr.
+    Parameters:
+        token   str
+        u_id    int
+    Returns:
+        {}  dict
+    """
+    data = get_data()
+    if verify_token(token) is False:
+        raise AccessError(description="token passed in is not a valid token")
+
+    user_found = False
+    for i, user in enumerate(data["users"]):
+        if u_id == user["u_id"]:
+            del data["users"][i]
+            user_found = True
+    if not user_found:
+        raise InputError(description="u_id does not refer to a valid user")
+
+    for i, channel in enumerate(data["channels"]):
+        for k, each_owner in enumerate(channel["owner_members"]):
+            if each_owner["u_id"] == u_id:
+                print(data["channels"][i]["owner_members"][k])
+                del data["channels"][i]["owner_members"][k]
+        for k, each_member in enumerate(channel["all_members"]):
+            if each_member["u_id"] == u_id:
+                print(data["channels"][i]["all_members"][k])
+                del data["channels"][i]["all_members"][k]
+    # show_data(data)
+
+    save_data(data)
+    return {}
+
+def admin_userpermission_change(token, u_id, permission_id):
+    """
+    Given a User by their user ID, set their permissions
+    to new permissions described by permission_id
+    ERRORS:
+    - u_id does not refer to a valid user
+    - permission_id does not refer to a value permission
+    - The authorised user is not an owner
+    Parameters:
+        token           str
+        u_id            int
+        permission_id   int
+    Returns:
+        {}  dict
+    """
+    # Gets data from data storage
+    data = get_data()
+    # Access error if token is invalid
+    if verify_token(token) is False:
+        raise AccessError(description="token passed in is not a valid token")
+    # Checks if u_id is valid
+    u_id_is_valid = False
+    # Retrieves user's data from the token
+    user = get_user_from_token(data, token)
+    if user["permission_id"] != 1:
+        raise AccessError(description="The authorised user is not an owner")
+    # have a function to check if their permission_ids is valid
+    if permission_id in (1, 2):
+        pass
+    else:
+        raise InputError(description="permission_id does not refer to a value permission")
+    # Compares u_id with database and pulls data from inputted u_id
+    for user in data["users"]:
+        if u_id == user["u_id"]:
+            # Updates permission id
+            user["permission_id"] = permission_id
+            u_id_is_valid = True
+    # Check if u_id is valid in the database, outside the loop
+    if u_id_is_valid is False:
+        raise InputError(description="u_id does not refer to a valid user")
+    if permission_id == 1:
+        for channels in data["channels"]:
+            for each_member in channels["all_members"]:
+                if u_id == each_member["u_id"]:
+                    user_to_add = get_user_from_id(data["users"], u_id)[2]
+                    channels["owner_members"].append(user_to_add)
+    # Saves data into data storage
+    save_data(data)
+    return {}

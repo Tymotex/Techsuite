@@ -398,3 +398,46 @@ def message_edit(token, message_id, msg):
     save_data(data)
 
     return {}
+
+
+def search(token, query_str):
+    """
+    Given a query string, return a collection of messages in all of the channels
+    that the user has joined that match the query. Results are sorted from most
+    recent message to least recent message
+    ERRORS
+    - Invalid token
+    Parameters:
+        token       str
+        query_str   str
+    Returns: {
+        List of dictionaries, where each dictionary contains
+        types { message_id, u_id, message, time_created, reacts, is_pinned  }
+        messages    list(dict)
+    }
+    """
+    # Gets data from data storage
+    data = get_data()
+    # Access error if token is invalid
+    if verify_token(token) is False:
+        raise AccessError(description="token passed in is not a valid token")
+    # For an empty string input, nothing happens and is returned
+    if query_str == "":
+        return None
+    # Retrieves user's data from the token
+    user = get_user_from_token(data, token)
+    # Searches all messages and compares query_str
+    search_results = []
+    for selected_channel in data["channels"]:
+        if is_user_member(user, selected_channel) is True:
+            for message in reversed(selected_channel["messages"]):
+                message_lower_case = message["message"].lower()
+                string_checker = message_lower_case.find(query_str.lower())
+                if string_checker >= 0:
+                    search_results.append(message)
+    sorted_messages = sorted(search_results, key=lambda k: k['time_created'])
+    # Returns messages that contain query_str
+    # Contains all info on message (message_id, u_id, message, time_created, reacts, pin)
+    return {
+        'messages': sorted_messages
+    }
