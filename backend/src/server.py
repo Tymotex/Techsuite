@@ -1,0 +1,739 @@
+"""The file contains all the server routes"""
+import sys
+import pprint
+import os
+from json import dumps
+from PIL import Image
+import requests
+from flask import Flask, request, send_file
+from flask_cors import CORS
+from error import InputError
+
+# Our files:
+import auth
+import channel
+import channels
+import message
+import other
+import user
+import standup
+
+PROFILE_IMG_DIRECTORY = os.getcwd() + r"/static/images/"
+
+def default_handler(err):
+    """
+    Default handler
+    """
+    response = err.get_response()
+    print('response', err, err.get_response())
+    response.data = dumps({
+        "code": err.code,
+        "name": "System Error",
+        "message": err.get_description(),
+    })
+    response.content_type = 'application/json'
+    return response
+
+APP = Flask(__name__)
+CORS(APP)
+
+APP.config['TRAP_HTTP_EXCEPTIONS'] = True
+APP.register_error_handler(Exception, default_handler)
+
+
+# ============== helper function ==============
+def download_img_and_crop(url, u_id, x_start, y_start, x_end, y_end):
+    """
+    Given a URL to an web image resource, download it to the
+    project directory's 'static/images' folder with a unique filename.
+    The image is then cropped and overwritten by the cropped result.
+
+    Parameters:
+    url         str
+    u_id        int
+    x_start     int
+    y_start     int
+    x_end       int
+    y_end       int
+
+    Returns the filename of the cropped image on success, otherwise
+    returns None
+    """
+    # pylint: disable=R0913
+    filename = "user{}_profile.jpg".format(u_id)
+    image_path = PROFILE_IMG_DIRECTORY + filename
+
+    # Fetching and saving the profile picture to server directory
+    res = requests.get(url)
+    if res.status_code != 200:
+        raise InputError(description="Request to image resource failed")
+    with open(image_path, "wb") as output_img:
+        output_img.write(res.content)
+
+    try:
+        pic = Image.open(image_path)
+    except:
+        raise InputError(description="Not a valid image file!")
+
+    # Remove the previous profile picture, if it exists
+    try:
+        os.remove(image_path)
+    except FileNotFoundError:
+        pass
+
+    crop_coordinates = (x_start, y_start, x_end, y_end)
+    width, height = pic.size
+    # pylint: disable=R0916
+    if (x_start > width or y_start > height or
+            x_end > width or y_end > height or
+            x_start < 0 or y_start < 0 or
+            x_end < 0 or y_end < 0 or
+            x_start > x_end or y_start > y_end
+       ):
+        raise InputError(description="Coordinates out of bounds")
+
+    cropped_pic = pic.crop(crop_coordinates)
+    cropped_pic.save(image_path)
+    return filename
+
+# ===== MY EDITS: =====
+# ADDING NEW ROUTES
+
+# ===== Authentication =====
+# Params: (email, password)
+@APP.route("/auth/login", methods=['POST'])
+def handle_auth_login():
+    """
+    HTTP Route: /auth/login
+    HTTP Method: POST
+    Params: (email, password)
+
+    Return dumps(results)   (str)
+    """
+    request_data = request.get_json()
+    email = request_data["email"]
+    password = request_data['password']
+    results = auth.auth_login(email, password)
+    return dumps(results)
+
+# Params: (token)
+@APP.route("/auth/logout", methods=['POST'])
+def handle_auth_logout():
+    """
+    HTTP Route: /auth/logout
+    HTTP Method: POST
+    Params: (token)
+
+    Return dumps(results)   (str)
+    """
+    request_data = request.get_json()
+    results = auth.auth_logout(request_data["token"])
+    return dumps(results)
+
+# Params: (email, password, name_first, name_last)
+@APP.route("/auth/register", methods=['POST'])
+def handle_auth_register():
+    """
+    HTTP Route: /auth/register
+    HTTP Method: POST
+    Params: (email, password, name_first, name_last)
+
+    Return dumps(results)   (str)
+    """
+    request_data = request.get_json()
+    email = request_data["email"]
+    password = request_data['password']
+    name_first = request_data["name_first"]
+    name_last = request_data["name_last"]
+    results = auth.auth_register(email, password, name_first, name_last)
+    print(results)
+    return dumps(results)
+
+# Params: (email)
+@APP.route("/auth/passwordreset/request", methods=['POST'])
+def handle_auth_passwordreset_request():
+    """
+    HTTP Route: /auth/passwordreset/request
+    HTTP Method: POST
+    Params: (email)
+
+    Return dumps(results)   (str)
+    """
+    request_data = request.get_json()
+    results = auth.auth_passwordreset_request(request_data["email"])
+    return dumps(results)
+
+# Params: (reset_code, new_password)
+@APP.route("/auth/passwordreset/reset", methods=['POST'])
+def handle_auth_passwordreset_reset():
+    """
+    HTTP Route: /auth/passwordreset/reset
+    HTTP Method: POST
+    Params: (reset_code, new_password)
+
+    Return dumps(results)   (str)
+    """
+    request_data = request.get_json()
+    reset_code = request_data['reset_code']
+    new_password = request_data['new_password']
+    results = auth.auth_passwordreset_reset(reset_code, new_password)
+    return dumps(results)
+
+# ===== Channel =====
+
+# Params: (token, channel_id, u_id)
+@APP.route("/channel/invite", methods=['POST'])
+def handle_channel_invite():
+    """
+    HTTP Route: /channel/invite
+    HTTP Method: POST
+    Params: (token, channel_id, u_id)
+
+    Return dumps(results)   (str)
+    """
+    request_data = request.get_json()
+    token = request_data["token"]
+    channel_id = int(request_data["channel_id"])
+    u_id = int(request_data["u_id"])
+    results = channel.channel_invite(token, channel_id, u_id)
+    return dumps(results)
+
+# Params: (token, channel_id)
+@APP.route("/channel/details", methods=['GET'])
+def handle_channel_details():
+    """
+    HTTP Route: /channel/details
+    HTTP Method: GET
+    Params: (token, channel_id)
+
+    Return dumps(results)   (str)
+    """
+    token = request.args.get("token")
+    channel_id = int(request.args.get("channel_id"))
+    results = channel.channel_details(token, channel_id)
+    return dumps(results)
+
+# Params: (token, channel_id, start)
+@APP.route("/channel/messages", methods=['GET'])
+def handle_channel_messages():
+    """
+    HTTP Route: /channel/messages
+    HTTP Method: GET
+    Params: (token, channel_id, start)
+
+    Return dumps(results)   (str)
+    """
+    token = request.args.get("token")
+    channel_id = int(request.args.get("channel_id"))
+    start = int(request.args.get("start"))
+    results = channel.channel_messages(token, channel_id, start)
+    return dumps(results)
+
+# Params: (token, channel_id)
+@APP.route("/channel/leave", methods=['POST'])
+def handle_channel_leave():
+    """
+    HTTP Route: /channel/leave
+    HTTP Method: POST
+    Params: (token, channel_id)
+
+    Return dumps(results)   (str)
+    """
+    request_data = request.get_json()
+    token = request_data["token"]
+    channel_id = int(request_data["channel_id"])
+    results = channel.channel_leave(token, channel_id)
+    return dumps(results)
+
+# Params: (token, channel_id)
+@APP.route("/channel/join", methods=['POST'])
+def handle_channel_join():
+    """
+    HTTP Route: /channel/join
+    HTTP Method: POST
+    Params: (token, channel_id)
+
+    Return dumps(results)   (str)
+    """
+    print("CHANNEL JOIN:")
+    request_data = request.get_json()
+    token = request_data["token"]
+    channel_id = int(request_data["channel_id"])
+    results = channel.channel_join(token, channel_id)
+    return dumps(results)
+
+# Params: (token, channel_id, u_id)
+@APP.route("/channel/addowner", methods=['POST'])
+def handle_channel_addowner():
+    """
+    HTTP Route: /channel/addowner
+    HTTP Method: POST
+    Params: (token, channel_id, u_id)
+
+    Return dumps(results)   (str)
+    """
+    print("CHANNEL ADDOWNER:")
+    request_data = request.get_json()
+    token = request_data["token"]
+    channel_id = int(request_data["channel_id"])
+    u_id = int(request_data["u_id"])
+    results = channel.channel_addowner(token, channel_id, u_id)
+    return dumps(results)
+
+# Params: (token, channel_id, u_id)
+@APP.route("/channel/removeowner", methods=['POST'])
+def handle_channel_removeowner():
+    """
+    HTTP Route: /channel/removeowner
+    HTTP Method: POST
+    Params: (token, channel_id, u_id)
+
+    Return dumps(results)   (str)
+    """
+    print("CHANNEL REMOVEOWNER:")
+    request_data = request.get_json()
+    token = request_data["token"]
+    channel_id = int(request_data["channel_id"])
+    u_id = int(request_data["u_id"])
+    results = channel.channel_removeowner(token, channel_id, u_id)
+    return dumps(results)
+
+# ===== Channels =====
+
+# Params: (token)
+@APP.route("/channels/list", methods=['GET'])
+def handle_channels_list():
+    """
+    HTTP Route: /channels/list
+    HTTP Method: GET
+    Params: (token)
+
+    Return dumps(results)   (str)
+    """
+    print("CHANNELS LIST:")
+    token = request.args.get("token")
+    user_channels = channels.channels_list(token)
+    return dumps(user_channels)
+
+# Params: (token)
+@APP.route("/channels/listall", methods=['GET'])
+def handle_channels_listall():
+    """
+    HTTP Route: /channels/listall
+    HTTP Method: GET
+    Params: (token)
+
+    Return dumps(results)   (str)
+    """
+    print("CHANNELS LISTALL:")
+    token = request.args.get("token")
+    all_channels = channels.channels_listall(token)
+    return dumps(all_channels)
+
+# Params: (token, name, is_public)
+@APP.route("/channels/create", methods=['POST'])
+def handle_channels_create():
+    """
+    HTTP Route: /channels/create
+    HTTP Method: POST
+    Params: (token, name, is_public)
+
+    Return dumps(results)   (str)
+    """
+    print("CHANNELS CREATE:")
+    request_data = request.get_json()
+    token = request_data["token"]
+    name = request_data["name"]
+    is_public = request_data["is_public"]
+    results = channels.channels_create(token, name, is_public)
+    return dumps(results)
+
+# ===== Message =====
+
+# Params: (token, channel_id, message)
+@APP.route("/message/send", methods=['POST'])
+def handle_message_send():
+    """
+    HTTP Route: /message/send
+    HTTP Method: POST
+    Params: (token, channel_id, message)
+
+    Return dumps(results)   (str)
+    """
+    print("MESSAGE SEND:")
+    request_data = request.get_json()
+    token = request_data["token"]
+    channel_id = int(request_data["channel_id"])
+    sent_message = request_data["message"]
+    results = message.message_send(token, channel_id, sent_message)
+    return dumps(results)
+
+# Params: (token, channel_id, message, time_sent)
+@APP.route("/message/sendlater", methods=['POST'])
+def handle_message_sendlater():
+    """
+    HTTP Route: /message/sendlater
+    HTTP Method: POST
+    Params: (token, channel_id, message, time_sent)
+
+    Return dumps(results)   (str)
+    """
+    print("MESSAGE SENDLATER:")
+    request_data = request.get_json()
+    token = request_data["token"]
+    channel_id = int(request_data["channel_id"])
+    send_message_later = request_data["message"]
+    time_sent = int(request_data["time_sent"])
+    results = message.message_sendlater(token, channel_id, send_message_later, time_sent)
+    return dumps(results)
+
+# Params: (token, message_id, react_id)
+@APP.route("/message/react", methods=['POST'])
+def handle_message_react():
+    """
+    HTTP Route: /message/react
+    HTTP Method: POST
+    Params: (token, message_id, react_id)
+
+    Return dumps(results)   (str)
+    """
+    print("MESSAGE REACT:")
+    request_data = request.get_json()
+    token = request_data["token"]
+    message_id = int(request_data["message_id"])
+    react_id = int(request_data["react_id"])
+    results = message.message_react(token, message_id, react_id)
+    return dumps(results)
+
+# Params: (token, message_id, react_id)
+@APP.route("/message/unreact", methods=['POST'])
+def handle_message_unreact():
+    """
+    HTTP Route: /message/unreact
+    HTTP Method: POST
+    Params: (token, message_id, react_id)
+
+    Return dumps(results)   (str)
+    """
+    print("MESSAGE UNREACT:")
+    request_data = request.get_json()
+    token = request_data["token"]
+    message_id = int(request_data["message_id"])
+    react_id = int(request_data["react_id"])
+    results = message.message_unreact(token, message_id, react_id)
+    return dumps(results)
+
+# Params: (token, message_id)
+@APP.route("/message/pin", methods=['POST'])
+def handle_message_pin():
+    """
+    HTTP Route: /message/pin
+    HTTP Method: POST
+    Params: (token, message_id)
+
+    Return dumps(results)   (str)
+    """
+    print("MESSAGE PIN:")
+    request_data = request.get_json()
+    token = request_data["token"]
+    message_id = int(request_data["message_id"])
+    results = message.message_pin(token, message_id)
+    return dumps(results)
+
+# Params: (token, message_id)
+@APP.route("/message/unpin", methods=['POST'])
+def handle_message_unpin():
+    """
+    HTTP Route: /message/unpin
+    HTTP Method: POST
+    Params: (token, message_id)
+
+    Return dumps(results)   (str)
+    """
+    print("MESSAGE UNPIN:")
+    request_data = request.get_json()
+    token = request_data["token"]
+    message_id = int(request_data["message_id"])
+    results = message.message_unpin(token, message_id)
+    return dumps(results)
+
+# Params: (token, message_id)
+@APP.route("/message/remove", methods=['DELETE'])
+def handle_message_remove():
+    """
+    HTTP Route: /message/remove
+    HTTP Method: DELETE
+    Params: (token, message_id)
+
+    Return dumps(results)   (str)
+    """
+    print("MESSAGE REMOVE:")
+    request_data = request.get_json()
+    token = request_data["token"]
+    message_id = int(request_data["message_id"])
+    results = message.message_remove(token, message_id)
+    return dumps(results)
+
+# Params: (token, message_id, message)
+@APP.route("/message/edit", methods=['PUT'])
+def handle_message_edit():
+    """
+    HTTP Route: /message/edit
+    HTTP Method: PUT
+    Params: (token, message_id, message)
+
+    Return dumps(results)   (str)
+    """
+    print("MESSAGE EDIT:")
+    request_data = request.get_json()
+    token = request_data["token"]
+    message_id = int(request_data["message_id"])
+    edited_message = request_data["message"]
+    results = message.message_edit(token, message_id, edited_message)
+    return dumps(results)
+
+# ===== User =====
+
+# Params: (token, u_id)
+@APP.route("/user/profile", methods=['GET'])
+def handle_user_profile():
+    """
+    HTTP Route: /user/profile
+    HTTP Method: GET
+    Params: (token, u_id)
+
+    Return dumps(results)   (str)
+    """
+    print("USER PROFILE:")
+    token = request.args.get("token")
+    u_id = int(request.args.get("u_id"))
+    results = user.user_profile(token, u_id)
+    return dumps(results)
+
+# Params: (token, name_first, name_last)
+@APP.route("/user/profile/setname", methods=['PUT'])
+def handle_user_profile_setname():
+    """
+    HTTP Route: /user/profile/setname
+    HTTP Method: PUT
+    Params: (token, name_first, name_last)
+
+    Return dumps(results)   (str)
+    """
+    print("USER PROFILE SETNAME:")
+    request_data = request.get_json()
+    token = request_data["token"]
+    name_first = request_data["name_first"]
+    name_last = request_data["name_last"]
+    results = user.user_profile_setname(token, name_first, name_last)
+    return dumps(results)
+
+# Params: (token, email)
+@APP.route("/user/profile/setemail", methods=['PUT'])
+def handle_user_profile_setemail():
+    """
+    HTTP Route: /user/profile/setemail
+    HTTP Method: PUT
+    Params: (token, email)
+
+    Return dumps(results)   (str)
+    """
+    print("USER PROFILE SETEMAIL:")
+    request_data = request.get_json()
+    token = request_data["token"]
+    email = request_data["email"]
+    results = user.user_profile_setemail(token, email)
+    return dumps(results)
+
+# Params: (token, handle_str)
+@APP.route("/user/profile/sethandle", methods=['PUT'])
+def handle_user_profile_sethandle():
+    """
+    HTTP Route: /user/profile/sethandle
+    HTTP Method: PUT
+    Params: (token, handle_str)
+
+    Return dumps(results)   (str)
+    """
+    print("USER PROFILE SETHANDLE:")
+    request_data = request.get_json()
+    token = request_data["token"]
+    handle_str = request_data["handle_str"]
+    results = user.user_profile_sethandle(token, handle_str)
+    return dumps(results)
+
+@APP.route("/images/<filename>")
+def serve_image(filename):
+    """ Given an image filename, serves that image back with Flask's send_file """
+    return send_file("static/images/{}".format(filename))
+
+
+
+# Params: (token, img_url, x_start, y_start, x_end, y_end)
+@APP.route("/user/profile/uploadphoto", methods=['POST'])
+def handle_user_profile_uploadphoto():
+    """
+    HTTP Route: /user/profile/uploadphoto
+    HTTP Method: POST
+    Params: (token, img_url, x_start, y_start, x_end, y_end)
+
+    Return dumps(results)   (str)
+    """
+    print("=====USER PROFILE UPLOADPHOTO =====")
+    request_data = request.get_json()
+    token = request_data["token"]
+    img_url = request_data["img_url"]
+    x_start = int(request_data["x_start"])
+    y_start = int(request_data["y_start"])
+    x_end = int(request_data["x_end"])
+    y_end = int(request_data["y_end"])
+    print("===> URL: " + img_url)
+    data = other.get_data()
+    u_id = other.get_user_from_token(data, token)["u_id"]
+    img_filename = download_img_and_crop(img_url, u_id, x_start, y_start, x_end, y_end)
+
+    port = int(sys.argv[1])
+    image_endpoint = "http://localhost:{0}/images/{1}".format(port, img_filename)
+
+    results = user.user_profile_uploadphoto(token, image_endpoint)
+    return dumps(results)
+
+# ===== Other =====
+
+# Params: (token)
+@APP.route("/users/all", methods=['GET'])
+def handle_users_all():
+    """
+    HTTP Route: /users/all
+    HTTP Method: GET
+    Params: (token)
+
+    Return dumps(results)   (str)
+    """
+    print("USERS ALL:")
+    token = request.args.get("token")
+    results = other.users_all(token)
+    return dumps(results)
+
+# Params: (token, query_str)
+@APP.route("/search", methods=['GET'])
+def handle_search():
+    """
+    HTTP Route: /search
+    HTTP Method: GET
+    Params: (token, query_str)
+
+    Return dumps(results)   (str)
+    """
+    print("SEARCH:")
+    token = request.args.get("token")
+    query_str = request.args.get("query_str")
+    results = other.search(token, query_str)
+    return dumps(results)
+
+# ===== Standup =====
+# Params: (token, channel_id, length)
+@APP.route("/standup/start", methods=['POST'])
+def handle_standup_start():
+    """
+    HTTP Route: /standup/start
+    HTTP Method: POST
+    Params: (token, channel_id, length)
+
+    Return dumps(results)   (str)
+    """
+    print("STANDUP START:")
+    data = request.get_json()
+    token = data["token"]
+    channel_id = int(data["channel_id"])
+    length = int(data["length"])
+    results = standup.start(token, channel_id, length)
+    return dumps(results)
+
+# Params: (token, channel_id)
+@APP.route("/standup/active", methods=['GET'])
+def handle_standup_active():
+    """
+    HTTP Route: /standup/active
+    HTTP Method: GET
+    Params: (token, channel_id)
+
+    Return dumps(results)   (str)
+    """
+    print("STANDUP ACTIVE:")
+    token = request.args.get('token')
+    channel_id = int(request.args.get("channel_id"))
+    results = standup.active(token, channel_id)
+    return dumps(results)
+
+# Params: (token, channel_id, message)
+@APP.route("/standup/send", methods=['POST'])
+def handle_standup_send():
+    """
+    HTTP Route: /standup/send
+    HTTP Method: POST
+    Params: (token, channel_id, message)
+
+    Return dumps(results)   (str)
+    """
+    print("STANDUP SEND:")
+    data = request.get_json()
+    token = data["token"]
+    channel_id = int(data["channel_id"])
+    msg = data["message"]
+    results = standup.send(token, channel_id, msg)
+    return dumps(results)
+
+# ===== Misc =====
+
+@APP.route("/admin/user/remove", methods=["POST"])
+def handle_admin_user_remove():
+    """
+    HTTP Route: /admin/user/remove
+    HTTP Method: DELETE
+    Params: (token, u_id)
+
+    Return dumps(results)   (str)
+    """
+    print("ADMIN USER REMOVE:")
+    request_data = request.get_json()
+    pprint.pprint(request_data, width=100)
+    token = request_data["token"]
+    u_id = int(request_data["u_id"])
+    results = other.admin_user_remove(token, u_id)
+    return dumps(results)
+
+# Params: (token, u_id, permission_id)
+@APP.route("/admin/userpermission/change", methods=['POST'])
+def handle_admins_userpermission_change():
+    """
+    HTTP Route: /admin/userpermission/change
+    HTTP Method: POST
+    Params: (token, u_id, permission_id)
+
+    Return dumps(results)   (str)
+    """
+    print("ADMIN USERPERMISSION CHANGE:")
+    request_data = request.get_json()
+    token = request_data["token"]
+    u_id = int(request_data["u_id"])
+    permission_id = int(request_data["permission_id"])
+    results = other.admin_userpermission_change(token, u_id, permission_id)
+    return dumps(results)
+
+# Params: ()
+@APP.route("/workspace/reset", methods=['POST'])
+def handle_workspace_reset():
+    """
+    HTTP Route: /workspace/reset
+    HTTP Method: POST
+    Params: ()
+
+    Return dumps(results)   (str)
+    """
+    print("WORKSPACE RESET:")
+    other.workspace_reset()
+    return dumps({})
+
+if __name__ == "__main__":
+    APP.run(port=(int(sys.argv[1]) if len(sys.argv) == 2 else 8080), debug=True)
