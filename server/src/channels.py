@@ -2,9 +2,7 @@ from database import get_data, save_data, get_user_from_token, generate_channel_
 from exceptions import InputError, AccessError
 from util import is_user_member, select_channel, get_user_from_id, verify_token
 
-# ===== Channel FUNCTIONS =====
-
-def channel_invite(token, channel_id, u_id):
+def channels_invite(token, channel_id, u_id):
     """
     Invites a user (with user id u_id) to join a channel with ID channel_id.
     Once invited the user is added to the channel immediately
@@ -21,6 +19,7 @@ def channel_invite(token, channel_id, u_id):
     # add u_id, associated first name and last name into channel_id dictionary (or storage)
 
     data = get_data()
+    verify_token(token)
     auth_user = get_user_from_token(data, token)
     if auth_user is None:
         raise AccessError(description="Invalid Token")
@@ -55,7 +54,7 @@ def channel_invite(token, channel_id, u_id):
     return {
     }
 
-def channel_details(token, channel_id):
+def channels_details(token, channel_id):
     """
     Given a Channel with ID channel_id that the authorised user is
     part of, provide basic details about the channel
@@ -81,6 +80,7 @@ def channel_details(token, channel_id):
 
     # access data store, and retrieve information from keys:
     data = get_data()
+    verify_token(token)
     auth_user = get_user_from_token(data, token)
     if auth_user is None:
         raise AccessError(description="Invalid Token")
@@ -120,7 +120,7 @@ def channel_details(token, channel_id):
     }
 
 
-def channel_messages(token, channel_id, start):
+def channels_messages(token, channel_id, start):
     """
     Given a Channel with ID channel_id that the authorised user is part of,
     return up to 50 messages between index "start" and "start + 50" exclusive.
@@ -129,23 +129,22 @@ def channel_messages(token, channel_id, start):
     if this function has returned the least recent messages in the channel,
     returns -1 in "end" to indicate there are no more messages to load after this return.
 
-    parametres: (token, channel_id, start)
-    Types:
-    token        str
-    channel_id   int
-    start        int
-
-    return {messages, start, end}
+    returns {
+        messages,
+        start,
+        end
+    }
     messages is a list of message dictionary (max size 50)
     start is an int
     end is an int
-
     """
     # check parameters are all valid and raise exception if they aren't
 
     # add u_id, associated first name and last name into channel_id dictionary (or storage)
 
     data = get_data()
+    verify_token(token)
+    
     auth_user = get_user_from_token(data, token)
     if auth_user is None:
         raise AccessError(description="Invalid Token")
@@ -189,7 +188,7 @@ def channel_messages(token, channel_id, start):
         return_messages["end"] = -1
     return return_messages
 
-def channel_leave(token, channel_id):
+def channels_leave(token, channel_id):
     """
     Given a channel ID, the user removed as a member of this channel
 
@@ -205,6 +204,7 @@ def channel_leave(token, channel_id):
     # access all_members and owner_members lists witihn dictionary with associated channel_id
 
     data = get_data()
+    verify_token(token)
     #identify user from token
     auth_user = get_user_from_token(data, token)
     if auth_user is None:
@@ -239,7 +239,7 @@ def channel_leave(token, channel_id):
     return {
     }
 
-def channel_join(token, channel_id):
+def channels_join(token, channel_id):
     """
     Given a channel_id of a channel that the authorised user can join, adds them to that channel
 
@@ -253,6 +253,7 @@ def channel_join(token, channel_id):
     # check parameters are all valid and raise exception if they aren't
 
     data = get_data()
+    verify_token(token)
     #identify user from token
     auth_user = get_user_from_token(data, token)
     if auth_user is None:
@@ -286,22 +287,18 @@ def channel_join(token, channel_id):
     return {
     }
 
-def channel_addowner(token, channel_id, u_id):
+def channels_addowner(token, channel_id, u_id):
     """
-    Desc:    Make user with user id u_id an owner of this channel
-    Params:  (token, channel_id, u_id)
+    Make user with user id u_id an owner of this channel
     Returns: empty dict
     Errors: InputError on invalid channel_id
             InputError when u_id already has ownership over a
             channel before calling channel_addowner
             AccessError when the user isn't an owner of the
             slackr or an owner of this channel
-    TYPES:
-    token             str
-    channel_id        int
-    u_id              int
     """
     data = get_data()
+    verify_token(token)
     #identify user from token
     auth_user = get_user_from_token(data, token)
     if auth_user is None:
@@ -336,7 +333,7 @@ def channel_addowner(token, channel_id, u_id):
     return {
     }
 
-def channel_removeowner(token, channel_id, u_id):
+def channels_removeowner(token, channel_id, u_id):
     """
     Desc:    Remove user with user id u_id an owner of this channel
     Params:  (token, channel_id, u_id)
@@ -353,6 +350,7 @@ def channel_removeowner(token, channel_id, u_id):
     u_id              int
     """
     data = get_data()
+    verify_token(token)
     #identify user from token
     auth_user = get_user_from_token(data, token)
     if auth_user is None:
@@ -399,9 +397,10 @@ def channels_list(token):
         channels    list(dict())
     }
     """
-    if not verify_token(token):
-        raise AccessError
+    verify_token(token)
+    
     data_store = get_data()
+    verify_token(token)
     associated_channels = []
     member = get_user_from_token(data_store, token)
     member = {
@@ -430,8 +429,7 @@ def channels_listall(token):
         channels    list(dict())
     }
     """
-    if not verify_token(token):
-        raise AccessError
+    verify_token(token)
     data_store = get_data()
     all_channels = []
     for each_channel in data_store["channels"]:
@@ -455,7 +453,6 @@ def channels_create(token, name, is_public):
     Returns:
         channel_id   int
     """
-    print("RECEIVED: {}\n{}\n{}".format(token, name, is_public))
     verify_token(token)
     if len(name) > 20:
         raise InputError

@@ -2,3 +2,4 @@ src/deprecated/
 src/data.bin
 src/devmess/
 src/.env
+src/__pycache__/

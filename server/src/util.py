@@ -47,7 +47,7 @@ def verify_token(token):
         return True
     except jwt.DecodeError:
         # Token is invalid!
-        raise AccessError(description="Token is invalid!")
+        raise AccessError(description="Token is invalid! {}".format(token))
 
 def is_user_member(user, selected_channel):
     """

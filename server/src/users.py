@@ -6,27 +6,23 @@ from exceptions import InputError, AccessError
 from util import email_is_legit, verify_token
 
 # ===== User Functions =====
-def user_profile(token, u_id):
+def users_profile(token, u_id):
     """
     For a valid user, returns information about their user
     id, email, first name, last name, and handle
     ERRORS
     - Invalid token
     - Invalid u_id
-    Parameters:
-        token   str
-        u_id    int
     Returns: {
         user    dict
     }
     """
     # Gets data from data storage
     data = get_data()
+    verify_token(token)
     # Checks if u_id is valid
     u_id_is_valid = False
-    # Access error if token is invalid
-    if verify_token(token) is False:
-        raise AccessError(description="token passed in is not a valid token")
+    
     # This if statement can be removed
     # Compares u_id with database and pulls data from inputted u_id
     for user in data["users"]:
@@ -54,20 +50,18 @@ def user_profile(token, u_id):
         }
     }
 
-def user_profile_uploadphoto(token, img_endpoint):
+def users_profile_uploadphoto(token, img_endpoint):
     """
     The server does the following:
     Given a URL of an image on the internet, crops the image within bounds
     (x_start, y_start) and (x_end, y_end). Position (0,0) is the top left.
     This function handles associating the saved cropped image with the user
-    Parameters:
-        token           str
-        img_endpoint    int
     Returns:
         {}  dict
     """
     # Need to add the file path to the user dictionary
     data = get_data()
+    verify_token(token)
 
     this_user = get_user_from_token(data, token)
 
@@ -79,25 +73,20 @@ def user_profile_uploadphoto(token, img_endpoint):
     save_data(data)
     return {}
 
-def user_profile_setname(token, name_first, name_last):
+def users_profile_setname(token, name_first, name_last):
     """
     Update the authorised user's first and last name
     ERRORS
     - Invalid token
     - Invalid u_id
     - name_first and name_last both must be 1-50 characters inclusive
-    Parameters:
-        token       str
-        name_first  str
-        name_last   str
     Returns:
         {}  dict
     """
     # Gets data from data storage
     data = get_data()
-    # Access error if token is invalid
-    if verify_token(token) is False:
-        raise AccessError(description="token passed in is not a valid token")
+    verify_token(token)
+    
     # Check if names are valid, within acceptable length
     error_description = "must be between 1 and 50 characters inclusive in length"
     if 1 <= len(name_first) <= 50:
@@ -133,25 +122,19 @@ def user_profile_setname(token, name_first, name_last):
     save_data(data)
     return {}
 
-def user_profile_setemail(token, email):
+def users_profile_setemail(token, email):
     """
     Update the authorised user's email address
     ERRORS
     - Invalid token
     - Invalid email format
     - Email is already being used
-    Parameters:
-        token   str
-        email   str
     Returns:
         {}  dict
     """
-    # Gets data from data storage
     data = get_data()
-    # Access error if token is invalid
     verify_token(token)
-    if verify_token(token) is False:
-        raise AccessError(description="token passed in is not a valid token")
+    
     # Check if email is valid
     if email_is_legit(email) is False:
         raise InputError(description="Email entered is not a valid email")
@@ -167,24 +150,19 @@ def user_profile_setemail(token, email):
     save_data(data)
     return {}
 
-def user_profile_sethandle(token, handle_str):
+def users_profile_sethandle(token, handle_str):
     """
     Update the authorised user's handle (i.e. display name)
     ERRORS
     - Invalid token
     - Handle must be 2-20 characters inclusive
     - Handle is already used
-    Parameters:
-        token       str
-        handle_str  str
     Returns:
         {}  dict
     """
-    # Gets data from data storage
     data = get_data()
-    # Access error if token is invalid
-    if verify_token(token) is False:
-        raise AccessError(description="token passed in is not a valid token")
+    verify_token(token)
+    
     # Check if handle is within length
     if (len(handle_str) < 2) or (len(handle_str) > 20):
         raise InputError(description="handle_str must be between 2 and 20 characters inclusive")
@@ -205,19 +183,15 @@ def users_all(token):
     Returns a list of all users and their associated details
     ERRORS:
     - Invalid token
-    Parameters:
-        token      str
     Returns: {
         List of dictionaries, where each dictionary contains types u_id, email, name_first,
         name_last, handle_str, profile_img_url
         users  list(dict)
     }
     """
-    # Gets data from data storage
     data = get_data()
-    # Access error if token is invalid
-    if verify_token(token) is False:
-        raise AccessError(description="token passed in is not a valid token")
+    verify_token(token)
+    
     # Get all users into a list, database prints other info as well
     users = []
     for user in data["users"]:
@@ -237,15 +211,11 @@ def users_all(token):
 def admin_user_remove(token, u_id):
     """
     Given a User by their user ID, remove the user from the slackr.
-    Parameters:
-        token   str
-        u_id    int
     Returns:
         {}  dict
     """
     data = get_data()
-    if verify_token(token) is False:
-        raise AccessError(description="token passed in is not a valid token")
+    verify_token(token)
 
     user_found = False
     for i, user in enumerate(data["users"]):
@@ -264,7 +234,6 @@ def admin_user_remove(token, u_id):
             if each_member["u_id"] == u_id:
                 print(data["channels"][i]["all_members"][k])
                 del data["channels"][i]["all_members"][k]
-    # show_data(data)
 
     save_data(data)
     return {}
@@ -277,18 +246,12 @@ def admin_userpermission_change(token, u_id, permission_id):
     - u_id does not refer to a valid user
     - permission_id does not refer to a value permission
     - The authorised user is not an owner
-    Parameters:
-        token           str
-        u_id            int
-        permission_id   int
     Returns:
         {}  dict
     """
-    # Gets data from data storage
     data = get_data()
-    # Access error if token is invalid
-    if verify_token(token) is False:
-        raise AccessError(description="token passed in is not a valid token")
+    verify_token(token)
+    
     # Checks if u_id is valid
     u_id_is_valid = False
     # Retrieves user's data from the token

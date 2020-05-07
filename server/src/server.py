@@ -14,6 +14,7 @@ from authentication import auth_register, auth_login, auth_logout
 import channels
 import messages
 import users
+from database import get_data, show_data
 
 # Globals and config
 load_dotenv()
@@ -135,9 +136,8 @@ def handle_auth_register():
 
     Return dumps(results)   (str)
     """
-    print("*** RECEIVED REQUEST ***")
+    print("*** REGISTERING USER ***")
     request_data = request.get_json()
-    pprint(request_data, width=100)
     email = request_data["email"]
     password = request_data['password']
     name_first = request_data["name_first"]
@@ -187,7 +187,7 @@ def handle_channel_invite():
     token = request_data["token"]
     channel_id = int(request_data["channel_id"])
     u_id = int(request_data["u_id"])
-    results = channel.channel_invite(token, channel_id, u_id)
+    results = channels.channels_invite(token, channel_id, u_id)
     return dumps(results)
 
 @APP.route("/channels/details", methods=['GET'])
@@ -201,7 +201,7 @@ def handle_channel_details():
     """
     token = request.args.get("token")
     channel_id = int(request.args.get("channel_id"))
-    results = channel.channel_details(token, channel_id)
+    results = channels.channels_details(token, channel_id)
     return dumps(results)
 
 @APP.route("/channels/messages", methods=['GET'])
@@ -216,7 +216,7 @@ def handle_channel_messages():
     token = request.args.get("token")
     channel_id = int(request.args.get("channel_id"))
     start = int(request.args.get("start"))
-    results = channel.channel_messages(token, channel_id, start)
+    results = channels.channels_messages(token, channel_id, start)
     return dumps(results)
 
 @APP.route("/channels/leave", methods=['POST'])
@@ -231,7 +231,7 @@ def handle_channel_leave():
     request_data = request.get_json()
     token = request_data["token"]
     channel_id = int(request_data["channel_id"])
-    results = channel.channel_leave(token, channel_id)
+    results = channels.channels_leave(token, channel_id)
     return dumps(results)
 
 @APP.route("/channels/join", methods=['POST'])
@@ -247,7 +247,7 @@ def handle_channel_join():
     request_data = request.get_json()
     token = request_data["token"]
     channel_id = int(request_data["channel_id"])
-    results = channel.channel_join(token, channel_id)
+    results = channels.channels_join(token, channel_id)
     return dumps(results)
 
 @APP.route("/channels/addowner", methods=['POST'])
@@ -264,7 +264,7 @@ def handle_channel_addowner():
     token = request_data["token"]
     channel_id = int(request_data["channel_id"])
     u_id = int(request_data["u_id"])
-    results = channel.channel_addowner(token, channel_id, u_id)
+    results = channels.channels_addowner(token, channel_id, u_id)
     return dumps(results)
 
 @APP.route("/channels/removeowner", methods=['POST'])
@@ -281,7 +281,7 @@ def handle_channel_removeowner():
     token = request_data["token"]
     channel_id = int(request_data["channel_id"])
     u_id = int(request_data["u_id"])
-    results = channel.channel_removeowner(token, channel_id, u_id)
+    results = channels.channels_removeowner(token, channel_id, u_id)
     return dumps(results)
 
 @APP.route("/channels/list", methods=['GET'])
@@ -338,12 +338,12 @@ def handle_message_send():
 
     Return dumps(results)   (str)
     """
-    print("MESSAGE SEND:")
+    print("*** SENDING MESSAGE ***")
     request_data = request.get_json()
     token = request_data["token"]
     channel_id = int(request_data["channel_id"])
     sent_message = request_data["message"]
-    results = message.message_send(token, channel_id, sent_message)
+    results = messages.message_send(token, channel_id, sent_message)
     return dumps(results)
 
 @APP.route("/message/sendlater", methods=['POST'])
@@ -361,7 +361,7 @@ def handle_message_sendlater():
     channel_id = int(request_data["channel_id"])
     send_message_later = request_data["message"]
     time_sent = int(request_data["time_sent"])
-    results = message.message_sendlater(token, channel_id, send_message_later, time_sent)
+    results = messages.message_sendlater(token, channel_id, send_message_later, time_sent)
     return dumps(results)
 
 @APP.route("/message/react", methods=['POST'])
@@ -378,7 +378,7 @@ def handle_message_react():
     token = request_data["token"]
     message_id = int(request_data["message_id"])
     react_id = int(request_data["react_id"])
-    results = message.message_react(token, message_id, react_id)
+    results = messages.message_react(token, message_id, react_id)
     return dumps(results)
 
 @APP.route("/message/unreact", methods=['POST'])
@@ -395,7 +395,7 @@ def handle_message_unreact():
     token = request_data["token"]
     message_id = int(request_data["message_id"])
     react_id = int(request_data["react_id"])
-    results = message.message_unreact(token, message_id, react_id)
+    results = messages.message_unreact(token, message_id, react_id)
     return dumps(results)
 
 @APP.route("/message/pin", methods=['POST'])
@@ -411,7 +411,7 @@ def handle_message_pin():
     request_data = request.get_json()
     token = request_data["token"]
     message_id = int(request_data["message_id"])
-    results = message.message_pin(token, message_id)
+    results = messages.message_pin(token, message_id)
     return dumps(results)
 
 @APP.route("/message/unpin", methods=['POST'])
@@ -427,7 +427,7 @@ def handle_message_unpin():
     request_data = request.get_json()
     token = request_data["token"]
     message_id = int(request_data["message_id"])
-    results = message.message_unpin(token, message_id)
+    results = messages.message_unpin(token, message_id)
     return dumps(results)
 
 @APP.route("/message/remove", methods=['DELETE'])
@@ -443,7 +443,7 @@ def handle_message_remove():
     request_data = request.get_json()
     token = request_data["token"]
     message_id = int(request_data["message_id"])
-    results = message.message_remove(token, message_id)
+    results = messages.message_remove(token, message_id)
     return dumps(results)
 
 @APP.route("/message/edit", methods=['PUT'])
@@ -460,7 +460,7 @@ def handle_message_edit():
     token = request_data["token"]
     message_id = int(request_data["message_id"])
     edited_message = request_data["message"]
-    results = message.message_edit(token, message_id, edited_message)
+    results = messages.message_edit(token, message_id, edited_message)
     return dumps(results)
 
 @APP.route("/user/profile", methods=['GET'])
@@ -475,7 +475,7 @@ def handle_user_profile():
     print("USER PROFILE:")
     token = request.args.get("token")
     u_id = int(request.args.get("u_id"))
-    results = user.user_profile(token, u_id)
+    results = users.users_profile(token, u_id)
     return dumps(results)
 
 @APP.route("/user/profile/setname", methods=['PUT'])
@@ -492,7 +492,7 @@ def handle_user_profile_setname():
     token = request_data["token"]
     name_first = request_data["name_first"]
     name_last = request_data["name_last"]
-    results = user.user_profile_setname(token, name_first, name_last)
+    results = users.users_profile_setname(token, name_first, name_last)
     return dumps(results)
 
 # Params: (token, email)
@@ -509,7 +509,7 @@ def handle_user_profile_setemail():
     request_data = request.get_json()
     token = request_data["token"]
     email = request_data["email"]
-    results = user.user_profile_setemail(token, email)
+    results = users.users_profile_setemail(token, email)
     return dumps(results)
 
 # Params: (token, handle_str)
@@ -526,7 +526,7 @@ def handle_user_profile_sethandle():
     request_data = request.get_json()
     token = request_data["token"]
     handle_str = request_data["handle_str"]
-    results = user.user_profile_sethandle(token, handle_str)
+    results = users.users_profile_sethandle(token, handle_str)
     return dumps(results)
 
 @APP.route("/images/<filename>")
@@ -560,7 +560,7 @@ def handle_user_profile_uploadphoto():
     port = os.getenv("PORT")
     image_endpoint = "http://localhost:{0}/images/{1}".format(port, img_filename)
 
-    results = user.user_profile_uploadphoto(token, image_endpoint)
+    results = users.users_profile_uploadphoto(token, image_endpoint)
     return dumps(results)
 
 @APP.route("/users/all", methods=['GET'])
@@ -609,7 +609,6 @@ def handle_admin_user_remove():
     results = other.admin_user_remove(token, u_id)
     return dumps(results)
 
-# Params: (token, u_id, permission_id)
 @APP.route("/admin/userpermission/change", methods=['POST'])
 def handle_admins_userpermission_change():
     """
@@ -627,7 +626,6 @@ def handle_admins_userpermission_change():
     results = other.admin_userpermission_change(token, u_id, permission_id)
     return dumps(results)
 
-# Params: ()
 @APP.route("/workspace/reset", methods=['POST'])
 def handle_workspace_reset():
     """
@@ -640,6 +638,15 @@ def handle_workspace_reset():
     print("WORKSPACE RESET:")
     other.workspace_reset()
     return dumps({})
+
+# For debugging and testing
+@APP.route("/workspace/show", methods=["GET"])
+def handle_workspace_show():
+    data_store = get_data()
+    print("============== SHOWING DATA ==============")
+    show_data(data_store)
+    print("============== DONE SHOWING ==============")
+    return dumps(data_store)
 
 if __name__ == "__main__":
     # The port is specified in the .env file (which is parsed and loaded by the python-dotenv module)
