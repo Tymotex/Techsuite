@@ -9,7 +9,7 @@ from util import email_is_legit, verify_token
 def users_profile(token, u_id):
     """
     For a valid user, returns information about their user
-    id, email, first name, last name, and handle
+    id, email, first name, last name
     ERRORS
     - Invalid token
     - Invalid u_id
@@ -30,7 +30,6 @@ def users_profile(token, u_id):
             email = user["email"]
             name_first = user["name_first"]
             name_last = user["name_last"]
-            handle_str = user["handle_str"]
             img_endpoint = user["profile_img_url"]
             # u_id is valid
             u_id_is_valid = True
@@ -45,7 +44,6 @@ def users_profile(token, u_id):
             'email': email,
             'name_first': name_first,
             'name_last': name_last,
-            'handle_str': handle_str,
             'profile_img_url': img_endpoint
         }
     }
@@ -150,34 +148,6 @@ def users_profile_setemail(token, email):
     save_data(data)
     return {}
 
-def users_profile_sethandle(token, handle_str):
-    """
-    Update the authorised user's handle (i.e. display name)
-    ERRORS
-    - Invalid token
-    - Handle must be 2-20 characters inclusive
-    - Handle is already used
-    Returns:
-        {}  dict
-    """
-    data = get_data()
-    verify_token(token)
-    
-    # Check if handle is within length
-    if (len(handle_str) < 2) or (len(handle_str) > 20):
-        raise InputError(description="handle_str must be between 2 and 20 characters inclusive")
-    # Handle is already used by another user
-    for user in data["users"]:
-        if handle_str == user["handle_str"]:
-            raise InputError(description="handle is already used by another user")
-    # Retrieves user's data from the token
-    user = get_user_from_token(data, token)
-    # Updates the handle_str in the profile of the user
-    user["handle_str"] = handle_str
-    # Saves data into data storage
-    save_data(data)
-    return {}
-
 def users_all(token):
     """
     Returns a list of all users and their associated details
@@ -185,7 +155,7 @@ def users_all(token):
     - Invalid token
     Returns: {
         List of dictionaries, where each dictionary contains types u_id, email, name_first,
-        name_last, handle_str, profile_img_url
+        name_last, profile_img_url
         users  list(dict)
     }
     """
@@ -199,9 +169,8 @@ def users_all(token):
             'u_id': user["u_id"],
             'email': user["email"],
             'name_first': user["name_first"],
-            'name_last': user["name_last"],
-            'handle_str': user["handle_str"]
-        },)
+            'name_last': user["name_last"]
+        })
     # Returns all users from database
     return {
         'users': users

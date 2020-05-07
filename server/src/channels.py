@@ -398,7 +398,6 @@ def channels_list(token):
     }
     """
     verify_token(token)
-    
     data_store = get_data()
     verify_token(token)
     associated_channels = []

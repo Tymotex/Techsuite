@@ -307,7 +307,7 @@ def handle_channels_listall():
 
     Return dumps(results)   (str)
     """
-    print("CHANNELS LISTALL:")
+    print("*** CHANNELS LISTALL ***")
     token = request.args.get("token")
     all_channels = channels.channels_listall(token)
     return dumps(all_channels)
@@ -472,7 +472,7 @@ def handle_user_profile():
 
     Return dumps(results)   (str)
     """
-    print("USER PROFILE:")
+    print("*** USER PROFILE ***")
     token = request.args.get("token")
     u_id = int(request.args.get("u_id"))
     results = users.users_profile(token, u_id)
@@ -510,23 +510,6 @@ def handle_user_profile_setemail():
     token = request_data["token"]
     email = request_data["email"]
     results = users.users_profile_setemail(token, email)
-    return dumps(results)
-
-# Params: (token, handle_str)
-@APP.route("/user/profile/sethandle", methods=['PUT'])
-def handle_user_profile_sethandle():
-    """
-    HTTP Route: /user/profile/sethandle
-    HTTP Method: PUT
-    Params: (token, handle_str)
-
-    Return dumps(results)   (str)
-    """
-    print("USER PROFILE SETHANDLE:")
-    request_data = request.get_json()
-    token = request_data["token"]
-    handle_str = request_data["handle_str"]
-    results = users.users_profile_sethandle(token, handle_str)
     return dumps(results)
 
 @APP.route("/images/<filename>")
