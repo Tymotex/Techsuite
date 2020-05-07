@@ -1,5 +1,3 @@
-"""The file contains all the server routes"""
-import sys
 import pprint
 import os
 from json import dumps
@@ -7,22 +5,25 @@ from PIL import Image
 import requests
 from flask import Flask, request, send_file
 from flask_cors import CORS
-from error import InputError
+from exceptions import InputError
+from pprint import pprint
+from dotenv import load_dotenv
 
-# Our files:
-import auth
-import channel
+# Source files
+from authentication import auth_register, auth_login, auth_logout 
 import channels
-import message
-import other
-import user
-import standup
+import messages
+import users
 
+# Globals and config
+load_dotenv()
 PROFILE_IMG_DIRECTORY = os.getcwd() + r"/static/images/"
+APP = Flask(__name__)
+CORS(APP)
 
 def default_handler(err):
     """
-    Default handler
+    Default error handler
     """
     response = err.get_response()
     print('response', err, err.get_response())
@@ -34,14 +35,13 @@ def default_handler(err):
     response.content_type = 'application/json'
     return response
 
-APP = Flask(__name__)
-CORS(APP)
+
 
 APP.config['TRAP_HTTP_EXCEPTIONS'] = True
 APP.register_error_handler(Exception, default_handler)
 
 
-# ============== helper function ==============
+# ============== Helper Function ==============
 def download_img_and_crop(url, u_id, x_start, y_start, x_end, y_end):
     """
     Given a URL to an web image resource, download it to the
@@ -59,7 +59,6 @@ def download_img_and_crop(url, u_id, x_start, y_start, x_end, y_end):
     Returns the filename of the cropped image on success, otherwise
     returns None
     """
-    # pylint: disable=R0913
     filename = "user{}_profile.jpg".format(u_id)
     image_path = PROFILE_IMG_DIRECTORY + filename
 
@@ -83,7 +82,6 @@ def download_img_and_crop(url, u_id, x_start, y_start, x_end, y_end):
 
     crop_coordinates = (x_start, y_start, x_end, y_end)
     width, height = pic.size
-    # pylint: disable=R0916
     if (x_start > width or y_start > height or
             x_end > width or y_end > height or
             x_start < 0 or y_start < 0 or
@@ -96,11 +94,10 @@ def download_img_and_crop(url, u_id, x_start, y_start, x_end, y_end):
     cropped_pic.save(image_path)
     return filename
 
-# ===== MY EDITS: =====
-# ADDING NEW ROUTES
+@APP.route("/", methods=["GET"])
+def index():
+    return "Index page"
 
-# ===== Authentication =====
-# Params: (email, password)
 @APP.route("/auth/login", methods=['POST'])
 def handle_auth_login():
     """
@@ -113,10 +110,9 @@ def handle_auth_login():
     request_data = request.get_json()
     email = request_data["email"]
     password = request_data['password']
-    results = auth.auth_login(email, password)
+    results = auth_login(email, password)
     return dumps(results)
 
-# Params: (token)
 @APP.route("/auth/logout", methods=['POST'])
 def handle_auth_logout():
     """
@@ -127,10 +123,9 @@ def handle_auth_logout():
     Return dumps(results)   (str)
     """
     request_data = request.get_json()
-    results = auth.auth_logout(request_data["token"])
+    results = auth_logout(request_data["token"])
     return dumps(results)
 
-# Params: (email, password, name_first, name_last)
 @APP.route("/auth/register", methods=['POST'])
 def handle_auth_register():
     """
@@ -140,16 +135,17 @@ def handle_auth_register():
 
     Return dumps(results)   (str)
     """
+    print("*** RECEIVED REQUEST ***")
     request_data = request.get_json()
+    pprint(request_data, width=100)
     email = request_data["email"]
     password = request_data['password']
     name_first = request_data["name_first"]
     name_last = request_data["name_last"]
-    results = auth.auth_register(email, password, name_first, name_last)
+    results = auth_register(email, password, name_first, name_last)
     print(results)
     return dumps(results)
 
-# Params: (email)
 @APP.route("/auth/passwordreset/request", methods=['POST'])
 def handle_auth_passwordreset_request():
     """
@@ -160,10 +156,9 @@ def handle_auth_passwordreset_request():
     Return dumps(results)   (str)
     """
     request_data = request.get_json()
-    results = auth.auth_passwordreset_request(request_data["email"])
+    results = auth_passwordreset_request(request_data["email"])
     return dumps(results)
 
-# Params: (reset_code, new_password)
 @APP.route("/auth/passwordreset/reset", methods=['POST'])
 def handle_auth_passwordreset_reset():
     """
@@ -176,16 +171,13 @@ def handle_auth_passwordreset_reset():
     request_data = request.get_json()
     reset_code = request_data['reset_code']
     new_password = request_data['new_password']
-    results = auth.auth_passwordreset_reset(reset_code, new_password)
+    results = auth_passwordreset_reset(reset_code, new_password)
     return dumps(results)
 
-# ===== Channel =====
-
-# Params: (token, channel_id, u_id)
-@APP.route("/channel/invite", methods=['POST'])
+@APP.route("/channels/invite", methods=['POST'])
 def handle_channel_invite():
     """
-    HTTP Route: /channel/invite
+    HTTP Route: /channels/invite
     HTTP Method: POST
     Params: (token, channel_id, u_id)
 
@@ -198,11 +190,10 @@ def handle_channel_invite():
     results = channel.channel_invite(token, channel_id, u_id)
     return dumps(results)
 
-# Params: (token, channel_id)
-@APP.route("/channel/details", methods=['GET'])
+@APP.route("/channels/details", methods=['GET'])
 def handle_channel_details():
     """
-    HTTP Route: /channel/details
+    HTTP Route: /channels/details
     HTTP Method: GET
     Params: (token, channel_id)
 
@@ -213,11 +204,10 @@ def handle_channel_details():
     results = channel.channel_details(token, channel_id)
     return dumps(results)
 
-# Params: (token, channel_id, start)
-@APP.route("/channel/messages", methods=['GET'])
+@APP.route("/channels/messages", methods=['GET'])
 def handle_channel_messages():
     """
-    HTTP Route: /channel/messages
+    HTTP Route: /channels/messages
     HTTP Method: GET
     Params: (token, channel_id, start)
 
@@ -229,11 +219,10 @@ def handle_channel_messages():
     results = channel.channel_messages(token, channel_id, start)
     return dumps(results)
 
-# Params: (token, channel_id)
-@APP.route("/channel/leave", methods=['POST'])
+@APP.route("/channels/leave", methods=['POST'])
 def handle_channel_leave():
     """
-    HTTP Route: /channel/leave
+    HTTP Route: /channels/leave
     HTTP Method: POST
     Params: (token, channel_id)
 
@@ -245,11 +234,10 @@ def handle_channel_leave():
     results = channel.channel_leave(token, channel_id)
     return dumps(results)
 
-# Params: (token, channel_id)
-@APP.route("/channel/join", methods=['POST'])
+@APP.route("/channels/join", methods=['POST'])
 def handle_channel_join():
     """
-    HTTP Route: /channel/join
+    HTTP Route: /channels/join
     HTTP Method: POST
     Params: (token, channel_id)
 
@@ -262,11 +250,10 @@ def handle_channel_join():
     results = channel.channel_join(token, channel_id)
     return dumps(results)
 
-# Params: (token, channel_id, u_id)
-@APP.route("/channel/addowner", methods=['POST'])
+@APP.route("/channels/addowner", methods=['POST'])
 def handle_channel_addowner():
     """
-    HTTP Route: /channel/addowner
+    HTTP Route: /channels/addowner
     HTTP Method: POST
     Params: (token, channel_id, u_id)
 
@@ -280,11 +267,10 @@ def handle_channel_addowner():
     results = channel.channel_addowner(token, channel_id, u_id)
     return dumps(results)
 
-# Params: (token, channel_id, u_id)
-@APP.route("/channel/removeowner", methods=['POST'])
+@APP.route("/channels/removeowner", methods=['POST'])
 def handle_channel_removeowner():
     """
-    HTTP Route: /channel/removeowner
+    HTTP Route: /channels/removeowner
     HTTP Method: POST
     Params: (token, channel_id, u_id)
 
@@ -298,9 +284,6 @@ def handle_channel_removeowner():
     results = channel.channel_removeowner(token, channel_id, u_id)
     return dumps(results)
 
-# ===== Channels =====
-
-# Params: (token)
 @APP.route("/channels/list", methods=['GET'])
 def handle_channels_list():
     """
@@ -315,7 +298,6 @@ def handle_channels_list():
     user_channels = channels.channels_list(token)
     return dumps(user_channels)
 
-# Params: (token)
 @APP.route("/channels/listall", methods=['GET'])
 def handle_channels_listall():
     """
@@ -330,7 +312,6 @@ def handle_channels_listall():
     all_channels = channels.channels_listall(token)
     return dumps(all_channels)
 
-# Params: (token, name, is_public)
 @APP.route("/channels/create", methods=['POST'])
 def handle_channels_create():
     """
@@ -340,7 +321,7 @@ def handle_channels_create():
 
     Return dumps(results)   (str)
     """
-    print("CHANNELS CREATE:")
+    print("*** CREATING CHANNEL ***")
     request_data = request.get_json()
     token = request_data["token"]
     name = request_data["name"]
@@ -348,9 +329,6 @@ def handle_channels_create():
     results = channels.channels_create(token, name, is_public)
     return dumps(results)
 
-# ===== Message =====
-
-# Params: (token, channel_id, message)
 @APP.route("/message/send", methods=['POST'])
 def handle_message_send():
     """
@@ -368,7 +346,6 @@ def handle_message_send():
     results = message.message_send(token, channel_id, sent_message)
     return dumps(results)
 
-# Params: (token, channel_id, message, time_sent)
 @APP.route("/message/sendlater", methods=['POST'])
 def handle_message_sendlater():
     """
@@ -387,7 +364,6 @@ def handle_message_sendlater():
     results = message.message_sendlater(token, channel_id, send_message_later, time_sent)
     return dumps(results)
 
-# Params: (token, message_id, react_id)
 @APP.route("/message/react", methods=['POST'])
 def handle_message_react():
     """
@@ -405,7 +381,6 @@ def handle_message_react():
     results = message.message_react(token, message_id, react_id)
     return dumps(results)
 
-# Params: (token, message_id, react_id)
 @APP.route("/message/unreact", methods=['POST'])
 def handle_message_unreact():
     """
@@ -423,7 +398,6 @@ def handle_message_unreact():
     results = message.message_unreact(token, message_id, react_id)
     return dumps(results)
 
-# Params: (token, message_id)
 @APP.route("/message/pin", methods=['POST'])
 def handle_message_pin():
     """
@@ -440,7 +414,6 @@ def handle_message_pin():
     results = message.message_pin(token, message_id)
     return dumps(results)
 
-# Params: (token, message_id)
 @APP.route("/message/unpin", methods=['POST'])
 def handle_message_unpin():
     """
@@ -457,7 +430,6 @@ def handle_message_unpin():
     results = message.message_unpin(token, message_id)
     return dumps(results)
 
-# Params: (token, message_id)
 @APP.route("/message/remove", methods=['DELETE'])
 def handle_message_remove():
     """
@@ -474,7 +446,6 @@ def handle_message_remove():
     results = message.message_remove(token, message_id)
     return dumps(results)
 
-# Params: (token, message_id, message)
 @APP.route("/message/edit", methods=['PUT'])
 def handle_message_edit():
     """
@@ -492,9 +463,6 @@ def handle_message_edit():
     results = message.message_edit(token, message_id, edited_message)
     return dumps(results)
 
-# ===== User =====
-
-# Params: (token, u_id)
 @APP.route("/user/profile", methods=['GET'])
 def handle_user_profile():
     """
@@ -510,7 +478,6 @@ def handle_user_profile():
     results = user.user_profile(token, u_id)
     return dumps(results)
 
-# Params: (token, name_first, name_last)
 @APP.route("/user/profile/setname", methods=['PUT'])
 def handle_user_profile_setname():
     """
@@ -567,8 +534,6 @@ def serve_image(filename):
     """ Given an image filename, serves that image back with Flask's send_file """
     return send_file("static/images/{}".format(filename))
 
-
-
 # Params: (token, img_url, x_start, y_start, x_end, y_end)
 @APP.route("/user/profile/uploadphoto", methods=['POST'])
 def handle_user_profile_uploadphoto():
@@ -592,15 +557,12 @@ def handle_user_profile_uploadphoto():
     u_id = other.get_user_from_token(data, token)["u_id"]
     img_filename = download_img_and_crop(img_url, u_id, x_start, y_start, x_end, y_end)
 
-    port = int(sys.argv[1])
+    port = os.getenv("PORT")
     image_endpoint = "http://localhost:{0}/images/{1}".format(port, img_filename)
 
     results = user.user_profile_uploadphoto(token, image_endpoint)
     return dumps(results)
 
-# ===== Other =====
-
-# Params: (token)
 @APP.route("/users/all", methods=['GET'])
 def handle_users_all():
     """
@@ -615,7 +577,6 @@ def handle_users_all():
     results = other.users_all(token)
     return dumps(results)
 
-# Params: (token, query_str)
 @APP.route("/search", methods=['GET'])
 def handle_search():
     """
@@ -630,61 +591,6 @@ def handle_search():
     query_str = request.args.get("query_str")
     results = other.search(token, query_str)
     return dumps(results)
-
-# ===== Standup =====
-# Params: (token, channel_id, length)
-@APP.route("/standup/start", methods=['POST'])
-def handle_standup_start():
-    """
-    HTTP Route: /standup/start
-    HTTP Method: POST
-    Params: (token, channel_id, length)
-
-    Return dumps(results)   (str)
-    """
-    print("STANDUP START:")
-    data = request.get_json()
-    token = data["token"]
-    channel_id = int(data["channel_id"])
-    length = int(data["length"])
-    results = standup.start(token, channel_id, length)
-    return dumps(results)
-
-# Params: (token, channel_id)
-@APP.route("/standup/active", methods=['GET'])
-def handle_standup_active():
-    """
-    HTTP Route: /standup/active
-    HTTP Method: GET
-    Params: (token, channel_id)
-
-    Return dumps(results)   (str)
-    """
-    print("STANDUP ACTIVE:")
-    token = request.args.get('token')
-    channel_id = int(request.args.get("channel_id"))
-    results = standup.active(token, channel_id)
-    return dumps(results)
-
-# Params: (token, channel_id, message)
-@APP.route("/standup/send", methods=['POST'])
-def handle_standup_send():
-    """
-    HTTP Route: /standup/send
-    HTTP Method: POST
-    Params: (token, channel_id, message)
-
-    Return dumps(results)   (str)
-    """
-    print("STANDUP SEND:")
-    data = request.get_json()
-    token = data["token"]
-    channel_id = int(data["channel_id"])
-    msg = data["message"]
-    results = standup.send(token, channel_id, msg)
-    return dumps(results)
-
-# ===== Misc =====
 
 @APP.route("/admin/user/remove", methods=["POST"])
 def handle_admin_user_remove():
@@ -736,4 +642,5 @@ def handle_workspace_reset():
     return dumps({})
 
 if __name__ == "__main__":
-    APP.run(port=(int(sys.argv[1]) if len(sys.argv) == 2 else 8080), debug=True)
+    # The port is specified in the .env file (which is parsed and loaded by the python-dotenv module)
+    APP.run(port=os.getenv("PORT"), debug=True)

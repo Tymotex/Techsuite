@@ -4,11 +4,9 @@ Contains all message functions (send, sendlater, react, unreact, pin, unpin, rem
 from datetime import datetime, timezone
 import threading
 import time
-from database import get_data, save_data, generate_m_id, get_user_from_token, verify_token
-from error import InputError, AccessError
-from helper import is_user_member, get_message, determine_channel
-from helper import select_channel, is_owner, is_admin
-from hangman import start_game, check_guess
+from database import get_data, save_data, generate_m_id, get_user_from_token
+from exceptions import InputError, AccessError
+from util import is_user_member, get_message, determine_channel, select_channel, is_owner, is_admin, verify_token
 
 #MESSAGE FUNCTIONS
 def message_send(token, channel_id, msg):

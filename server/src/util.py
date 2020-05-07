@@ -4,64 +4,50 @@ File containing all helper functions for implementation functions
 import re
 import random
 import smtplib
+import jwt
+import os
+from dotenv import load_dotenv
 
-# ===== Helper Functions =====
+# Source files:
+from exceptions import AccessError
 
-# This is a resource provided by the course (see specs)
-# https://www.geeksforgeeks.org/check-if-email-address-valid-or-not-in-python/
-# Python program to validate an Email
+# Globals and config:
+load_dotenv()
+
 def email_is_legit(email):
     """
     Given a string, determines if it matches the standard email regex
-    Parameters:
-        email      str
     Returns:
         True/False  bool
     """
-    # Make a regular expression for validating an Email
     regex = r'^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$'
-    # pass the regualar expression and the string in search() method
     return bool(re.search(regex, email))
 
 def no_users_in_database(data_store):
     """
     Checks the given data dictionary and returns true if the user database is empty
-    Parameters:
-            data_store      dict
     Returns:
         len(data_store["users"])    int
     """
     return len(data_store["users"]) == 0
 
-def generate_handlestr(data_store, firstname, lastname):
+def verify_token(token):
     """
-    Given a first name and last name, generates a handle string under 20 characters
-    without name collisions
+    Given a token, checks the database and returns true if the token exists.
+    If the token doesn't exist, then return false.
+    Unfortunately, we need to check ourselves whether that u_id associated with
+    the token has access rights, etc.
     Parameters:
-        data_store  dict
-        firstname   str
-        lastname    str
+        token   str
     Returns:
-        resolve_handlestr_collision(data_store, handle_str) str
+        True/False  bool
     """
-    default_handle_str = (firstname[0] + lastname).lower()
-    handle_str = (default_handle_str[0:20]) if len(default_handle_str) > 20 else default_handle_str
-    return resolve_handlestr_collision(data_store, handle_str)
-
-def resolve_handlestr_collision(data_store, handle_str):
-    """
-    Recursively resolve name conflicts
-    Parameters:
-        data_store  dict
-        handle_str  str
-    Returns:
-        handle_str  str
-    """
-    for each_user in data_store["users"]:
-        if each_user["handle_str"] == handle_str:
-            handle_str = str(random.randint(0, 2147483647))
-            return resolve_handlestr_collision(data_store, handle_str)
-    return handle_str
+    try:
+        jwt.decode(token, os.getenv("SECRET_MESSAGE"), algorithms=["HS256"])
+        return True
+    except jwt.DecodeError:
+        # Token is invalid!
+        raise AccessError(description="Token is invalid!")
 
 def is_user_member(user, selected_channel):
     """

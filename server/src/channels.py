@@ -1,9 +1,6 @@
-"""
-Contains all functions for route /channel
-"""
-from database import get_data, save_data, get_user_from_token
-from error import InputError, AccessError
-from helper import is_user_member, select_channel, get_user_from_id
+from database import get_data, save_data, get_user_from_token, generate_channel_id
+from exceptions import InputError, AccessError
+from util import is_user_member, select_channel, get_user_from_id, verify_token
 
 # ===== Channel FUNCTIONS =====
 
@@ -458,10 +455,11 @@ def channels_create(token, name, is_public):
     Returns:
         channel_id   int
     """
+    print("RECEIVED: {}\n{}\n{}".format(token, name, is_public))
+    verify_token(token)
     if len(name) > 20:
         raise InputError
-    if not verify_token(token):
-        raise AccessError
+    
     data_store = get_data()
     new_channel_id = generate_channel_id(data_store)
     creator = get_user_from_token(data_store, token)

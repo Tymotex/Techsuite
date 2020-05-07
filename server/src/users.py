@@ -1,9 +1,9 @@
 """
 The file contains all the user functions
 """
-from database import get_data, get_user_from_token, save_data, verify_token
-from error import InputError, AccessError
-from helper import email_is_legit
+from database import get_data, get_user_from_token, save_data
+from exceptions import InputError, AccessError
+from util import email_is_legit, verify_token
 
 # ===== User Functions =====
 def user_profile(token, u_id):

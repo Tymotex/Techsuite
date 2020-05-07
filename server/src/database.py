@@ -14,6 +14,12 @@ import os
 import pprint
 import hashlib
 import jwt
+from dotenv import load_dotenv
+
+# Globals and config:
+load_dotenv()
+SECRET_MESSAGE = os.getenv("SECRET_MESSAGE")
+SECRET_CODE = hashlib.sha256(SECRET_MESSAGE.encode()).hexdigest()
 
 def get_data():
     """
@@ -117,10 +123,6 @@ def generate_channel_id(data_store):
     data_store["counters"]["channel_id_count"] += 1
     return data_store["counters"]["channel_id_count"]
 
-# ===== Utility Functions =====
-SECRET_MESSAGE = "davidzhang420"
-SECRET_CODE = hashlib.sha256(SECRET_MESSAGE.encode()).hexdigest()
-
 # Generating a unique token
 def generate_token(data_store, user_data):
     """
@@ -134,24 +136,6 @@ def generate_token(data_store, user_data):
     web_token = jwt.encode(user_data, SECRET_MESSAGE, algorithm="HS256").decode("utf-8")
     data_store["valid_tokens"][user_data["u_id"]] = web_token
     return web_token
-
-def verify_token(token):
-    """
-    Given a token, checks the database and returns true if the token exists.
-    If the token doesn't exist, then return false.
-    Unfortunately, we need to check ourselves whether that u_id associated with
-    the token has access rights, etc.
-    Parameters:
-        token   str
-    Returns:
-        True/False  bool
-    """
-    try:
-        jwt.decode(token, SECRET_MESSAGE, algorithms=["HS256"])
-        return True
-    except jwt.DecodeError:
-        # Token is invalid!
-        return False
 
 def get_user_from_token(data_store, token):
     """
