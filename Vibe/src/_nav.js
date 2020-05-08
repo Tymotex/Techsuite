@@ -26,11 +26,19 @@ export default {
       children: [
         {
           name: 'All Channels',
-          url: '/channels/all'
+          url: '/channels/all',
+          badge: {
+            variant: 'success',
+            text: '10',
+          },
         },
         {
           name: 'My Channels',
-          url: '/channels/my'
+          url: '/channels/my',
+          badge: {
+            variant: 'success',
+            text: '3',
+          },
         }
       ]
     },
@@ -150,20 +158,11 @@ export default {
   ],
   bottom: [
     {
-      name: 'Get Vibe',
-      url: 'https://github.com/NiceDash/Vibe',
+      name: 'DevMessenger GitHub',
+      url: 'https://github.com/Tymotex/DevMessenger',
       icon: 'GitHub',
       external: true,
       target: '_blank',
-    },
-    {
-      name: 'Account',
-      url: '/dashboard',
-      icon: 'User',
-      badge: {
-        variant: 'success',
-        text: '3',
-      },
-    },
+    }
   ],
 };

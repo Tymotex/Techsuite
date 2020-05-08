@@ -5,105 +5,102 @@ import bootstrapFeature from '../../assets/images/bootstrap-feature.svg';
 import responsiveFeature from '../../assets/images/responsive-feature.svg';
 import { Card, CardBody, Row, Col } from 'reactstrap';
 
-class Dashboard extends Component {
-  render() {
-    const heroStyles = {
-      padding: '50px 0 70px'
-    };
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faNewspaper, faPalette, faComment } from '@fortawesome/free-solid-svg-icons';
+import { faHubspot } from '@fortawesome/free-brands-svg-icons';
 
+// The feature showcase is rendered if the user is not logged in
+const Showcase = () => {
+  const heroStyles = {
+    padding: '50px 0 70px'
+  };
+  const iconStyles = {
+    width: "70px",
+    height: "auto"
+  }
+
+  return (
+    <div>
+      {/* Welcome header: */}
+      <Row>
+        <Col md={6}>
+          <div className="home-hero" style={heroStyles}>
+            <h1>Welcome to DevMessenger.</h1>
+            <p className="text-muted">
+              Chat with fellow software engineers!
+            </p>
+          </div>
+        </Col>
+      </Row>
+      {/* Cards: */}
+      <Row>
+        {/* Channels: */}
+        <Col md={6}>
+          <Card>
+            <CardBody className="display-flex">
+              <FontAwesomeIcon icon={faHubspot} style={iconStyles} />
+              <div className="m-l">
+                <h2 className="h4">Channels</h2>
+                <p className="text-muted">
+                  Create your own channels. 
+                </p>
+              </div>
+            </CardBody>
+          </Card>
+        </Col>
+        {/* Direct messages: */}
+        <Col md={6}>
+          <Card>
+            <CardBody className="display-flex">
+              <FontAwesomeIcon icon={faComment} style={iconStyles} />
+              <div className="m-l">
+                <h2 className="h4">Direct messaging</h2>
+                <p className="text-muted">
+                  Privately message other developers.
+                </p>
+              </div>
+            </CardBody>
+          </Card>
+        </Col>
+        {/* Personalise: */}
+        <Col md={6}>
+          <Card>
+            <CardBody className="display-flex">
+              <FontAwesomeIcon icon={faPalette} style={iconStyles} />
+              <div className="m-l">
+                <h2 className="h4">Personalise</h2>
+                <p className="text-muted">
+                  Show others what you are like.
+                </p>
+              </div>
+            </CardBody>
+          </Card>
+        </Col>
+        {/* Stay connected with the rapidly evolving software world */}
+        <Col md={6}>
+          <Card>
+            <CardBody className="display-flex">
+              <FontAwesomeIcon icon={faNewspaper} style={iconStyles} />
+              <div className="m-l">
+                <h2 className="h4">Keep up with trends</h2>
+                <p className="text-muted">
+                  Stay updated with the rapidly evolving software world!
+                </p>
+              </div>
+            </CardBody>
+          </Card>
+        </Col>
+      </Row>
+    </div>
+  );
+};
+
+class HomePage extends Component {
+  render() {
     return (
-      <div>
-        {/* Welcome header: */}
-        <Row>
-          <Col md={6}>
-            <div className="home-hero" style={heroStyles}>
-              <h1>Welcome to DevMessenger.</h1>
-              <p className="text-muted">
-                Chat with fellow developers!
-              </p>
-            </div>
-          </Col>
-        </Row>
-        {/* Cards: */}
-        <Row>
-          <Col md={6}>
-            <Card>
-              <CardBody className="display-flex">
-                <img
-                  src={reactFeature}
-                  style={{ width: 70, height: 70 }}
-                  alt="react.js"
-                  aria-hidden={true}
-                />
-                <div className="m-l">
-                  <h2 className="h4">Channels</h2>
-                  <p className="text-muted">
-                    Create your own public and private channels. 
-                  </p>
-                </div>
-              </CardBody>
-            </Card>
-          </Col>
-          <Col md={6}>
-            <Card>
-              <CardBody className="display-flex">
-                <img
-                  src={bootstrapFeature}
-                  style={{ width: 70, height: 70 }}
-                  alt="Bootstrap"
-                  aria-hidden={true}
-                />
-                <div className="m-l">
-                  <h2 className="h4">Bootstrap 4</h2>
-                  <p className="text-muted">
-                    The most popular framework to get your layouts built.
-                  </p>
-                </div>
-              </CardBody>
-            </Card>
-          </Col>
-        </Row>
-        <Row>
-          <Col md={6}>
-            <Card>
-              <CardBody className="display-flex">
-                <img
-                  src={sassFeature}
-                  style={{ width: 70, height: 70 }}
-                  alt="Sass"
-                  aria-hidden={true}
-                />
-                <div className="m-l">
-                  <h2 className="h4">Sass</h2>
-                  <p className="text-muted">
-                    Easily change the design system styles to fit your needs.
-                  </p>
-                </div>
-              </CardBody>
-            </Card>
-          </Col>
-          <Col md={6}>
-            <Card>
-              <CardBody className="display-flex">
-                <img
-                  src={responsiveFeature}
-                  style={{ width: 70, height: 70 }}
-                  alt="Responsive"
-                  aria-hidden={true}
-                />
-                <div className="m-l">
-                  <h2 className="h4">Responsive</h2>
-                  <p className="text-muted">
-                    Designed for screens of all sizes.
-                  </p>
-                </div>
-              </CardBody>
-            </Card>
-          </Col>
-        </Row>
-      </div>
+      <Showcase />
     );
   }
 }
 
-export default Dashboard;
+export default HomePage;

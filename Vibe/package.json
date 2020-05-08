@@ -7,6 +7,10 @@
   "copyright": "Copyright 2019 Nice Dash",
   "private": true,
   "dependencies": {
+    "@fortawesome/fontawesome-svg-core": "^1.2.28",
+    "@fortawesome/free-brands-svg-icons": "^5.13.0",
+    "@fortawesome/free-solid-svg-icons": "^5.13.0",
+    "@fortawesome/react-fontawesome": "^0.1.9",
     "axios": "^0.19.2",
     "bootstrap": "^4.3.1",
     "chart.js": "^2.7.3",
@@ -14,6 +18,7 @@
     "node-sass": "^4.11.0",
     "react": "^16.8.1",
     "react-chartjs-2": "2.6.4",
+    "react-cookie": "^4.0.3",
     "react-dom": "^16.8.1",
     "react-feather": "^1.1.6",
     "react-fontawesome": "1.6.1",
