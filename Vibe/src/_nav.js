@@ -6,6 +6,16 @@ export default {
       icon: 'Home',
     },
     {
+      name: 'Register',
+      url: '/auth/register',
+      icon: 'Register',
+    },
+    {
+      name: 'Log In',
+      url: '/auth/login',
+      icon: 'Login',
+    },
+    {
       name: 'My Profile',
       url: '/profile',
       icon: 'Profile',

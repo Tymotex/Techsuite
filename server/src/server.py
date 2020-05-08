@@ -3,7 +3,7 @@ import os
 from json import dumps
 from PIL import Image
 import requests
-from flask import Flask, request, send_file
+from flask import Flask, request, send_file, jsonify
 from flask_cors import CORS
 from exceptions import InputError
 from pprint import pprint
@@ -137,14 +137,18 @@ def handle_auth_register():
     Return dumps(results)   (str)
     """
     print("*** REGISTERING USER ***")
+    print(request.get_json())
+    print("DONE PRINTING REQUEST")
     request_data = request.get_json()
     email = request_data["email"]
     password = request_data['password']
     name_first = request_data["name_first"]
     name_last = request_data["name_last"]
     results = auth_register(email, password, name_first, name_last)
-    print(results)
-    return dumps(results)
+    response = jsonify(results)
+    response.headers.add('Access-Control-Allow-Origin', '*')
+    print(response.headers)
+    return response
 
 @APP.route("/auth/passwordreset/request", methods=['POST'])
 def handle_auth_passwordreset_request():

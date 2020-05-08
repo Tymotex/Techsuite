@@ -8,7 +8,7 @@ const NAV = [
   },
   {
     name: 'Messages',
-    url: '/#'
+    url: '/'
   }
 ];
 

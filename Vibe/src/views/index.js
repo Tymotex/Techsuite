@@ -21,6 +21,8 @@ import ChannelsAll from './pages/ChannelsAll';
 import ChannelsMy from './pages/ChannelsMy';
 import Profile from './pages/Profile';
 import Home from './pages/Home';
+import Register from './pages/Register';
+import Login from './pages/Login';
 
 import Feed from './pages/Feed';
 import Modals from './elements/Modals';
@@ -34,6 +36,16 @@ const pageList = [
     name: 'Home',
     path: '/home',
     component: Home,
+  },
+  {
+    name: 'Register',
+    path: '/auth/register',
+    component: Register,
+  },
+  {
+    name: 'Login',
+    path: '/auth/login',
+    component: Login,
   },
   {
     name: 'Profile',

@@ -66,12 +66,6 @@ def auth_register(email, password, name_first, name_last, is_bot=True):
     generated_token = generate_token(data_store, new_user_data)
     save_data(data_store)
 
-    # Checking that a server port was supplied (to remain compatible with integration tests)
-    # The following code only runs when the server is active
-    if len(sys.argv) > 1:
-        if len(data_store["users"]) == 1:
-            bot_register()
-
     return {
         'u_id': new_user_data["u_id"],
         'token': generated_token,

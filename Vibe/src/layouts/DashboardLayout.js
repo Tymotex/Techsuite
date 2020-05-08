@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Switch, Route, Redirect } from 'react-router-dom';
 import { Button, Badge, NavItem, UncontrolledDropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
 import { Header, SidebarNav, Footer, PageContent, Avatar, Chat, PageAlert, Page } from '../vibe';
-import Logo from '../assets/images/vibe-logo.svg';
+import Logo from '../assets/images/dev-messenger-icon.png';
 import avatar1 from '../assets/images/avatar1.png';
 import nav from '../_nav';
 import routes from '../views';
@@ -64,7 +64,7 @@ export default class DashboardLayout extends Component {
             <SidebarNav
               nav={nav}
               logo={Logo}
-              logoText="VIBE."
+              logoText="DevMessenger"
               isSidebarCollapsed={sidebarCollapsed}
               toggleSidebar={this.toggleSideCollapse}
               {...this.props}
@@ -104,6 +104,7 @@ export default class DashboardLayout extends Component {
 function HeaderNav() {
   return (
     <React.Fragment>
+      {/* SEARCH BAR: */}
       <NavItem>
         <form className="form-inline">
           <input className="form-control mr-sm-1" type="search" placeholder="Search" aria-label="Search" />
@@ -112,28 +113,17 @@ function HeaderNav() {
           </Button>
         </form>
       </NavItem>
-      <UncontrolledDropdown nav inNavbar>
-        <DropdownToggle nav caret>
-          New
-        </DropdownToggle>
-        <DropdownMenu right>
-          <DropdownItem>Project</DropdownItem>
-          <DropdownItem>User</DropdownItem>
-          <DropdownItem divider />
-          <DropdownItem>
-            Message <Badge color="primary">10</Badge>
-          </DropdownItem>
-        </DropdownMenu>
-      </UncontrolledDropdown>
+      {/* PROFILE DROPDOWN: */}
       <UncontrolledDropdown nav inNavbar>
         <DropdownToggle nav>
-          <Avatar size="small" color="blue" initials="JS" />
+          <Avatar size="small" color="blue" initials="TZ" />
+          {/* TODO: USER PROFILE IMAGE HERE! */}
         </DropdownToggle>
         <DropdownMenu right>
-          <DropdownItem>Option 1</DropdownItem>
-          <DropdownItem>Option 2</DropdownItem>
+          <DropdownItem>View my profile</DropdownItem>
+          <DropdownItem>Edit my profile</DropdownItem>
           <DropdownItem divider />
-          <DropdownItem>Reset</DropdownItem>
+          <DropdownItem>Log out</DropdownItem>
         </DropdownMenu>
       </UncontrolledDropdown>
     </React.Fragment>
