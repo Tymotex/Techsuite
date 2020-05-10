@@ -45,6 +45,10 @@ export default {
             variant: 'success',
             text: '3',
           },
+        },
+        {
+          name: 'Create a Channel',
+          url: '/channels/new'
         }
       ]
     },

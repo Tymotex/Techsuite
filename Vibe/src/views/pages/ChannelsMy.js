@@ -22,6 +22,7 @@ class ChannelsMy extends Component {
         if (currUserToken) {
             axios.get(`${BASE_URL}/channels/list?token=${currUserToken}`)
                 .then((res) => {
+					console.log("Successfully fetched all channels owned by me");
                     this.setState({
                         isLoading: false,
                         fetchSucceeded: true,
@@ -43,7 +44,7 @@ class ChannelsMy extends Component {
 	render() {
 		return (
 			<div>
-				<ChannelList />
+				<ChannelList {...this.state} />
 			</div>
 		);
 	}

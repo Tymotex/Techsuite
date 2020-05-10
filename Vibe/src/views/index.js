@@ -19,6 +19,7 @@ import SubNav from './pages/SubNav';
 
 import ChannelsAll from './pages/ChannelsAll';
 import ChannelsMy from './pages/ChannelsMy';
+import ChannelsNew from './pages/ChannelsNew';
 import Profile from './pages/Profile';
 import Home from './pages/Home';
 import Register from './pages/Register';
@@ -61,6 +62,11 @@ const pageList = [
     name: 'My Channels',
     path: '/channels/my',
     component: ChannelsMy,
+  },
+  {
+    name: 'Create a Channel',
+    path: '/channels/new',
+    component: ChannelsNew,
   },
   {
     name: 'Buttons',

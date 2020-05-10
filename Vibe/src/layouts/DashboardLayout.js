@@ -83,8 +83,6 @@ export default class DashboardLayout extends Component {
                 <HeaderNav />
               </Header>
               <PageContent>
-              
-                <img src="" />
                 <Switch>
                   {routes.map((page, key) => (
                     <Route path={page.path} component={page.component} key={key} />
@@ -122,9 +120,7 @@ class HeaderNav extends React.Component {
     if (currUserToken) {
       axios.get(`${BASE_URL}/users/profileimage?token=${currUserToken}`)
         .then((res) => {
-          console.log(res.data)
           const url = res.data.profile_img_url
-          console.log("LINK: ", url);
           this.setState({
             profileImgURL: url
           })

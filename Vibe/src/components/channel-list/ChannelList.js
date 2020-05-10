@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Card, CardBody, Row, Col } from 'reactstrap';
+import { Row, Col } from 'reactstrap';
+import { Channel } from '../channel';
 
 const ChannelList = (props) => {
     return (
@@ -16,23 +17,8 @@ const ChannelList = (props) => {
                     {/* Display all the channels returned by the server OR show a message if there's none  */}
                     {(props.channels.length > 0) ? 
                         props.channels.map((channel, i) => 
-                            <Col key={i} md={3}>
-                                <Card>
-                                    <CardBody className="display-flex">
-                                        <img
-                                            src="https://i.imgur.com/A2Aw6XG.png"
-                                            style={{ width: 70, height: 70 }}
-                                            alt="Responsive"
-                                            aria-hidden={true}
-                                        />
-                                        <div className="m-l">
-                                            <h2 className="h4">{channel.name}</h2>
-                                            <p className="text-muted">
-                                                Channel description here. And replace the channel picture
-                                            </p>
-                                        </div>
-                                    </CardBody>
-                                </Card>
+                            <Col md={6}>
+                                <Channel key={i} {...channel} />
                             </Col>
                         ) :
                         /* No channels exist in the database */
