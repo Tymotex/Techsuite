@@ -71,6 +71,21 @@ def users_profile_uploadphoto(token, img_endpoint):
     save_data(data)
     return {}
 
+def users_get_profile_image_url(token):
+    """
+    The server does the following:
+    Given a URL of an image on the internet, crops the image within bounds
+    (x_start, y_start) and (x_end, y_end). Position (0,0) is the top left.
+    This function handles associating the saved cropped image with the user
+    Returns:
+        'http://localhost:.../images/imagefilename.jpg'
+    """
+    verify_token(token)
+    data = get_data()
+    return {
+        "profile_img_url": get_user_from_token(data, token)["profile_img_url"]
+    }
+
 def users_profile_setname(token, name_first, name_last):
     """
     Update the authorised user's first and last name

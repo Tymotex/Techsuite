@@ -43,15 +43,8 @@ def auth_register(email, password, name_first, name_last, is_bot=True):
             raise exceptions.InputError(description="Email already exists")
 
     # Adding a default profile picture for the user
-    # Checking that a server port was supplied (to remain compatible with integration tests)
-    # The following code only runs when the server is active
     image_endpoint = None
-    if len(sys.argv) > 1:
-        try:
-            port = int(sys.argv[1])
-            image_endpoint = "http://localhost:{0}/images/{1}".format(port, "default.jpg")
-        except ValueError:
-            pass
+    image_endpoint = "http://localhost:{0}/images/{1}".format(os.getenv("PORT"), "default.jpg")
     # Generate a new user dictionary containing all fields
     new_user_data = {
         "u_id": generate_u_id(data_store),

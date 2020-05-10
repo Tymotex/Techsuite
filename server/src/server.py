@@ -467,10 +467,10 @@ def handle_message_edit():
     results = messages.message_edit(token, message_id, edited_message)
     return dumps(results)
 
-@APP.route("/user/profile", methods=['GET'])
+@APP.route("/users/profile", methods=['GET'])
 def handle_user_profile():
     """
-    HTTP Route: /user/profile
+    HTTP Route: /users/profile
     HTTP Method: GET
     Params: (token, u_id)
 
@@ -482,10 +482,10 @@ def handle_user_profile():
     results = users.users_profile(token, u_id)
     return dumps(results)
 
-@APP.route("/user/profile/setname", methods=['PUT'])
+@APP.route("/users/profile/setname", methods=['PUT'])
 def handle_user_profile_setname():
     """
-    HTTP Route: /user/profile/setname
+    HTTP Route: /users/profile/setname
     HTTP Method: PUT
     Params: (token, name_first, name_last)
 
@@ -500,10 +500,10 @@ def handle_user_profile_setname():
     return dumps(results)
 
 # Params: (token, email)
-@APP.route("/user/profile/setemail", methods=['PUT'])
+@APP.route("/users/profile/setemail", methods=['PUT'])
 def handle_user_profile_setemail():
     """
-    HTTP Route: /user/profile/setemail
+    HTTP Route: /users/profile/setemail
     HTTP Method: PUT
     Params: (token, email)
 
@@ -521,11 +521,17 @@ def serve_image(filename):
     """ Given an image filename, serves that image back with Flask's send_file """
     return send_file("static/images/{}".format(filename))
 
+@APP.route("/users/profileimage")
+def get_profile_image_url():
+    """ Returns the URL to the requesting user's profile picture """
+    results = users.users_get_profile_image_url(request.args.get("token"))
+    return dumps(results)
+
 # Params: (token, img_url, x_start, y_start, x_end, y_end)
-@APP.route("/user/profile/uploadphoto", methods=['POST'])
+@APP.route("/users/profile/uploadphoto", methods=['POST'])
 def handle_user_profile_uploadphoto():
     """
-    HTTP Route: /user/profile/uploadphoto
+    HTTP Route: /users/profile/uploadphoto
     HTTP Method: POST
     Params: (token, img_url, x_start, y_start, x_end, y_end)
 
@@ -550,10 +556,10 @@ def handle_user_profile_uploadphoto():
     results = users.users_profile_uploadphoto(token, image_endpoint)
     return dumps(results)
 
-@APP.route("/users/all", methods=['GET'])
+@APP.route("/userss/all", methods=['GET'])
 def handle_users_all():
     """
-    HTTP Route: /users/all
+    HTTP Route: /userss/all
     HTTP Method: GET
     Params: (token)
 
@@ -579,10 +585,10 @@ def handle_search():
     results = other.search(token, query_str)
     return dumps(results)
 
-@APP.route("/admin/user/remove", methods=["POST"])
+@APP.route("/admin/users/remove", methods=["POST"])
 def handle_admin_user_remove():
     """
-    HTTP Route: /admin/user/remove
+    HTTP Route: /admin/users/remove
     HTTP Method: DELETE
     Params: (token, u_id)
 
@@ -596,10 +602,10 @@ def handle_admin_user_remove():
     results = other.admin_user_remove(token, u_id)
     return dumps(results)
 
-@APP.route("/admin/userpermission/change", methods=['POST'])
+@APP.route("/admin/userspermission/change", methods=['POST'])
 def handle_admins_userpermission_change():
     """
-    HTTP Route: /admin/userpermission/change
+    HTTP Route: /admin/userspermission/change
     HTTP Method: POST
     Params: (token, u_id, permission_id)
 
