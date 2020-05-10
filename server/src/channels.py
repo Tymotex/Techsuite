@@ -435,12 +435,13 @@ def channels_listall(token):
         curr_channel_data = {}
         curr_channel_data["channel_id"] = each_channel["channel_id"]
         curr_channel_data["name"] = each_channel["name"]
+        curr_channel_data["description"] = each_channel["description"]
         all_channels.append(curr_channel_data)
     return {
         "channels": all_channels
     }
 
-def channels_create(token, name, is_public):
+def channels_create(token, name, description, is_public):
     """
     Creates a new channel with that name that is either a public or private channel
     ERRORS:
@@ -469,6 +470,7 @@ def channels_create(token, name, is_public):
         "channel_id": new_channel_id,
         "is_public": is_public,
         "name": name,
+        "description": description,
         "owner_members": [creator],
         "all_members": [creator],
         "messages": [],

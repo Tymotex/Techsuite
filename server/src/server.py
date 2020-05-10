@@ -321,7 +321,7 @@ def handle_channels_create():
     """
     HTTP Route: /channels/create
     HTTP Method: POST
-    Params: (token, name, is_public)
+    Params: (token, name, description, is_public)
 
     Return dumps(results)   (str)
     """
@@ -329,8 +329,9 @@ def handle_channels_create():
     request_data = request.get_json()
     token = request_data["token"]
     name = request_data["name"]
+    description = request_data["description"]
     is_public = request_data["is_public"]
-    results = channels.channels_create(token, name, is_public)
+    results = channels.channels_create(token, name, description, is_public)
     return dumps(results)
 
 @APP.route("/message/send", methods=['POST'])
