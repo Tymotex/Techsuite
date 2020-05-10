@@ -3,6 +3,7 @@ import axios from 'axios';
 import Cookie from 'js-cookie';
 import { ChannelList } from '../../components/channel-list';
 import { ChannelForm } from '../../components/channel-form';
+import { BASE_URL } from '../../constants/api-routes';
 
 class ChannelsAll extends Component {
     constructor(props) {
@@ -20,9 +21,8 @@ class ChannelsAll extends Component {
         });
         const currUserToken = Cookie.get("token");
         if (currUserToken) {
-            axios.get(`http://localhost:8080/channels/listall?token=${Cookie.get("token")}`)
+            axios.get(`${BASE_URL}/channels/listall?token=${currUserToken}`)
                 .then((res) => {
-                    console.log(res.data);
                     this.setState({
                         isLoading: false,
                         fetchSucceeded: true,
@@ -36,7 +36,8 @@ class ChannelsAll extends Component {
                     })
                 })
         } else {
-            console.log("TOKEN WAS NOT FOUND IN COOKIE");
+            // TODO: how should this case be handled?
+            alert("TOKEN WAS NOT FOUND IN COOKIE");
         }
         
         /*

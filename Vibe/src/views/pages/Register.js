@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import axios from 'axios';
 import Cookie from 'js-cookie';
 import { Button, Form, FormGroup, Label, Input, Col, Row, Card, CardBody } from 'reactstrap';
+import { BASE_URL } from '../../constants/api-routes';
 
 class RegisterForm extends Component {
     constructor() {
@@ -15,7 +16,7 @@ class RegisterForm extends Component {
         
         const postData = {
             method: 'post',
-            url: 'http://localhost:8080/auth/register',
+            url: `${BASE_URL}/auth/register`,
             data: {
                 name_first: data.get("name_first"),
                 name_last: data.get("name_last"),
@@ -33,13 +34,10 @@ class RegisterForm extends Component {
                 console.log("Successfully registered!");
                 console.log(res.data);
 
-
-                console.log("Getting cookie: ", Cookie.get("token"))
-
                 // Storing the JWT token inside the browser session storage 
-                Cookie.set("token", res.data.token)
+                Cookie.set("token", res.data.token);
+                Cookie.set("user_id", res.data.u_id);
                 
-                console.log("Getting cookie: ", Cookie.get("token"))
             })
             .catch((err) => {
                 console.log(err);

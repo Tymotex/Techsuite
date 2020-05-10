@@ -1,6 +1,8 @@
 import React, {Component} from 'react';
 import axios from 'axios';
+import Cookie from 'js-cookie';
 import { Button, Form, FormGroup, Label, Input, Col, Row, Card, CardBody } from 'reactstrap';
+import { BASE_URL } from '../../constants/api-routes';
 
 class LoginForm extends Component {
   constructor() {
@@ -13,7 +15,7 @@ class LoginForm extends Component {
     const data = new FormData(event.target);
     const postData = {
       method: 'post',
-      url: 'http://localhost:8080/auth/login',
+      url: `${BASE_URL}/auth/login`,
       data: {
         email: data.get("email"),
         password: data.get("password")
@@ -26,6 +28,9 @@ class LoginForm extends Component {
       .then((res) => {
         console.log(res);
         console.log("Successfully logged in");
+        // Storing the JWT token inside the browser session storage 
+        Cookie.set("token", res.data.token);
+        Cookie.set("user_id", res.data.u_id);
       })
       .catch((err) => {
         console.log(err);

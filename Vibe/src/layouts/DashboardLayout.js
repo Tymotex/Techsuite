@@ -9,6 +9,10 @@ import routes from '../views';
 import ContextProviders from '../vibe/components/utilities/ContextProviders';
 import handleKeyAccessibility, { handleClickAccessibility } from '../vibe/helpers/handleTabAccessibility';
 
+import axios from 'axios';
+import Cookie from 'js-cookie';
+import { BASE_URL } from '../constants/api-routes';
+
 const MOBILE_SIZE = 992;
 
 export default class DashboardLayout extends Component {
@@ -79,6 +83,8 @@ export default class DashboardLayout extends Component {
                 <HeaderNav />
               </Header>
               <PageContent>
+              
+                <img src="" />
                 <Switch>
                   {routes.map((page, key) => (
                     <Route path={page.path} component={page.component} key={key} />
@@ -101,31 +107,60 @@ export default class DashboardLayout extends Component {
   }
 }
 
-function HeaderNav() {
-  return (
-    <React.Fragment>
-      {/* SEARCH BAR: */}
-      <NavItem>
-        <form className="form-inline">
-          <input className="form-control mr-sm-1" type="search" placeholder="Search" aria-label="Search" />
-          <Button type="submit" className="d-none d-sm-block">
-            <i className="fa fa-search" />
-          </Button>
-        </form>
-      </NavItem>
-      {/* PROFILE DROPDOWN: */}
-      <UncontrolledDropdown nav inNavbar>
-        <DropdownToggle nav>
-          <Avatar size="small" color="blue" initials="TZ" />
-          {/* TODO: USER PROFILE IMAGE HERE! */}
-        </DropdownToggle>
-        <DropdownMenu right>
-          <DropdownItem>View my profile</DropdownItem>
-          <DropdownItem>Edit my profile</DropdownItem>
-          <DropdownItem divider />
-          <DropdownItem>Log out</DropdownItem>
-        </DropdownMenu>
-      </UncontrolledDropdown>
-    </React.Fragment>
-  );
+class HeaderNav extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      profileImgURL: ""
+    }
+  }
+
+  // Make an API call to get the profile image URL to display on the top navbar
+  // if the user is signed in
+  componentWillMount() {
+    const currUserToken = Cookie.get("token");
+    if (currUserToken) {
+      axios.get(`${BASE_URL}/users/profileimage?token=${currUserToken}`)
+        .then((res) => {
+          console.log(res.data)
+          const url = res.data.profile_img_url
+          console.log("LINK: ", url);
+          this.setState({
+            profileImgURL: url
+          })
+        })
+        .catch((err) => {
+          alert(err);
+        })
+    }
+  }
+
+  render() {
+    return (
+      <React.Fragment>
+        {/* SEARCH BAR: */}
+        <NavItem>
+          <form className="form-inline">
+            <input className="form-control mr-sm-1" type="search" placeholder="Search" aria-label="Search" />
+            <Button type="submit" className="d-none d-sm-block">
+              <i className="fa fa-search" />
+            </Button>
+          </form>
+        </NavItem>
+        {/* PROFILE DROPDOWN: */}
+        <UncontrolledDropdown nav inNavbar>
+          <DropdownToggle nav>
+            <Avatar size="small" color="blue" image={this.state.profileImgURL} initials="  " />
+            {/* TODO: USER PROFILE IMAGE HERE! */}
+          </DropdownToggle>
+          <DropdownMenu right>
+            <DropdownItem>View my profile</DropdownItem>
+            <DropdownItem>Edit my profile</DropdownItem>
+            <DropdownItem divider />
+            <DropdownItem>Log out</DropdownItem>
+          </DropdownMenu>
+        </UncontrolledDropdown>
+      </React.Fragment>
+    );
+  }
 }

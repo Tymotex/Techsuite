@@ -28,6 +28,7 @@ const Showcase = () => {
             </p>
           </div>
         </Col>
+        {/* TEMPORARY BUTTONS! */}
         <Col md={3}>
           <br />
           <br />

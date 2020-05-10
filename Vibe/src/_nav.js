@@ -1,3 +1,4 @@
+
 export default {
   top: [
     {
@@ -8,21 +9,26 @@ export default {
     {
       name: 'Register',
       url: '/auth/register',
-      icon: 'Register',
+      icon: 'UserPlus',
     },
     {
       name: 'Log In',
       url: '/auth/login',
-      icon: 'Login',
+      icon: 'LogIn',
+    },
+    {
+      name: 'Log Out',
+      url: '/auth/logout',
+      icon: 'LogOut'
     },
     {
       name: 'My Profile',
       url: '/profile',
-      icon: 'Profile',
+      icon: 'Code',
     },
     {
       name: 'Channels',
-      icon: 'Channels',
+      icon: 'Activity',
       children: [
         {
           name: 'All Channels',
