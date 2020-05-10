@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import axios from 'axios';
-import { Button, Form, FormGroup, Label, Input, FormText, Col, Row, Card, CardBody } from 'reactstrap';
+import { Button, Form, FormGroup, Label, Input, Col, Row, Card, CardBody } from 'reactstrap';
 
 class LoginForm extends Component {
   constructor() {

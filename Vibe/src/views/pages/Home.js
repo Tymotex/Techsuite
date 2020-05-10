@@ -1,10 +1,7 @@
 import React, { Component } from 'react';
-import reactFeature from '../../assets/images/react-feature.svg';
-import sassFeature from '../../assets/images/sass-feature.svg';
-import bootstrapFeature from '../../assets/images/bootstrap-feature.svg';
-import responsiveFeature from '../../assets/images/responsive-feature.svg';
-import { Card, CardBody, Row, Col } from 'reactstrap';
+import { Card, CardBody, Row, Col, Button } from 'reactstrap';
 
+// Font-awesome icons:
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faNewspaper, faPalette, faComment } from '@fortawesome/free-solid-svg-icons';
 import { faHubspot } from '@fortawesome/free-brands-svg-icons';
@@ -17,7 +14,7 @@ const Showcase = () => {
   const iconStyles = {
     width: "70px",
     height: "auto"
-  }
+  };
 
   return (
     <div>
@@ -31,7 +28,24 @@ const Showcase = () => {
             </p>
           </div>
         </Col>
+        <Col md={3}>
+          <br />
+          <br />
+          <br />
+          <div className="text-center">
+            <Button href="/auth/register" block color="primary" size="lg">Register</Button>
+          </div>
+        </Col>
+        <Col md={3}>
+          <br />
+          <br />
+          <br />
+          <div className="text-center">
+            <Button href="/auth/login" block color="primary" size="lg">Sign In</Button>
+          </div>
+        </Col>
       </Row>
+      
       {/* Cards: */}
       <Row>
         {/* Channels: */}

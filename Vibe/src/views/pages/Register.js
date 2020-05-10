@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import axios from 'axios';
-import { Button, Form, FormGroup, Label, Input, FormText, Col, Row, Card, CardBody } from 'reactstrap';
+import Cookie from 'js-cookie';
+import { Button, Form, FormGroup, Label, Input, Col, Row, Card, CardBody } from 'reactstrap';
 
 class RegisterForm extends Component {
     constructor() {
@@ -30,6 +31,15 @@ class RegisterForm extends Component {
             .then((res) => {
                 console.log(res);
                 console.log("Successfully registered!");
+                console.log(res.data);
+
+
+                console.log("Getting cookie: ", Cookie.get("token"))
+
+                // Storing the JWT token inside the browser session storage 
+                Cookie.set("token", res.data.token)
+                
+                console.log("Getting cookie: ", Cookie.get("token"))
             })
             .catch((err) => {
                 console.log(err);
