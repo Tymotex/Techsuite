@@ -4,20 +4,13 @@ from util import is_user_member, select_channel, get_user_from_id, verify_token
 
 def channels_invite(token, channel_id, u_id):
     """
-    Invites a user (with user id u_id) to join a channel with ID channel_id.
-    Once invited the user is added to the channel immediately
+        Invites a user (with user id u_id) to join a channel with ID channel_id.
+        Once invited the user is added to the channel immediately
 
-    Parameters:
-    token           string
-    channel_id      integer
-    u-id            integer
-
-    return {}
-
+        Returns: {}
     """
     # check parameters are all valid and raise exception if they aren't
     # add u_id, associated first name and last name into channel_id dictionary (or storage)
-
     data = get_data()
     verify_token(token)
     auth_user = get_user_from_token(data, token)
@@ -56,25 +49,16 @@ def channels_invite(token, channel_id, u_id):
 
 def channels_details(token, channel_id):
     """
-    Given a Channel with ID channel_id that the authorised user is
-    part of, provide basic details about the channel
+        Given a Channel with ID channel_id that the authorised user is
+        part of, provide basic details about the channel
 
-    parameters:  (token, channel_id)
-    types:
-    token        str
-    channel_id   int
+        returns dictionary with items 'name', 'owner_members', 'all_members'
 
-    return dictionary with items 'name', 'owner_members', 'all_members'
-
-    return {
-        'name': channel_name,
-        'owner_members': channel_owners,
-        'all_members': channel_members,
-    }
-    channel_name is a string
-    channel_owners is a list of dictionary
-    channel_members is a list of dictionary
-
+        return {
+            'name': channel_name,
+            'owner_members': channel_owners,
+            'all_members': channel_members,
+        }
     """
     # check parameters are all valid and raise exception if they aren't
 
@@ -122,21 +106,21 @@ def channels_details(token, channel_id):
 
 def channels_messages(token, channel_id, start):
     """
-    Given a Channel with ID channel_id that the authorised user is part of,
-    return up to 50 messages between index "start" and "start + 50" exclusive.
-    Message with index 0 is the most recent message in the channel.
-    This function returns a new index "end" which is the value of "start + 50", or,
-    if this function has returned the least recent messages in the channel,
-    returns -1 in "end" to indicate there are no more messages to load after this return.
+        Given a Channel with ID channel_id that the authorised user is part of,
+        return up to 50 messages between index "start" and "start + 50" exclusive.
+        Message with index 0 is the most recent message in the channel.
+        This function returns a new index "end" which is the value of "start + 50", or,
+        if this function has returned the least recent messages in the channel,
+        returns -1 in "end" to indicate there are no more messages to load after this return.
 
-    returns {
-        messages,
-        start,
-        end
-    }
-    messages is a list of message dictionary (max size 50)
-    start is an int
-    end is an int
+        returns {
+            messages,
+            start,
+            end
+        }
+        messages is a list of message dictionary (max size 50)
+        start is an int
+        end is an int
     """
     # check parameters are all valid and raise exception if they aren't
 
@@ -436,6 +420,7 @@ def channels_listall(token):
         curr_channel_data["channel_id"] = each_channel["channel_id"]
         curr_channel_data["name"] = each_channel["name"]
         curr_channel_data["description"] = each_channel["description"]
+        curr_channel_data["is_public"] = each_channel["is_public"]
         all_channels.append(curr_channel_data)
     return {
         "channels": all_channels
@@ -443,15 +428,11 @@ def channels_listall(token):
 
 def channels_create(token, name, description, is_public):
     """
-    Creates a new channel with that name that is either a public or private channel
-    ERRORS:
-    - Name longer than 20 characters
-    Parameters:
-        token   str
-        name    str
-        is_public   bool
-    Returns:
+    Creates a new channel with that name that is either a public or private channel. 
+    Name can't be longer than 20 characters
+    Returns: {
         channel_id   int
+    }
     """
     verify_token(token)
     if len(name) > 20:

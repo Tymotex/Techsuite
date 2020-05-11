@@ -28,7 +28,7 @@ CORS(APP)
 
 # Importing modularised routes:
 APP.register_blueprint(auth_router)
-APP.register_blueprint(channels_router, url_prefix="/channels")
+APP.register_blueprint(channels_router)
 
 
 def default_handler(err):
