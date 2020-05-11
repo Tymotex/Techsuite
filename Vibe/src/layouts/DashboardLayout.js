@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Switch, Route, Redirect } from 'react-router-dom';
-import { Button, NavItem, UncontrolledDropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
+import { NavItem, UncontrolledDropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
 import { Header, SidebarNav, Footer, PageContent, Avatar, Chat, PageAlert, Page } from '../vibe';
 import Logo from '../assets/images/dev-messenger-icon.png';
 import avatar1 from '../assets/images/avatar1.png';
@@ -68,7 +68,7 @@ export default class DashboardLayout extends Component {
             <SidebarNav
               nav={nav}
               logo={Logo}
-              logoText="DevMessenger"
+              logoText="Dev Messenger"
               isSidebarCollapsed={sidebarCollapsed}
               toggleSidebar={this.toggleSideCollapse}
               {...this.props}
@@ -132,18 +132,25 @@ class HeaderNav extends React.Component {
   }
 
   render() {
+    const paddedNavItem = {
+      paddingTop: "10px",
+      paddingRight: "10px"
+    };
     return (
       <React.Fragment>
         {/* SEARCH BAR: */}
-        <NavItem>
+        {/* <NavItem>
           <form className="form-inline">
             <input className="form-control mr-sm-1" type="search" placeholder="Search" aria-label="Search" />
             <Button type="submit" className="d-none d-sm-block">
               <i className="fa fa-search" />
             </Button>
           </form>
-        </NavItem>
+        </NavItem> */}
         {/* PROFILE DROPDOWN: */}
+        <NavItem style={paddedNavItem}>
+          Welcome
+        </NavItem>
         <UncontrolledDropdown nav inNavbar>
           <DropdownToggle nav>
             <Avatar size="small" color="blue" image={this.state.profileImgURL} initials="  " />

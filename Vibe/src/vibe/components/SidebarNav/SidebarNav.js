@@ -47,7 +47,7 @@ export default class SidebarNav extends Component {
             <div>
               <div className={`app-sidebar ${hasPageAlertClass}`}>
                 <NavBrand logo={this.props.logo} logoText={this.props.logoText} />
-                <nav>
+                <nav style={{"backgroundColor": "black"}}>
                   <ul id="main-menu">
                     {navItems(this.props.nav.top)}
                     <NavSpacer />

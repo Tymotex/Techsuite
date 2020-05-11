@@ -2,7 +2,8 @@
    ----------------------------- */
 
 .avatar {
-	border-radius: 2px;
+	border-radius: 50%;
+	border: white solid 2px;
 	display: inline-block;
 	width: 30px;
 	height: 30px;
@@ -22,8 +23,7 @@
 	img {
 		line-height: 0;
 	    position: relative;
-	    border-radius: 2px;
-	    display: inline-block;
+		border-radius: 50%;
 	}
 
 	&.avatar-sm {

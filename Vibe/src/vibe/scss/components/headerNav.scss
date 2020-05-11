@@ -2,8 +2,9 @@
    ----------------------------- */
 
 .app-header {
-  height: 50px;
-  background: white;
+  height: 55px;
+  background: rgb(37, 37, 37);
+  color: white;
   display: flex;
   position: relative;
   z-index: 80;
@@ -39,19 +40,27 @@
     float: none;
   }
 
+  .hamburger {
+    background-color: darkslategray;
+  }
+
   i {
     position: relative;
   }
 
   .sidebar-toggle {
+    background-color: darkslategray!important;
+    border: transparent;
+
     .fa {
       transform: rotate(0deg);
     }
-    &.is-collapsed {
-      .fa {
-        transform: rotate(180deg);
-      }
-    }
+    // &.is-collapsed {
+    //   .fa {
+    //     vertical-align: baseline;
+    //     transform: rotate(180deg);
+    //   }
+    // }
   }
 }
 
@@ -152,11 +161,11 @@
       i {
         transform: rotate(180deg);
       }
-      &.is-collapsed {
-        i {
-          transform: rotate(0deg);
-        }
-      }
+      // &.is-collapsed {
+      //   i {
+      //     transform: rotate(0deg);
+      //   }
+      // }
     }
   }
   .mobile-menu-link {

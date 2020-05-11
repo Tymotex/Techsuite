@@ -5,7 +5,7 @@
   bottom: 0px;
   left: 0px;
   width: $sidebarWidth;
-  background: $sidenavBgColor;
+  background: #010d21;
   display: flex;
   flex-direction: column;
 
@@ -25,11 +25,12 @@
 
 .site-logo-bar {
   overflow: hidden;
-  background: $sidenavBgColor;
+  background: rgb(60, 0, 66);
+  height: 55px;
 
   .navbar-brand {
     width: 100%;
-    padding: 0 20px;
+    padding: 0 10px;
     line-height: 48px;
     color: white;
     font-weight: bold;
@@ -41,8 +42,8 @@
     }
 
     > img {
-      max-height: 30px;
-      max-width: 30px;
+      max-height: 50px;
+      max-width: 50px;
       display: inline-block;
     }
 
@@ -52,7 +53,7 @@
       vertical-align: middle;
 
       img {
-        max-height: 40px;
+        max-height: 50px;
         max-width: 50px;
       }
     }
@@ -64,7 +65,7 @@
   .side-menu-collapsed {
     .site-logo-bar {
       .navbar-brand {
-        padding: 0 10px;
+        padding: 0 ;
 
         .logo-text {
           opacity: 0;
