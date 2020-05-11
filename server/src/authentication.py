@@ -122,7 +122,7 @@ def auth_logout(token):
     else:
         raise exceptions.AccessError(description="Logout failed. Token is invalid")
 
-def auth_passwordreset_request(email):
+def auth_password_reset_request(email):
     """
     Given an email address, if the user is a registered user,
     send's them a an email containing a specific secret code, that when entered
@@ -166,7 +166,7 @@ def auth_passwordreset_request(email):
     save_data(data_store)
     return {}
 
-def auth_passwordreset_reset(reset_code, new_password):
+def auth_password_reset(reset_code, new_password):
     """
     Given a reset code for a user, set that user's new password to the password provided
     ERRORS:

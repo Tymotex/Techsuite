@@ -3,15 +3,17 @@ import os
 from json import dumps
 from PIL import Image
 import requests
-from flask import Flask, request, send_file, jsonify
+from flask import Flask, request, send_file, jsonify, Blueprint
 from flask_cors import CORS
 from exceptions import InputError
 from pprint import pprint
 from dotenv import load_dotenv
 
+# Routes
+from routes.auth_routes import auth_router
+from routes.channels_routes import channels_router
+
 # Source files
-from authentication import auth_register, auth_login, auth_logout 
-import channels
 import messages
 import users
 from database import get_data, show_data
@@ -20,7 +22,14 @@ from database import get_data, show_data
 load_dotenv()
 PROFILE_IMG_DIRECTORY = os.getcwd() + r"/static/images/"
 APP = Flask(__name__)
+
+# Allowing cross-origin resource sharing
 CORS(APP)
+
+# Importing modularised routes:
+APP.register_blueprint(auth_router)
+APP.register_blueprint(channels_router, url_prefix="/channels")
+
 
 def default_handler(err):
     """
@@ -98,241 +107,6 @@ def download_img_and_crop(url, u_id, x_start, y_start, x_end, y_end):
 @APP.route("/", methods=["GET"])
 def index():
     return "Index page"
-
-@APP.route("/auth/login", methods=['POST'])
-def handle_auth_login():
-    """
-    HTTP Route: /auth/login
-    HTTP Method: POST
-    Params: (email, password)
-
-    Return dumps(results)   (str)
-    """
-    request_data = request.get_json()
-    email = request_data["email"]
-    password = request_data['password']
-    results = auth_login(email, password)
-    return dumps(results)
-
-@APP.route("/auth/logout", methods=['POST'])
-def handle_auth_logout():
-    """
-    HTTP Route: /auth/logout
-    HTTP Method: POST
-    Params: (token)
-
-    Return dumps(results)   (str)
-    """
-    request_data = request.get_json()
-    results = auth_logout(request_data["token"])
-    return dumps(results)
-
-@APP.route("/auth/register", methods=['POST'])
-def handle_auth_register():
-    """
-    HTTP Route: /auth/register
-    HTTP Method: POST
-    Params: (email, password, name_first, name_last)
-
-    Return dumps(results)   (str)
-    """
-    print("*** REGISTERING USER ***")
-    print(request.get_json())
-    print("DONE PRINTING REQUEST")
-    request_data = request.get_json()
-    email = request_data["email"]
-    password = request_data['password']
-    name_first = request_data["name_first"]
-    name_last = request_data["name_last"]
-    results = auth_register(email, password, name_first, name_last)
-    response = jsonify(results)
-    response.headers.add('Access-Control-Allow-Origin', '*')
-    print(response.headers)
-    return response
-
-@APP.route("/auth/passwordreset/request", methods=['POST'])
-def handle_auth_passwordreset_request():
-    """
-    HTTP Route: /auth/passwordreset/request
-    HTTP Method: POST
-    Params: (email)
-
-    Return dumps(results)   (str)
-    """
-    request_data = request.get_json()
-    results = auth_passwordreset_request(request_data["email"])
-    return dumps(results)
-
-@APP.route("/auth/passwordreset/reset", methods=['POST'])
-def handle_auth_passwordreset_reset():
-    """
-    HTTP Route: /auth/passwordreset/reset
-    HTTP Method: POST
-    Params: (reset_code, new_password)
-
-    Return dumps(results)   (str)
-    """
-    request_data = request.get_json()
-    reset_code = request_data['reset_code']
-    new_password = request_data['new_password']
-    results = auth_passwordreset_reset(reset_code, new_password)
-    return dumps(results)
-
-@APP.route("/channels/invite", methods=['POST'])
-def handle_channel_invite():
-    """
-    HTTP Route: /channels/invite
-    HTTP Method: POST
-    Params: (token, channel_id, u_id)
-
-    Return dumps(results)   (str)
-    """
-    request_data = request.get_json()
-    token = request_data["token"]
-    channel_id = int(request_data["channel_id"])
-    u_id = int(request_data["u_id"])
-    results = channels.channels_invite(token, channel_id, u_id)
-    return dumps(results)
-
-@APP.route("/channels/details", methods=['GET'])
-def handle_channel_details():
-    """
-    HTTP Route: /channels/details
-    HTTP Method: GET
-    Params: (token, channel_id)
-
-    Return dumps(results)   (str)
-    """
-    token = request.args.get("token")
-    channel_id = int(request.args.get("channel_id"))
-    results = channels.channels_details(token, channel_id)
-    return dumps(results)
-
-@APP.route("/channels/messages", methods=['GET'])
-def handle_channel_messages():
-    """
-    HTTP Route: /channels/messages
-    HTTP Method: GET
-    Params: (token, channel_id, start)
-
-    Return dumps(results)   (str)
-    """
-    token = request.args.get("token")
-    channel_id = int(request.args.get("channel_id"))
-    start = int(request.args.get("start"))
-    results = channels.channels_messages(token, channel_id, start)
-    return dumps(results)
-
-@APP.route("/channels/leave", methods=['POST'])
-def handle_channel_leave():
-    """
-    HTTP Route: /channels/leave
-    HTTP Method: POST
-    Params: (token, channel_id)
-
-    Return dumps(results)   (str)
-    """
-    request_data = request.get_json()
-    token = request_data["token"]
-    channel_id = int(request_data["channel_id"])
-    results = channels.channels_leave(token, channel_id)
-    return dumps(results)
-
-@APP.route("/channels/join", methods=['POST'])
-def handle_channel_join():
-    """
-    HTTP Route: /channels/join
-    HTTP Method: POST
-    Params: (token, channel_id)
-
-    Return dumps(results)   (str)
-    """
-    print("CHANNEL JOIN:")
-    request_data = request.get_json()
-    token = request_data["token"]
-    channel_id = int(request_data["channel_id"])
-    results = channels.channels_join(token, channel_id)
-    return dumps(results)
-
-@APP.route("/channels/addowner", methods=['POST'])
-def handle_channel_addowner():
-    """
-    HTTP Route: /channels/addowner
-    HTTP Method: POST
-    Params: (token, channel_id, u_id)
-
-    Return dumps(results)   (str)
-    """
-    print("CHANNEL ADDOWNER:")
-    request_data = request.get_json()
-    token = request_data["token"]
-    channel_id = int(request_data["channel_id"])
-    u_id = int(request_data["u_id"])
-    results = channels.channels_addowner(token, channel_id, u_id)
-    return dumps(results)
-
-@APP.route("/channels/removeowner", methods=['POST'])
-def handle_channel_removeowner():
-    """
-    HTTP Route: /channels/removeowner
-    HTTP Method: POST
-    Params: (token, channel_id, u_id)
-
-    Return dumps(results)   (str)
-    """
-    print("CHANNEL REMOVEOWNER:")
-    request_data = request.get_json()
-    token = request_data["token"]
-    channel_id = int(request_data["channel_id"])
-    u_id = int(request_data["u_id"])
-    results = channels.channels_removeowner(token, channel_id, u_id)
-    return dumps(results)
-
-@APP.route("/channels/list", methods=['GET'])
-def handle_channels_list():
-    """
-    HTTP Route: /channels/list
-    HTTP Method: GET
-    Params: (token)
-
-    Return dumps(results)   (str)
-    """
-    print("CHANNELS LIST:")
-    token = request.args.get("token")
-    user_channels = channels.channels_list(token)
-    return dumps(user_channels)
-
-@APP.route("/channels/listall", methods=['GET'])
-def handle_channels_listall():
-    """
-    HTTP Route: /channels/listall
-    HTTP Method: GET
-    Params: (token)
-
-    Return dumps(results)   (str)
-    """
-    print("*** CHANNELS LISTALL ***")
-    token = request.args.get("token")
-    all_channels = channels.channels_listall(token)
-    return dumps(all_channels)
-
-@APP.route("/channels/create", methods=['POST'])
-def handle_channels_create():
-    """
-    HTTP Route: /channels/create
-    HTTP Method: POST
-    Params: (token, name, description, is_public)
-
-    Return dumps(results)   (str)
-    """
-    print("*** CREATING CHANNEL ***")
-    request_data = request.get_json()
-    token = request_data["token"]
-    name = request_data["name"]
-    description = request_data["description"]
-    is_public = request_data["is_public"]
-    results = channels.channels_create(token, name, description, is_public)
-    return dumps(results)
 
 @APP.route("/message/send", methods=['POST'])
 def handle_message_send():
