@@ -1,6 +1,7 @@
 """
-File containing all helper functions for implementation functions
+    File containing all globally used helper functions
 """
+import functools
 import re
 import random
 import smtplib
@@ -16,31 +17,29 @@ load_dotenv()
 
 def email_is_legit(email):
     """
-    Given a string, determines if it matches the standard email regex
-    Returns:
-        True/False  bool
+        Given a string, determines if it matches the standard email regex.
     """
     regex = r'^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$'
     return bool(re.search(regex, email))
 
 def no_users_in_database(data_store):
     """
-    Checks the given data dictionary and returns true if the user database is empty
-    Returns:
-        len(data_store["users"])    int
+        Checks the given data dictionary and returns true if the user database is empty
+        Returns:
+            len(data_store["users"])    int
     """
     return len(data_store["users"]) == 0
 
 def verify_token(token):
     """
-    Given a token, checks the database and returns true if the token exists.
-    If the token doesn't exist, then return false.
-    Unfortunately, we need to check ourselves whether that u_id associated with
-    the token has access rights, etc.
-    Parameters:
-        token   str
-    Returns:
-        True/False  bool
+        Given a token, checks the database and returns true if the token exists.
+        If the token doesn't exist, then return false.
+        Unfortunately, we need to check ourselves whether that u_id associated with
+        the token has access rights, etc.
+        Parameters:
+            token   str
+        Returns:
+            True/False  bool
     """
     try:
         jwt.decode(token, os.getenv("SECRET_MESSAGE"), algorithms=["HS256"])
@@ -51,15 +50,14 @@ def verify_token(token):
 
 def is_user_member(user, selected_channel):
     """
-    Returns True if user is a member of selected channel, False otherwis
-    function which Authorised user is not a member of channel with channel_id
+        Returns True if user is a member of selected channel, False otherwis
+        function which Authorised user is not a member of channel with channel_id
 
-    parameters:
-    user             (dictionary)
-    selected_channel (dictionary)
+        parameters:
+        user             (dictionary)
+        selected_channel (dictionary)
 
-    returns boolean
-
+        returns boolean
     """
     for member in selected_channel["all_members"]:
         if member["u_id"] == user["u_id"]:
@@ -68,12 +66,12 @@ def is_user_member(user, selected_channel):
 
 def select_channel(data, channel_id):
     """
-    Checks whether channel exists and returns channel details
-    Parameters:
-        data        dict
-        channel_id  int
-    Returns:
-        selected_channel    dict
+        Checks whether channel exists and returns channel details
+        Parameters:
+            data        dict
+            channel_id  int
+        Returns:
+            selected_channel    dict
     """
     channels_list = data["channels"]
     for channel in channels_list:
@@ -85,20 +83,20 @@ def select_channel(data, channel_id):
 
 def get_user_from_id(users_list, u_id):
     """
-    Function which returns whether u_id is in user list and
-    return (is_valid_user, is_user_admin, user_to_add)
-    whether u_id is in user list, whether user is global admin and the details of the user
+        Function which returns whether u_id is in user list and
+        return (is_valid_user, is_user_admin, user_to_add)
+        whether u_id is in user list, whether user is global admin and the details of the user
 
-    Parameters (users_list, u_id)
-    types:
-    users_list      list
-    u_id            integer
+        Parameters (users_list, u_id)
+        types:
+        users_list      list
+        u_id            integer
 
-    return (is_valid_user, is_user_admin, user_to_add)
-    types:
-    is_valid_user   boolean
-    is_user_admin   boolean
-    user_to_add     dictionary
+        return (is_valid_user, is_user_admin, user_to_add)
+        types:
+        is_valid_user   boolean
+        is_user_admin   boolean
+        user_to_add     dictionary
     """
     is_valid_user = False
     is_user_admin = False
@@ -120,19 +118,15 @@ def get_user_from_id(users_list, u_id):
 
 def send_email(send_to, gmail_user, gmail_password, msg):
     """
-    Function which sends mail from gmail account
-    Parameters (send_to, gmail_user, gmail_password, msg):
-    types:
-    send_to           string
-    gmail_user        string
-    gmail_password    string
-    msg               string
+        Function which sends mail from gmail account
+        Parameters (send_to, gmail_user, gmail_password, msg):
+        types:
+        send_to           string
+        gmail_user        string
+        gmail_password    string
+        msg               string
 
-    returns nothing
-
-    credit to:
-    https://mkyong.com/python/how-do-send-email-in-python-via-smtplib/
-
+        returns nothing
     """
     smtpserver = smtplib.SMTP("smtp.gmail.com", 587)
     smtpserver.ehlo()
@@ -143,14 +137,14 @@ def send_email(send_to, gmail_user, gmail_password, msg):
 
 def email_message(email, reset_code, name_first, name_last):
     """
-    Message contents of email sent to reset password
-    Parameters:
-        email       str
-        reset_code  str
-        name_first   str
-        name_last    str
-    Returns:
-        message str
+        Message contents of email sent to reset password
+        Parameters:
+            email       str
+            reset_code  str
+            name_first   str
+            name_last    str
+        Returns:
+            message str
     """
     header = 'To:' + email + '\n' + 'From: ' + 'pythontest9582@gmail.com' + \
     '\n' + 'Subject:Password reset for SLACKR \n'
@@ -165,7 +159,7 @@ def email_message(email, reset_code, name_first, name_last):
     'But if you still feel unsafe, please report to SLACKR admins.' + '\n' + \
     'Contact email: ' + 'pythontest9582@gmail.com' + '\n' + \
     'Best regards,' + '\n' + \
-    'The Slackr Team' + '\n' + \
+    'DevMessenger' + '\n' + \
     '================== Do not reply to this email =================='
     return message
 
@@ -251,3 +245,19 @@ def workspace_reset():
     # Wipe data
     wipe_data()
     return {}
+
+def debugBorders(func):
+    """ 
+        A simple decorator that adds a start and end marker for a function call.
+        Meant for debugging functions.
+    """
+    @functools.wraps(func)
+    def wrapper(*args, **kwargs):
+        args_repr = [repr(a) for a in args]   
+        kwargs_repr = [f"{k}={v!r}" for k, v in kwargs.items()]    
+        signature = ", ".join(args_repr + kwargs_repr)   
+        print(f"=====* Start of {func.__name__}({signature}) *=====")
+        func(*args, **kwargs)
+        print(f"=====*  End of {func.__name__}  *=====")
+    # The function is now wrapped by two additional print statements
+    return wrapper

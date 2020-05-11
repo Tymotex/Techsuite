@@ -8,14 +8,11 @@ from util import email_is_legit, verify_token
 # ===== User Functions =====
 def users_profile(token, u_id):
     """
-    For a valid user, returns information about their user
-    id, email, first name, last name
-    ERRORS
-    - Invalid token
-    - Invalid u_id
-    Returns: {
-        user    dict
-    }
+        For a valid user, returns some fields about them, eg.
+        id, email, first name, last name, profile image
+        Returns: {
+            u_id, email, name_first, name_last, profile_img_url
+        }
     """
     # Gets data from data storage
     data = get_data()
@@ -38,14 +35,12 @@ def users_profile(token, u_id):
         raise InputError(description="User with u_id is not a valid user")
     # Returns a dictionary
     return {
-        'user': {
-            'u_id': u_id,
-            # String form: 'u_id': '{:d}'.format(u_id).zfill(4),
-            'email': email,
-            'name_first': name_first,
-            'name_last': name_last,
-            'profile_img_url': img_endpoint
-        }
+        'u_id': u_id,
+        # String form: 'u_id': '{:d}'.format(u_id).zfill(4),
+        'email': email,
+        'name_first': name_first,
+        'name_last': name_last,
+        'profile_img_url': img_endpoint
     }
 
 def users_profile_uploadphoto(token, img_endpoint):
