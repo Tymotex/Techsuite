@@ -149,7 +149,7 @@ class HeaderNav extends React.Component {
         </NavItem> */}
         {/* PROFILE DROPDOWN: */}
         <NavItem style={paddedNavItem}>
-          Welcome
+          Welcome {"USER NAME HERE"}
         </NavItem>
         <UncontrolledDropdown nav inNavbar>
           <DropdownToggle nav>

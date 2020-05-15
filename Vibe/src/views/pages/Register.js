@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import { Redirect } from  'react-router-dom';
 import axios from 'axios';
 import Cookie from 'js-cookie';
 import { Button, Form, FormGroup, Label, Input, Col, Row, Card, CardBody } from 'reactstrap';
@@ -8,6 +9,9 @@ class RegisterForm extends Component {
     constructor() {
         super();
         this.registerUser = this.registerUser.bind(this);
+        this.state = {
+            isAuthenticated: false
+        };
     }
 
     registerUser = (event) => {
@@ -38,6 +42,13 @@ class RegisterForm extends Component {
                 Cookie.set("token", res.data.token);
                 Cookie.set("user_id", res.data.u_id);
                 
+                // Setting the state's isAuthenticated field rerenders the component
+                // which returns a <Redirect to="/" />, redirecting the user to the homepage
+                if (!this.state.isAuthenticated) {
+                    this.setState({
+                        isAuthenticated: true
+                    });
+                }
             })
             .catch((err) => {
                 console.log(err);
@@ -45,39 +56,42 @@ class RegisterForm extends Component {
     }
 
     render() {
+        // If successfully registered, a redirect is made to the homepage
         return (
-            <Row>
-                <Col md={{ size: 8, offset: 2 }}>
-                    <Card>
-                        <CardBody>
-                            <Form onSubmit={this.registerUser}>
-                                {/* First Name: */}
-                                <FormGroup>
-                                    <Label htmlFor="name_first">First Name</Label>
-                                    <Input type="text" name="name_first" id="name_first" />
-                                </FormGroup>
-                                {/* Last Name: */}
-                                <FormGroup>
-                                    <Label htmlFor="name_last">Last Name</Label>
-                                    <Input type="text" name="name_last" id="name_last" />
-                                </FormGroup>
-                                {/* Email Address: */}
-                                <FormGroup>
-                                    <Label htmlFor="email">Email</Label>
-                                    <Input type="email" name="email" id="email" />
-                                </FormGroup>
-                                {/* Password: */}
-                                <FormGroup>
-                                    <Label htmlFor="password">Password</Label>
-                                    <Input type="password" name="password" id="password" />
-                                </FormGroup>
-                                {/* Submit button: */}
-                                <Button>Submit</Button>
-                            </Form>
-                        </CardBody>
-                    </Card>
-                </Col>
-            </Row>
+            (this.state.isAuthenticated) ? 
+                <Redirect to="/" /> :
+                <Row>
+                    <Col md={{ size: 8, offset: 2 }}>
+                        <Card>
+                            <CardBody>
+                                <Form onSubmit={this.registerUser}>
+                                    {/* First Name: */}
+                                    <FormGroup>
+                                        <Label htmlFor="name_first">First Name</Label>
+                                        <Input type="text" name="name_first" id="name_first" />
+                                    </FormGroup>
+                                    {/* Last Name: */}
+                                    <FormGroup>
+                                        <Label htmlFor="name_last">Last Name</Label>
+                                        <Input type="text" name="name_last" id="name_last" />
+                                    </FormGroup>
+                                    {/* Email Address: */}
+                                    <FormGroup>
+                                        <Label htmlFor="email">Email</Label>
+                                        <Input type="email" name="email" id="email" />
+                                    </FormGroup>
+                                    {/* Password: */}
+                                    <FormGroup>
+                                        <Label htmlFor="password">Password</Label>
+                                        <Input type="password" name="password" id="password" />
+                                    </FormGroup>
+                                    {/* Submit button: */}
+                                    <Button>Submit</Button>
+                                </Form>
+                            </CardBody>
+                        </Card>
+                    </Col>
+                </Row>
         );   
     }
 }

@@ -7,6 +7,9 @@ export default {
       icon: 'Home',
     },
     {
+      divider: true,
+    },
+    {
       name: 'Register',
       url: '/auth/register',
       icon: 'UserPlus',
@@ -51,6 +54,9 @@ export default {
           url: '/channels/new'
         }
       ]
+    },
+    {
+      divider: true,
     },
     {
       name: 'UI Elements',
@@ -153,9 +159,6 @@ export default {
           url: '/apps/cms',
         },
       ],
-    },
-    {
-      divider: true,
     },
     {
       name: 'Widgets',
