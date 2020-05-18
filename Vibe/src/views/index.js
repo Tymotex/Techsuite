@@ -20,6 +20,7 @@ import SubNav from './pages/SubNav';
 import ChannelsAll from './pages/ChannelsAll';
 import ChannelsMy from './pages/ChannelsMy';
 import ChannelsNew from './pages/ChannelsNew';
+import Channel from './pages/Channel';
 import Profile from './pages/Profile';
 import Home from './pages/Home';
 import Register from './pages/Register';
@@ -31,7 +32,7 @@ import ProgressBars from './elements/ProgressBars';
 import PaginationPage from './elements/Pagination';
 import ErrorPage from './pages/404';
 
-// See React Router documentation for details: https://reacttraining.com/react-router/web/api/Route
+
 const pageList = [
   {
     name: 'Home',
@@ -52,6 +53,11 @@ const pageList = [
     name: 'Profile',
     path: '/profile',
     component: Profile,
+  },
+  {
+    name: 'Channel',
+    path: '/channel/:channelName',
+    component: Channel
   },
   {
     name: 'All Channels',

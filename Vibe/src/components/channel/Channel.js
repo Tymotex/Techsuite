@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { Card, CardBody } from 'reactstrap';
 
@@ -6,14 +7,18 @@ const Channel = ({ name, image, description, isPublic }) => {
     return (
         <Card>
             <CardBody className="display-flex">
-                <img
-                    src={image}
-                    style={{ width: 70, height: 70 }}
-                    alt="Responsive"
-                    aria-hidden={true}
-                />
+                <Link to={`/channel/${name}`}>
+                    <img
+                        src={image}
+                        style={{ width: 70, height: 70 }}
+                        alt="Responsive"
+                        aria-hidden={true}
+                    />
+                </Link>
                 <div className="m-l">
-                    <h2 className="h4">{name}</h2>
+                    <Link to="/">
+                        <h2 className="h4">{name}</h2>
+                    </Link>
                     {(isPublic) ? 
                         <em>Public Channel</em> :
                         <em>Private Channel</em>
