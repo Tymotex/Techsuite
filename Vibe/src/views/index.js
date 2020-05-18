@@ -56,7 +56,7 @@ const pageList = [
   },
   {
     name: 'Channel',
-    path: '/channel/:channelName',
+    path: '/channel/:channelID',
     component: Channel
   },
   {

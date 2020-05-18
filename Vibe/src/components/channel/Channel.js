@@ -3,11 +3,11 @@ import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { Card, CardBody } from 'reactstrap';
 
-const Channel = ({ name, image, description, isPublic }) => {
+const Channel = ({ channel_id, name, image, description, isPublic }) => {
     return (
         <Card>
             <CardBody className="display-flex">
-                <Link to={`/channel/${name}`}>
+                <Link to={`/channel/${channel_id}`}>
                     <img
                         src={image}
                         style={{ width: 70, height: 70 }}
@@ -16,7 +16,7 @@ const Channel = ({ name, image, description, isPublic }) => {
                     />
                 </Link>
                 <div className="m-l">
-                    <Link to="/">
+                    <Link to={`/channel/${channel_id}`}>
                         <h2 className="h4">{name}</h2>
                     </Link>
                     {(isPublic) ? 

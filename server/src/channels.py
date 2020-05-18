@@ -79,6 +79,7 @@ def channels_details(token, channel_id):
         raise AccessError(description="Authorised user is not a member of channel with channel_id")
 
     channel_name = selected_channel["name"]
+    channel_description = selected_channel["description"]
     channel_owners = []
     for owner in selected_channel["owner_members"]:
         channel_owners.append({
@@ -99,8 +100,9 @@ def channels_details(token, channel_id):
 
     return {
         'name': channel_name,
+        'description': channel_description,
         'owner_members': channel_owners,
-        'all_members': channel_members,
+        'all_members': channel_members
     }
 
 
@@ -394,9 +396,10 @@ def channels_list(token):
     }
     for each_channel in data_store["channels"]:
         if member in each_channel["all_members"]:
-            curr_channel_data = {}
-            curr_channel_data["channel_id"] = each_channel["channel_id"]
-            curr_channel_data["name"] = each_channel["name"]
+            curr_channel_data = {
+                "channel_id": each_channel["channel_id"],
+                "name": each_channel["name"]
+            }
             associated_channels.append(curr_channel_data)
     return {
         'channels': associated_channels
@@ -416,11 +419,12 @@ def channels_listall(token):
     data_store = get_data()
     all_channels = []
     for each_channel in data_store["channels"]:
-        curr_channel_data = {}
-        curr_channel_data["channel_id"] = each_channel["channel_id"]
-        curr_channel_data["name"] = each_channel["name"]
-        curr_channel_data["description"] = each_channel["description"]
-        curr_channel_data["is_public"] = each_channel["is_public"]
+        curr_channel_data = {
+            "channel_id": each_channel["channel_id"],
+            "name": each_channel["name"],
+            "description": each_channel["description"],
+            "is_public": each_channel["is_public"]
+        }
         all_channels.append(curr_channel_data)
     return {
         "channels": all_channels

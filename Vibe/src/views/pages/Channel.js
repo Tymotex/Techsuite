@@ -1,4 +1,7 @@
 import React from 'react';
+import axios from 'axios';
+import Cookie from 'js-cookie';
+import { BASE_URL } from '../../constants/api-routes';
 import {
     Row,
     Col,
@@ -14,6 +17,41 @@ import {
 } from 'reactstrap';
 
 class Channel extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            isLoading: false,
+            fetchSucceeded: false,
+            channel: {}
+        }
+    }
+
+    componentWillMount() {
+        this.setState({
+            isLoading: true
+        });
+        const currUserToken = Cookie.get("token");
+        if (currUserToken) {
+            axios.get(`${BASE_URL}/channels/details?token=${currUserToken}&channel_id=${this.props.match.params.channelID}`)
+                .then((res) => {
+                    this.setState({
+                        isLoading: false,
+                        fetchSucceeded: true,
+                        channel: res.data
+                    });
+                })
+                .catch((err) => {
+                    this.setState({
+                        isLoading: false,
+                        fetchSucceeded: false
+                    })
+                })
+        } else {
+            // TODO: how should this case be handled?
+            alert("TOKEN WAS NOT FOUND IN COOKIE");
+        }
+    }
+
     render() {
         const centerChildren = {
             width: "100%",
@@ -25,6 +63,8 @@ class Channel extends React.Component {
             margin: "2px"
         };
 
+        const { name, description, all_members, owner_members } = this.state.channel;
+        console.log(this.state.channel);
         return (
             <div>
                 <Row>
@@ -32,9 +72,10 @@ class Channel extends React.Component {
                         {/* Header card */}
                         <Card>
                             <CardBody>
-                                <h1>{this.props.match.params.channelName}</h1>
+                                <h1>{name}</h1>
                                 <p className="text-muted">
-                                    DISPLAY CHANNEL DETAILS HERE
+                                    {this.props.match.params.channelID}.
+                                    {description}
                                 </p>
                             </CardBody>
                         </Card>
