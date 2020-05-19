@@ -1,11 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import Cookie from 'js-cookie';
 import { Row, Col } from 'reactstrap';
 import { Channel } from '../channel';
 
 const ChannelList = ({ allChannels, myChannels, isLoading, fetchSucceeded, showAll }) => {
-    const currUserID = Cookie.get("user_id");
     return (
         <Row>
             {(showAll) ? 

@@ -1,8 +1,8 @@
 import React from 'react';
 import axios from 'axios';
 import Cookie from 'js-cookie';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faStar, faUser } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faStar, faUser } from '@fortawesome/free-solid-svg-icons';
 import { BASE_URL } from '../../constants/api-routes';
 import {
     Row,
@@ -17,6 +17,7 @@ import {
     Label,
     Button
 } from 'reactstrap';
+import { ChannelMessages } from '../../components/channel-messages';
 
 class Channel extends React.Component {
     constructor(props) {
@@ -123,7 +124,7 @@ class Channel extends React.Component {
                                 {/* Message log and form */}
                                 <Card>
                                     <CardBody>
-                                        FETCH MESSAGES AND DISPLAY THEM HERE. Style them with styles and format similar to Facebook messenger
+                                        <ChannelMessages />
                                     </CardBody>
 
                                     {/* Divider */}
