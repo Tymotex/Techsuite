@@ -10,8 +10,10 @@ class ChannelsAll extends Component {
         this.state = {
             isLoading: false,
             fetchSucceeded: false,
-            channels: []
-        }
+            allChannels: [],
+            myChannels: [],
+            showAll: true
+        };
     }
 
     componentWillMount() {
@@ -21,12 +23,23 @@ class ChannelsAll extends Component {
         const currUserToken = Cookie.get("token");
         if (currUserToken) {
             axios.get(`${BASE_URL}/channels/listall?token=${currUserToken}`)
-                .then((res) => {
-                    this.setState({
-                        isLoading: false,
-                        fetchSucceeded: true,
-                        channels: res.data.channels
-                    });
+                .then((allChannels) => {
+                    axios.get(`${BASE_URL}/channels/list?token=${currUserToken}`)
+                        .then((myChannels) => {
+                            console.log(allChannels.data)
+                            this.setState({
+                                isLoading: false,
+                                fetchSucceeded: true,
+                                allChannels: allChannels.data.channels,
+                                myChannels: myChannels.data.channels
+                            });
+                        })
+                        .catch((err) => {
+                            this.setState({
+                                isLoading: false,
+                                fetchSucceeded: false
+                            });
+                        });
                 })
                 .catch((err) => {
                     this.setState({
@@ -42,9 +55,11 @@ class ChannelsAll extends Component {
 
     render() {
         return (
-            <div>
-                <ChannelList {...this.state} />
-            </div>
+            (this.state.isLoading) ?
+                <p>Loading channels</p> :
+                (this.state.fetchSucceeded) ? 
+                    <ChannelList {...this.state} /> :
+                    <p>Fetch failed. Is the backend running?</p>
         );
     }
 }

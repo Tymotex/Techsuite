@@ -1,47 +1,47 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import Cookie from 'js-cookie';
 import { Row, Col } from 'reactstrap';
 import { Channel } from '../channel';
 
-const ChannelList = (props) => {
+const ChannelList = ({ allChannels, myChannels, isLoading, fetchSucceeded, showAll }) => {
+    const currUserID = Cookie.get("user_id");
     return (
-        <div>
-            {/* TODO: Show a loading message or backdrop */}
-            {(props.isLoading) ? 
-                <p>Loading all channels...</p> :
-                ""
+        <Row>
+            {(showAll) ? 
+                (allChannels.length > 0) ? 
+                    allChannels.map((channel, i) => 
+                        <Col key={i} md={6}>
+                            <Channel {...channel} />
+                        </Col>
+                    ) :
+                    <p>There are currently no channels!</p> :
+                (myChannels.length > 0) ?
+                    myChannels.map((channel, i) => 
+                        <Col key={i} md={6}>
+                            <Channel {...channel} member_of={true} />
+                        </Col>
+                    ) :
+                    <p>You currently own no channels!</p>
             }
-            
-            {(props.fetchSucceeded) ?
-                <Row>
-                    {/* Display all the channels returned by the server OR show a message if there's none  */}
-                    {(props.channels.length > 0) ? 
-                        props.channels.map((channel, i) => 
-                            <Col md={6}>
-                                <Channel key={i} {...channel} />
-                            </Col>
-                        ) :
-                        /* No channels exist in the database */
-                        "There are currently no channels!" 
-                    }
-                </Row> :
-                /* Show an error message if the API failed */
-                "Something went wrong! DevMessenger couldn't fetch the channels :("
-            }
-        </div>
+        </Row> 
     );
 }
 
 ChannelList.propTypes = {
     isLoading: PropTypes.bool,
     fetchSucceeded: PropTypes.bool,
-    channels: PropTypes.array
+    allChannels: PropTypes.array,
+    myChannels: PropTypes.array,
+    showAll: PropTypes.bool
 };
 
 ChannelList.defaultProps = {
     isLoading: false,
     fetchSucceeded: false,
-    channels: []
+    allChannels: [],
+    myChannels: [],
+    showAll: true
 }
 
 export default ChannelList;

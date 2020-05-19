@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Switch, Route, Redirect } from 'react-router-dom';
-import { NavItem, UncontrolledDropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
+import { NavItem, UncontrolledDropdown, DropdownToggle, DropdownMenu, DropdownItem, Button } from 'reactstrap';
 import { Header, SidebarNav, Footer, PageContent, Avatar, Chat, PageAlert, Page } from '../vibe';
 import Logo from '../assets/images/dev-messenger-icon.png';
 import avatar1 from '../assets/images/avatar1.png';
@@ -109,33 +109,60 @@ class HeaderNav extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      profileImgURL: ""
-    }
+      profileImgURL: "",
+      username: "",
+      triggerLogout: false
+    };
+    this.logout = this.logout.bind(this);
   }
 
   // Make an API call to get the profile image URL to display on the top navbar
   // if the user is signed in
-  componentWillMount() {
+  componentDidMount() {
     const currUserToken = Cookie.get("token");
+    const currUserID = Cookie.get("user_id");
     if (currUserToken) {
-      axios.get(`${BASE_URL}/users/profileimage?token=${currUserToken}`)
+      axios.get(`${BASE_URL}/users/profile?token=${currUserToken}&u_id=${currUserID}`)
         .then((res) => {
-          const url = res.data.profile_img_url
+          console.log("Fetched details");
           this.setState({
-            profileImgURL: url
+            username: `${res.data.name_first} ${res.data.name_last}`,
+            profileImgURL: res.data.profile_img_url,
+            triggerLogout: false
           })
         })
         .catch((err) => {
           alert(err);
-        })
+        });
     }
   }
 
+  logout() {
+    console.log("CLEARED COOKIES. User is now logged out");
+    Cookie.remove("token");
+    Cookie.remove("user_id");
+    this.setState({
+      triggerLogout: true
+    });
+  }
+
   render() {
+    console.log(this.state);
     const paddedNavItem = {
       paddingTop: "10px",
       paddingRight: "10px"
     };
+
+    if (this.state.triggerLogout === true) {
+      console.log("Redirecting");
+      this.setState({
+        triggerLogout: false
+      });
+      return (
+        <Redirect to="/" />
+      )
+    }
+
     return (
       <React.Fragment>
         {/* SEARCH BAR: */}
@@ -149,7 +176,7 @@ class HeaderNav extends React.Component {
         </NavItem> */}
         {/* PROFILE DROPDOWN: */}
         <NavItem style={paddedNavItem}>
-          Welcome {"USER NAME HERE"}
+          Welcome <strong>{this.state.username}</strong>
         </NavItem>
         <UncontrolledDropdown nav inNavbar>
           <DropdownToggle nav>
@@ -160,7 +187,9 @@ class HeaderNav extends React.Component {
             <DropdownItem>View my profile</DropdownItem>
             <DropdownItem>Edit my profile</DropdownItem>
             <DropdownItem divider />
-            <DropdownItem>Log out</DropdownItem>
+            <DropdownItem>
+              Log out
+            </DropdownItem>
           </DropdownMenu>
         </UncontrolledDropdown>
       </React.Fragment>

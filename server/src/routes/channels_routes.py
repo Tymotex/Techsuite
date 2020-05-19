@@ -23,7 +23,7 @@ def handle_channel_details():
         HTTP Route: /channels/details
         HTTP Method: GET
         Params: (token, channel_id)
-        Returns JSON: { name, owner_members, all_members }
+        Returns JSON: { name, description, owner_members, all_members }
     """
     token = request.args.get("token")
     channel_id = int(request.args.get("channel_id"))
@@ -136,6 +136,7 @@ def handle_channels_create():
             channels_id
         }
     """
+    import pprint
     request_data = request.get_json()
     token = request_data["token"]
     name = request_data["name"]

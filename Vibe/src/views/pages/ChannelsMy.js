@@ -10,24 +10,36 @@ class ChannelsMy extends Component {
         this.state = {
             isLoading: false,
             fetchSucceeded: false,
-            channels: []
-        }
-	}
-	
-	componentWillMount() {
+            allChannels: [],
+            myChannels: [],
+            showAll: false
+        };
+    }
+
+    componentWillMount() {
         this.setState({
             isLoading: true
         });
         const currUserToken = Cookie.get("token");
         if (currUserToken) {
-            axios.get(`${BASE_URL}/channels/list?token=${currUserToken}`)
-                .then((res) => {
-					console.log("Successfully fetched all channels owned by me");
-                    this.setState({
-                        isLoading: false,
-                        fetchSucceeded: true,
-                        channels: res.data.channels
-                    });
+            axios.get(`${BASE_URL}/channels/listall?token=${currUserToken}`)
+                .then((allChannels) => {
+                    axios.get(`${BASE_URL}/channels/list?token=${currUserToken}`)
+                        .then((myChannels) => {
+                            console.log(allChannels.data)
+                            this.setState({
+                                isLoading: false,
+                                fetchSucceeded: true,
+                                allChannels: allChannels.data.channels,
+                                myChannels: myChannels.data.channels
+                            });
+                        })
+                        .catch((err) => {
+                            this.setState({
+                                isLoading: false,
+                                fetchSucceeded: false
+                            });
+                        });
                 })
                 .catch((err) => {
                     this.setState({
@@ -41,13 +53,15 @@ class ChannelsMy extends Component {
         }
     }
 
-	render() {
-		return (
-			<div>
-				<ChannelList {...this.state} />
-			</div>
-		);
-	}
+    render() {
+        return (
+            (this.state.isLoading) ?
+                <p>Loading channels</p> :
+                (this.state.fetchSucceeded) ? 
+                    <ChannelList {...this.state} /> :
+                    <p>Fetch failed. Is the backend running?</p>
+        );
+    }
 }
 
 export default ChannelsMy;

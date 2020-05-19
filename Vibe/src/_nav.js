@@ -35,19 +35,11 @@ export default {
       children: [
         {
           name: 'All Channels',
-          url: '/channels/all',
-          badge: {
-            variant: 'success',
-            text: '10',
-          },
+          url: '/channels/all'
         },
         {
           name: 'My Channels',
-          url: '/channels/my',
-          badge: {
-            variant: 'success',
-            text: '3',
-          },
+          url: '/channels/my'
         },
         {
           name: 'Create a Channel',

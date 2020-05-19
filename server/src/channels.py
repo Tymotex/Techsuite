@@ -52,10 +52,11 @@ def channels_details(token, channel_id):
         Given a Channel with ID channel_id that the authorised user is
         part of, provide basic details about the channel
 
-        returns dictionary with items 'name', 'owner_members', 'all_members'
+        returns dictionary with items 'name', 'description', 'owner_members', 'all_members'
 
         return {
             'name': channel_name,
+            'description': description
             'owner_members': channel_owners,
             'all_members': channel_members,
         }
@@ -176,14 +177,14 @@ def channels_messages(token, channel_id, start):
 
 def channels_leave(token, channel_id):
     """
-    Given a channel ID, the user removed as a member of this channel
+        Given a channel ID, the user removed as a member of this channel
 
-    parameters:  (token, channel_id)
-    types:
-    token        str
-    channel_id   int
+        parameters:  (token, channel_id)
+        types:
+        token        str
+        channel_id   int
 
-    return {}
+        return {}
     """
     # check parameters are all valid and raise exception if they aren't
 
@@ -227,20 +228,20 @@ def channels_leave(token, channel_id):
 
 def channels_join(token, channel_id):
     """
-    Given a channel_id of a channel that the authorised user can join, adds them to that channel
+        Given a channel_id of a channel that the authorised user can join, adds them to that channel
 
-    parameters:  (token, channel_id)
-    types:
-    token        str
-    channel_id   int
+        parameters:  (token, channel_id)
+        types:
+        token        str
+        channel_id   int
 
-    return {}
+        return {}
     """
     # check parameters are all valid and raise exception if they aren't
 
     data = get_data()
     verify_token(token)
-    #identify user from token
+    # identify user from token
     auth_user = get_user_from_token(data, token)
     if auth_user is None:
         raise AccessError(description="Invalid Token")
@@ -275,13 +276,13 @@ def channels_join(token, channel_id):
 
 def channels_addowner(token, channel_id, u_id):
     """
-    Make user with user id u_id an owner of this channel
-    Returns: empty dict
-    Errors: InputError on invalid channel_id
-            InputError when u_id already has ownership over a
-            channel before calling channel_addowner
-            AccessError when the user isn't an owner of the
-            slackr or an owner of this channel
+        Make user with user id u_id an owner of this channel
+        Returns: empty dict
+        Errors: InputError on invalid channel_id
+                InputError when u_id already has ownership over a
+                channel before calling channel_addowner
+                AccessError when the user isn't an owner of the
+                slackr or an owner of this channel
     """
     data = get_data()
     verify_token(token)
@@ -321,19 +322,19 @@ def channels_addowner(token, channel_id, u_id):
 
 def channels_removeowner(token, channel_id, u_id):
     """
-    Desc:    Remove user with user id u_id an owner of this channel
-    Params:  (token, channel_id, u_id)
-    Returns: empty dict
-    Errors: InputError on invalid channel_id
-            InputError when u_id DOESN'T already have ownership over
-            a channel before calling channel_removeowner
-            AccessError when the user isn't an owner of the
-            slackr or an owner of this channel
+        Desc:    Remove user with user id u_id an owner of this channel
+        Params:  (token, channel_id, u_id)
+        Returns: empty dict
+        Errors: InputError on invalid channel_id
+                InputError when u_id DOESN'T already have ownership over
+                a channel before calling channel_removeowner
+                AccessError when the user isn't an owner of the
+                slackr or an owner of this channel
 
-    TYPES:
-    token             str
-    channel_id        int
-    u_id              int
+        TYPES:
+        token             str
+        channel_id        int
+        u_id              int
     """
     data = get_data()
     verify_token(token)
@@ -374,13 +375,13 @@ def channels_removeowner(token, channel_id, u_id):
 
 def channels_list(token):
     """
-    Provide a list of all channels (and their associated details) that the
-    authorised user is part of
-    Parameters:
-        token   str
-    Returns: {
-        List of dictionaries, where each dictionary contains types { channel_id, name }
-        channels    list(dict())
+        Provide a list of all channels (and their associated details) that the
+        authorised user is part of
+        Parameters:
+            token   str
+        Returns: {
+            List of dictionaries, where each dictionary contains types { channel_id, name }
+            channels    list(dict())
     }
     """
     verify_token(token)
@@ -400,6 +401,10 @@ def channels_list(token):
                 "channel_id": each_channel["channel_id"],
                 "name": each_channel["name"]
             }
+            if member in each_channel["owner_members"]:
+                curr_channel_data["owner_of"] = True
+            else:
+                curr_channel_data["owner_of"] = False
             associated_channels.append(curr_channel_data)
     return {
         'channels': associated_channels
@@ -407,16 +412,17 @@ def channels_list(token):
 
 def channels_listall(token):
     """
-    Provide a list of all channels (and their associated details)
-    Parameters:
-        token   str
-    Returns: {
-        List of dictionaries, where each dictionary contains types { channel_id, name }
-        channels    list(dict())
-    }
+        Provide a list of all channels (and their associated details)
+        Parameters:
+            token   str
+        Returns: {
+            List of dictionaries, where each dictionary contains types { channel_id, name }
+            channels    list(dict())
+        }
     """
     verify_token(token)
     data_store = get_data()
+    user = get_user_from_token(data_store, token)
     all_channels = []
     for each_channel in data_store["channels"]:
         curr_channel_data = {
@@ -425,6 +431,12 @@ def channels_listall(token):
             "description": each_channel["description"],
             "is_public": each_channel["is_public"]
         }
+        for each_member in each_channel["all_members"]:
+            if each_member["u_id"] == user["u_id"]:
+                curr_channel_data["member_of"] = True
+                for each_owner in each_channel["owner_members"]:
+                    if each_owner["u_id"] == user["u_id"]:
+                        curr_channel_data["owner_of"] = True 
         all_channels.append(curr_channel_data)
     return {
         "channels": all_channels
