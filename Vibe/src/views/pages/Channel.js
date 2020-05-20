@@ -74,7 +74,7 @@ class Channel extends React.Component {
                 (this.state.fetchSucceeded) ?
                     <div>
                         <Row>
-                            <Col md={8}>
+                            <Col md={12} xl={9}>
                                 {/* Header card */}
                                 <Card>
                                     <CardBody>
@@ -124,7 +124,7 @@ class Channel extends React.Component {
                                 {/* Message log and form */}
                                 <Card>
                                     <CardBody>
-                                        <ChannelMessages />
+                                        <ChannelMessages channelID={this.props.match.params.channelID} />
                                     </CardBody>
 
                                     {/* Divider */}
@@ -133,17 +133,11 @@ class Channel extends React.Component {
                                     </Container>
                                     {/* Form */}
                                     <CardBody>
-                                        <Form>
-                                            <FormGroup>
-                                                <Label for="message-send-textarea">Send a message:</Label>
-                                                <Input type="textarea" name="message" id="message-send-textarea" />
-                                            </FormGroup>
-                                            <Button>Send</Button>
-                                        </Form>
+                                        Something could go here? Maybe something important like a meeting summary?
                                     </CardBody>
                                 </Card>
                             </Col>
-                            <Col md={4}>
+                            <Col md={12} xl={3}>
                                 <Card>
                                     <CardHeader>Side Widgets here?</CardHeader>
                                     <CardBody>

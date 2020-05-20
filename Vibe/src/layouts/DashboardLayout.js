@@ -124,7 +124,6 @@ class HeaderNav extends React.Component {
     if (currUserToken) {
       axios.get(`${BASE_URL}/users/profile?token=${currUserToken}&u_id=${currUserID}`)
         .then((res) => {
-          console.log("Fetched details");
           this.setState({
             username: `${res.data.name_first} ${res.data.name_last}`,
             profileImgURL: res.data.profile_img_url,
@@ -147,14 +146,12 @@ class HeaderNav extends React.Component {
   }
 
   render() {
-    console.log(this.state);
     const paddedNavItem = {
       paddingTop: "10px",
       paddingRight: "10px"
     };
 
     if (this.state.triggerLogout === true) {
-      console.log("Redirecting");
       this.setState({
         triggerLogout: false
       });

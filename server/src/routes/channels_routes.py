@@ -36,7 +36,7 @@ def handle_channel_messages():
         HTTP Method: GET
         Params: (token, channel_id, start)
         Returns JSON: {
-            messages: [{ message_id, u_id, message, time_created, reacts, is_pinned }, ...],
+            messages: [{ message_id, u_id, message, time_created, is_author, reacts, is_pinned }, ...],
             start,
             end
         }

@@ -126,43 +126,35 @@ def channels_messages(token, channel_id, start):
         end is an int
     """
     # check parameters are all valid and raise exception if they aren't
-
     # add u_id, associated first name and last name into channel_id dictionary (or storage)
-
     data = get_data()
     verify_token(token)
-    
     auth_user = get_user_from_token(data, token)
     if auth_user is None:
         raise AccessError(description="Invalid Token")
+    
     return_messages = {
         'messages': [],
-        'start': start,
+        'start': start
     }
-    # messages should be stored in a list
-    # get channel with channel_id
+    
     curr_channel = select_channel(data, channel_id)
-
     if curr_channel is None:
         raise InputError(description="Channel ID is not a valid channel")
-
     if is_user_member(auth_user, curr_channel) is False:
         raise AccessError(description="Authorised user is not a member of channel with channel_id")
 
-    # loop through 50 message dictionaries of list starting from start index
+    # Loop through 50 message dictionaries of list starting from start index
     messsages_list = curr_channel["messages"]
-
-    if messsages_list == []:
+    if not messsages_list:
         return_messages["end"] = -1
         return return_messages
-
-    # raise error if start is greater than or equal to the total number of messages in the channel
+    # Raise error if start is greater than or equal to the total number of messages in the channel
     if start >= len(messsages_list):
-        error = "start is greater than or equal to the total number of messages in the channel"
-        raise InputError(description=error)
-
+        raise InputError(description="'Start' is greater than or equal to the total number of messages in the channel")
     from_start = 0
     for message in messsages_list[start:]:
+        message["is_author"] = True if message["u_id"] == auth_user["u_id"] else False
         return_messages["messages"].append(message)
         from_start += 1
         if from_start == 50:

@@ -1,5 +1,6 @@
 src/deprecated/
 src/data.bin
 src/devmess/
+src/seeds/
 src/.env
 src/__pycache__/

@@ -12,6 +12,7 @@ from dotenv import load_dotenv
 from routes.auth_routes import auth_router
 from routes.channels_routes import channels_router
 from routes.users_routes import users_router
+from routes.message_routes import message_router
 
 # Source files
 import messages
@@ -30,6 +31,7 @@ CORS(APP)
 APP.register_blueprint(auth_router)
 APP.register_blueprint(channels_router)
 APP.register_blueprint(users_router)
+APP.register_blueprint(message_router)
 
 # HTTP error handling:
 def default_error_handler(err):
