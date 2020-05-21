@@ -2,6 +2,7 @@ from flask import Blueprint, request, jsonify
 from dotenv import load_dotenv
 import os
 import users
+import util
 
 # Globals and config:
 load_dotenv()
@@ -56,11 +57,11 @@ def handle_users_all():
         HTTP Method: GET
         Params: (token)
         Returns JSON: {
-            users: { u_id, email, name_first, name_last, profile_img_url }
+            users: [{ u_id, email, name_first, name_last, profile_img_url }, ...]
         }
     """
     token = request.args.get("token")
-    return jsonify(other.users_all(token))
+    return jsonify(users.users_all(token))
 
 # ===== User Profile Picture Handling =====
 @users_router.route("/users/profileimage")
@@ -83,8 +84,8 @@ def handle_user_profile_uploadphoto():
     y_start = int(request_data["y_start"])
     x_end = int(request_data["x_end"])
     y_end = int(request_data["y_end"])
-    data = other.get_data()
-    u_id = other.get_user_from_token(data, token)["u_id"]
+    data = util.get_data()
+    u_id = util.get_user_from_token(data, token)["u_id"]
     img_filename = download_img_and_crop(img_url, u_id, x_start, y_start, x_end, y_end)
 
     image_endpoint = "http://localhost:{0}/images/{1}".format(os.getenv("port"), img_filename)

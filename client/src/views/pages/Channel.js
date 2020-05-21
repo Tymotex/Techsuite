@@ -18,6 +18,8 @@ import {
     Button
 } from 'reactstrap';
 import { ChannelMessages } from '../../components/channel-messages';
+import { UserInvite } from '../../components/user-invite';
+import { ChannelLeave } from '../../components/channel-leave';
 
 class Channel extends React.Component {
     constructor(props) {
@@ -141,7 +143,6 @@ class Channel extends React.Component {
                                 <Card>
                                     <CardHeader>Side Widgets here?</CardHeader>
                                     <CardBody>
-                                        <h2>{this.props.match.params.channelName}</h2>
                                         Maybe something that can track stats relevant to this channel.
                                         Maybe a meme generator, an image editor, or some other useful utility.
                                     </CardBody>
@@ -149,19 +150,13 @@ class Channel extends React.Component {
                                 <Card>
                                     <CardHeader>Invite Someone</CardHeader>
                                     <CardBody>
-                                        <Form>
-                                            <FormGroup>
-                                                <Label for="exampleSelectMulti">Select Multiple</Label>
-                                                <Input type="select" name="selectMulti" id="exampleSelectMulti" multiple>
-                                                    <option>1</option>
-                                                    <option>2</option>
-                                                    <option>3</option>
-                                                    <option>4</option>
-                                                    <option>5</option>
-                                                </Input>
-                                                <Button>Invite</Button>
-                                            </FormGroup>
-                                        </Form>
+                                        <UserInvite channelName={name} />
+                                    </CardBody>
+                                </Card>
+                                <Card>
+                                    <CardHeader>Leave This Channel</CardHeader>
+                                    <CardBody>
+                                        <ChannelLeave channelName={name} />
                                     </CardBody>
                                 </Card>
                             </Col>
