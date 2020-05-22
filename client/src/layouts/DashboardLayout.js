@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import { Switch, Route, Redirect } from 'react-router-dom';
-import { NavItem, UncontrolledDropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
+import { Switch, Route, Redirect, NavLink } from 'react-router-dom';
+import { NavItem, UncontrolledDropdown, DropdownToggle, DropdownMenu, DropdownItem, Button } from 'reactstrap';
 import { Header, SidebarNav, Footer, PageContent, Avatar, Chat, PageAlert, Page } from '../vibe';
 import Logo from '../assets/images/techsuite-icon.png';
 import avatar1 from '../assets/images/avatar1.png';
@@ -12,6 +12,7 @@ import handleKeyAccessibility, { handleClickAccessibility } from '../vibe/helper
 import axios from 'axios';
 import Cookie from 'js-cookie';
 import { BASE_URL } from '../constants/api-routes';
+import { UserPlus, LogIn, LogOut, Sign } from 'react-feather';
 
 const MOBILE_SIZE = 992;
 
@@ -105,13 +106,14 @@ export default class DashboardLayout extends Component {
   }
 }
 
+// Header definition:
 class HeaderNav extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      loggedIn: false,
       profileImgURL: "",
-      username: "",
-      triggerLogout: false
+      username: ""
     };
     this.logout = this.logout.bind(this);
   }
@@ -125,10 +127,10 @@ class HeaderNav extends React.Component {
       axios.get(`${BASE_URL}/users/profile?token=${currUserToken}&u_id=${currUserID}`)
         .then((res) => {
           this.setState({
+            loggedIn: true,
             username: `${res.data.name_first} ${res.data.name_last}`,
-            profileImgURL: res.data.profile_img_url,
-            triggerLogout: false
-          })
+            profileImgURL: res.data.profile_img_url
+          });
         })
         .catch((err) => {
           alert(err);
@@ -140,9 +142,6 @@ class HeaderNav extends React.Component {
     console.log("CLEARED COOKIES. User is now logged out");
     Cookie.remove("token");
     Cookie.remove("user_id");
-    this.setState({
-      triggerLogout: true
-    });
   }
 
   render() {
@@ -151,45 +150,47 @@ class HeaderNav extends React.Component {
       paddingRight: "10px"
     };
 
-    if (this.state.triggerLogout === true) {
-      this.setState({
-        triggerLogout: false
-      });
-      return (
-        <Redirect to="/" />
-      )
-    }
-
     return (
       <React.Fragment>
-        {/* SEARCH BAR: */}
-        {/* <NavItem>
-          <form className="form-inline">
-            <input className="form-control mr-sm-1" type="search" placeholder="Search" aria-label="Search" />
-            <Button type="submit" className="d-none d-sm-block">
-              <i className="fa fa-search" />
-            </Button>
-          </form>
-        </NavItem> */}
         {/* PROFILE DROPDOWN: */}
-        <NavItem style={paddedNavItem}>
-          Welcome <strong>{this.state.username}</strong>
-        </NavItem>
-        <UncontrolledDropdown nav inNavbar>
-          <DropdownToggle nav>
-            <Avatar size="small" color="blue" image={this.state.profileImgURL} initials="  " />
-            {/* TODO: USER PROFILE IMAGE HERE! */}
-          </DropdownToggle>
-          <DropdownMenu right>
-            <DropdownItem>View my profile</DropdownItem>
-            <DropdownItem>Edit my profile</DropdownItem>
-            <DropdownItem divider />
-            <DropdownItem>
-              Log out
-            </DropdownItem>
-          </DropdownMenu>
-        </UncontrolledDropdown>
+        {(this.state.loggedIn) ? 
+          <>
+            <NavItem style={paddedNavItem}>
+              Welcome <strong>{this.state.username}</strong>
+            </NavItem>
+            <AvatarDropdown profileImgURL={this.state.profileImgURL} />
+          </> :
+          <>
+            <NavItem style={paddedNavItem}>
+              <NavLink to="/auth/login"><Button color="primary"><LogIn /> Log In</Button></NavLink>
+            </NavItem> 
+            <NavItem style={paddedNavItem}>
+              <NavLink to="/auth/register"><Button color="primary"><UserPlus /> Register</Button></NavLink>
+            </NavItem> 
+          </>
+        }
+        
       </React.Fragment>
     );
   }
 }
+
+const AvatarDropdown = (props) => {
+  const { profileImgURL } = props;
+  return (
+    <UncontrolledDropdown nav inNavbar>
+      <DropdownToggle nav>
+        <Avatar size="small" color="black" image={profileImgURL} />
+      </DropdownToggle>
+      <DropdownMenu right>
+        <DropdownItem>View my profile</DropdownItem>
+        <DropdownItem>Edit my profile</DropdownItem>
+        <DropdownItem divider />
+        <DropdownItem>
+          Log out
+        </DropdownItem>
+      </DropdownMenu>
+    </UncontrolledDropdown>
+  );
+}
+

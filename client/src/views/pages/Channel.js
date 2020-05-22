@@ -1,165 +1,75 @@
 import React from 'react';
-import axios from 'axios';
-import Cookie from 'js-cookie';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faStar, faUser } from '@fortawesome/free-solid-svg-icons';
-import { BASE_URL } from '../../constants/api-routes';
-import {
-    Row,
-    Col,
-    Card,
-    CardHeader,
-    CardBody,
-    Container
-} from 'reactstrap';
+import { Row, Col, Card, CardHeader, CardBody, Container, Button, Form, FormGroup, Input } from 'reactstrap';
 import { ChannelMessages } from '../../components/channel-messages';
 import { UserInvite } from '../../components/user-invite';
 import { ChannelLeave } from '../../components/channel-leave';
+import { ChannelDetails } from '../../components/channel-details';
 
-class Channel extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            isLoading: false,
-            fetchSucceeded: false,
-            channel: {}
-        };
-    }
+const Channel = (props) => {
+    const centerChildren = {
+        width: "100%",
+        textAlign: "center"
+    };
+    const chatDivider = {
+        width: "97%",
+        display: "inline-block",
+        margin: "2px"
+    };
 
-    componentWillMount() {
-        this.setState({
-            isLoading: true
-        });
-        const currUserToken = Cookie.get("token");
-        if (currUserToken) {
-            axios.get(`${BASE_URL}/channels/details?token=${currUserToken}&channel_id=${this.props.match.params.channelID}`)
-                .then((res) => {
-                    this.setState({
-                        isLoading: false,
-                        fetchSucceeded: true,
-                        channel: res.data
-                    });
-                })
-                .catch((err) => {
-                    this.setState({
-                        isLoading: false,
-                        fetchSucceeded: false
-                    })
-                })
-        } else {
-            // TODO: how should this case be handled?
-            alert("TOKEN WAS NOT FOUND IN COOKIE");
-        }
-    }
+    return (
+        <div>
+            <Row>
+                <Col md={12} xl={9}>
+                    {/* Header card */}
+                    <Card>
+                        <CardBody>
+                            <ChannelDetails />
+                        </CardBody>
+                    </Card>
+                    <hr />
+                    {/* Message log and form */}
+                    <Card>
+                        <CardBody>
+                            <ChannelMessages channelID={props.match.params.channelID} />
+                        </CardBody>
 
-    render() {
-        const centerChildren = {
-            width: "100%",
-            textAlign: "center"
-        };
-        const chatDivider = {
-            width: "97%",
-            display: "inline-block",
-            margin: "2px"
-        };
-
-        const { name, description, all_members, owner_members } = this.state.channel;
-        const currUserID = Cookie.get("user_id");
-        return (
-            (this.state.isLoading) ?
-                <p>LOADING</p> :
-                (this.state.fetchSucceeded) ?
-                    <div>
-                        <Row>
-                            <Col md={12} xl={9}>
-                                {/* Header card */}
-                                <Card>
-                                    <CardBody>
-                                        <h1>{name}</h1>
-                                        <p className="text-muted">
-                                            {description}
-                                        </p>
-                                        <h3>Owners:</h3>
-                                        <ul>
-                                            {owner_members.map((eachMember, i) => (
-                                                <li key={i}>
-                                                    <FontAwesomeIcon icon={faStar} />  {eachMember.name_first} {eachMember.name_last}
-                                                    {(currUserID === eachMember.u_id) ?
-                                                        <span> (You)</span> :
-                                                        ""
-                                                    }
-                                                </li>
-                                            ))}
-                                        </ul>
-                                        <h3>All Members:</h3>
-                                        <ul>
-                                            {all_members.map((eachMember, i) => {
-                                                let isOwner = false;
-                                                owner_members.forEach((owner) => {
-                                                    if (owner.u_id === eachMember.u_id) {
-                                                        isOwner = true;
-                                                    }
-                                                });
-                                                return (
-                                                    <li key={i}>
-                                                        {(isOwner) ?
-                                                            <FontAwesomeIcon icon={faStar} /> :
-                                                            <FontAwesomeIcon icon={faUser} />
-                                                        } {eachMember.name_first} {eachMember.name_last}
-                                                        {(currUserID === eachMember.u_id) ?
-                                                            <span> (You)</span> :
-                                                            ""
-                                                        }
-                                                    </li>
-                                                );
-                                            }
-                                            )}
-                                        </ul>
-                                    </CardBody>
-                                </Card>
-                                <hr />
-                                {/* Message log and form */}
-                                <Card>
-                                    <CardBody>
-                                        <ChannelMessages channelID={this.props.match.params.channelID} />
-                                    </CardBody>
-
-                                    {/* Divider */}
-                                    <Container style={centerChildren}>
-                                        <hr style={chatDivider} />
-                                    </Container>
-                                    {/* Form */}
-                                    <CardBody>
-                                        Something could go here? Maybe something important like a meeting summary?
-                                    </CardBody>
-                                </Card>
-                            </Col>
-                            <Col md={12} xl={3}>
-                                <Card>
-                                    <CardHeader>Side Widgets here?</CardHeader>
-                                    <CardBody>
-                                        Maybe something that can track stats relevant to this channel.
-                                        Maybe a meme generator, an image editor, or some other useful utility.
-                                    </CardBody>
-                                </Card>
-                                <Card>
-                                    <CardHeader>Invite Someone</CardHeader>
-                                    <CardBody>
-                                        <UserInvite channelName={name} />
-                                    </CardBody>
-                                </Card>
-                                <Card>
-                                    <CardHeader>Leave This Channel</CardHeader>
-                                    <CardBody>
-                                        <ChannelLeave channelName={name} />
-                                    </CardBody>
-                                </Card>
-                            </Col>
-                        </Row>
-                    </div> :
-                    <p>FETCH FAILED. Is the backend running?</p>
-        )
-    }
+                        {/* Divider */}
+                        <Container style={centerChildren}>
+                            <hr style={chatDivider} />
+                        </Container>
+                        {/* Form */}
+                        <CardBody>
+                            Something could go here? Maybe something important like a meeting summary?
+                        </CardBody>
+                    </Card>
+                </Col>
+                <Col md={12} xl={3}>
+                    <Card>
+                        <CardHeader>Side Widgets here?</CardHeader>
+                        <CardBody>
+                            Maybe something that can track stats relevant to this channel.
+                            Maybe a meme generator, an image editor, or some other useful utility.
+                        </CardBody>
+                    </Card>
+                    <Card>
+                        <CardHeader>Channel Functions</CardHeader>
+                        <CardBody>
+                            <UserInvite /> <ChannelLeave />
+                        </CardBody>
+                    </Card>
+                    <Card>
+                        <CardHeader>Search Channel Messages</CardHeader>
+                        <Form className="form-inline">
+                            <Input className="form-control" type="search" placeholder="Search" aria-label="Search" />
+                            <Button type="submit">
+                                <i className="fa fa-search" />
+                            </Button>
+                        </Form>
+                    </Card>
+                </Col>
+            </Row>
+        </div>
+    )
 }
 
 export default Channel;

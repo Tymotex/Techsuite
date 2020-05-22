@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Card, CardBody, Row, Col, Button } from 'reactstrap';
+import { Card, CardBody, Row, Col } from 'reactstrap';
 
 // Font-awesome icons:
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -24,25 +24,8 @@ const Showcase = () => {
           <div className="home-hero" style={heroStyles}>
             <h1>Welcome to Techsuite.</h1>
             <p className="text-muted">
-              Chat with fellow software engineers!
+              Chat and collaborate with fellow software engineers!
             </p>
-          </div>
-        </Col>
-        {/* TEMPORARY BUTTONS! */}
-        <Col md={3}>
-          <br />
-          <br />
-          <br />
-          <div className="text-center">
-            <Button href="/auth/register" block color="primary" size="lg">Register</Button>
-          </div>
-        </Col>
-        <Col md={3}>
-          <br />
-          <br />
-          <br />
-          <div className="text-center">
-            <Button href="/auth/login" block color="primary" size="lg">Sign In</Button>
           </div>
         </Col>
       </Row>

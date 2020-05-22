@@ -8,8 +8,7 @@ import PropTypes from 'prop-types';
 
 class UserInvite extends React.Component {
     static propTypes = {
-        match: PropTypes.object.isRequired,
-        channelName: PropTypes.string.isRequired
+        match: PropTypes.object.isRequired
     }
 
     constructor(props) {
@@ -90,7 +89,7 @@ class UserInvite extends React.Component {
             <>
                 <Button color="primary" onClick={this.toggleModal}>Invite Someone</Button>
                 <Modal isOpen={this.state.modal} toggle={this.toggleModal}>
-                    <ModalHeader toggle={this.toggleModal}>Invite someone to <em>{this.props.channelName}</em></ModalHeader>
+                    <ModalHeader toggle={this.toggleModal}>Invite someone to this channel</ModalHeader>
                     <Form onSubmit={this.inviteUser}>
                         <ModalBody>
                             Select a user:

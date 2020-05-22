@@ -10,26 +10,6 @@ export default {
       divider: true,
     },
     {
-      name: 'Register',
-      url: '/auth/register',
-      icon: 'UserPlus',
-    },
-    {
-      name: 'Log In',
-      url: '/auth/login',
-      icon: 'LogIn',
-    },
-    {
-      name: 'Log Out',
-      url: '/auth/logout',
-      icon: 'LogOut'
-    },
-    {
-      name: 'My Profile',
-      url: '/profile',
-      icon: 'Code',
-    },
-    {
       name: 'Channels',
       icon: 'Activity',
       children: [

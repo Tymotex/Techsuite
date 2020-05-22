@@ -61,7 +61,7 @@ class UserInvite extends React.Component {
                 <Modal isOpen={this.state.modal} toggle={this.toggleModal}>
                     <ModalHeader toggle={this.toggleModal}>Leave {}</ModalHeader>
                     <ModalBody>
-                        Are you sure you want to leave <em>{this.props.channelName}</em>?
+                        Are you sure you want to leave this channel?
                     </ModalBody>
                     {/* Buttons in the modal footer: */}
                     <ModalFooter>
