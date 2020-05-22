@@ -6,6 +6,9 @@ import { Form, FormGroup, Button, Input } from 'reactstrap';
 import Message from './Message';
 import { BASE_URL } from '../../constants/api-routes';
 
+import openSocket from 'socket.io-client';
+const socket = openSocket('http://localhost:3001');
+
 class ChannelMessages extends React.Component {
     constructor(props) {
         super(props);
@@ -15,6 +18,10 @@ class ChannelMessages extends React.Component {
             fetchSucceeded: false,
             messages: []
         };
+        socket.on("receive_message", (message) => {
+            console.log(`Received realtime message: ${message}`);
+            this.fetchMessages();
+        });
     }
 
     componentWillMount() {
@@ -27,27 +34,28 @@ class ChannelMessages extends React.Component {
         const messageData = new FormData(event.target);
         const currToken = Cookie.get("token");
         if (currToken) {
-            console.log("RECEIVED: ", messageData.get("message"))
-            const postData = {
-                url: `${BASE_URL}/message/send`,
-                method: "POST",
-                data: {
-                    token: currToken,
-                    channel_id: this.props.channelID,
-                    message: messageData.get("message")
-                },
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            };
-            axios(postData)
-                .then((response) => {
-                    console.log("Message successfully sent!");
-                    this.fetchMessages();
-                })
-                .catch((err) => {
-                    alert(err);
-                });
+            console.log(`Sending the message: ${messageData.get("message")}`)
+            console.log(`Emitting send_message with params: ${currToken} ${this.props.channelID} ${messageData.get("message")}`)
+            socket.emit("send_message", currToken, this.props.channelID, messageData.get("message"));
+            // const postData = {
+            //     url: `${BASE_URL}/message/send`,
+            //     method: "POST",
+            //     data: {
+            //         token: currToken,
+            //         channel_id: this.props.channelID,
+            //         message: messageData.get("message")
+            //     },
+            //     headers: {
+            //         'Content-Type': 'application/json'
+            //     }
+            // };
+            // axios(postData)
+            //     .then((response) => {
+            //         this.fetchMessages();
+            //     })
+            //     .catch((err) => {
+            //         alert(err);
+            //     });
         }
     }
 

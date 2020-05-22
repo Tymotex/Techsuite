@@ -9,11 +9,18 @@ import jwt
 import os
 from dotenv import load_dotenv
 
+# Debugging tools
+import colored
+from colored import stylize
+
 # Source files:
 from exceptions import AccessError
 
 # Globals and config:
 load_dotenv()
+
+def printColour(text, colour="green"):
+    print(stylize(text, colored.fg(colour)))
 
 def email_is_legit(email):
     """

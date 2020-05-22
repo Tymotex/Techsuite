@@ -10,25 +10,11 @@ import {
     Card,
     CardHeader,
     CardBody,
-    Container,
-    Form,
-    FormGroup,
-    Input,
-    Label,
-    Button
+    Container
 } from 'reactstrap';
 import { ChannelMessages } from '../../components/channel-messages';
 import { UserInvite } from '../../components/user-invite';
 import { ChannelLeave } from '../../components/channel-leave';
-
-import io from 'socket.io-client';
-
-const socket = io('http://localhost:3001');
-
-// 'connect' happens first
-socket.on('connect', function() {
-    socket.emit('my event', {data: 'I\'m connected!'});
-});
 
 class Channel extends React.Component {
     constructor(props) {
@@ -37,7 +23,7 @@ class Channel extends React.Component {
             isLoading: false,
             fetchSucceeded: false,
             channel: {}
-        }
+        };
     }
 
     componentWillMount() {
@@ -98,8 +84,8 @@ class Channel extends React.Component {
                                             {owner_members.map((eachMember, i) => (
                                                 <li key={i}>
                                                     <FontAwesomeIcon icon={faStar} />  {eachMember.name_first} {eachMember.name_last}
-                                                    {(currUserID === eachMember.u_id) ? 
-                                                        <span> (You)</span>:
+                                                    {(currUserID === eachMember.u_id) ?
+                                                        <span> (You)</span> :
                                                         ""
                                                     }
                                                 </li>
@@ -108,25 +94,25 @@ class Channel extends React.Component {
                                         <h3>All Members:</h3>
                                         <ul>
                                             {all_members.map((eachMember, i) => {
-                                                    let isOwner = false;
-                                                    owner_members.forEach((owner) => {
-                                                        if (owner.u_id === eachMember.u_id) {
-                                                            isOwner = true;
+                                                let isOwner = false;
+                                                owner_members.forEach((owner) => {
+                                                    if (owner.u_id === eachMember.u_id) {
+                                                        isOwner = true;
+                                                    }
+                                                });
+                                                return (
+                                                    <li key={i}>
+                                                        {(isOwner) ?
+                                                            <FontAwesomeIcon icon={faStar} /> :
+                                                            <FontAwesomeIcon icon={faUser} />
+                                                        } {eachMember.name_first} {eachMember.name_last}
+                                                        {(currUserID === eachMember.u_id) ?
+                                                            <span> (You)</span> :
+                                                            ""
                                                         }
-                                                    });
-                                                    return (
-                                                        <li key={i}>
-                                                            {(isOwner) ?
-                                                                <FontAwesomeIcon icon={faStar} /> :
-                                                                <FontAwesomeIcon icon={faUser} />
-                                                            } {eachMember.name_first} {eachMember.name_last}
-                                                            {(currUserID === eachMember.u_id) ? 
-                                                                <span> (You)</span>:
-                                                                ""
-                                                            }
-                                                        </li>
-                                                    );
-                                                }
+                                                    </li>
+                                                );
+                                            }
                                             )}
                                         </ul>
                                     </CardBody>

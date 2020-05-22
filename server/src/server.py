@@ -3,7 +3,7 @@ from json import dumps
 from PIL import Image
 from flask import Flask, request, send_file, jsonify, Blueprint
 from flask_cors import CORS
-from flask_socketio import SocketIO, send
+from flask_socketio import SocketIO, send, emit
 from exceptions import InputError
 from dotenv import load_dotenv
 
@@ -14,8 +14,9 @@ from routes.users_routes import users_router
 from routes.message_routes import message_router
 
 # Source files
-import messages, users
+from messages import message_send
 from database import get_data, show_data
+from util import printColour
 
 # Globals and config
 load_dotenv()
@@ -64,12 +65,20 @@ def serve_image(filename):
     """ Given an image filename, serves that image back with Flask's send_file """
     return send_file("static/images/{}".format(filename))
 
+@socketio.on('connect')
+def handle_connect():
+    printColour("Socket connection succeeded")
 
 @socketio.on('message')
 def handle_message(message):
-    print('received message: ' + message)
+    printColour("Received a message: {}".format(message))
 
-
+@socketio.on("send_message")
+def handle_send_message(token, channel_id, message):    
+    message_send(token, int(channel_id), message)
+    # Broadcast the newly sent message to all listening client sockets so the
+    # chat field updates in 'realtime'
+    emit("receive_message", "The server says hi", broadcast=True)
 
 if __name__ == "__main__":
     # Optionally supply an explicit port:
