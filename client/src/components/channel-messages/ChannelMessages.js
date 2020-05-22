@@ -64,7 +64,6 @@ class ChannelMessages extends React.Component {
                         fetchSucceeded: true,
                         messages: response.data.messages
                     });
-                    console.log(this.state);
                 })
                 .catch((err) => {
                     alert(err);

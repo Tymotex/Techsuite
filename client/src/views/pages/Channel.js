@@ -21,6 +21,15 @@ import { ChannelMessages } from '../../components/channel-messages';
 import { UserInvite } from '../../components/user-invite';
 import { ChannelLeave } from '../../components/channel-leave';
 
+import io from 'socket.io-client';
+
+const socket = io('http://localhost:3001');
+
+// 'connect' happens first
+socket.on('connect', function() {
+    socket.emit('my event', {data: 'I\'m connected!'});
+});
+
 class Channel extends React.Component {
     constructor(props) {
         super(props);

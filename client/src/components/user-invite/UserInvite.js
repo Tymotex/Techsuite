@@ -33,8 +33,6 @@ class UserInvite extends React.Component {
         if (currToken) {
             axios.get(`${BASE_URL}/users/all?token=${currToken}`)
                 .then((allUsers) => {
-                    console.log("RECEIVED DATAAAAAAAAAAAAA");
-                    console.log(allUsers.data);
                     this.setState({
                         users: allUsers.data.users,
                         isLoading: false,

@@ -25,8 +25,7 @@ class ChannelsAll extends Component {
             axios.get(`${BASE_URL}/channels/listall?token=${currUserToken}`)
                 .then((allChannels) => {
                     axios.get(`${BASE_URL}/channels/list?token=${currUserToken}`)
-                        .then((myChannels) => {
-                            console.log(allChannels.data)
+                        .then((myChannels) => { 
                             this.setState({
                                 isLoading: false,
                                 fetchSucceeded: true,

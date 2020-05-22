@@ -1,10 +1,9 @@
-import sys
-import os
+import sys, os, requests
 from json import dumps
 from PIL import Image
-import requests
 from flask import Flask, request, send_file, jsonify, Blueprint
 from flask_cors import CORS
+from flask_socketio import SocketIO, send
 from exceptions import InputError
 from dotenv import load_dotenv
 
@@ -15,23 +14,26 @@ from routes.users_routes import users_router
 from routes.message_routes import message_router
 
 # Source files
-import messages
-import users
+import messages, users
 from database import get_data, show_data
 
 # Globals and config
 load_dotenv()
 PROFILE_IMG_DIRECTORY = os.getcwd() + r"/static/images/"
-APP = Flask(__name__)
+app = Flask(__name__)
+socketio = SocketIO(app, cors_allowed_origins="*")
+
+# TODO: Store a secret string in .env
+app.config["SECRET_KEY"] = "MYDIRTYSECRET"
 
 # Allowing cross-origin resource sharing
-CORS(APP)
+CORS(app)
 
 # Importing modularised routes:
-APP.register_blueprint(auth_router)
-APP.register_blueprint(channels_router)
-APP.register_blueprint(users_router)
-APP.register_blueprint(message_router)
+app.register_blueprint(auth_router)
+app.register_blueprint(channels_router)
+app.register_blueprint(users_router)
+app.register_blueprint(message_router)
 
 # HTTP error handling:
 def default_error_handler(err):
@@ -48,22 +50,29 @@ def default_error_handler(err):
     response.content_type = 'application/json'
     return response
 
-APP.config['TRAP_HTTP_EXCEPTIONS'] = True
-APP.register_error_handler(Exception, default_error_handler)
+app.config['TRAP_HTTP_EXCEPTIONS'] = True
+app.register_error_handler(Exception, default_error_handler)
 
 # 'Landing' page:
-@APP.route("/", methods=["GET"])
+@app.route("/", methods=["GET"])
 def index():
     return "Index page"
 
 # Serving images from the 'static/images' directory
-@APP.route("/images/<filename>")
+@app.route("/images/<filename>")
 def serve_image(filename):
     """ Given an image filename, serves that image back with Flask's send_file """
     return send_file("static/images/{}".format(filename))
+
+
+@socketio.on('message')
+def handle_message(message):
+    print('received message: ' + message)
+
+
 
 if __name__ == "__main__":
     # Optionally supply an explicit port:
     port = int(sys.argv[1]) if len(sys.argv) > 1 else os.getenv("PORT")
     # The port is specified in the .env file (which is parsed and loaded by the python-dotenv module)
-    APP.run(port=port, debug=True)
+    socketio.run(app, port=port, debug=True)
