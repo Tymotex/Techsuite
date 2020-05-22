@@ -22,6 +22,7 @@ import ChannelsMy from './pages/ChannelsMy';
 import ChannelsNew from './pages/ChannelsNew';
 import Channel from './pages/Channel';
 import Profile from './pages/Profile';
+import ProfileEdit from './pages/ProfileEdit';
 import Home from './pages/Home';
 import Register from './pages/Register';
 import Login from './pages/Login';
@@ -51,7 +52,12 @@ const pageList = [
   },
   {
     name: 'Profile',
-    path: '/profile',
+    path: '/user/profile/:userID/edit',
+    component: ProfileEdit,
+  },
+  {
+    name: 'Profile',
+    path: '/user/profile/:userID',
     component: Profile,
   },
   {

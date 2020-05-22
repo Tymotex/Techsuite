@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import { Switch, Route, Redirect, NavLink } from 'react-router-dom';
+import PropTypes from 'prop-types';
+import { Switch, Route, Redirect, NavLink, Link } from 'react-router-dom';
 import { NavItem, UncontrolledDropdown, DropdownToggle, DropdownMenu, DropdownItem, Button } from 'reactstrap';
 import { Header, SidebarNav, Footer, PageContent, Avatar, Chat, PageAlert, Page } from '../vibe';
 import Logo from '../assets/images/techsuite-icon.png';
@@ -150,6 +151,7 @@ class HeaderNav extends React.Component {
       paddingRight: "10px"
     };
 
+    const currUserID = Cookie.get("user_id");
     return (
       <React.Fragment>
         {/* PROFILE DROPDOWN: */}
@@ -158,7 +160,7 @@ class HeaderNav extends React.Component {
             <NavItem style={paddedNavItem}>
               Welcome <strong>{this.state.username}</strong>
             </NavItem>
-            <AvatarDropdown profileImgURL={this.state.profileImgURL} />
+            <AvatarDropdown profileImgURL={this.state.profileImgURL} userID={currUserID} />
           </> :
           <>
             <NavItem style={paddedNavItem}>
@@ -176,15 +178,19 @@ class HeaderNav extends React.Component {
 }
 
 const AvatarDropdown = (props) => {
-  const { profileImgURL } = props;
+  const { profileImgURL, userID } = props;
   return (
     <UncontrolledDropdown nav inNavbar>
       <DropdownToggle nav>
         <Avatar size="small" color="black" image={profileImgURL} />
       </DropdownToggle>
       <DropdownMenu right>
-        <DropdownItem>View my profile</DropdownItem>
-        <DropdownItem>Edit my profile</DropdownItem>
+        <DropdownItem>
+          <Link to={`/user/profile/${userID}`}>View my profile</Link>
+        </DropdownItem>
+        <DropdownItem>
+          <Link to={`/user/profile/${userID}/edit`}>Edit my profile</Link>
+        </DropdownItem>
         <DropdownItem divider />
         <DropdownItem>
           Log out
@@ -194,3 +200,7 @@ const AvatarDropdown = (props) => {
   );
 }
 
+AvatarDropdown.propTypes = {
+  profileImgURL: PropTypes.string.isRequired,
+  userID: PropTypes.number.isRequired
+};

@@ -1,10 +1,10 @@
-import React, { Component } from 'react';
+import React from 'react';
 import axios from 'axios';
 import Cookie from 'js-cookie';
 import { ChannelList } from '../../components/channel-list';
 import { BASE_URL } from '../../constants/api-routes';
 
-class ChannelsAll extends Component {
+class ChannelsAll extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
