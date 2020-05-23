@@ -4,6 +4,7 @@ from PIL import Image
 from flask import Flask, request, send_file, jsonify, Blueprint
 from flask_cors import CORS
 from flask_socketio import SocketIO, send, emit
+from flask_sqlalchemy import SQLAlchemy
 from exceptions import InputError
 from dotenv import load_dotenv
 
@@ -24,8 +25,13 @@ PROFILE_IMG_DIRECTORY = os.getcwd() + r"/static/images/"
 app = Flask(__name__)
 socketio = SocketIO(app, cors_allowed_origins="*")
 
-# TODO: Store a secret string in .env
+# TODO: Store a secret string in .env. This is related to websockets
 app.config["SECRET_KEY"] = "MYDIRTYSECRET"
+
+app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+app.config["SQLALCHEMY_DATABASE_URI"] = ""
+
+db = SQLAlchemy(app)
 
 # Allowing cross-origin resource sharing
 CORS(app)
