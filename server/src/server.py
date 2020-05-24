@@ -1,76 +1,57 @@
-import sys, os, requests
+import sys, os
 from json import dumps
 from PIL import Image
-from flask import Flask, request, send_file, jsonify, Blueprint
+from flask import Flask
 from flask_cors import CORS
-from flask_socketio import SocketIO, send, emit
 from flask_sqlalchemy import SQLAlchemy
+from flask_socketio import SocketIO, send, emit
 from exceptions import InputError
 from dotenv import load_dotenv
 
-# Routes
+# Route handlers and sockets
 from routes.auth_routes import auth_router
 from routes.channels_routes import channels_router
 from routes.users_routes import users_router
 from routes.message_routes import message_router
+from routes.image_routes import image_router
 
 # Source files
 from messages import message_send
 from database import get_data, show_data
 from util import printColour
+from http_error_handler import error_handler
 
 # Globals and config
 load_dotenv()
 PROFILE_IMG_DIRECTORY = os.getcwd() + r"/static/images/"
 app = Flask(__name__)
 socketio = SocketIO(app, cors_allowed_origins="*")
-
-# TODO: Store a secret string in .env. This is related to websockets
-app.config["SECRET_KEY"] = "MYDIRTYSECRET"
-
+app.config["SECRET_KEY"] = os.getenv("SECRET_MESSAGE")
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
-app.config["SQLALCHEMY_DATABASE_URI"] = ""
-
+app.config["SQLALCHEMY_DATABASE_URI"] = os.getenv("DATABASE_URI")
+app.config['TRAP_HTTP_EXCEPTIONS'] = True
 db = SQLAlchemy(app)
 
 # Allowing cross-origin resource sharing
 CORS(app)
 
-# Importing modularised routes:
+# Importing modularised routers:
 app.register_blueprint(auth_router)
 app.register_blueprint(channels_router)
 app.register_blueprint(users_router)
 app.register_blueprint(message_router)
+app.register_blueprint(image_router)
 
-# HTTP error handling:
-def default_error_handler(err):
-    """
-        Default error handler
-    """
-    response = err.get_response()
-    print('response', err, err.get_response())
-    response.data = dumps({
-        "code": err.code,
-        "name": "System Error",
-        "message": err.get_description(),
-    })
-    response.content_type = 'application/json'
-    return response
+# Register a default error handler
+app.register_error_handler(Exception, error_handler)
 
-app.config['TRAP_HTTP_EXCEPTIONS'] = True
-app.register_error_handler(Exception, default_error_handler)
-
+# ===== Basic Routes (For Testing) =====
 # 'Landing' page:
 @app.route("/", methods=["GET"])
 def index():
-    return "Index page"
+    return dumps({"message": "Reached the landing page"})
 
-# Serving images from the 'static/images' directory
-@app.route("/images/<filename>")
-def serve_image(filename):
-    """ Given an image filename, serves that image back with Flask's send_file """
-    return send_file("static/images/{}".format(filename))
-
+# ===== Web Socket Messaging =====
 @socketio.on('connect')
 def handle_connect():
     printColour("Socket connection succeeded")

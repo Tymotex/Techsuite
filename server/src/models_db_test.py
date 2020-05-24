@@ -1,5 +1,6 @@
 from server_db_test import db
 from datetime import datetime
+from util import printColour
 
 # This class will map to a database table. Objects of this class will map to tuples of that table
 class TechsuiteUser(db.Model):
