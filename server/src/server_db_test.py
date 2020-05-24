@@ -29,11 +29,11 @@ class User(db.Model):
     # Passing datetime.now as the callback function which is executed everytime a new record is added
     time_created = db.Column(db.DateTime, default=datetime.now)  
     
-    member_of = db.relationship("MemberOf", backref="user", lazy=True)
-    message_id = db.relationship("Message", backref="user", lazy=True)
+    channel_membership = db.relationship("MemberOf", backref="user", lazy=True)
+    messages_sent = db.relationship("Message", backref="user", lazy=True)
     
     def __repr__(self):
-        return "<User {}>".format(self.first_name)
+        return "<User {}>".format(self.id)
 
 class Bio(db.Model):
     __tablename__ = "bios"
@@ -49,7 +49,9 @@ class Bio(db.Model):
     education = db.Column(db.String(255))
     # backref="bio" will declare a new property TechsuiteUser.bio for referencing 
     # nullable=False declares the attribute with constraint: NOT NULL. This is implicit for attributes declared as primary keys
-    user_id = db.relationship("User", backref="bio", lazy=True)
+    owner = db.relationship("User", backref="bio", lazy=True)
+    def __repr__(self):
+        return "<Bio {}>".format(self.id)
 
 class Channel(db.Model):
     __tablename__ = "channels"
@@ -59,17 +61,19 @@ class Channel(db.Model):
     visibility = db.String(30)
     time_created = db.Column(db.DateTime, default=datetime.now)
     
-    member_of = db.relationship("MemberOf", backref="channel", lazy=True)
-    message_id = db.relationship("Message", backref="channel", lazy=True)
+    channel_membership = db.relationship("MemberOf", backref="channel", lazy=True)
+    messages_sent = db.relationship("Message", backref="channel", lazy=True)
     
     def __repr__(self):
-        return "<Channel {}>".format(self.name)
+        return "<Channel {}>".format(self.id)
 
 class MemberOf(db.Model):
     __tablename__ = "member_of"
     user_id = db.Column(db.Integer, db.ForeignKey("techsuite_users.id"), nullable=False, primary_key=True)
     channel_id = db.Column(db.Integer, db.ForeignKey("channels.id"), nullable=False, primary_key=True)
     is_owner = db.Column(db.Boolean)
+    def __repr__(self):
+        return "<MemberOf (user_id: {}, channel_id: {})>".format(self.user_id, self.channel_id)
 
 class Message(db.Model):
     __tablename__ = "messages"
@@ -78,6 +82,8 @@ class Message(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey("techsuite_users.id"), nullable=False)
     message = db.Column(db.String(1000))       # Allow 1000 characters for messages
     time_created = db.Column(db.DateTime, default=datetime.now())
+    def __repr__(self):
+        return "<Message {}>".format(self.id)
     
 # ===================
 
@@ -86,6 +92,7 @@ def hello():
     return "Hello. This works"
 
 # Example: http://.../user/example@gmail.com/tymotex/john/smith/password
+# Example: http://.../user/example@gmail.com/cse_chad/richard/buckland/password
 @app.route("/user/<email>/<username>/<first_name>/<last_name>/<password>")
 def create_user(email, username, first_name, last_name, password, ):
     bio = Bio(
@@ -140,10 +147,7 @@ def get_all_users():
 @app.route("/message/<user_id>/<channel_id>/<message_body>")
 def create_message(user_id, channel_id, message_body):
     user = User.query.filter_by(id=user_id).first()
-    channel = Channel.query.filter_by(id=channel_id).first()
-    print("Obtained user {}".format(user.email))
-    print("Obtained chan {}".format(channel.name))
-    
+    channel = Channel.query.filter_by(id=channel_id).first()    
     message = Message(
         message=message_body,
         user=user,
@@ -152,7 +156,10 @@ def create_message(user_id, channel_id, message_body):
     db.session.add(message)
     db.session.commit()
     return "Added a message"
-    
-if __name__ == '__main__':
-    app.run(port=6970, debug=True)
+
+# @app.route("/allmessages")
+
+
+# if __name__ == '__main__':
+#     app.run(port=6969, debug=True)
     
