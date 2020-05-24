@@ -17,18 +17,19 @@ SECRET_CODE = hashlib.sha256(os.getenv("SECRET_MESSAGE").encode()).hexdigest()
 
 def auth_register(email, password, name_first, name_last, is_bot=True):
     """
-    Given a user's first and last name, email address, and password,
-    create a new account for them and return a new token for authentication
-    in their session.
-    ERRORS:
-    - Invalid email format
-    - Email already exists in db
-    - Password less than 6 chars
-    - firstname and lastname both must be 1-50 characters inclusive
-    Returns: {
-        u_id    int
-        token   str
-    }
+        Given a user's first and last name, email address, and password,
+        create a new account for them and return a new token for authentication
+        in their session.
+        ERRORS:
+        - Invalid email format
+        - Email already exists in db
+        - Password less than 6 chars
+        - firstname and lastname both must be 1-50 characters inclusive
+        
+        Returns: {
+            u_id    int
+            token   str
+        }
     """
     if not email_is_legit(email):
         raise exceptions.InputError(description="Invalid email format")
