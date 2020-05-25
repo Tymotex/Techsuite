@@ -1,4 +1,5 @@
-from server_db_test import db
+from database import db
+from models import *
 from util import printColour
 
 # ===== Basic Admin Functions =====

@@ -1,4 +1,5 @@
 from flask import Blueprint, request, jsonify
+from util import printColour
 import channels
 
 channels_router = Blueprint("channels", __name__)
@@ -15,6 +16,7 @@ def handle_channel_invite():
     token = request_data["token"]
     channel_id = int(request_data["channel_id"])
     user_id = int(request_data["user_id"])
+    printColour("Channel Invite: {}".format(request_data), colour="violet")
     return jsonify(channels.channels_invite(token, channel_id, user_id))
 
 @channels_router.route("/channels/details", methods=['GET'])
@@ -27,6 +29,7 @@ def handle_channel_details():
     """
     token = request.args.get("token")
     channel_id = int(request.args.get("channel_id"))
+    printColour("Channel Details: {}".format(request.args), colour="violet")
     return jsonify(channels.channels_details(token, channel_id))
 
 @channels_router.route("/channels/messages", methods=['GET'])
@@ -44,6 +47,7 @@ def handle_channel_messages():
     token = request.args.get("token")
     channel_id = int(request.args.get("channel_id"))
     start = int(request.args.get("start"))
+    printColour("Channel Messages: {}".format(request.args), colour="violet")
     return jsonify(channels.channels_messages(token, channel_id, start))
 
 @channels_router.route("/channels/leave", methods=['POST'])
@@ -57,6 +61,7 @@ def handle_channel_leave():
     request_data = request.get_json()
     token = request_data["token"]
     channel_id = int(request_data["channel_id"])
+    printColour("Channel Leave: {}".format(request_data), colour="violet")
     return jsonify(channels.channels_leave(token, channel_id))
 
 @channels_router.route("/channels/join", methods=['POST'])
@@ -70,10 +75,11 @@ def handle_channel_join():
     request_data = request.get_json()
     token = request_data["token"]
     channel_id = int(request_data["channel_id"])
+    printColour("Channel Join: {}".format(request_data), colour="violet")
     return jsonify(channels.channels_join(token, channel_id))
 
 @channels_router.route("/channels/addowner", methods=['POST'])
-def handle_channel_addowner():
+def handle_channel_add_owner():
     """
         HTTP Route: /channels/addowner
         HTTP Method: POST
@@ -84,10 +90,11 @@ def handle_channel_addowner():
     token = request_data["token"]
     channel_id = int(request_data["channel_id"])
     user_id = int(request_data["user_id"])
+    printColour("Channel Add Owner: {}".format(request_data), colour="violet")
     return jsonify(channels.channels_addowner(token, channel_id, user_id))
 
 @channels_router.route("/channels/removeowner", methods=['POST'])
-def handle_channel_removeowner():
+def handle_channel_remove_owner():
     """
         HTTP Route: /channels/removeowner
         HTTP Method: POST
@@ -98,6 +105,7 @@ def handle_channel_removeowner():
     token = request_data["token"]
     channel_id = int(request_data["channel_id"])
     user_id = int(request_data["user_id"])
+    printColour("Channel Remove Owner: {}".format(request_data), colour="violet")
     return jsonify(channels.channels_removeowner(token, channel_id, user_id))
 
 @channels_router.route("/channels/list", methods=['GET'])
@@ -107,10 +115,11 @@ def handle_channels_list():
         HTTP Method: GET
         Params: (token)
         Returns JSON: { 
-            channels: [{ channel_id, name, description, is_public }, ...]
+            channels: [{ channel_id, name, description, visibility }, ...]
         }
     """
     token = request.args.get("token")
+    printColour("Channels List: {}".format(request.args), colour="violet")
     return jsonify(channels.channels_list(token))
 
 @channels_router.route("/channels/listall", methods=['GET'])
@@ -120,10 +129,11 @@ def handle_channels_listall():
         HTTP Method: GET
         Params: (token)
         Returns JSON: {
-            channels: [{ channel_id, name, description, is_public }, ...]
+            channels: [{ channel_id, name, description, visibility, member_of, owner_of }, ...]
         }
     """
     token = request.args.get("token")
+    printColour("Channels Listall: {}".format(request.args), colour="violet")
     return jsonify(channels.channels_listall(token))
 
 @channels_router.route("/channels/create", methods=['POST'])
@@ -131,15 +141,15 @@ def handle_channels_create():
     """
         HTTP Route: /channels/create
         HTTP Method: POST
-        Params: (token, name, description, is_public)
+        Params: (token, name, description, visibility)
         Returns JSON: {
             channels_id
         }
     """
-    import pprint
     request_data = request.get_json()
     token = request_data["token"]
     name = request_data["name"]
     description = request_data["description"]
-    is_public = request_data["is_public"]
-    return jsonify(channels.channels_create(token, name, description, is_public))
+    visibility = request_data["visibility"]
+    printColour("Channels Create: {}".format(request_data), colour="violet")
+    return jsonify(channels.channels_create(token, name, description, visibility))

@@ -30,7 +30,7 @@ CORS(app)
 
 # Registering modularised routers:
 app.register_blueprint(auth_router)
-# app.register_blueprint(channels_router)
+app.register_blueprint(channels_router)
 # app.register_blueprint(users_router)
 # app.register_blueprint(message_router)
 # app.register_blueprint(image_router)

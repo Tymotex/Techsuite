@@ -45,14 +45,13 @@ class Bio(db.Model):
 class Channel(db.Model):
     __tablename__ = "channels"
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(30))            # Allow 30 characters for channel names
-    description = db.Column(db.String(1000))   # Allow 1000 characters for channel descriptions
-    visibility = db.String(30)
+    name = db.Column(db.String(30), nullable=False)     # Allow 30 characters for channel names
+    description = db.Column(db.String(1000))            # Allow 1000 characters for channel descriptions
+    visibility = db.Column(db.String(30), nullable=False)
     time_created = db.Column(db.DateTime, default=datetime.now)
-    
+
     channel_membership = db.relationship("MemberOf", backref="channel", lazy=True)
     messages_sent = db.relationship("Message", backref="channel", lazy=True)
-    
     def __repr__(self):
         return "<Channel {}>".format(self.id)
 

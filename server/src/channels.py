@@ -1,7 +1,7 @@
 from database import db
+from models import Channel, User, Message, MemberOf, Bio
 from exceptions import InputError, AccessError
-from util import is_user_member, select_channel, get_user_from_token, get_user_from_id, verify_token
-from models import User, Channel, MemberOf, Message
+from util import is_user_member, select_channel, get_user_from_token, get_user_from_id, verify_token, printColour
 
 def channels_invite(token, channel_id, user_id):
     """
@@ -14,7 +14,6 @@ def channels_invite(token, channel_id, user_id):
         Returns: 
             {}          (dict)
     """
-    # Checking inputs are all valid
     verify_token(token)
     auth_user = get_user_from_token(data, token)
     if not auth_user:
@@ -29,81 +28,66 @@ def channels_invite(token, channel_id, user_id):
     if not is_user_member(auth_user, selected_channel):
         raise AccessError(description="Authorised user is not a member of channel with channel_id")
 
-    users_list = data["users"]
-
-    is_valid_user, is_user_admin, user_to_add = get_user_from_id(users_list, user_id)
-
-    if is_valid_user is False:
+    user_to_add = get_user_from_id(user_id)
+    # Check that the user exists (ie. the user_id is valid)
+    if not user_to_add:
         raise InputError(description="user_id does not refer to a valid user")
-
-    # check if user_to_add is already a member
+    # Check if user_to_add is already a member
     if is_user_member(user_to_add, selected_channel) is True:
         raise InputError(description="user_id is already a member")
-
-    selected_channel["all_members"].append(user_to_add)
-
-    if is_user_admin is True:
-        selected_channel["owner_members"].append(user_to_add)
-
-    save_data(data)
-    return {
-    }
+    # Granting membership
+    new_membership = MemberOf(
+        user=auth_user,
+        channel=selected_channel,
+        is_owner=False
+    )
+    db.session.add(new_membership)
+    db.session.commit()
+    return {}
 
 def channels_details(token, channel_id):
     """
         Given a Channel with ID channel_id that the authorised user is
         part of, provide basic details about the channel
-
-        returns dictionary with items 'name', 'description', 'owner_members', 'all_members'
-
-        return {
-            'name': channel_name,
-            'description': description
-            'owner_members': channel_owners,
-            'all_members': channel_members,
-        }
+        Parameters:
+            token       (str)
+            channel_id  (channel_id)
+        Returns:
+            { name, description, owner_members, all_members }    (dict)
+        Where:
+            owner_members: [{ user_id, username, email, profile_img_url }, ...]  (list of user objects)
+            all_members: [{ user_id, username, email, profile_img_url }, ...]    (list of user objects)
     """
-    # check parameters are all valid and raise exception if they aren't
-
-    # access data store, and retrieve information from keys:
-    data = get_data()
     verify_token(token)
-    auth_user = get_user_from_token(data, token)
-    if auth_user is None:
+    auth_user = get_user_from_token(token)
+    if not auth_user:
         raise AccessError(description="Invalid Token")
-    # name, owner_members and all_members
-    selected_channel = select_channel(data, channel_id)
-
-    if selected_channel is None:
+    
+    selected_channel = select_channel(channel_id)
+    if not selected_channel:
         raise InputError(description=f"{channel_id} is not a valid channel")
 
-    # raise exception whe authorised user is not a member of channel with channel_id
-    if is_user_member(auth_user, selected_channel) is False:
+    # Raise exception when the user is not a member of the channel with the given channel_id
+    if not is_user_member(auth_user, selected_channel):
         raise AccessError(description="Authorised user is not a member of channel with channel_id")
 
-    channel_name = selected_channel["name"]
-    channel_description = selected_channel["description"]
     channel_owners = []
-    for owner in selected_channel["owner_members"]:
-        channel_owners.append({
-            'user_id': owner["user_id"],
-            'name_first': owner["name_first"],
-            'name_last': owner["name_last"],
-            'profile_img_url': owner["profile_img_url"]
-        })
-
-    channel_members = []
-    for member in selected_channel["all_members"]:
-        channel_members.append({
-            'user_id': member["user_id"],
-            'name_first': member["name_first"],
-            'name_last': member["name_last"],
-            'profile_img_url': member["profile_img_url"]
-        })
+    # results = db.session.query(User, MemberOf, Channel).outerjoin(MemberOf, MemberOf.user_id==User.id).outerjoin(Channel, Channel.id==MemberOf.channel_id).filter_by(channel_id=selected_channel.id).all()
+    print(results)
+    
+    # channel_members = []
+    # for member in selected_channel["all_members"]:
+    #     channel_members.append({
+    #         'user_id': member["user_id"],
+    #         'name_first': member["name_first"],
+    #         'name_last': member["name_last"],
+    #         'profile_img_url': member["profile_img_url"]
+    #     })
+    return {}
 
     return {
-        'name': channel_name,
-        'description': channel_description,
+        'name': selected_channel.name,
+        'description': selected_channel.description,
         'owner_members': channel_owners,
         'all_members': channel_members
     }
@@ -255,7 +239,7 @@ def channels_join(token, channel_id):
     # check whether channel is private or not
     # and if it is, raise accessError
 
-    if (selected_channel["is_public"] or is_user_admin) is False:
+    if (selected_channel["visibility"] or is_user_admin) is False:
         error = "channel_id refers to a channel that is private "
         error += "(when the authorised user is not an admin), or user does not exist"
         raise AccessError(description=error)
@@ -408,71 +392,74 @@ def channels_listall(token):
     """
         Provide a list of all channels (and their associated details)
         Parameters:
-            token   str
-        Returns: {
-            List of dictionaries, where each dictionary contains types { channel_id, name }
-            channels    list(dict())
-        }
+            token   (str)
+        Returns: 
+            { channels }
+        Where:
+            List of dictionaries: { channel_id, name, description, visibility, member_of, owner_of }
     """
     verify_token(token)
-    data_store = get_data()
-    user = get_user_from_token(data_store, token)
-    all_channels = []
-    for each_channel in data_store["channels"]:
+    user = get_user_from_token(token)
+    channels_list = []
+    all_channels = Channel.query.all()
+    for each_channel in all_channels:
         curr_channel_data = {
-            "channel_id": each_channel["channel_id"],
-            "name": each_channel["name"],
-            "description": each_channel["description"],
-            "is_public": each_channel["is_public"]
+            "channel_id": each_channel.id,
+            "name": each_channel.name,
+            "description": each_channel.description,
+            "visibility": each_channel.visibility,
+            "member_of": False,
+            "owner_of": False
         }
-        for each_member in each_channel["all_members"]:
-            if each_member["user_id"] == user["user_id"]:
+        memberships = each_channel.channel_membership
+        for membership in memberships:
+            if membership.user_id == user.id:
                 curr_channel_data["member_of"] = True
-                for each_owner in each_channel["owner_members"]:
-                    if each_owner["user_id"] == user["user_id"]:
-                        curr_channel_data["owner_of"] = True 
-        all_channels.append(curr_channel_data)
+                if membership.is_owner:
+                    curr_channel_data["owner_of"] = True 
+        channels_list.append(curr_channel_data)
+    printColour(channels_list)
     return {
-        "channels": all_channels
+        "channels": channels_list
     }
 
-def channels_create(token, name, description, is_public):
+def channels_create(token, name, description, visibility):
     """
-    Creates a new channel with that name that is either a public or private channel. 
-    Name can't be longer than 20 characters
-    Returns: {
-        channel_id   int
-    }
+        Creates a new channel with that name that is either a public or private channel. The created channel object
+        has the following fields: { channel_id, name, description, visibility }
+        Parameters:
+            token       (str)
+            name        (str)
+            description (str)
+            visibility  (bool)
+        Raises: TODO
+        Returns: 
+            { channel_id }
     """
     verify_token(token)
-    if len(name) > 20:
+    if len(name) > 30:
         raise InputError
     
-    data_store = get_data()
-    new_channel_id = generate_channel_id(data_store)
-    creator = get_user_from_token(data_store, token)
-    creator = {
-        "name_first": creator["name_first"],
-        "name_last": creator["name_last"],
-        "user_id": creator["user_id"],
-        "profile_img_url": creator["profile_img_url"]
-    }
-    new_channel_data = {
-        "channel_id": new_channel_id,
-        "is_public": is_public,
-        "name": name,
-        "description": description,
-        "owner_members": [creator],
-        "all_members": [creator],
-        "messages": [],
-        "stand_up_active": False,
-        "stand_up": {
-            "time_finish": None,
-            "messages": []
-        }
-    }
-    data_store["channels"].append(new_channel_data)
-    save_data(data_store)
+    # creator = get_user_from_token(token)
+    creator = User.query.first()
+    new_channel = Channel(
+        visibility=visibility,
+        name=name,
+        description=description
+    )
+    ownership = MemberOf(
+        user=creator,
+        channel=new_channel,
+        is_owner=True
+    )
+    print(creator)
+    print(new_channel)
+    local_object = db.session.merge(new_channel)
+    db.session.add(local_object)
+    local_object2 = db.session.merge(ownership)
+    db.session.add(local_object2)
+    db.session.commit()
+    print("ChannelID: {}".format(new_channel.id))
     return {
-        'channel_id': new_channel_id
+        # 'channel_id': new_channel.id
     }

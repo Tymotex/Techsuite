@@ -10,6 +10,6 @@ app.register_blueprint(db_router)
 def hello():
     return "Hello. This works"
 
-if __name__ == '__main__':
-    app.run(port=6969, debug=True)
+# if __name__ == '__main__':
+#     app.run(port=6969, debug=True)
     

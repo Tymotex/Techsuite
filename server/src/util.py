@@ -59,6 +59,7 @@ def generate_token(user_data):
         Generates a unique JSON web token.
         Parameters:
             user_data: { 
+                user_id: int,
                 email: str,
                 username: str,
                 profile_img_url: str
@@ -67,6 +68,7 @@ def generate_token(user_data):
             web_token    str
     """
     payload = {
+        "user_id": user_data.id,
         "email": user_data.email,
         "username": user_data.username,
         "profile_img_url": user_data.bio.profile_img_url
@@ -107,7 +109,9 @@ def get_user_from_token(token):
         }
     """
     decoded_token = jwt.decode(token, os.getenv("SECRET_MESSAGE"), algorithms=["HS256"])
-    User.query.filter_by(id=decoded_token["user_id"]).first()
+    if not decoded_token:
+        raise AccessError(description="Invalid token supplied")
+    return User.query.filter_by(id=decoded_token["user_id"]).first()
 
 # ===== User Utilities =====
 def is_user_member(user, selected_channel):
@@ -118,37 +122,18 @@ def is_user_member(user, selected_channel):
             selected_channel obj
         Returns: True/False
     """
+    return selected_channel.channel_membership.user_id == user.id
     
 
-def get_user_from_id(users_list, user_id):
+def get_user_from_id(user_id):
     """
-        Checks whether user_id is in user list and returns (is_valid_user, is_user_admin, user_to_add)
-        whether user_id is in user list, whether user is global admin and the details of the user
+        Returns the user object associated with the given user_id
         Parameters:
-            users_list      list of user objects
             user_id            integer
-        Returns: (
-            is_valid_user   boolean
-            is_user_admin   boolean
-            user_to_add     dictionary
-        )
+        Returns: 
+            user            (obj)
     """
-    is_valid_user = False
-    is_user_admin = False
-    user_to_add = None
-    for user in users_list:
-        # retrieve information about user
-        if user.user_id == user_id:
-            is_valid_user = True
-            if user.permission_id == 1:
-                is_user_admin = True
-            user_to_add = {
-                "user_id": user_id,
-                "email": user.email,
-                "profile_img_url": user.profile_img_url
-            }
-            break
-    return (is_valid_user, is_user_admin, user_to_add)
+    return User.query.filter_by(id=user_id).first()
 
 # ===== Password Reset Utilities =====
 # TODO:

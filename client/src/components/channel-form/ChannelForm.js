@@ -15,6 +15,12 @@ class ChannelForm extends React.Component {
         const currUserToken = Cookie.get("token");
         if (currUserToken) {
             const formData = new FormData(event.target);
+            console.log({
+                token: currUserToken,
+                name: formData.get("name"),
+                description: formData.get("description"),
+                visibility: formData.get("visibility")
+            });
             const postData = {
                 method: 'post',
                 url: `${BASE_URL}/channels/create`,
@@ -22,7 +28,7 @@ class ChannelForm extends React.Component {
                     token: currUserToken,
                     name: formData.get("name"),
                     description: formData.get("description"),
-                    is_public: (formData.get("is_public")) ? true : false
+                    visibility: formData.get("visibility")
                 },
                 headers: {
                     "Content-Type": "application/json"
@@ -57,12 +63,21 @@ class ChannelForm extends React.Component {
                         Give a short summary of what this channel is about!
                     </FormText>
                 </FormGroup>
-                {/* Is public? */}
-                <FormGroup check>
-                    <Label check>
-                        <Input type="checkbox" name="is_public" />
-                        Do you want this to be a public channel?
-                    </Label>
+                {/* Visibility? */}
+                <FormGroup tag="fieldset">
+                    <legend>Visibility</legend>
+                    <FormGroup check>
+                        <Label check>
+                            <Input type="radio" name="visibility" value="public" />{' '}
+                            Public (anyone can join your channel)
+                        </Label>
+                    </FormGroup>
+                    <FormGroup check>
+                        <Label check>
+                            <Input type="radio" name="visibility" value="private" />{' '}
+                            Private (other users must be invited to join your channel)
+                        </Label>
+                    </FormGroup>
                 </FormGroup>
                 <br />
                 <Button size="lg" color="primary">Submit</Button>
