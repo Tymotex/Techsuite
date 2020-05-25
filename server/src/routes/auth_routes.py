@@ -1,7 +1,23 @@
 from flask import Blueprint, request, jsonify
 from authentication import auth_register, auth_login, auth_logout, auth_password_reset, auth_password_reset_request
+from util import printColour
 
 auth_router = Blueprint("auth", __name__)
+
+@auth_router.route("/auth/register", methods=['POST'])
+def handle_auth_register():
+    """
+        HTTP Route: /auth/register
+        HTTP Method: POST
+        Params: (email, username, password)
+        Returns JSON: { token, user_id }
+    """
+    request_data = request.get_json()
+    email = request_data["email"]
+    password = request_data["password"]
+    username = request_data["username"]
+    printColour("Auth Register: {}".format(request_data), colour="violet")
+    return jsonify(auth_register(email, password, username))
 
 @auth_router.route("/auth/login", methods=['POST'])
 def handle_auth_login():
@@ -9,11 +25,12 @@ def handle_auth_login():
         HTTP Route: /auth/login
         HTTP Method: POST
         Params: (email, password)
-        Returns JSON: { token, u_id }
+        Returns JSON: { token, user_id }
     """
     request_data = request.get_json()
     email = request_data["email"]
     password = request_data['password']
+    printColour("Auth Login: {}".format(request_data), colour="violet")
     return jsonify(auth_login(email, password))
 
 @auth_router.route("/auth/logout", methods=['POST'])
@@ -25,22 +42,8 @@ def handle_auth_logout():
         Returns JSON: {  }
     """
     request_data = request.get_json()
+    printColour("Auth Logout: {}".format(request_data), colour="violet")
     return jsonify(auth_logout(request_data["token"]))
-
-@auth_router.route("/auth/register", methods=['POST'])
-def handle_auth_register():
-    """
-        HTTP Route: /auth/register
-        HTTP Method: POST
-        Params: (email, password, name_first, name_last)
-        Returns JSON: { token, u_id }
-    """
-    request_data = request.get_json()
-    email = request_data["email"]
-    password = request_data['password']
-    name_first = request_data["name_first"]
-    name_last = request_data["name_last"]
-    return jsonify(auth_register(email, password, name_first, name_last))
 
 @auth_router.route("/auth/forgotpassword/request", methods=['POST'])
 def handle_auth_password_request():
@@ -52,6 +55,7 @@ def handle_auth_password_request():
     """
     request_data = request.get_json()
     results = auth_password_reset_request(request_data["email"])
+    printColour("Auth Password Reset Request: {}".format(request_data), colour="violet")
     return jsonify(results)
 
 @auth_router.route("/auth/forgotpassword/reset", methods=['POST'])
@@ -65,4 +69,5 @@ def handle_auth_passwordreset_reset():
     request_data = request.get_json()
     reset_code = request_data['reset_code']
     new_password = request_data['new_password']
+    printColour("Auth Password Reset: {}".format(request_data), colour="violet")
     return jsonify(auth_password_reset(reset_code, new_password))

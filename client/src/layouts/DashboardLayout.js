@@ -13,7 +13,7 @@ import handleKeyAccessibility, { handleClickAccessibility } from '../vibe/helper
 import axios from 'axios';
 import Cookie from 'js-cookie';
 import { BASE_URL } from '../constants/api-routes';
-import { UserPlus, LogIn, LogOut, Sign } from 'react-feather';
+import { UserPlus, LogIn } from 'react-feather';
 
 const MOBILE_SIZE = 992;
 

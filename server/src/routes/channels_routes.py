@@ -8,14 +8,14 @@ def handle_channel_invite():
     """
         HTTP Route: /channels/invite
         HTTP Method: POST
-        Params: (token, channel_id, u_id)
+        Params: (token, channel_id, user_id)
         Returns JSON: {  }
     """
     request_data = request.get_json()
     token = request_data["token"]
     channel_id = int(request_data["channel_id"])
-    u_id = int(request_data["u_id"])
-    return jsonify(channels.channels_invite(token, channel_id, u_id))
+    user_id = int(request_data["user_id"])
+    return jsonify(channels.channels_invite(token, channel_id, user_id))
 
 @channels_router.route("/channels/details", methods=['GET'])
 def handle_channel_details():
@@ -36,7 +36,7 @@ def handle_channel_messages():
         HTTP Method: GET
         Params: (token, channel_id, start)
         Returns JSON: {
-            messages: [{ message_id, u_id, message, time_created, is_author, reacts, is_pinned }, ...],
+            messages: [{ message_id, user_id, message, time_created, is_author, reacts, is_pinned }, ...],
             start,
             end
         }
@@ -77,28 +77,28 @@ def handle_channel_addowner():
     """
         HTTP Route: /channels/addowner
         HTTP Method: POST
-        Params: (token, channel_id, u_id)
+        Params: (token, channel_id, user_id)
         Returns JSON: {  }
     """
     request_data = request.get_json()
     token = request_data["token"]
     channel_id = int(request_data["channel_id"])
-    u_id = int(request_data["u_id"])
-    return jsonify(channels.channels_addowner(token, channel_id, u_id))
+    user_id = int(request_data["user_id"])
+    return jsonify(channels.channels_addowner(token, channel_id, user_id))
 
 @channels_router.route("/channels/removeowner", methods=['POST'])
 def handle_channel_removeowner():
     """
         HTTP Route: /channels/removeowner
         HTTP Method: POST
-        Params: (token, channel_id, u_id)
+        Params: (token, channel_id, user_id)
         Returns JSON: {  }
     """
     request_data = request.get_json()
     token = request_data["token"]
     channel_id = int(request_data["channel_id"])
-    u_id = int(request_data["u_id"])
-    return jsonify(channels.channels_removeowner(token, channel_id, u_id))
+    user_id = int(request_data["user_id"])
+    return jsonify(channels.channels_removeowner(token, channel_id, user_id))
 
 @channels_router.route("/channels/list", methods=['GET'])
 def handle_channels_list():

@@ -1,8 +1,8 @@
-""" TODO: Maybe 'app' shouldn't be constructed here """
 import os
 from dotenv import load_dotenv
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
+from datetime import datetime
 
 load_dotenv()
 app = Flask(__name__)

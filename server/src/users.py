@@ -1,9 +1,10 @@
 """
 The file contains all the user functions
 """
-from database import get_data, get_user_from_token, save_data
+from database import db
 from exceptions import InputError, AccessError
-from util import email_is_legit, verify_token
+from util import email_is_legit, verify_token, get_user_from_token
+from models import User, Channel, Bio, MemberOf
 
 # ===== User Functions =====
 def users_profile(token, u_id):

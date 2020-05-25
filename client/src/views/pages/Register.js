@@ -22,8 +22,7 @@ class RegisterForm extends Component {
             method: 'post',
             url: `${BASE_URL}/auth/register`,
             data: {
-                name_first: data.get("name_first"),
-                name_last: data.get("name_last"),
+                username: data.get("username"),
                 email: data.get("email"),
                 password: data.get("password")
             },
@@ -65,15 +64,10 @@ class RegisterForm extends Component {
                         <Card>
                             <CardBody>
                                 <Form onSubmit={this.registerUser}>
-                                    {/* First Name: */}
+                                    {/* Username: */}
                                     <FormGroup>
-                                        <Label htmlFor="name_first">First Name</Label>
-                                        <Input type="text" name="name_first" id="name_first" />
-                                    </FormGroup>
-                                    {/* Last Name: */}
-                                    <FormGroup>
-                                        <Label htmlFor="name_last">Last Name</Label>
-                                        <Input type="text" name="name_last" id="name_last" />
+                                        <Label htmlFor="username">Username</Label>
+                                        <Input type="text" name="username" id="username" />
                                     </FormGroup>
                                     {/* Email Address: */}
                                     <FormGroup>

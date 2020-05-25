@@ -1,5 +1,5 @@
 import React from 'react';
-import { Row, Col, Card, CardHeader, CardBody, Container, Button, Form, FormGroup, Input } from 'reactstrap';
+import { Row, Col, Card, CardHeader, CardBody, Container, Button, Form, Input } from 'reactstrap';
 import { ChannelMessages } from '../../components/channel-messages';
 import { UserInvite } from '../../components/user-invite';
 import { ChannelLeave } from '../../components/channel-leave';

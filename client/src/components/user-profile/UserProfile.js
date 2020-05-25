@@ -51,7 +51,7 @@ class UserProfile extends React.Component {
             <Card body>
                 <div className="text-center">
                     <div className="m-b">
-                        <img src={profile_img_url} style={{ width: "200px", height: "200px" }} className="b-circle" alt="Profile picture" />
+                        <img src={profile_img_url} style={{ width: "200px", height: "200px" }} className="b-circle" alt="Profile" />
                     </div>
                     <div>
                         <h2 className="h4">{`${name_first} ${name_last}`}</h2>

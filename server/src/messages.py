@@ -6,9 +6,9 @@ import threading
 import time
 
 # Source files:
-from database import get_data, save_data, generate_m_id, get_user_from_token
+from database import db
 from exceptions import InputError, AccessError
-from util import is_user_member, get_message, determine_channel, select_channel, is_owner, is_admin, verify_token
+from util import is_user_member, get_message, get_user_from_token, determine_channel, select_channel, verify_token
 
 def message_send(token, channel_id, msg):
     """
