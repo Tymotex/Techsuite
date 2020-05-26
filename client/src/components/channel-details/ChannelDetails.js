@@ -49,12 +49,12 @@ class ChannelDetails extends React.Component {
 
     render() {
         const { name, description, all_members, owner_members } = this.state.channel;
-        const currUserID = Cookie.get("u_id");
+        const currUserID = Cookie.get("user_id");
         return (
             (this.state.isLoading) ?
-                <p>LOADING</p> :
+                <p>Loading...</p> :
                 (!this.state.fetchSucceeded) ?
-                    <p>FETCH FAILED. Is the backend running?</p> :
+                    <p>Fetch failed. Is the backend running?</p> :
                     <>
                         <h1>{name}</h1>
                         <p className="text-muted">
@@ -65,7 +65,7 @@ class ChannelDetails extends React.Component {
                             {owner_members.map((eachMember, i) => (
                                 <li key={i}>
                                     <FontAwesomeIcon icon={faStar} />  {eachMember.name_first} {eachMember.name_last}
-                                    {(currUserID === eachMember.u_id) ?
+                                    {(currUserID === eachMember.user_id) ?
                                         <span> (You)</span> :
                                         ""
                                     }
@@ -77,7 +77,7 @@ class ChannelDetails extends React.Component {
                             {all_members.map((eachMember, i) => {
                                 let isOwner = false;
                                 owner_members.forEach((owner) => {
-                                    if (owner.u_id === eachMember.u_id) {
+                                    if (owner.user_id === eachMember.user_id) {
                                         isOwner = true;
                                     }
                                 });
@@ -87,7 +87,7 @@ class ChannelDetails extends React.Component {
                                             <FontAwesomeIcon icon={faStar} /> :
                                             <FontAwesomeIcon icon={faUser} />
                                         } {eachMember.name_first} {eachMember.name_last}
-                                        {(currUserID === eachMember.u_id) ?
+                                        {(currUserID === eachMember.user_id) ?
                                             <span> (You)</span> :
                                             ""
                                         }

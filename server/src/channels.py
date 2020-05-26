@@ -5,8 +5,8 @@ from util import is_user_member, select_channel, get_user_from_token, get_user_f
 
 def channels_invite(token, channel_id, user_id):
     """
-        Invites a user, with the given user_id, to join a channel with ID channel_id.
-        Once invited the user is added to the channel immediately
+        Invites a user, with the given user_id, to join the channel with ID channel_id.
+        Once invited, the user is added to the channel immediately.
         Parameters:
             token       (str)
             channel_id  (channel_id)
@@ -15,11 +15,10 @@ def channels_invite(token, channel_id, user_id):
             {}          (dict)
     """
     verify_token(token)
-    auth_user = get_user_from_token(data, token)
+    auth_user = get_user_from_token(token)
     if not auth_user:
         raise AccessError(description="Invalid Token")
     
-    users_list = User.query.all()
     # If channel_id is invalid, raise input error
     selected_channel = select_channel(channel_id)
     if not selected_channel:
@@ -59,37 +58,36 @@ def channels_details(token, channel_id):
             all_members: [{ user_id, username, email, profile_img_url }, ...]    (list of user objects)
     """
     verify_token(token)
-    auth_user = get_user_from_token(token)
-    if not auth_user:
+    user = get_user_from_token(token)
+    if not user:
         raise AccessError(description="Invalid Token")
-    
     selected_channel = select_channel(channel_id)
     if not selected_channel:
-        raise InputError(description=f"{channel_id} is not a valid channel")
-
+        raise InputError(description=f"{channel_id} doesn't point to a valid channel")
     # Raise exception when the user is not a member of the channel with the given channel_id
-    if not is_user_member(auth_user, selected_channel):
+    if not is_user_member(user, selected_channel):
         raise AccessError(description="Authorised user is not a member of channel with channel_id")
 
     channel_owners = []
-    # results = db.session.query(User, MemberOf, Channel).outerjoin(MemberOf, MemberOf.user_id==User.id).outerjoin(Channel, Channel.id==MemberOf.channel_id).filter_by(channel_id=selected_channel.id).all()
-    print(results)
-    
-    # channel_members = []
-    # for member in selected_channel["all_members"]:
-    #     channel_members.append({
-    #         'user_id': member["user_id"],
-    #         'name_first': member["name_first"],
-    #         'name_last': member["name_last"],
-    #         'profile_img_url': member["profile_img_url"]
-    #     })
-    return {}
-
+    channel_members = []
+    # Joining User with MemberOf, then filtering for users associated with the selected channel 
+    # TODO: Possible optimisation -> swap the ordering of the filtering
+    memberships = db.session.query(User, MemberOf, Channel).outerjoin(MemberOf, MemberOf.user_id==User.id).outerjoin(Channel, Channel.id==MemberOf.channel_id).filter_by(id=channel_id).all()    
+    for each_membership in memberships:
+        curr_member = each_membership[0]
+        member_data = {
+            "user_id": curr_member.id,
+            "name_first": curr_member.username,
+            "profile_img_url": curr_member.bio.profile_img_url
+        }
+        channel_members.append(member_data)
+        if each_membership[1].is_owner:
+            channel_owners.append(member_data)
     return {
-        'name': selected_channel.name,
-        'description': selected_channel.description,
-        'owner_members': channel_owners,
-        'all_members': channel_members
+        "name": selected_channel.name,
+        "description": selected_channel.description,
+        "owner_members": channel_owners,
+        "all_members": channel_members
     }
 
 
@@ -101,22 +99,24 @@ def channels_messages(token, channel_id, start):
         This function returns a new index "end" which is the value of "start + 50", or,
         if this function has returned the least recent messages in the channel,
         returns -1 in "end" to indicate there are no more messages to load after this return.
-
-        returns {
+        Parameters:
+            token      (str)
+            channel_id (int)
+            start      (int)
+        Returns {
             messages,
             start,
             end
         }
-        messages is a list of message dictionary (max size 50)
-        start is an int
-        end is an int
+        Where:
+            messages: list of message dictionary (max size 50)
+         int
     """
     # check parameters are all valid and raise exception if they aren't
     # add user_id, associated first name and last name into channel_id dictionary (or storage)
-    data = get_data()
     verify_token(token)
-    auth_user = get_user_from_token(data, token)
-    if auth_user is None:
+    auth_user = get_user_from_token(token)
+    if not auth_user:
         raise AccessError(description="Invalid Token")
     
     return_messages = {
@@ -125,7 +125,7 @@ def channels_messages(token, channel_id, start):
     }
     
     curr_channel = select_channel(data, channel_id)
-    if curr_channel is None:
+    if not curr_channel:
         raise InputError(description="Channel ID is not a valid channel")
     if is_user_member(auth_user, curr_channel) is False:
         raise AccessError(description="Authorised user is not a member of channel with channel_id")
@@ -164,93 +164,56 @@ def channels_leave(token, channel_id):
 
         return {}
     """
-    # check parameters are all valid and raise exception if they aren't
-
-    # access all_members and owner_members lists witihn dictionary with associated channel_id
-
-    data = get_data()
     verify_token(token)
-    #identify user from token
-    auth_user = get_user_from_token(data, token)
-    if auth_user is None:
+    user = get_user_from_token(token)
+    if not user:
         raise AccessError(description="Invalid Token")
-    channels_list = data["channels"]
-    curr_channel = select_channel(data, channel_id)
-
+    channels_list = Channel.query.all()
+    selected_channel = select_channel(channel_id)
     # Check if Channel ID is not a valid channel
-    if curr_channel is None:
+    if not selected_channel:
         raise InputError(description="Channel ID is not a valid channel")
-
-    # check Authorised user is not a member of channel with channel_id
-    if is_user_member(auth_user, curr_channel) is False:
+    # Check user if the user is not currently a member of the selected channel
+    if not is_user_member(user, selected_channel):
         raise AccessError(description="Authorised user is not a member of channel with channel_id")
 
-    # check if user is owner of channel, remove self from owner
-    owners_list = curr_channel["owner_members"]
-    for owner in owners_list:
-        if owner["user_id"] == auth_user["user_id"]:
-            owners_list.remove(owner)
-    members_list = curr_channel["all_members"]
-    for member in members_list:
-        if member["user_id"] == auth_user["user_id"]:
-            members_list.remove(member)
-
+    membership = MemberOf.query.filter_by(user_id=user.id, channel_id=selected_channel.id).first()
+    db.session.delete(membership)
+    db.session.commit()
+    # If the user attempting to leave is the owner... Pass down ownership to someone else? Or delete channel
+    # TODO:
     # If there is no members left in channel, delete channel
-    if members_list == []:
-        channels_list.remove(curr_channel)
-
-    save_data(data)
-    # remove user with associated token from both lists if possible
-    return {
-    }
+    # TODO:
+    return {}
 
 def channels_join(token, channel_id):
     """
         Given a channel_id of a channel that the authorised user can join, adds them to that channel
-
-        parameters:  (token, channel_id)
-        types:
-        token        str
-        channel_id   int
-
-        return {}
+        Parameters:  
+            token      (str)
+            channel_id (int)
+        Returns:
+            {}
     """
-    # check parameters are all valid and raise exception if they aren't
-
-    data = get_data()
     verify_token(token)
-    # identify user from token
-    auth_user = get_user_from_token(data, token)
-    if auth_user is None:
+    user = get_user_from_token(token)
+    if not user:
         raise AccessError(description="Invalid Token")
-    user_to_add = {
-        "user_id": auth_user["user_id"],
-        "name_first": auth_user["name_first"],
-        "name_last": auth_user["name_last"],
-        "profile_img_url": auth_user["profile_img_url"]
-    }
-    # retrieve user profile from auth_user
-    is_user_admin = (auth_user["permission_id"] == 1)
-    selected_channel = select_channel(data, channel_id)
-
-    if selected_channel is None:
+    selected_channel = select_channel(channel_id)
+    if not selected_channel:
         raise InputError(description="Channel ID is not a valid channel")
+    # Check whether channel is private or not. Raise AccessError if it is
+    if not selected_channel.visibility == "public":
+        raise AccessError(description="channel_id refers to a channel that is private.")
 
-    # check whether channel is private or not
-    # and if it is, raise accessError
-
-    if (selected_channel["visibility"] or is_user_admin) is False:
-        error = "channel_id refers to a channel that is private "
-        error += "(when the authorised user is not an admin), or user does not exist"
-        raise AccessError(description=error)
-    # check Channel ID is not a valid channel
-
-    selected_channel["all_members"].append(user_to_add)
-    if is_user_admin is True:
-        selected_channel["owner_members"].append(user_to_add)
-    save_data(data)
-    return {
-    }
+    new_membership = MemberOf(
+        user=user,
+        channel=selected_channel,
+        is_owner=False
+    )
+    db.session.add(new_membership)
+    db.session.commit()
+    return {}
 
 def channels_addowner(token, channel_id, user_id):
     """
@@ -262,16 +225,15 @@ def channels_addowner(token, channel_id, user_id):
                 AccessError when the user isn't an owner of the
                 slackr or an owner of this channel
     """
-    data = get_data()
     verify_token(token)
     #identify user from token
     auth_user = get_user_from_token(data, token)
-    if auth_user is None:
+    if not auth_user:
         raise AccessError(description="Invalid Token")
     users_list = data["users"]
 
-    selected_channel = select_channel(data, channel_id)
-    if selected_channel is None:
+    selected_channel = select_channel(channel_id)
+    if not selected_channel:
         raise InputError(description="Channel ID is not a valid channel")
 
     # check whether user_id is already owner in channel
@@ -294,7 +256,6 @@ def channels_addowner(token, channel_id, user_id):
 
     user_to_add = get_user_from_id(users_list, user_id)[2]
     selected_channel["owner_members"].append(user_to_add)
-    save_data(data)
     return {
     }
 
@@ -314,16 +275,15 @@ def channels_removeowner(token, channel_id, user_id):
         channel_id        int
         user_id              int
     """
-    data = get_data()
     verify_token(token)
     #identify user from token
     auth_user = get_user_from_token(data, token)
-    if auth_user is None:
+    if not auth_user:
         raise AccessError(description="Invalid Token")
     users_list = data["users"]
 
     selected_channel = select_channel(data, channel_id)
-    if selected_channel is None:
+    if not selected_channel:
         raise InputError(description="Channel ID is not a valid channel")
 
     # check whether user_id is already owner in channel
@@ -347,7 +307,6 @@ def channels_removeowner(token, channel_id, user_id):
     owner_l = [o for o in selected_channel["owner_members"] if o["user_id"] != user_to_remove["user_id"]]
     selected_channel["owner_members"] = owner_l
 
-    save_data(data)
     return {
     }
 

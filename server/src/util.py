@@ -122,8 +122,9 @@ def is_user_member(user, selected_channel):
             selected_channel obj
         Returns: True/False
     """
-    return selected_channel.channel_membership.user_id == user.id
-    
+    for each_membership in selected_channel.channel_membership:
+        if each_membership.user_id == user.id:
+            return True    
 
 def get_user_from_id(user_id):
     """

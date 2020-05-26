@@ -7,37 +7,35 @@ from util import email_is_legit, verify_token, get_user_from_token
 from models import User, Channel, Bio, MemberOf
 
 # ===== User Functions =====
-def users_profile(token, u_id):
+def users_profile(token, user_id):
     """
         For a valid user, returns some fields about them, eg.
         id, email, first name, last name, profile image
         Returns: {
-            u_id, email, name_first, name_last, profile_img_url
+            user_id, email, name_first, name_last, profile_img_url
         }
     """
-    # Gets data from data storage
-    data = get_data()
     verify_token(token)
-    # Checks if u_id is valid
-    u_id_is_valid = False
+    # Checks if user_id is valid
+    user_id_is_valid = False
     
     # This if statement can be removed
-    # Compares u_id with database and pulls data from inputted u_id
+    # Compares user_id with database and pulls data from inputted user_id
     for user in data["users"]:
-        if u_id == user["u_id"]:
+        if user_id == user["user_id"]:
             email = user["email"]
             name_first = user["name_first"]
             name_last = user["name_last"]
             img_endpoint = user["profile_img_url"]
-            # u_id is valid
-            u_id_is_valid = True
-    # Check if u_id is valid in the database, outside the loop
-    if u_id_is_valid is False:
-        raise InputError(description="User with u_id is not a valid user")
+            # user_id is valid
+            user_id_is_valid = True
+    # Check if user_id is valid in the database, outside the loop
+    if user_id_is_valid is False:
+        raise InputError(description="User with user_id is not a valid user")
     # Returns a dictionary
     return {
-        'u_id': u_id,
-        # String form: 'u_id': '{:d}'.format(u_id).zfill(4),
+        'user_id': user_id,
+        # String form: 'user_id': '{:d}'.format(user_id).zfill(4),
         'email': email,
         'name_first': name_first,
         'name_last': name_last,
@@ -61,7 +59,7 @@ def users_profile_uploadphoto(token, img_endpoint):
 
     users = data["users"]
     for each_user in users:
-        if each_user["u_id"] == this_user["u_id"]:
+        if each_user["user_id"] == this_user["user_id"]:
             each_user["profile_img_url"] = img_endpoint
 
     save_data(data)
@@ -87,7 +85,7 @@ def users_profile_setname(token, name_first, name_last):
     Update the authorised user's first and last name
     ERRORS
     - Invalid token
-    - Invalid u_id
+    - Invalid user_id
     - name_first and name_last both must be 1-50 characters inclusive
     Returns:
         {}  dict
@@ -120,11 +118,11 @@ def users_profile_setname(token, name_first, name_last):
     # Propagate changes through all channels
     for each_channel in data["channels"]:
         for each_member in each_channel["all_members"]:
-            if user["u_id"] == each_member["u_id"]:
+            if user["user_id"] == each_member["user_id"]:
                 each_member["name_first"] = name_first
                 each_member["name_last"] = name_last
         for each_member in each_channel["owner_members"]:
-            if user["u_id"] == each_member["u_id"]:
+            if user["user_id"] == each_member["user_id"]:
                 each_member["name_first"] = name_first
                 each_member["name_last"] = name_last
     # Saves data into data storage
@@ -165,7 +163,7 @@ def users_all(token):
     ERRORS:
     - Invalid token
     Returns: {
-        List of dictionaries, where each dictionary contains types u_id, email, name_first,
+        List of dictionaries, where each dictionary contains types user_id, email, name_first,
         name_last, profile_img_url
         users  list(dict)
     }
@@ -177,7 +175,7 @@ def users_all(token):
     users = []
     for user in data["users"]:
         users.append({
-            'u_id': user["u_id"],
+            'user_id': user["user_id"],
             'email': user["email"],
             'name_first': user["name_first"],
             'name_last': user["name_last"]
@@ -188,7 +186,7 @@ def users_all(token):
     }
 
 
-def admin_user_remove(token, u_id):
+def admin_user_remove(token, user_id):
     """
     Given a User by their user ID, remove the user from the slackr.
     Returns:
@@ -199,31 +197,31 @@ def admin_user_remove(token, u_id):
 
     user_found = False
     for i, user in enumerate(data["users"]):
-        if u_id == user["u_id"]:
+        if user_id == user["user_id"]:
             del data["users"][i]
             user_found = True
     if not user_found:
-        raise InputError(description="u_id does not refer to a valid user")
+        raise InputError(description="user_id does not refer to a valid user")
 
     for i, channel in enumerate(data["channels"]):
         for k, each_owner in enumerate(channel["owner_members"]):
-            if each_owner["u_id"] == u_id:
+            if each_owner["user_id"] == user_id:
                 print(data["channels"][i]["owner_members"][k])
                 del data["channels"][i]["owner_members"][k]
         for k, each_member in enumerate(channel["all_members"]):
-            if each_member["u_id"] == u_id:
+            if each_member["user_id"] == user_id:
                 print(data["channels"][i]["all_members"][k])
                 del data["channels"][i]["all_members"][k]
 
     save_data(data)
     return {}
 
-def admin_userpermission_change(token, u_id, permission_id):
+def admin_userpermission_change(token, user_id, permission_id):
     """
     Given a User by their user ID, set their permissions
     to new permissions described by permission_id
     ERRORS:
-    - u_id does not refer to a valid user
+    - user_id does not refer to a valid user
     - permission_id does not refer to a value permission
     - The authorised user is not an owner
     Returns:
@@ -232,8 +230,8 @@ def admin_userpermission_change(token, u_id, permission_id):
     data = get_data()
     verify_token(token)
     
-    # Checks if u_id is valid
-    u_id_is_valid = False
+    # Checks if user_id is valid
+    user_id_is_valid = False
     # Retrieves user's data from the token
     user = get_user_from_token(data, token)
     if user["permission_id"] != 1:
@@ -243,20 +241,20 @@ def admin_userpermission_change(token, u_id, permission_id):
         pass
     else:
         raise InputError(description="permission_id does not refer to a value permission")
-    # Compares u_id with database and pulls data from inputted u_id
+    # Compares user_id with database and pulls data from inputted user_id
     for user in data["users"]:
-        if u_id == user["u_id"]:
+        if user_id == user["user_id"]:
             # Updates permission id
             user["permission_id"] = permission_id
-            u_id_is_valid = True
-    # Check if u_id is valid in the database, outside the loop
-    if u_id_is_valid is False:
-        raise InputError(description="u_id does not refer to a valid user")
+            user_id_is_valid = True
+    # Check if user_id is valid in the database, outside the loop
+    if user_id_is_valid is False:
+        raise InputError(description="user_id does not refer to a valid user")
     if permission_id == 1:
         for channels in data["channels"]:
             for each_member in channels["all_members"]:
-                if u_id == each_member["u_id"]:
-                    user_to_add = get_user_from_id(data["users"], u_id)[2]
+                if user_id == each_member["user_id"]:
+                    user_to_add = get_user_from_id(data["users"], user_id)[2]
                     channels["owner_members"].append(user_to_add)
     # Saves data into data storage
     save_data(data)

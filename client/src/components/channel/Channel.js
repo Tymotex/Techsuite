@@ -48,7 +48,7 @@ class Channel extends React.Component {
     }
 
     render() {
-        let { channel_id, name, image, description, is_public, member_of, owner_of } = this.props;
+        let { channel_id, name, image, description, visibility, member_of, owner_of } = this.props;
         return (
             <Card className="channel-card">
                 <CardBody className="display-flex">
@@ -72,7 +72,7 @@ class Channel extends React.Component {
                         <Link to={`/channel/${channel_id}`}>
                             <h2 className="h4">{name}</h2>
                         </Link>
-                        {(is_public === true) ? 
+                        {(visibility === "public") ? 
                             <em>Public Channel</em> :
                             <em>Private Channel  <FontAwesomeIcon icon={faLock} /></em>
                         }
@@ -81,7 +81,7 @@ class Channel extends React.Component {
                         </p>
                         {/* Showing the button to join/request invite, if the user is NOT an owner/member */}
                         {(!owner_of && !member_of) ?
-                            (is_public === true) ? 
+                            (visibility === "public") ? 
                                 <Button onClick={this.joinChannel}>Join Channel</Button> :
                                 <Button onClick={this.requestInvite}>Request To Join</Button> :
                             ""
