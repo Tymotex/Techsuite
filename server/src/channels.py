@@ -1,4 +1,4 @@
-from database import db
+from extensions import db
 from models import Channel, User, Message, MemberOf, Bio
 from exceptions import InputError, AccessError
 from util import is_user_member, select_channel, get_user_from_token, get_user_from_id, verify_token, printColour
@@ -351,43 +351,6 @@ def channels_removeowner(token, channel_id, user_id):
     return {
     }
 
-def channels_list(token):
-    """
-        Provide a list of all channels (and their associated details) that the
-        authorised user is part of
-        Parameters:
-            token   str
-        Returns: {
-            List of dictionaries, where each dictionary contains types { channel_id, name }
-            channels    list(dict())
-    }
-    """
-    verify_token(token)
-    data_store = get_data()
-    verify_token(token)
-    associated_channels = []
-    member = get_user_from_token(data_store, token)
-    member = {
-        "name_first": member["name_first"],
-        "name_last": member["name_last"],
-        "user_id": member["user_id"],
-        "profile_img_url": member["profile_img_url"]
-    }
-    for each_channel in data_store["channels"]:
-        if member in each_channel["all_members"]:
-            curr_channel_data = {
-                "channel_id": each_channel["channel_id"],
-                "name": each_channel["name"]
-            }
-            if member in each_channel["owner_members"]:
-                curr_channel_data["owner_of"] = True
-            else:
-                curr_channel_data["owner_of"] = False
-            associated_channels.append(curr_channel_data)
-    return {
-        'channels': associated_channels
-    }
-
 def channels_listall(token):
     """
         Provide a list of all channels (and their associated details)
@@ -418,7 +381,7 @@ def channels_listall(token):
                 if membership.is_owner:
                     curr_channel_data["owner_of"] = True 
         channels_list.append(curr_channel_data)
-    printColour(channels_list)
+    printColour("Results: {}".format(channels_list), colour="blue")
     return {
         "channels": channels_list
     }
@@ -440,8 +403,7 @@ def channels_create(token, name, description, visibility):
     if len(name) > 30:
         raise InputError
     
-    # creator = get_user_from_token(token)
-    creator = User.query.first()
+    creator = get_user_from_token(token)
     new_channel = Channel(
         visibility=visibility,
         name=name,
@@ -452,14 +414,9 @@ def channels_create(token, name, description, visibility):
         channel=new_channel,
         is_owner=True
     )
-    print(creator)
-    print(new_channel)
-    local_object = db.session.merge(new_channel)
-    db.session.add(local_object)
-    local_object2 = db.session.merge(ownership)
-    db.session.add(local_object2)
+    db.session.add(new_channel)
+    db.session.add(ownership)
     db.session.commit()
-    print("ChannelID: {}".format(new_channel.id))
     return {
-        # 'channel_id': new_channel.id
+        'channel_id': new_channel.id
     }

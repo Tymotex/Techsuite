@@ -1,13 +1,13 @@
 from flask import Blueprint, request, jsonify
-from authentication import auth_register, auth_login, auth_logout, auth_password_reset, auth_password_reset_request
+from authentication import auth_signup, auth_login, auth_logout, auth_password_reset, auth_password_reset_request
 from util import printColour
 
 auth_router = Blueprint("auth", __name__)
 
 @auth_router.route("/auth/register", methods=['POST'])
-def handle_auth_register():
+def handle_auth_signup():
     """
-        HTTP Route: /auth/register
+        HTTP Route: /auth/signup
         HTTP Method: POST
         Params: (email, username, password)
         Returns JSON: { token, user_id }
@@ -16,8 +16,8 @@ def handle_auth_register():
     email = request_data["email"]
     password = request_data["password"]
     username = request_data["username"]
-    printColour("Auth Register: {}".format(request_data), colour="violet")
-    return jsonify(auth_register(email, password, username))
+    printColour("Auth Signup: {}".format(request_data), colour="violet")
+    return jsonify(auth_signup(email, password, username))
 
 @auth_router.route("/auth/login", methods=['POST'])
 def handle_auth_login():

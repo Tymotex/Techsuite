@@ -34,7 +34,7 @@ class LoginForm extends Component {
         console.log("Successfully logged in");
         // Storing the JWT token inside the browser session storage 
         Cookie.set("token", res.data.token);
-        Cookie.set("user_id", res.data.u_id);
+        Cookie.set("user_id", res.data.user_id);
 
         // Reinvoke the render function which returns the <Redirect />
         // element, redirecting the user back to the homepage

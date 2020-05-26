@@ -1,21 +1,24 @@
 """ For server and app configuration and for startined the server """
-# Libraries
-import sys, os
+# Standard libraries:
+import logging
+import sys
+import os
+
+# Third party libraries:
+from flask import Flask
 from flask_cors import CORS
 from flask_socketio import SocketIO, send, emit
 from dotenv import load_dotenv
 
-# Route handlers and sockets
+# Local imports:
 from routes.auth_routes import auth_router
 from routes.channels_routes import channels_router
 from routes.users_routes import users_router
 from routes.message_routes import message_router
 from routes.image_routes import image_router
 from routes.http_error_handler import error_handler
-
-# Source files
 from messages import message_send
-from database import app
+from extensions import app
 from util import printColour
 
 # Globals and config
@@ -24,7 +27,6 @@ PROFILE_IMG_DIRECTORY = os.getcwd() + r"/static/images/"
 socketio = SocketIO(app, cors_allowed_origins="*")
 app.config["SECRET_KEY"] = os.getenv("SECRET_MESSAGE")
 app.config["TRAP_HTTP_EXCEPTIONS"] = True
-
 # Allowing cross-origin resource sharing
 CORS(app)
 

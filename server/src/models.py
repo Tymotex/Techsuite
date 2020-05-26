@@ -1,4 +1,4 @@
-from database_config import db
+from extensions import db
 from datetime import datetime
 
 # ===== CLASSES =====
@@ -12,8 +12,7 @@ class User(db.Model):
     password = db.Column(db.String(255))
     permission_id = db.Column(db.Integer)
     username = db.Column(db.String(50))
-    # db.relationship() 
-    # uselist=False tells SQLAlchemy that this is a one-to-one relationship
+
     bio_id = db.Column(db.Integer, db.ForeignKey("bios.id"), nullable=False)
     # Passing datetime.now as the callback function which is executed everytime a new record is added
     time_created = db.Column(db.DateTime, default=datetime.now)  
@@ -50,6 +49,7 @@ class Channel(db.Model):
     visibility = db.Column(db.String(30), nullable=False)
     time_created = db.Column(db.DateTime, default=datetime.now)
 
+    # uselist=False tells SQLAlchemy that this is a one-to-one relationship
     channel_membership = db.relationship("MemberOf", backref="channel", lazy=True)
     messages_sent = db.relationship("Message", backref="channel", lazy=True)
     def __repr__(self):
@@ -61,7 +61,7 @@ class MemberOf(db.Model):
     channel_id = db.Column(db.Integer, db.ForeignKey("channels.id"), nullable=False, primary_key=True)
     is_owner = db.Column(db.Boolean)
     def __repr__(self):
-        return "<MemberOf (user_id: {}, channel_id: {})>".format(self.user_id, self.channel_id)
+        return "<MemberOf (user_id: {}, channel_id: {}, is_owner: {})>".format(self.user_id, self.channel_id, self.is_owner)
 
 class Message(db.Model):
     __tablename__ = "messages"

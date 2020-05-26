@@ -4,10 +4,10 @@ from datetime import datetime, timezone
 from dotenv import load_dotenv
 
 # Source files:
-from database import db
+from extensions import db
 from models import User, Bio, Channel, Message, MemberOf
 from exceptions import InputError, AccessError
-from util import email_is_legit, generate_token, verify_token, send_email, email_message
+from util import email_is_legit, generate_token, verify_token, send_email, email_message, printColour
 import users
 
 # Globals and config:
@@ -15,7 +15,7 @@ load_dotenv()
 SECRET_CODE = hashlib.sha256(os.getenv("SECRET_MESSAGE").encode()).hexdigest()
 
 # ===== Authentication Functions =====
-def auth_register(email, password, username):
+def auth_signup(email, password, username):
     """
         Creates a new account, given a user's email and password. Returns a dict containing
         a token and user_id for authenticating their session.
@@ -56,6 +56,10 @@ def auth_register(email, password, username):
     db.session.add(new_user_bio)
     db.session.commit()
     generated_token = generate_token(new_user)
+    printColour("Returning: {}".format({
+        'user_id': new_user.id,
+        'token': generated_token,
+    }), colour="blue")
     return {
         'user_id': new_user.id,
         'token': generated_token,
@@ -80,6 +84,10 @@ def auth_login(email, password):
             if each_user.password == hashlib.sha256(password.encode()).hexdigest():
                 # User has been verified once this block is reached
                 generated_token = generate_token(each_user)
+                printColour("Returning: {}".format({
+                    "user_id": each_user.id,
+                    "token": generated_token
+                }), colour="blue")
                 return {
                     "user_id": each_user.id,
                     "token": generated_token

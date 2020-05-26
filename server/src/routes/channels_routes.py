@@ -108,20 +108,6 @@ def handle_channel_remove_owner():
     printColour("Channel Remove Owner: {}".format(request_data), colour="violet")
     return jsonify(channels.channels_removeowner(token, channel_id, user_id))
 
-@channels_router.route("/channels/list", methods=['GET'])
-def handle_channels_list():
-    """
-        HTTP Route: /channels/list
-        HTTP Method: GET
-        Params: (token)
-        Returns JSON: { 
-            channels: [{ channel_id, name, description, visibility }, ...]
-        }
-    """
-    token = request.args.get("token")
-    printColour("Channels List: {}".format(request.args), colour="violet")
-    return jsonify(channels.channels_list(token))
-
 @channels_router.route("/channels/listall", methods=['GET'])
 def handle_channels_listall():
     """

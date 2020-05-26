@@ -1,11 +1,18 @@
-""" TODO: Maybe 'app' shouldn't be constructed here """
+# Standard libraries: 
 import os
+
+# Third party libraries:
 from dotenv import load_dotenv
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 
+# Local imports:
+from extensions import db
+
+# Globals and config
 load_dotenv()
-app = Flask(__name__)
-app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
-app.config["SQLALCHEMY_DATABASE_URI"] = os.getenv("DATABASE_URI")
-db = SQLAlchemy(app)
+
+# Aliasing common SQLAlchemy names
+Column = db.Column
+relationship = db.relationship
+

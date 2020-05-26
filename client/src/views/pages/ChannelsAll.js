@@ -24,28 +24,19 @@ class ChannelsAll extends React.Component {
         if (currUserToken) {
             axios.get(`${BASE_URL}/channels/listall?token=${currUserToken}`)
                 .then((allChannels) => {
-                    axios.get(`${BASE_URL}/channels/list?token=${currUserToken}`)
-                        .then((myChannels) => { 
-                            this.setState({
-                                isLoading: false,
-                                fetchSucceeded: true,
-                                allChannels: allChannels.data.channels,
-                                myChannels: myChannels.data.channels
-                            });
-                        })
-                        .catch((err) => {
-                            this.setState({
-                                isLoading: false,
-                                fetchSucceeded: false
-                            });
-                        });
+                    this.setState({
+                        isLoading: false,
+                        fetchSucceeded: true,
+                        allChannels: allChannels.data.channels,
+                        myChannels: allChannels.data.channels.filter(eachChannel => eachChannel.member_of)
+                    });
                 })
                 .catch((err) => {
                     this.setState({
                         isLoading: false,
                         fetchSucceeded: false
                     })
-                })
+                });
         } else {
             // TODO: how should this case be handled?
             alert("TOKEN WAS NOT FOUND IN COOKIE");

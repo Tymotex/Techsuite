@@ -39,7 +39,7 @@ class RegisterForm extends Component {
 
                 // Storing the JWT token inside the browser session storage 
                 Cookie.set("token", res.data.token);
-                Cookie.set("user_id", res.data.u_id);
+                Cookie.set("user_id", res.data.user_id);
                 
                 // Setting the state's isAuthenticated field rerenders the component
                 // which returns a <Redirect to="/" />, redirecting the user to the homepage
