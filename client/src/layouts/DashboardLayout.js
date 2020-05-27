@@ -125,11 +125,11 @@ class HeaderNav extends React.Component {
     const currUserToken = Cookie.get("token");
     const currUserID = Cookie.get("user_id");
     if (currUserToken) {
-      axios.get(`${BASE_URL}/users/profile?token=${currUserToken}&u_id=${currUserID}`)
+      axios.get(`${BASE_URL}/users/profile?token=${currUserToken}&user_id=${currUserID}`)
         .then((res) => {
           this.setState({
             loggedIn: true,
-            username: `${res.data.name_first} ${res.data.name_last}`,
+            username: `${res.data.username}`,
             profileImgURL: res.data.profile_img_url
           });
         })

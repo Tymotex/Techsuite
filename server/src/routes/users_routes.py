@@ -1,8 +1,13 @@
+# Standard libraries:
+import os
+
+# Third party libraries:
 from flask import Blueprint, request, jsonify
 from dotenv import load_dotenv
-import os
+
+# Local imports:
 import users
-import util
+from util import get_user_from_token, printColour
 
 # Globals and config:
 load_dotenv()
@@ -13,30 +18,14 @@ def handle_user_profile():
     """
         HTTP Route: /users/profile
         HTTP Method: GET
-        Params: (token, u_id)
-        Returns JSON: { 
-            u_id, email, name_first, name_last, profile_img_url
-        }
+        Params: (token, user_id)
+        Returns JSON: { user_id, email, username, profile_img_url }
     """
     token = request.args.get("token")
-    u_id = int(request.args.get("u_id"))
-    return jsonify(users.users_profile(token, u_id))
+    user_id = int(request.args.get("user_id"))
+    printColour("User profile: {}".format(request.args), colour="violet")
+    return jsonify(users.users_profile(token, user_id))
 
-@users_router.route("/users/profile/setname", methods=['PUT'])
-def handle_user_profile_setname():
-    """
-        HTTP Route: /users/profile/setname
-        HTTP Method: PUT
-        Params: (token, name_first, name_last)
-        Returns JSON: {  }
-    """
-    request_data = request.get_json()
-    token = request_data["token"]
-    name_first = request_data["name_first"]
-    name_last = request_data["name_last"]
-    return jsonify(users.users_profile_setname(token, name_first, name_last))
-
-# Params: (token, email)
 @users_router.route("/users/profile/setemail", methods=['PUT'])
 def handle_user_profile_setemail():
     """
@@ -57,10 +46,11 @@ def handle_users_all():
         HTTP Method: GET
         Params: (token)
         Returns JSON: {
-            users: [{ u_id, email, name_first, name_last, profile_img_url }, ...]
+            users: [{ user_id, email, username, profile_img_url }, ...]
         }
     """
     token = request.args.get("token")
+    printColour("All Users: {}".format(request.args), colour="violet")
     return jsonify(users.users_all(token))
 
 # ===== User Profile Picture Handling =====
@@ -84,9 +74,8 @@ def handle_user_profile_uploadphoto():
     y_start = int(request_data["y_start"])
     x_end = int(request_data["x_end"])
     y_end = int(request_data["y_end"])
-    data = util.get_data()
-    u_id = util.get_user_from_token(data, token)["u_id"]
-    img_filename = download_img_and_crop(img_url, u_id, x_start, y_start, x_end, y_end)
+    user_id = get_user_from_token(data, token)["user_id"]
+    img_filename = download_img_and_crop(img_url, user_id, x_start, y_start, x_end, y_end)
 
     image_endpoint = "http://localhost:{0}/images/{1}".format(os.getenv("port"), img_filename)
 

@@ -25,7 +25,7 @@ class UserProfile extends React.Component {
         });
         const currUserToken = Cookie.get("token");
         if (currUserToken) {
-            axios.get(`${BASE_URL}/users/profile?token=${currUserToken}&u_id=${this.props.userID}`)
+            axios.get(`${BASE_URL}/users/profile?token=${currUserToken}&user_id=${this.props.userID}`)
                 .then((userProfile) => {
                     this.setState({
                         isLoading: false,

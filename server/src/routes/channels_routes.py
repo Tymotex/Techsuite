@@ -38,11 +38,7 @@ def handle_channel_messages():
         HTTP Route: /channels/messages
         HTTP Method: GET
         Params: (token, channel_id, start)
-        Returns JSON: {
-            messages: [{ message_id, user_id, message, time_created, is_author, reacts, is_pinned }, ...],
-            start,
-            end
-        }
+        Returns JSON: { messages, exhausted }
     """
     token = request.args.get("token")
     channel_id = int(request.args.get("channel_id"))

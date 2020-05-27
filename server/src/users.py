@@ -9,39 +9,25 @@ from models import User, Channel, Bio, MemberOf
 # ===== User Functions =====
 def users_profile(token, user_id):
     """
-        For a valid user, returns some fields about them, eg.
-        id, email, first name, last name, profile image
-        Returns: {
-            user_id, email, name_first, name_last, profile_img_url
-        }
+        For a valid user, returns some of their basic fields
+        Parameters:
+            token (str)
+            user_id (int)
+        Returns: 
+        { user_id, email, username, profile_img_url }
     """
     verify_token(token)
-    # Checks if user_id is valid
-    user_id_is_valid = False
-    
-    # This if statement can be removed
-    # Compares user_id with database and pulls data from inputted user_id
-    for user in data["users"]:
-        if user_id == user["user_id"]:
-            email = user["email"]
-            name_first = user["name_first"]
-            name_last = user["name_last"]
-            img_endpoint = user["profile_img_url"]
-            # user_id is valid
-            user_id_is_valid = True
-    # Check if user_id is valid in the database, outside the loop
-    if user_id_is_valid is False:
-        raise InputError(description="User with user_id is not a valid user")
-    # Returns a dictionary
+    user = User.query.filter_by(id=user_id).first()
+    if not user:
+        raise InputError(description="user_id does not refer to any user in the database")
     return {
-        'user_id': user_id,
-        # String form: 'user_id': '{:d}'.format(user_id).zfill(4),
-        'email': email,
-        'name_first': name_first,
-        'name_last': name_last,
-        'profile_img_url': img_endpoint
+        "user_id": user.id,
+        "email": user.email,
+        "username": user.username,
+        "profile_img_url": user.bio.profile_img_url
     }
 
+# TODO
 def users_profile_uploadphoto(token, img_endpoint):
     """
     The server does the following:
@@ -80,111 +66,66 @@ def users_get_profile_image_url(token):
         "profile_img_url": get_user_from_token(data, token)["profile_img_url"]
     }
 
-def users_profile_setname(token, name_first, name_last):
+# TODO: 
+def users_profile_set_username(token, username):
     """
-    Update the authorised user's first and last name
-    ERRORS
-    - Invalid token
-    - Invalid user_id
-    - name_first and name_last both must be 1-50 characters inclusive
-    Returns:
-        {}  dict
+        Update the authorised user's first and last name
+        Parameters:
+            token (str)
+            username (str)
+        Returns:
+            {}  
     """
-    # Gets data from data storage
-    data = get_data()
     verify_token(token)
     
-    # Check if names are valid, within acceptable length
-    error_description = "must be between 1 and 50 characters inclusive in length"
-    if 1 <= len(name_first) <= 50:
-        pass
-    else:
-        raise InputError(description="name_first " + error_description)
-    # if name_first == [] or len(name_first) > 50:
-    #     raise InputError(description="name_first " + error_description)
-
-    if 1 <= len(name_last) <= 50:
-        pass
-    else:
-        raise InputError(description="name_last " + error_description)
-    # if name_last == [] or len(name_last) > 50:
-    #     raise InputError(description="name_last " + error_description)
+    # TODO: validate the username   
 
     # Retrieves user's data from the token
-    user = get_user_from_token(data, token)
-    # Updates the names in the profile of the user
-    user["name_first"] = name_first
-    user["name_last"] = name_last
-    # Propagate changes through all channels
-    for each_channel in data["channels"]:
-        for each_member in each_channel["all_members"]:
-            if user["user_id"] == each_member["user_id"]:
-                each_member["name_first"] = name_first
-                each_member["name_last"] = name_last
-        for each_member in each_channel["owner_members"]:
-            if user["user_id"] == each_member["user_id"]:
-                each_member["name_first"] = name_first
-                each_member["name_last"] = name_last
-    # Saves data into data storage
-    save_data(data)
+    user = get_user_from_token(token)
+    
     return {}
 
+# TODO
 def users_profile_setemail(token, email):
     """
-    Update the authorised user's email address
-    ERRORS
-    - Invalid token
-    - Invalid email format
-    - Email is already being used
-    Returns:
-        {}  dict
+        Update the authorised user's email address
+        Parameters:
+            token (str)
+            email (str)
+        Returns:
+            {} 
     """
-    data = get_data()
     verify_token(token)
     
-    # Check if email is valid
-    if email_is_legit(email) is False:
+    # Validate the supplied email
+    if not email_is_legit(email):
         raise InputError(description="Email entered is not a valid email")
-    # Check if email is being used by another user
-    for user in data["users"]:
-        if email == user["email"]:
-            raise InputError(description="Email address is already being used by another user")
-    # Retrieves user's data from the token
-    user = get_user_from_token(data, token)
-    # Updates the email in the profile of the user
-    user["email"] = email
-    # Saves data into data storage
-    save_data(data)
+    
+    # TODO Check if email is being used by another user
+    
+    user = get_user_from_token(token)
+    
+    # TODO: Update record
     return {}
 
 def users_all(token):
     """
-    Returns a list of all users and their associated details
-    ERRORS:
-    - Invalid token
-    Returns: {
-        List of dictionaries, where each dictionary contains types user_id, email, name_first,
-        name_last, profile_img_url
-        users  list(dict)
-    }
+        Returns a list of all users and their associated details
+        Parameters:
+            token (str)
+        Returns: 
+            { users }
+        Where:
+            users: list of dictionaries: { user_id, email, username, profile_img_url }
     """
-    data = get_data()
     verify_token(token)
     
     # Get all users into a list, database prints other info as well
-    users = []
-    for user in data["users"]:
-        users.append({
-            'user_id': user["user_id"],
-            'email': user["email"],
-            'name_first': user["name_first"],
-            'name_last': user["name_last"]
-        })
-    # Returns all users from database
+    all_users = User.query.all()
+    users = [{ "user_id": user.id, "email": user.email, "username": user.username, "profile_img_url": user.bio.profile_img_url } for user in all_users]
     return {
-        'users': users
+        "users": users
     }
-
 
 def admin_user_remove(token, user_id):
     """

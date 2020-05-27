@@ -17,6 +17,7 @@ class User(db.Model):
     # Passing datetime.now as the callback function which is executed everytime a new record is added
     time_created = db.Column(db.DateTime, default=datetime.now)  
     
+    # Relationships
     channel_membership = db.relationship("MemberOf", backref="user", lazy=True)
     messages_sent = db.relationship("Message", backref="user", lazy=True)
     

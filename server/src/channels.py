@@ -83,86 +83,82 @@ def channels_details(token, channel_id):
         channel_members.append(member_data)
         if each_membership[1].is_owner:
             channel_owners.append(member_data)
-    return {
+    
+    details = {
         "name": selected_channel.name,
         "description": selected_channel.description,
         "owner_members": channel_owners,
         "all_members": channel_members
     }
+    printColour("Results: {}".format(details), colour="blue")
+    return details
 
 
-def channels_messages(token, channel_id, start):
+def channels_messages(token, channel_id, start, limit=50):
     """
-        Given a Channel with ID channel_id that the authorised user is part of,
-        return up to 50 messages between index "start" and "start + 50" exclusive.
-        Message with index 0 is the most recent message in the channel.
-        This function returns a new index "end" which is the value of "start + 50", or,
-        if this function has returned the least recent messages in the channel,
-        returns -1 in "end" to indicate there are no more messages to load after this return.
+        Given a channel that the user is a member of, returns up to a specified maximum
+        number of messages from a starting index. Messages are ordered in ascending
+        recency, so the message at index 0 is the most recent.
         Parameters:
             token      (str)
             channel_id (int)
             start      (int)
-        Returns {
-            messages,
-            start,
-            end
-        }
+            limit      (int)
+        Returns:
+            { messages, exhausted }
         Where:
-            messages: list of message dictionary (max size 50)
-         int
+            messages: list of message dictionary: { message_id, user_id, message, time_created, is_author }
+            exhausted: bool indicating whether the there any more messages left to fetch 
     """
     # check parameters are all valid and raise exception if they aren't
     # add user_id, associated first name and last name into channel_id dictionary (or storage)
     verify_token(token)
-    auth_user = get_user_from_token(token)
-    if not auth_user:
+    user = get_user_from_token(token)
+    if not user:
         raise AccessError(description="Invalid Token")
-    
-    return_messages = {
-        'messages': [],
-        'start': start
-    }
-    
-    curr_channel = select_channel(data, channel_id)
-    if not curr_channel:
+    selected_channel = select_channel(channel_id)
+    if not selected_channel:
         raise InputError(description="Channel ID is not a valid channel")
-    if is_user_member(auth_user, curr_channel) is False:
+    if is_user_member(user, selected_channel) is False:
         raise AccessError(description="Authorised user is not a member of channel with channel_id")
 
     # Loop through 50 message dictionaries of list starting from start index
-    messsages_list = curr_channel["messages"]
+    messsages_list = selected_channel.messages_sent
+    
+    payload = {
+        "messages": [],
+        "exhausted": True
+    }
+    
     if not messsages_list:
-        return_messages["end"] = -1
-        return return_messages
-    # Raise error if start is greater than or equal to the total number of messages in the channel
+        printColour("Results: {}".format(payload), colour="blue")
+        return payload
     if start >= len(messsages_list):
-        raise InputError(description="'Start' is greater than or equal to the total number of messages in the channel")
-    from_start = 0
-    for message in messsages_list[start:]:
-        message["is_author"] = True if message["user_id"] == auth_user["user_id"] else False
-        return_messages["messages"].append(message)
-        from_start += 1
-        if from_start == 50:
-            return_messages["end"] = start + 50
-            return return_messages
-
-    # and add message dictionaries into return list for messages
-    # if end of list is reached, return 'end':-1 (reach this point)
-    if start + 49 > len(messsages_list):
-        return_messages["end"] = -1
-    return return_messages
+        raise InputError(description="Starting index is greater than or equal to the total number of messages in the channel")
+    if not (start + limit >= len(messsages_list)):
+        messages["exhausted"] = False
+    
+    for i, message in enumerate(messsages_list[start :], start=1):
+        payload["messages"].append({
+            "message_id": message.id,
+            "user_id": message.user_id,
+            "message": message.message,
+            "time_created": message.time_created.timestamp(),
+            "is_author": message.user_id == user.id
+        })
+        if i == limit:
+            break
+    printColour("Results: {}".format(payload), colour="blue")
+    return payload
 
 def channels_leave(token, channel_id):
     """
-        Given a channel ID, the user removed as a member of this channel
-
-        parameters:  (token, channel_id)
-        types:
-        token        str
-        channel_id   int
-
-        return {}
+        Removes the caller from the specified channel.
+        Parameters:  
+            token      (str)
+            channel_id (str)
+        Returns: 
+            {}
     """
     verify_token(token)
     user = get_user_from_token(token)

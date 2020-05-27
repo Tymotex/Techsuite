@@ -33,8 +33,8 @@ CORS(app)
 # Registering modularised routers:
 app.register_blueprint(auth_router)
 app.register_blueprint(channels_router)
-# app.register_blueprint(users_router)
-# app.register_blueprint(message_router)
+app.register_blueprint(users_router)
+app.register_blueprint(message_router)
 # app.register_blueprint(image_router)
 
 # Register a default error handler
@@ -58,6 +58,7 @@ def handle_message(message):
 
 @socketio.on("send_message")
 def handle_send_message(token, channel_id, message):    
+    printColour("Sending message -- {} -- to channel {}".format(message, channel_id), colour="violet")
     message_send(token, int(channel_id), message)
     # Broadcast the newly sent message to all listening client sockets so the
     # chat field updates in 'realtime'

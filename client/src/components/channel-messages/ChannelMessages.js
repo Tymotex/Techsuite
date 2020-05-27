@@ -29,13 +29,13 @@ class ChannelMessages extends React.Component {
     }
 
     sendMessage(event) {
-        console.log("Form submitted");
         event.preventDefault();
         const messageData = new FormData(event.target);
         const currToken = Cookie.get("token");
         if (currToken) {
-            console.log(`Sending the message: ${messageData.get("message")}`)
-            console.log(`Emitting send_message with params: ${currToken} ${this.props.channelID} ${messageData.get("message")}`)
+            console.log(`Sending the message: ${messageData.get("message")}`);
+            console.log(`Emitting send_message with params: ${currToken} ${this.props.channelID} ${messageData.get("message")}`);
+            // TODO: Move the event name 'send_message' to a constants file
             socket.emit("send_message", currToken, this.props.channelID, messageData.get("message"));
         }
     }
