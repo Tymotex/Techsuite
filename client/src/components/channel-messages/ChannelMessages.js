@@ -5,6 +5,7 @@ import './ChannelMessages.scss';
 import { Form, FormGroup, Button, Input } from 'reactstrap';
 import Message from './Message';
 import { BASE_URL } from '../../constants/api-routes';
+import { LoadingSpinner } from '../loading-spinner';
 
 import openSocket from 'socket.io-client';
 const socket = openSocket('http://localhost:3001');
@@ -67,7 +68,7 @@ class ChannelMessages extends React.Component {
     render() {
         return (
             (this.state.isLoading) ?
-                <p>Loading messages...</p> :
+                <LoadingSpinner /> :
                 (this.state.fetchSucceeded) ? 
                     <div className="inbox_msg">
                         <div className="mesgs">

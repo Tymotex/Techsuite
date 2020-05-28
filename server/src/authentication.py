@@ -57,12 +57,14 @@ def auth_signup(email, password, username):
     db.session.commit()
     generated_token = generate_token(new_user)
     printColour("Returning: {}".format({
-        'user_id': new_user.id,
-        'token': generated_token,
+        "user_id": new_user.id,
+        "token": generated_token,
     }), colour="blue")
     return {
-        'user_id': new_user.id,
-        'token': generated_token,
+        "user_id": new_user.id,
+        "token": generated_token,
+        "username": new_user.username,
+        "profile_img_url": new_user_bio.profile_img_url
     }
 
 def auth_login(email, password):
@@ -90,7 +92,9 @@ def auth_login(email, password):
                 }), colour="blue")
                 return {
                     "user_id": each_user.id,
-                    "token": generated_token
+                    "token": generated_token,
+                    "username": each_user.username,
+                    "profile_img_url": each_user.bio.profile_img_url
                 }
             # Password is incorrect
             raise InputError(description="Password is incorrect")

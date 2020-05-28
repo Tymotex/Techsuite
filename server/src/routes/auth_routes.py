@@ -10,7 +10,7 @@ def handle_auth_signup():
         HTTP Route: /auth/signup
         HTTP Method: POST
         Params: (email, username, password)
-        Returns JSON: { token, user_id }
+        Returns JSON: { token, user_id, username, profile_img_url }
     """
     request_data = request.get_json()
     email = request_data["email"]
@@ -25,7 +25,7 @@ def handle_auth_login():
         HTTP Route: /auth/login
         HTTP Method: POST
         Params: (email, password)
-        Returns JSON: { token, user_id }
+        Returns JSON: { token, user_id, username, profile_img_url }
     """
     request_data = request.get_json()
     email = request_data["email"]

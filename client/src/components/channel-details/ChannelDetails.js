@@ -6,6 +6,7 @@ import Cookie from 'js-cookie';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faStar, faUser } from '@fortawesome/free-solid-svg-icons';
 import { BASE_URL } from '../../constants/api-routes';
+import { LoadingSpinner } from '../loading-spinner';
 
 class ChannelDetails extends React.Component {
     static propTypes = {
@@ -52,7 +53,7 @@ class ChannelDetails extends React.Component {
         const currUserID = Cookie.get("user_id");
         return (
             (this.state.isLoading) ?
-                <p>Loading...</p> :
+                <LoadingSpinner /> :
                 (!this.state.fetchSucceeded) ?
                     <p>Fetch failed. Is the backend running?</p> :
                     <>

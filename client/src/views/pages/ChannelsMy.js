@@ -3,6 +3,7 @@ import Cookie from 'js-cookie';
 import axios from 'axios';
 import { ChannelList } from '../../components/channel-list';
 import { BASE_URL } from '../../constants/api-routes';
+import { LoadingSpinner } from '../../components/loading-spinner';
 
 class ChannelsMy extends Component {
     constructor(props) {
@@ -46,7 +47,7 @@ class ChannelsMy extends Component {
     render() {
         return (
             (this.state.isLoading) ?
-                <p>Loading channels</p> :
+                <LoadingSpinner /> :
                 (this.state.fetchSucceeded) ? 
                     <ChannelList {...this.state} /> :
                     <p>Fetch failed. Is the backend running?</p>
