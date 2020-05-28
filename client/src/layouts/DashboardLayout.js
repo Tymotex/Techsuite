@@ -1,8 +1,6 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import { Switch, Route, Redirect, NavLink, Link } from 'react-router-dom';
-import { NavItem, UncontrolledDropdown, DropdownToggle, DropdownMenu, DropdownItem, Button } from 'reactstrap';
-import { Header, SidebarNav, Footer, PageContent, Avatar, Chat, PageAlert, Page } from '../vibe';
+import React from 'react';
+import { Switch, Route, Redirect } from 'react-router-dom';
+import { Header, SidebarNav, Footer, PageContent, Chat, PageAlert, Page } from '../vibe';
 import Logo from '../assets/images/techsuite-icon.png';
 import avatar1 from '../assets/images/avatar1.png';
 import nav from '../_nav';
@@ -10,14 +8,11 @@ import routes from '../views';
 import ContextProviders from '../vibe/components/utilities/ContextProviders';
 import handleKeyAccessibility, { handleClickAccessibility } from '../vibe/helpers/handleTabAccessibility';
 
-import axios from 'axios';
-import Cookie from 'js-cookie';
-import { BASE_URL } from '../constants/api-routes';
-import { UserPlus, LogIn } from 'react-feather';
+import { TopNav } from '../components/top-nav';
 
 const MOBILE_SIZE = 992;
 
-export default class DashboardLayout extends Component {
+class DashboardLayout extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
@@ -41,166 +36,70 @@ export default class DashboardLayout extends Component {
 		}
 	}
 
-  componentDidMount() {
-    window.addEventListener('resize', this.handleResize);
-    document.addEventListener('keydown', handleKeyAccessibility);
-    document.addEventListener('click', handleClickAccessibility);
-  }
+	componentDidMount() {
+		window.addEventListener('resize', this.handleResize);
+		document.addEventListener('keydown', handleKeyAccessibility);
+		document.addEventListener('click', handleClickAccessibility);
+	}
 
-  componentWillUnmount() {
-    window.removeEventListener('resize', this.handleResize);
-  }
+	componentWillUnmount() {
+		window.removeEventListener('resize', this.handleResize);
+	}
 
-  toggleSideCollapse = () => {
-    this.setState(prevState => ({ sidebarCollapsed: !prevState.sidebarCollapsed }));
-  };
+	toggleSideCollapse = () => {
+		this.setState(prevState => ({ sidebarCollapsed: !prevState.sidebarCollapsed }));
+	};
 
-  closeChat = () => {
-    this.setState({ showChat1: false });
-  };
+	closeChat = () => {
+		this.setState({ showChat1: false });
+	};
 
-  render() {
-    const { sidebarCollapsed } = this.state;
-    const sidebarCollapsedClass = sidebarCollapsed ? 'side-menu-collapsed' : '';
-    return (
-      <ContextProviders>
-        <div className={`app ${sidebarCollapsedClass}`}>
-          <PageAlert />
-          <div className="app-body">
-            <SidebarNav
-              nav={nav}
-              logo={Logo}
-              logoText="Techsuite"
-              isSidebarCollapsed={sidebarCollapsed}
-              toggleSidebar={this.toggleSideCollapse}
-              {...this.props}
-            />
-            <Page>
-              <Header
-                toggleSidebar={this.toggleSideCollapse}
-                isSidebarCollapsed={sidebarCollapsed}
-                routes={routes}
-                {...this.props}
-              >
-                <HeaderNav />
-              </Header>
-              <PageContent>
-                <Switch>
-                  {routes.map((page, key) => (
-                    <Route path={page.path} component={page.component} key={key} />
-                  ))}
-                  <Redirect from="/" to="/home" />
-                </Switch>
-              </PageContent>
-            </Page>
-          </div>
-          <Footer>
-          </Footer>
-          <Chat.Container>
-            {this.state.showChat1 && (
-              <Chat.ChatBox name="Messages" status="online" image={avatar1} close={this.closeChat} />
-            )}
-          </Chat.Container>
-        </div>
-      </ContextProviders>
-    );
-  }
+	render() {
+		const { sidebarCollapsed } = this.state;
+		const sidebarCollapsedClass = sidebarCollapsed ? 'side-menu-collapsed' : '';
+		return (
+			<ContextProviders>
+				<div className={`app ${sidebarCollapsedClass}`}>
+				<PageAlert />
+				<div className="app-body">
+					<SidebarNav
+					nav={nav}
+					logo={Logo}
+					logoText="Techsuite"
+					isSidebarCollapsed={sidebarCollapsed}
+					toggleSidebar={this.toggleSideCollapse}
+					{...this.props}
+					/>
+					<Page>
+					<Header
+						toggleSidebar={this.toggleSideCollapse}
+						isSidebarCollapsed={sidebarCollapsed}
+						routes={routes}
+						{...this.props}
+					>
+						<TopNav />
+					</Header>
+					<PageContent>
+						<Switch>
+						{routes.map((page, key) => (
+							<Route path={page.path} component={page.component} key={key} />
+						))}
+						<Redirect from="/" to="/home" />
+						</Switch>
+					</PageContent>
+					</Page>
+				</div>
+				<Footer>
+				</Footer>
+				<Chat.Container>
+					{this.state.showChat1 && (
+					<Chat.ChatBox name="Messages" status="online" image={avatar1} close={this.closeChat} />
+					)}
+				</Chat.Container>
+				</div>
+			</ContextProviders>
+		);
+	}
 }
 
-// Header definition:
-class HeaderNav extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      loggedIn: false,
-      profileImgURL: "",
-      username: ""
-    };
-    this.logout = this.logout.bind(this);
-  }
-
-  // Make an API call to get the profile image URL to display on the top navbar
-  // if the user is signed in
-  componentDidMount() {
-    const currUserToken = Cookie.get("token");
-    const currUserID = Cookie.get("user_id");
-    if (currUserToken) {
-      axios.get(`${BASE_URL}/users/profile?token=${currUserToken}&user_id=${currUserID}`)
-        .then((res) => {
-          this.setState({
-            loggedIn: true,
-            username: `${res.data.username}`,
-            profileImgURL: res.data.profile_img_url
-          });
-        })
-        .catch((err) => {
-          alert(err);
-        });
-    }
-  }
-
-  logout() {
-    console.log("CLEARED COOKIES. User is now logged out");
-    Cookie.remove("token");
-    Cookie.remove("user_id");
-  }
-
-  render() {
-    const paddedNavItem = {
-      paddingTop: "10px",
-      paddingRight: "10px"
-    };
-
-    const currUserID = Cookie.get("user_id");
-    return (
-      <React.Fragment>
-        {/* PROFILE DROPDOWN: */}
-        {(this.state.loggedIn) ? 
-          <>
-            <NavItem style={paddedNavItem}>
-              Welcome <strong>{this.state.username}</strong>
-            </NavItem>
-            <AvatarDropdown profileImgURL={this.state.profileImgURL} userID={currUserID} />
-          </> :
-          <>
-            <NavItem style={paddedNavItem}>
-              <NavLink to="/auth/login"><Button color="primary"><LogIn /> Log In</Button></NavLink>
-            </NavItem> 
-            <NavItem style={paddedNavItem}>
-              <NavLink to="/auth/register"><Button color="primary"><UserPlus /> Register</Button></NavLink>
-            </NavItem> 
-          </>
-        }
-        
-      </React.Fragment>
-    );
-  }
-}
-
-const AvatarDropdown = (props) => {
-  const { profileImgURL, userID } = props;
-  return (
-    <UncontrolledDropdown nav inNavbar>
-      <DropdownToggle nav>
-        <Avatar size="small" color="black" image={profileImgURL} />
-      </DropdownToggle>
-      <DropdownMenu right>
-        <DropdownItem>
-          <Link to={`/user/profile/${userID}`}>View my profile</Link>
-        </DropdownItem>
-        <DropdownItem>
-          <Link to={`/user/profile/${userID}/edit`}>Edit my profile</Link>
-        </DropdownItem>
-        <DropdownItem divider />
-        <DropdownItem>
-          Log out
-        </DropdownItem>
-      </DropdownMenu>
-    </UncontrolledDropdown>
-  );
-}
-
-AvatarDropdown.propTypes = {
-  profileImgURL: PropTypes.string.isRequired,
-  userID: PropTypes.number.isRequired
-};
+export default DashboardLayout;

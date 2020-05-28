@@ -1,7 +1,7 @@
 import React from 'react';
 import axios from 'axios';
 import Cookie from 'js-cookie';
-import { Link } from 'react-router-dom';
+import { Link, withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faStar, faUser, faLock } from '@fortawesome/free-solid-svg-icons'
@@ -30,8 +30,9 @@ class Channel extends React.Component {
                         "Content-Type": "application/json"
                     }
                 })
-                .then((response) => {
+                .then((res) => {
                     console.log("Successfully joined channel!");
+                    this.props.history.push(`/channel/${this.props.channel_id}`);
                 })
                 .catch((err) => {
                     // TODO: Replace alert with something else
@@ -107,4 +108,4 @@ Channel.defaultProps = {
     isPublic: true
 };
 
-export default Channel;
+export default withRouter(Channel);

@@ -8,8 +8,7 @@ import PropTypes from 'prop-types';
 
 class UserInvite extends React.Component {
     static propTypes = {
-        match: PropTypes.object.isRequired,
-        channelName: PropTypes.string.isRequired
+        match: PropTypes.object.isRequired
     }
 
     constructor(props) {
@@ -44,8 +43,8 @@ class UserInvite extends React.Component {
                 }
             }
             axios(postData)
-                .then(() => {
-                    // TODO: Redirect to all channels page
+                .then((res) => {
+                    this.props.history.push("/channels/my");
                 })
                 .catch((err) => {
                     // TODO: replace alert

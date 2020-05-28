@@ -60,7 +60,7 @@ def get_profile_image_url():
     return jsonify(users.users_get_profile_image_url(request.args.get("token")))
 
 @users_router.route("/users/profile/uploadphoto", methods=['POST'])
-def handle_user_profile_uploadphoto():
+def handle_user_profile_upload_photo():
     """
         HTTP Route: /users/profile/uploadphoto
         HTTP Method: POST

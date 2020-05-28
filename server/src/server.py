@@ -35,7 +35,7 @@ app.register_blueprint(auth_router)
 app.register_blueprint(channels_router)
 app.register_blueprint(users_router)
 app.register_blueprint(message_router)
-# app.register_blueprint(image_router)
+app.register_blueprint(image_router)
 
 # Register a default error handler
 app.register_error_handler(Exception, error_handler)

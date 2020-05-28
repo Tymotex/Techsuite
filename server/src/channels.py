@@ -341,7 +341,7 @@ def channels_listall(token):
         "channels": channels_list
     }
 
-def channels_create(token, name, description, visibility):
+def channels_create(token, name, description, channel_image, visibility):
     """
         Creates a new channel with that name that is either a public or private channel. The created channel object
         has the following fields: { channel_id, name, description, visibility }

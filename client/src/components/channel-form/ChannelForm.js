@@ -1,6 +1,7 @@
 import React from 'react';
 import axios from 'axios';
 import Cookie from 'js-cookie';
+import { withRouter } from 'react-router-dom';
 import { BASE_URL } from '../../constants/api-routes';
 import { Button, Form, FormGroup, FormText, Label, Input } from 'reactstrap';
 
@@ -28,6 +29,7 @@ class ChannelForm extends React.Component {
                     token: currUserToken,
                     name: formData.get("name"),
                     description: formData.get("description"),
+                    channel_image: formData.get("channelImage"),
                     visibility: formData.get("visibility")
                 },
                 headers: {
@@ -37,6 +39,8 @@ class ChannelForm extends React.Component {
             axios(postData)
                 .then((res) => {
                     console.log("Successfully created a channel!");
+                    // Pushing a route to history will invoke a redirect to that route 
+                    this.props.history.push("/channels/my");
                 })
                 .catch((err) => {
                     alert(err);
@@ -63,6 +67,14 @@ class ChannelForm extends React.Component {
                         Give a short summary of what this channel is about!
                     </FormText>
                 </FormGroup>
+                {/* Channel Picture */}
+                <FormGroup>
+                    <Label for="channelImage">Channel Image</Label>
+                    <Input type="text" name="channelImage" id="channelImage" />
+                    <FormText>
+                        Upload an image for your channel.
+                    </FormText>
+                </FormGroup>
                 {/* Visibility? */}
                 <FormGroup tag="fieldset">
                     <legend>Visibility</legend>
@@ -86,4 +98,4 @@ class ChannelForm extends React.Component {
     }
 }
 
-export default ChannelForm;
+export default withRouter(ChannelForm);

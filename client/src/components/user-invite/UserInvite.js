@@ -97,7 +97,7 @@ class UserInvite extends React.Component {
                                     <Label for="exampleSelect"></Label>
                                     <Input type="select" name="u_id" id="exampleSelect">
                                         {this.state.users.map((eachUser, i) => (
-                                            <option key={i} value={eachUser.u_id}>{`${eachUser.name_first} ${eachUser.name_last}` }</option>
+                                            <option key={i} value={eachUser.u_id}>{`${eachUser.username}` }</option>
                                         ))}
                                     </Input>
                                 </FormGroup>

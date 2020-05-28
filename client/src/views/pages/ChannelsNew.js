@@ -13,6 +13,7 @@ class ChannelsNew extends React.Component {
     createNewChannel(event) {
         event.preventDefault();
         const currUserToken = Cookie.get("token");
+        const history = this.props.history;
         if (currUserToken) {
             const formData = new FormData(event.target);
             console.log("IS PUBLIC???", (formData.get("is_public")) ? true : false)
@@ -32,7 +33,8 @@ class ChannelsNew extends React.Component {
             axios(postData)
                 .then((res) => {
                     console.log("Successfully created a channel!");
-                    this.forceUpdate();
+                    history.push("/home");
+                    console.log("Redirecting.");
                 })
                 .catch((err) => {
                     alert(err);

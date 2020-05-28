@@ -2,7 +2,7 @@ import React from 'react';
 import axios from 'axios';
 import Cookie from 'js-cookie';
 import PropTypes from 'prop-types';
-import { Row, Col, Card, Button } from 'reactstrap';
+import { Row, Col, Card } from 'reactstrap';
 import { BASE_URL } from '../../constants/api-routes';
 
 class UserProfile extends React.Component {
@@ -46,7 +46,7 @@ class UserProfile extends React.Component {
     }
 
     render() {
-        const { email, name_first, name_last, profile_img_url } = this.state.user;
+        const { email, username, profile_img_url } = this.state.user;
         return (
             <Card body>
                 <div className="text-center">
@@ -54,7 +54,7 @@ class UserProfile extends React.Component {
                         <img src={profile_img_url} style={{ width: "200px", height: "200px" }} className="b-circle" alt="Profile" />
                     </div>
                     <div>
-                        <h2 className="h4">{`${name_first} ${name_last}`}</h2>
+                        <h2 className="h4"><strong>{`${username}`}</strong></h2>
                         <div className="h5 text-muted">Software Engineering Student</div>
                         <div className="h5 text-muted">{email}</div>
                         <hr />
@@ -68,7 +68,7 @@ class UserProfile extends React.Component {
                                 <div className="text-muted">Channels joined</div>
                             </Col>
                         </Row>
-                        <Button block>Follow</Button>
+                        <hr />
                     </div>
                 </div>
             </Card>

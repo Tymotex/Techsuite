@@ -137,7 +137,7 @@ def handle_channels_create():
     """
         HTTP Route: /channels/create
         HTTP Method: POST
-        Params: (token, name, description, visibility)
+        Params: (token, name, description, channel_image, visibility)
         Returns JSON: {
             channels_id
         }
@@ -146,6 +146,7 @@ def handle_channels_create():
     token = request_data["token"]
     name = request_data["name"]
     description = request_data["description"]
+    channel_image = request_data["channel_image"]
     visibility = request_data["visibility"]
     printColour("Channels Create: {}".format(request_data), colour="violet")
-    return jsonify(channels.channels_create(token, name, description, visibility))
+    return jsonify(channels.channels_create(token, name, description, channel_image, visibility))
