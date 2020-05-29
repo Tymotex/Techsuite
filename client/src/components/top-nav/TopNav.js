@@ -53,8 +53,7 @@ class TopNav extends React.Component {
         // Storing the JWT token inside the browser session storage 
         Cookie.set("token", res.data.token);
         Cookie.set("user_id", res.data.user_id);
-        this.props.history.push("/home");
-        this.toggleModal();
+        // this.props.history.push("/home");
     }
 
     wipeSession() {
