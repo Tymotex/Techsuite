@@ -64,23 +64,14 @@ def handle_send_message(token, channel_id, message):
     # chat field updates in 'realtime'
     emit("receive_message", "The server has received your message", broadcast=True)
 
-# TODO: Haha.. global variable
-NUM_USERS_TYPING = 0
-
 @socketio.on("started_typing")
 def handle_typing_prompt():
-    global NUM_USERS_TYPING
-    NUM_USERS_TYPING += 1
     emit("show_typing_prompt", broadcast=True, include_self=False)
 
 @socketio.on("stopped_typing")
 def handle_typing_prompt():
-    global NUM_USERS_TYPING
-    NUM_USERS_TYPING -= 1
     printColour("NUM_USERS_TYPING: {}".format(NUM_USERS_TYPING), colour="red")
-    if (NUM_USERS_TYPING == 0):
-        emit("hide_typing_prompt", broadcast=True, include_self=False)
-    
+    emit("hide_typing_prompt", broadcast=True, include_self=False)    
 
 # ===== Starting the server =====
 if __name__ == "__main__":

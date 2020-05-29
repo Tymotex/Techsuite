@@ -8,7 +8,8 @@ import PropTypes from 'prop-types';
 
 class UserInvite extends React.Component {
     static propTypes = {
-        match: PropTypes.object.isRequired
+        match: PropTypes.object.isRequired,
+        history: PropTypes.object.isRequired
     }
 
     constructor(props) {
@@ -59,7 +60,7 @@ class UserInvite extends React.Component {
         const formData = new FormData(event.target);
         console.log("Trying to invite user!");
         const currToken = Cookie.get("token");
-        console.log(formData.get('u_id'));
+        console.log(formData.get('user_id'));
         if (currToken) {
             const postData = {
                 url: `${BASE_URL}/channels/invite`,
@@ -67,7 +68,7 @@ class UserInvite extends React.Component {
                 data: {
                     token: currToken,
                     channel_id: this.state.channelID,
-                    u_id: formData.get("u_id")
+                    user_id: formData.get("user_id")
                 },
                 headers: {
                     'Content-Type': 'application/json'
@@ -76,6 +77,7 @@ class UserInvite extends React.Component {
             axios(postData)
                 .then(() => {
                     this.toggleModal();
+                    this.props.history.push("/home")
                 })
                 .catch((err) => {
                     // TODO: replace alert
@@ -95,9 +97,9 @@ class UserInvite extends React.Component {
                             Select a user:
                                 <FormGroup>
                                     <Label for="exampleSelect"></Label>
-                                    <Input type="select" name="u_id" id="exampleSelect">
+                                    <Input type="select" name="user_id" id="exampleSelect">
                                         {this.state.users.map((eachUser, i) => (
-                                            <option key={i} value={eachUser.u_id}>{`${eachUser.username}` }</option>
+                                            <option key={i} value={eachUser.user_id}>{`${eachUser.username}` }</option>
                                         ))}
                                     </Input>
                                 </FormGroup>

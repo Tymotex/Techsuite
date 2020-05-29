@@ -14,9 +14,11 @@ def channels_invite(token, channel_id, user_id):
         Returns: 
             {}          (dict)
     """
+    printColour("RECEIVED CHANNEL ID: {}".format(channel_id), colour="blue")
+    printColour("RECEIVED USER ID: {}".format(user_id), colour="blue")
     verify_token(token)
-    auth_user = get_user_from_token(token)
-    if not auth_user:
+    calling_user = get_user_from_token(token)
+    if not calling_user:
         raise AccessError(description="Invalid Token")
     
     # If channel_id is invalid, raise input error
@@ -24,22 +26,24 @@ def channels_invite(token, channel_id, user_id):
     if not selected_channel:
         raise InputError(description="channel_id doesn't reference a valid channel that the user is part of.")
     # Check the authorised user is not already a member of the channel
-    if not is_user_member(auth_user, selected_channel):
+    if not is_user_member(calling_user, selected_channel):
         raise AccessError(description="Authorised user is not a member of channel with channel_id")
 
-    user_to_add = get_user_from_id(user_id)
+    invited_user = User.query.filter_by(id=user_id).first() 
     # Check that the user exists (ie. the user_id is valid)
-    if not user_to_add:
+    if not invited_user:
         raise InputError(description="user_id does not refer to a valid user")
-    # Check if user_to_add is already a member
-    if is_user_member(user_to_add, selected_channel) is True:
-        raise InputError(description="user_id is already a member")
+    # Check if invited_user is already a member
+    if is_user_member(invited_user, selected_channel):
+        raise InputError(description="{} is already a member".format(invited_user.username))
     # Granting membership
     new_membership = MemberOf(
-        user=auth_user,
+        user=invited_user,
         channel=selected_channel,
         is_owner=False
     )
+    printColour("Trying to add user {} to channel {}".format(new_membership.user.id, new_membership.channel.id), colour="blue")
+    
     db.session.add(new_membership)
     db.session.commit()
     return {}
@@ -223,8 +227,8 @@ def channels_addowner(token, channel_id, user_id):
     """
     verify_token(token)
     #identify user from token
-    auth_user = get_user_from_token(data, token)
-    if not auth_user:
+    calling_user = get_user_from_token(data, token)
+    if not calling_user:
         raise AccessError(description="Invalid Token")
     users_list = data["users"]
 
@@ -239,7 +243,7 @@ def channels_addowner(token, channel_id, user_id):
     for owner in owners_list:
         if owner["user_id"] == user_id:
             is_user_owner = True
-        elif owner["user_id"] == auth_user["user_id"]:
+        elif owner["user_id"] == calling_user["user_id"]:
             is_auth_owner = True
 
     if is_user_owner is True:
@@ -273,8 +277,8 @@ def channels_removeowner(token, channel_id, user_id):
     """
     verify_token(token)
     #identify user from token
-    auth_user = get_user_from_token(data, token)
-    if not auth_user:
+    calling_user = get_user_from_token(data, token)
+    if not calling_user:
         raise AccessError(description="Invalid Token")
     users_list = data["users"]
 
@@ -288,7 +292,7 @@ def channels_removeowner(token, channel_id, user_id):
     for owner in selected_channel["owner_members"]:
         if owner["user_id"] == user_id:
             is_user_owner = True
-        if owner["user_id"] == auth_user["user_id"]:
+        if owner["user_id"] == calling_user["user_id"]:
             is_auth_owner = True
 
     if is_user_owner is False:

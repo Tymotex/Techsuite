@@ -7,12 +7,10 @@ import {
   CardHeader,
   CardFooter,
   CardBody,
-  CardImg,
   CardTitle,
   CardSubtitle,
   CardText,
 } from 'reactstrap';
-import laptopImage from '../../assets/images/laptop.jpeg';
 
 class CardsPage extends Component {
   constructor() {
@@ -32,7 +30,6 @@ class CardsPage extends Component {
             </CardBody>
           </Card>
           <Card>
-            <CardImg src={laptopImage} top width="100%" alt="laptop" />
             <CardBody>
               <CardTitle>Card title</CardTitle>
               <CardSubtitle>Card subtitle</CardSubtitle>
