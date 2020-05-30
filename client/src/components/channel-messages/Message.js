@@ -2,12 +2,18 @@ import React from 'react';
 import IncomingMessage from './IncomingMessage';
 import OutgoingMessage from './OutgoingMessage';
 
-const Message = (props) => {
-    return (
-        (props.is_author) ? 
-            <OutgoingMessage {...props} /> :
-            <IncomingMessage {...props} />
-    );
-};
+class Message extends React.Component {
+    componentDidMount() {
+        console.log(`Remounting! ${this.props.message_id}`);
+    }
+
+    render() {
+        return (
+            (this.props.is_author) ? 
+                <OutgoingMessage {...this.props} /> :
+                <IncomingMessage {...this.props} />
+        );
+    }
+}
 
 export default Message;

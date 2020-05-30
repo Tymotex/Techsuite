@@ -9,7 +9,11 @@ import { LoadingSpinner } from '../loading-spinner';
 
 import openSocket from 'socket.io-client';
 import TypingPrompt from './TypingPrompt';
+
+
 const socket = openSocket('http://localhost:3001');
+
+
 
 class ChannelMessages extends React.Component {
     constructor(props) {
@@ -74,6 +78,8 @@ class ChannelMessages extends React.Component {
             console.log(`Emitting send_message with params: ${currToken} ${this.props.channelID} ${messageData.get("message")}`);
             // TODO: Move the event name 'send_message' to a constants file
             socket.emit("send_message", currToken, this.props.channelID, messageData.get("message"));
+            const textField = document.getElementById("typingArea");
+            textField.value = "";
         }
     }
 
@@ -102,35 +108,38 @@ class ChannelMessages extends React.Component {
     }
 
     render() {
+        console.log(this.state.messages);
         return (
-            <div className="inbox_msg">
-                <div className="mesgs">
-                    <div className="msg_history">
+            <>
+                <div className="messageContainer">
+                    <div className="messageLog">
                         {(this.state.isLoading) ? (
                             <LoadingSpinner />
                         ) : (
                             (this.state.fetchSucceeded) ? (
-                                this.state.messages.map((eachMessage, i) => (
-                                    <Message key={i} {...eachMessage}/>
-                                ))
+                                this.state.messages.map((eachMessage) => {
+                                    return (
+                                        <Message key={eachMessage.message_id} {...eachMessage}/>
+                                    )
+                                })
                             ) : (
                                 <p>Message fetch failed</p>
                             )
-                        )}                        
+                        )}                      
                     </div>
-                    {/* 'User is typing' prompt */}
-                    <TypingPrompt isSomeoneElseTyping={this.state.isSomeoneElseTyping} />
-                    {/* Type a message form: */}
-                    <Form className="type_msg" onSubmit={this.sendMessage}>
-                        <FormGroup className="input_msg_write">
-                            <Input id="typingArea" type="textarea" placeholder="Type a message" name="message" />
-                            <Button className="msg_send_btn" color="primary">
-                                <i className="fa fa-paper-plane-o" aria-hidden="true"></i>
-                            </Button>
-                        </FormGroup>
-                    </Form>
                 </div>
-            </div>
+                {/* 'User is typing' prompt */}
+                <TypingPrompt isSomeoneElseTyping={this.state.isSomeoneElseTyping} />
+                {/* Type a message form: */}
+                <Form className="messageForm" onSubmit={this.sendMessage}>
+                    <FormGroup className="typingAreaFormGroup">
+                        <Input id="typingArea" type="textarea" placeholder="Type a message" name="message" />
+                        <Button className="msg_send_btn" color="primary">
+                            <i className="fa fa-paper-plane-o" aria-hidden="true"></i>
+                        </Button>
+                    </FormGroup>
+                </Form>
+            </>
         );
     }
 }

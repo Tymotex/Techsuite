@@ -19,7 +19,7 @@ const Channel = (props) => {
     return (
         <div>
             <Row>
-                <Col md={12} xl={9}>
+                <Col md={12} xl={10}>
                     {/* Header card */}
                     <Card>
                         <CardBody>
@@ -43,7 +43,7 @@ const Channel = (props) => {
                         </CardBody>
                     </Card>
                 </Col>
-                <Col md={12} xl={3}>
+                <Col md={12} xl={2}>
                     <Card>
                         <CardHeader>Side Widgets here?</CardHeader>
                         <CardBody>
