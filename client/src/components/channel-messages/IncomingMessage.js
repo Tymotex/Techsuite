@@ -1,17 +1,19 @@
 import React from 'react';
+import moment from 'moment-timezone';
 
-const IncomingMessage = ({ message, time_created, is_pinned, reacts }) => {
+const IncomingMessage = ({ message, time_created }) => {
+    const formattedTime = moment.unix(time_created).tz("Australia/Sydney").format("MM/DD/YYYY  |  h:mmA (z)");
     return (
-        <div className="incoming_msg">
-            <div className="incoming_msg_img">
-                <img src="https://ptetutorials.com/images/user-profile.png" alt="USERNAME" />
+        <div class="answer left">
+            <div class="avatar">
+            <img src="https://bootdey.com/img/Content/avatar/avatar2.png" alt="User name" />
+            <div class="status offline"></div>
             </div>
-            <div className="received_msg">
-                <div className="received_withd_msg">
-                    <p>{message}</p>
-                    <span className="time_date"> 11:01 AM    |    June 9</span>
-                </div>
+            <div class="name">Alexander Herthic</div>
+            <div class="text">
+                {message}
             </div>
+            <div class="time">{formattedTime}</div>
         </div>
     );
 };
