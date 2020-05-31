@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import PageAlertContext from '../../vibe/components/PageAlert/PageAlertContext';
+import PageAlertContext from '../../UI/components/PageAlert/PageAlertContext';
 import {
   Row,
   Col,

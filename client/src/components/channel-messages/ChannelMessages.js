@@ -107,7 +107,7 @@ class ChannelMessages extends React.Component {
         }
     }
 
-    
+    // Forcing the 
     componentDidUpdate() {
         const messageListContainer = document.getElementById("message-list-container");
         messageListContainer.scrollTop = messageListContainer.scrollHeight;

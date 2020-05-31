@@ -1,6 +1,6 @@
 import React from 'react';
 import { Card, CardBody, CardHeader } from 'reactstrap';
-import { Avatar } from '../../vibe';
+import { Avatar } from '../../UI';
 import avatar3 from '../../assets/images/avatar3.jpeg';
 import avatar4 from '../../assets/images/avatar4.jpeg';
 import avatar5 from '../../assets/images/avatar5.jpeg';

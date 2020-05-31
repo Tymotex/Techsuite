@@ -1,5 +1,5 @@
 import React from 'react';
-import { SubNavigation } from '../../vibe';
+import { SubNavigation } from '../../UI';
 
 const NAV = [
   {

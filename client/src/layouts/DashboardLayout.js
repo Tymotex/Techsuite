@@ -1,14 +1,15 @@
 import React from 'react';
 import { Switch, Route, Redirect } from 'react-router-dom';
-import { Header, SidebarNav, Footer, PageContent, Chat, PageAlert, Page } from '../vibe';
+import { SidebarNav, Footer, PageContent, Chat, PageAlert, Page } from '../UI';
 import Logo from '../assets/images/techsuite-icon.png';
 import avatar1 from '../assets/images/avatar1.png';
 import nav from '../_nav';
 import routes from '../views';
-import ContextProviders from '../vibe/components/utilities/ContextProviders';
-import handleKeyAccessibility, { handleClickAccessibility } from '../vibe/helpers/handleTabAccessibility';
+import ContextProviders from '../UI/components/utilities/ContextProviders';
+import handleKeyAccessibility, { handleClickAccessibility } from '../UI/helpers/handleTabAccessibility';
 
-import { TopNav } from '../components/top-nav';
+import { TopNavItems } from '../components/top-nav';
+import Header from '../UI/components/Header/Header';
 
 const MOBILE_SIZE = 992;
 
@@ -77,7 +78,7 @@ class DashboardLayout extends React.Component {
 						routes={routes}
 						{...this.props}
 					>
-						<TopNav />
+						<TopNavItems />
 					</Header>
 					<PageContent>
 						<Switch>
