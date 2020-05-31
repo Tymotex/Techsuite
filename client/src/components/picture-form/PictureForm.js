@@ -1,8 +1,11 @@
 /* eslint-disable jsx-a11y/media-has-caption, class-methods-use-this */
 import React, { PureComponent } from 'react';
+import Cookie from 'js-cookie';
 import { Form, FormGroup, FormText, Input, Label, Button, Row, Col } from 'reactstrap';
 import ReactCrop from 'react-image-crop';
 import 'react-image-crop/dist/ReactCrop.css';
+import axios from 'axios';
+import { BASE_URL } from '../../constants/api-routes';
 
 class PictureForm extends PureComponent {
     constructor(props) {
@@ -108,7 +111,34 @@ class PictureForm extends PureComponent {
     uploadPicture(event) {
         event.preventDefault();
         console.log("Trying to upload picture now!");
-        
+        const formData = new FormData(event.target);
+        const externalImageURL = formData.get("externalImageURL");
+        const croppedImageURL = this.state.croppedImageUrl;
+        const currUserToken = Cookie.get("token");
+        if (currUserToken) {
+            if (externalImageURL || croppedImageURL) {
+                const postData = {
+                    method: "POST",
+                    url: `${BASE_URL}/users/profile/uploadphoto`,
+                    data: {
+                        token: currUserToken,
+                        img_url: (externalImageURL) ? externalImageURL : croppedImageURL
+                    },
+                    headers: {
+                        "Content-Type": "application/json"
+                    }
+                };
+                axios(postData)
+                    .then((res) => {
+
+                    })
+                    .catch((err) => {
+                        console.log(err);
+                    })
+            } else {
+                console.log("NO IMAGE INPUT!?");
+            }
+        }
     }
     
     render() {
@@ -118,7 +148,7 @@ class PictureForm extends PureComponent {
                 <Form onSubmit={this.uploadPicture}>
                     <FormGroup>
                         <Label for="image-url">Image URL</Label>
-                        <Input type="text" id="image-url" placeholder="Image URL" />
+                        <Input type="text" name="externalImageURL" id="image-url" placeholder="Image URL" />
                         <FormText color="muted">
                             Paste the URL to an image here
                         </FormText>

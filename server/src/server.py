@@ -23,7 +23,6 @@ from util import printColour
 
 # Globals and config
 load_dotenv()
-PROFILE_IMG_DIRECTORY = os.getcwd() + r"/static/images/"
 socketio = SocketIO(app, cors_allowed_origins="*")
 app.config["SECRET_KEY"] = os.getenv("SECRET_MESSAGE")
 app.config["TRAP_HTTP_EXCEPTIONS"] = True

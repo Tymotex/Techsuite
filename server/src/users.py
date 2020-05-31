@@ -27,44 +27,30 @@ def users_profile(token, user_id):
         "profile_img_url": user.bio.profile_img_url
     }
 
-# TODO
-def users_profile_uploadphoto(token, img_endpoint):
+def users_profile_upload_photo(token, img_endpoint):
     """
-    The server does the following:
-    Given a URL of an image on the internet, crops the image within bounds
-    (x_start, y_start) and (x_end, y_end). Position (0,0) is the top left.
-    This function handles associating the saved cropped image with the user
-    Returns:
-        {}  dict
+        Given a URL to an image, updates the user's bio tuple to hold
+        the new profile picture's URL.  
+        Returns:
+            {}  dict
     """
-    # Need to add the file path to the user dictionary
-    data = get_data()
     verify_token(token)
-
-    this_user = get_user_from_token(data, token)
-
-    users = data["users"]
-    for each_user in users:
-        if each_user["user_id"] == this_user["user_id"]:
-            each_user["profile_img_url"] = img_endpoint
-
-    save_data(data)
+    user = get_user_from_token(token)
+    user.bio.profile_img_url = img_endpoint
+    db.session.commit()
     return {}
 
-def users_get_profile_image_url(token):
-    """
-    The server does the following:
-    Given a URL of an image on the internet, crops the image within bounds
-    (x_start, y_start) and (x_end, y_end). Position (0,0) is the top left.
-    This function handles associating the saved cropped image with the user
-    Returns:
-        'http://localhost:.../images/imagefilename.jpg'
-    """
-    verify_token(token)
-    data = get_data()
-    return {
-        "profile_img_url": get_user_from_token(data, token)["profile_img_url"]
-    }
+# def users_get_profile_image_url(token):
+#     """
+#         TODO: DEPRECATED?
+#         Returns:
+#             'http://localhost:.../images/imagefilename.jpg'
+#     """
+#     verify_token(token)
+#     data = get_data()
+#     return {
+#         "profile_img_url": get_user_from_token(data, token)["profile_img_url"]
+#     }
 
 # TODO: 
 def users_profile_set_username(token, username):

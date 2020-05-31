@@ -1,13 +1,16 @@
 """
-    File containing all globally used helper functions
+    File containing global helper functions
 """
-# Libraries
-import functools, re, smtplib, random, jwt, os, colored, hashlib
+# Standard libraries
+import functools, re, random, os
+
+# Third party libraries
 from dotenv import load_dotenv
 from colored import stylize
+import jwt, requests, hashlib, colored, smtplib
 
 # Source files:
-from exceptions import AccessError
+from exceptions import AccessError, InputError
 from models import User, Channel, Bio, MemberOf, Message
 from database import db
 
@@ -15,6 +18,7 @@ from database import db
 load_dotenv()
 SECRET_MESSAGE = os.getenv("SECRET_MESSAGE")
 SECRET_CODE = hashlib.sha256(SECRET_MESSAGE.encode()).hexdigest()
+PROFILE_IMG_DIRECTORY = os.getcwd() + r"/static/images/"
 
 # ===== Debugging Utilities =====
 def printColour(text, colour="green", bordersOn=True):
@@ -214,3 +218,34 @@ def select_channel(channel_id):
         if it exists.
     """
     return Channel.query.filter_by(id=channel_id).first()
+
+# ===== Downloading and Saving Images =====
+def download_img_and_get_filename(url, user_id):
+    """
+        Given a URL to an web image resource, download it to the
+        project directory's 'static/images' folder with a unique filename
+        of format: user_x_profile.jpg where x is the user's ID
+        Parameters:
+            url         (str)
+            user_id     (int)
+        Returns:
+            Filename (str) of the image on success, otherwise returns None
+    """
+    filename = "user_{}_profile.jpg".format(user_id)
+    image_path = PROFILE_IMG_DIRECTORY + filename
+
+    # Remove the previous profile picture, if it exists
+    try:
+        printColour("Removing exist profile picture: {}".format(filename), colour="red_1")
+        os.remove(image_path)
+    except FileNotFoundError:
+        pass
+
+    # Fetching and saving the profile picture to server directory
+    res = requests.get(url)
+    if res.status_code != 200:
+        raise InputError(description="Request to image resource failed")
+    with open(image_path, "wb") as output_img:
+        printColour("Saving picture: {}".format(image_path), colour="blue")
+        output_img.write(res.content)
+    return filename
