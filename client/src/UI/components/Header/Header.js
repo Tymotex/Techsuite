@@ -37,10 +37,14 @@ export default class Header extends Component {
   };
 
   render() {
+    const vert_align = {
+      display: 'flex',
+      flexDirection: 'column'
+    }
     return (
       <header className="app-header">
         <SkipToContentLink focusId="primary-content" />
-        <div className="top-nav">
+        <div className="top-nav" style={vert_align}>
           <Navbar color="faded" light expand="md">
             <ToggleSidebarButton
               toggleSidebar={this.props.toggleSidebar}

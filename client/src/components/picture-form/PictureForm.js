@@ -1,6 +1,6 @@
 /* eslint-disable jsx-a11y/media-has-caption, class-methods-use-this */
 import React, { PureComponent } from 'react';
-import { Form, FormGroup, FormText, Input, Label, Button } from 'reactstrap';
+import { Form, FormGroup, FormText, Input, Label, Button, Row, Col } from 'reactstrap';
 import ReactCrop from 'react-image-crop';
 import 'react-image-crop/dist/ReactCrop.css';
 
@@ -105,7 +105,8 @@ class PictureForm extends PureComponent {
     }
 
     // ===== API call =====
-    uploadPicture() {
+    uploadPicture(event) {
+        event.preventDefault();
         console.log("Trying to upload picture now!");
         
     }
@@ -131,20 +132,25 @@ class PictureForm extends PureComponent {
                     </FormGroup>
                     <Button>Upload Picture</Button>
                 </Form>
-
-                {src && (
-                    <ReactCrop
-                        src={src}
-                        crop={crop}
-                        ruleOfThirds
-                        onImageLoaded={this.onImageLoaded}
-                        onComplete={this.onCropComplete}
-                        onChange={this.onCropChange}
-                    />
-                )}
-                {croppedImageUrl && (
-                    <img alt="Crop" style={{ maxWidth: '100%' }} src={croppedImageUrl} />
-                )}
+                <Row>
+                    <Col sm={12} md={9} >
+                        {src && (
+                            <ReactCrop
+                                src={src}
+                                crop={crop}
+                                ruleOfThirds
+                                onImageLoaded={this.onImageLoaded}
+                                onComplete={this.onCropComplete}
+                                onChange={this.onCropChange}
+                            />
+                        )}
+                    </Col>
+                    <Col sm={12} md={3}>
+                        {croppedImageUrl && (
+                            <img alt="Crop" style={{ maxWidth: '100%' }} src={croppedImageUrl} />
+                        )}
+                    </Col>
+                </Row>
             </>
         );
     }

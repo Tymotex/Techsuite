@@ -6,7 +6,7 @@ class Profile extends Component {
 	render() {
 		return (
 			<div>
-				<UserProfile userID={this.props.match.params.userID} />
+				<UserProfile userID={parseInt(this.props.match.params.userID)} />
 				<PictureForm />
 			</div>
 		);
