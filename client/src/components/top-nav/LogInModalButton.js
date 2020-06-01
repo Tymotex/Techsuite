@@ -4,6 +4,8 @@ import { NavLink } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { LogIn } from 'react-feather';
 
+import { NeonButton } from '../neon-button';
+
 class LogInModal extends React.Component {
     static propTypes = {
         login: PropTypes.func.isRequired
@@ -18,6 +20,7 @@ class LogInModal extends React.Component {
     }
 
     toggleModal() {
+        console.log("Toggling");
         this.setState(prevState => ({
             modal: !prevState.modal
         }));
@@ -26,7 +29,11 @@ class LogInModal extends React.Component {
     render() {
         return (
             <>
-                <Button color="primary" onClick={this.toggleModal}><LogIn /> Log In</Button>
+                <button onClick={this.toggleModal}>
+                    <NeonButton>
+                        <LogIn /> Log In
+                    </NeonButton>
+                </button>
                 <Modal isOpen={this.state.modal} toggle={this.toggleModal}>
                     <ModalHeader toggle={this.toggleModal}>Welcome back!</ModalHeader>
                     <Form onSubmit={this.props.login}>

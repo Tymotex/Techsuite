@@ -5,8 +5,8 @@ import { BASE_URL } from '../../constants/api-routes';
 import { withRouter } from 'react-router-dom';
 import { NavItem } from 'reactstrap';
 import AvatarDropdown from './AvatarDropdown';
-import LogInModal from './LogInModal';
-import RegisterModal from './RegisterModal';
+import LogInModalButton from './LogInModalButton';
+import RegisterModalButton from './RegisterModalButton';
 
 class TopNavItems extends React.Component {
     constructor(props) {
@@ -123,9 +123,11 @@ class TopNavItems extends React.Component {
   
     render() {
         const paddedNavItem = {
-            paddingTop: "10px",
-            paddingRight: "10px"
         };
+        const center = {
+            margin: "auto",
+            width: "100%"
+        }
   
         const currUserID = parseInt(Cookie.get("user_id"));
         const { loggedIn, username, profileImgURL } = this.state;
@@ -134,7 +136,7 @@ class TopNavItems extends React.Component {
                 {/* Rendering the profile dropdown */}
                 {(loggedIn) ? (
                     <>
-                        <NavItem style={paddedNavItem}>
+                        <NavItem style={center}>
                             Welcome <strong>{username}</strong>
                         </NavItem>
                         <AvatarDropdown profileImgURL={profileImgURL} userID={currUserID} logout={this.logout} />
@@ -142,11 +144,11 @@ class TopNavItems extends React.Component {
                 ) : (
                     <>
                         <NavItem style={paddedNavItem}>
-                            <LogInModal login={this.logInUser}/>
+                            <LogInModalButton login={this.logInUser}/>
                             {/* <NavLink to="/auth/login"><Button color="primary"><LogIn /> Log In</Button></NavLink> */}
                         </NavItem> 
                         <NavItem style={paddedNavItem}>
-                            <RegisterModal register={this.registerUser} />
+                            <RegisterModalButton register={this.registerUser} />
                             {/* <NavLink to="/auth/register"><Button color="primary"><UserPlus /> Register</Button></NavLink> */}
                         </NavItem> 
                     </>

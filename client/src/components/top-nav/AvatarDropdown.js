@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
-import { Avatar } from '../../UI';
+import Avatar from './Avatar';
 import { UncontrolledDropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
 
 const AvatarDropdown = (props) => {
@@ -9,7 +9,7 @@ const AvatarDropdown = (props) => {
     return (
         <UncontrolledDropdown nav inNavbar>
             <DropdownToggle nav>
-                <Avatar size="small" color="black" image={profileImgURL} />
+                <Avatar size="lg" color="black" image={profileImgURL} />
             </DropdownToggle>
             <DropdownMenu right>
                 <DropdownItem>

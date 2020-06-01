@@ -1,10 +1,10 @@
-/* TOP NAVIGATION STYLES
-   ----------------------------- */
+$navbar-colour: rgb(19, 19, 19);
+$navbar-text-colour: white;
+$hamburger-colour: darkslategrey;
 
 .app-header {
-  height: 55px;
-  background: rgb(37, 37, 37);
-  color: white;
+  background: $navbar-colour;
+  color: $navbar-text-colour;
   display: flex;
   position: relative;
   z-index: 80;
@@ -14,7 +14,6 @@
     padding: 0 0px;
     width: 100%;
     box-shadow: 0 1px 0px rgba(0, 0, 0, 0.03), 0 1px 8px rgba(0, 21, 41, 0.12);
-
     > nav {
       padding: 5px 10px;
       > li {
@@ -41,7 +40,7 @@
   }
 
   .hamburger {
-    background-color: darkslategray;
+    background-color: $hamburger-colour;
   }
 
   i {
@@ -49,7 +48,7 @@
   }
 
   .sidebar-toggle {
-    background-color: darkslategray!important;
+    background-color: $hamburger-colour!important;
     border: transparent;
 
     .fa {
