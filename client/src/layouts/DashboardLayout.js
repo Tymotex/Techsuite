@@ -64,12 +64,12 @@ class DashboardLayout extends React.Component {
 				<PageAlert />
 				<div className="app-body">
 					<SidebarNav
-					nav={nav}
-					logo={Logo}
-					logoText="Techsuite"
-					isSidebarCollapsed={sidebarCollapsed}
-					toggleSidebar={this.toggleSideCollapse}
-					{...this.props}
+						nav={nav}
+						logo={Logo}
+						logoText="Techsuite."
+						isSidebarCollapsed={sidebarCollapsed}
+						toggleSidebar={this.toggleSideCollapse}
+						{...this.props}
 					/>
 					<Page>
 					<Header

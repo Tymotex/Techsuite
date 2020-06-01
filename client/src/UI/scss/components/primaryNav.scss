@@ -8,6 +8,7 @@
   background: #010d21;
   display: flex;
   flex-direction: column;
+  transition: $slideTransitionTime;
 
   &.has-alert {
     top: 48px;
@@ -26,7 +27,7 @@
 .site-logo-bar {
   overflow: hidden;
   background: rgb(60, 0, 66);
-  height: 55px;
+  height: auto;
 
   .navbar-brand {
     width: 100%;
@@ -42,8 +43,8 @@
     }
 
     > img {
-      max-height: 50px;
-      max-width: 50px;
+      max-height: 64px;
+      max-width: 64px;
       display: inline-block;
     }
 
@@ -51,6 +52,7 @@
       margin-left: 8px;
       opacity: 1;
       vertical-align: middle;
+      font-size: 150%;
 
       img {
         max-height: 50px;

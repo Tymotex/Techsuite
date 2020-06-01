@@ -1,6 +1,7 @@
 
-$normal-background-colour: darkslategray;
-$neon-glow-color: blueviolet;
+$normal-background-colour: rgb(30, 51, 51);
+$neon-background-colour: rgb(106, 155, 233);
+$neon-glow-colour: blueviolet;
 $normal-text-colour: whitesmoke;
 $neon-text-colour: darkslategray;
 
@@ -10,8 +11,10 @@ $neon-text-colour: darkslategray;
     padding: 10px;
     margin: 5px 15px;
     vertical-align: middle;
+
     color: $normal-text-colour;
     background-color: $normal-background-colour;
+    border-radius: 5%;
     text-transform: uppercase;
     letter-spacing: 4px;
     text-decoration: none!important;
@@ -19,10 +22,12 @@ $neon-text-colour: darkslategray;
     overflow: hidden;
     transition: all 0.3s;
 
+    cursor: pointer;
+
     &:hover {
         color: $neon-text-colour;
-        background: #2196F3;
-        box-shadow: 0 0 10px $neon-glow-color, 0 0 40px $neon-glow-color, 0 0 80px $neon-glow-color;
+        background: $neon-background-colour;
+        box-shadow: 0 0 10px $neon-glow-colour, 0 0 40px $neon-glow-colour, 0 0 80px $neon-glow-colour;
         transition-delay: 0.3s;
 
         span {

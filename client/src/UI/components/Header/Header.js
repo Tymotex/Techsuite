@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import ToggleSidebarButton from './components/ToggleSidebarButton';
+// import ToggleSidebarButton from './components/ToggleSidebarButton';
+import ToggleSidebarButton from '../../../components/top-nav/ToggleSidebarButton';
 import PageLoader from '../PageLoader/PageLoader';
 
 import { Navbar, NavbarToggler, Collapse, Nav } from 'reactstrap';

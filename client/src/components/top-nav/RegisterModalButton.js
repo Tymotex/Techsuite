@@ -3,6 +3,8 @@ import { Button, Modal, ModalHeader, ModalBody, ModalFooter, Form, FormGroup, In
 import PropTypes from 'prop-types';
 import { UserPlus } from 'react-feather';
 
+import { NeonButton } from '../neon-button';
+
 class RegisterModal extends React.Component {
     static propTypes = {
         register: PropTypes.func.isRequired
@@ -25,7 +27,9 @@ class RegisterModal extends React.Component {
     render() {
         return (
             <>
-                <Button color="primary" onClick={this.toggleModal}><UserPlus /> Register</Button>
+                <NeonButton toggleModal={this.toggleModal}>
+                    <UserPlus /> Register
+                </NeonButton>
                 <Modal isOpen={this.state.modal} toggle={this.toggleModal}>
                     <ModalHeader toggle={this.toggleModal}>Sign Up!</ModalHeader>
                     <Form onSubmit={this.register}>

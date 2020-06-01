@@ -11,6 +11,7 @@
   width: 100%;
   position: relative;
   margin-left: $sidebarWidth;
+  transition: $slideTransitionTime;
 
   &.has-alert {
     margin-top: 48px;
@@ -58,6 +59,7 @@
   .side-menu-collapsed {
     #page-content {
       margin-left: 50px;
+      transition: $slideTransitionTime;
     }
   }
 }

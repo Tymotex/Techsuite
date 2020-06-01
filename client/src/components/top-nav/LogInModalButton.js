@@ -29,11 +29,9 @@ class LogInModal extends React.Component {
     render() {
         return (
             <>
-                <button onClick={this.toggleModal}>
-                    <NeonButton>
-                        <LogIn /> Log In
-                    </NeonButton>
-                </button>
+                <NeonButton toggleModal={this.toggleModal}>
+                    <LogIn /> Log In
+                </NeonButton>
                 <Modal isOpen={this.state.modal} toggle={this.toggleModal}>
                     <ModalHeader toggle={this.toggleModal}>Welcome back!</ModalHeader>
                     <Form onSubmit={this.props.login}>
