@@ -23,7 +23,7 @@ const NavSingleItem = ({ item }) => {
 
     return (
       <li className="nav-item">
-        <NavLink to={url} activeClassName="active">
+        <NavLink to={url} activeClassName="active" onClick={playSFX}>
           {item.icon && Icon && <Icon className="side-nav-icon" />}
           <span className="nav-item-label">{item.name}</span>
           {item.badge && <NavBadge color={item.badge.variant} text={item.badge.text} />}
@@ -32,5 +32,11 @@ const NavSingleItem = ({ item }) => {
     );
   }
 };
+
+function playSFX() {
+  // Path to audio files start from the project directory's public folder ('/' is the public directory)
+  let audio = new Audio("/sfx/click-2.wav");
+  audio.play();
+}
 
 export default NavSingleItem;

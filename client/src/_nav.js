@@ -29,6 +29,11 @@ export default {
     },
     {
       divider: true,
+    },
+    {
+      name: 'News',
+      url: '/news',
+      icon: 'Globe',
     }
   ],
   bottom: [

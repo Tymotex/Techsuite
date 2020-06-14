@@ -26,6 +26,7 @@ import ProfileEdit from './pages/ProfileEdit';
 import Home from './pages/Home';
 import Register from './pages/Register';
 import Login from './pages/Login';
+import News from './pages/News';
 
 import Feed from './pages/Feed';
 import Modals from './elements/Modals';
@@ -79,6 +80,11 @@ const pageList = [
     name: 'Create a Channel',
     path: '/channels/new',
     component: ChannelsNew,
+  },
+  {
+    name: 'News',
+    path: '/news',
+    component: News,
   },
   {
     name: 'Buttons',
