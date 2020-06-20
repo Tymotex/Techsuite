@@ -9,7 +9,6 @@ class News extends React.Component {
     }
 
     componentWillMount() {
-        console.log("===== HERE =====");
         axios.get("https://hacker-news.firebaseio.com/v0/item/9129911.json?print=pretty")
             .then((res) => {
                 console.log(res.data);
