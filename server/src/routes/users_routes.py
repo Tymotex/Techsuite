@@ -7,7 +7,8 @@ from dotenv import load_dotenv
 
 # Local imports:
 import users
-from util import get_user_from_token, printColour, download_img_and_get_filename
+from util.util import printColour, download_img_and_get_filename
+from util.token import get_user_from_token
 
 # Globals and config:
 load_dotenv()

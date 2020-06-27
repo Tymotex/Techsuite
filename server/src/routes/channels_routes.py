@@ -1,5 +1,5 @@
 from flask import Blueprint, request, jsonify
-from util import printColour
+from util.util import printColour
 import channels
 
 channels_router = Blueprint("channels", __name__)

@@ -1,6 +1,6 @@
 from flask import Blueprint, request, jsonify
 import users
-import util
+from util import util
 
 admin_router = Blueprint("admin", __name__)
 

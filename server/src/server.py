@@ -19,7 +19,7 @@ from routes.image_routes import image_router
 from routes.http_error_handler import error_handler
 from messages import message_send
 from extensions import app
-from util import printColour
+from util.util import printColour
 
 # Globals and config
 load_dotenv()

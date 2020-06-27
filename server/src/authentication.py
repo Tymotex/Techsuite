@@ -7,7 +7,8 @@ from dotenv import load_dotenv
 from extensions import db
 from models import User, Bio, Channel, Message, MemberOf
 from exceptions import InputError, AccessError
-from util import email_is_legit, generate_token, verify_token, send_email, email_message, printColour
+from util.util import email_is_legit, send_email, email_message, printColour
+from util.token import generate_token, verify_token
 import users
 
 # Globals and config:

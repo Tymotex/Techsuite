@@ -1,6 +1,6 @@
 from database import db
 from models import *
-from util import printColour
+from util.util import printColour
 
 # ===== Basic Admin Functions =====
 def create_all():

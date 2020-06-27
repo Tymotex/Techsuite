@@ -1,6 +1,6 @@
 from flask import Blueprint, request, jsonify
 from authentication import auth_signup, auth_login, auth_logout, auth_password_reset, auth_password_reset_request
-from util import printColour
+from util.util import printColour
 
 auth_router = Blueprint("auth", __name__)
 

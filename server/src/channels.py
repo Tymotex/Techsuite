@@ -1,7 +1,8 @@
 from extensions import db
 from models import Channel, User, Message, MemberOf, Bio
 from exceptions import InputError, AccessError
-from util import is_user_member, select_channel, get_user_from_token, get_user_from_id, verify_token, printColour
+from util.util import is_user_member, select_channel, get_user_from_id, printColour
+from util.token import get_user_from_token, verify_token
 
 def channels_invite(token, channel_id, user_id):
     """

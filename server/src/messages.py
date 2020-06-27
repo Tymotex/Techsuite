@@ -2,7 +2,8 @@
 from extensions import db
 from models import Channel, User, Message, MemberOf, Bio
 from exceptions import InputError, AccessError
-from util import is_user_member, get_message, get_user_from_token, determine_channel, select_channel, verify_token
+from util.util import is_user_member, get_message, determine_channel, select_channel
+from util.token import verify_token, get_user_from_token
 
 def message_send(token, channel_id, message):
     """
