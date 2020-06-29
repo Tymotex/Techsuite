@@ -51,7 +51,7 @@ class LogInModal extends React.Component {
                         </ModalBody>
                         {/* Buttons in the modal footer: */}
                         <ModalFooter>
-                            <Button color="primary">Sign In</Button>{' '}
+                            <Button color="primary">Sign In</Button>
                             <Button color="secondary" onClick={this.toggleModal}>Cancel</Button>
                         </ModalFooter>
                     </Form>

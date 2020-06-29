@@ -32,7 +32,7 @@ class RegisterModal extends React.Component {
                 </NeonButton>
                 <Modal isOpen={this.state.modal} toggle={this.toggleModal}>
                     <ModalHeader toggle={this.toggleModal}>Sign Up!</ModalHeader>
-                    <Form onSubmit={this.register}>
+                    <Form onSubmit={this.props.register}>
                         <ModalBody>
                             {/* Username: */}
                             <FormGroup>

@@ -111,6 +111,7 @@ class TopNavItems extends React.Component {
         axios(postData)
             .then((res) => {
                 this.saveSession(res);
+                alert("DONE");
             })
             .catch((err) => {
                 console.log(err);

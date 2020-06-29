@@ -18,3 +18,7 @@ A social app for developers. Built with React, Flask and PostgreSQL.
 - Socket broadcast issue for group messaging
 - Broadcasting to unique users
 
+# Installing Psycopg2 on Debian/Ubuntu
+1. sudo apt install libpq-dev python3-dev
+2. pip3 install psycopg2
+
