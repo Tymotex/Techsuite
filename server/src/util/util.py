@@ -15,7 +15,8 @@ from models import User, Channel, Bio, MemberOf, Message
 from database import db
 
 # Globals and config:
-load_dotenv()
+load_dotenv("../")
+
 SECRET_MESSAGE = os.getenv("SECRET_MESSAGE")
 SECRET_CODE = hashlib.sha256(SECRET_MESSAGE.encode()).hexdigest()
 PROFILE_IMG_DIRECTORY = os.getcwd() + r"/static/images/"

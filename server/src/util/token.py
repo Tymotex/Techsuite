@@ -2,11 +2,16 @@
 import os
 
 # Third party libraries
+from dotenv import load_dotenv
 import jwt
 
 # Source files:
 from exceptions import AccessError
 from models import User
+
+# Globals and config:
+load_dotenv("../")
+SECRET_MESSAGE = os.getenv("SECRET_MESSAGE")
 
 # ===== Token Functions =====
 def generate_token(user_data):

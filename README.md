@@ -18,7 +18,31 @@ A social app for developers. Built with React, Flask and PostgreSQL.
 - Socket broadcast issue for group messaging
 - Broadcasting to unique users
 
-# Installing Psycopg2 on Debian/Ubuntu
+# Database Setup:
+Instructions for installing PostgreSQL and hooking it up with Flask-SQLAlchemy.
+1. Install PostgreSQL
+```
+$ sudo apt update
+$ sudo apt install postgresql postgresql-contrib
+```
+2. Create a new role
+```
+$ sudo -u postgres createuser --interactive --pwprompt
+Enter name of role to add: me
+Enter password for new role: 
+Enter it again: 
+Shall the new role be a superuser? (y/n) y
+```
+3. Create a new database instance with ```sudo -u postgres createdb techsuite```
+4. Enter the ```psql``` interactive shell and grant privileges
+```
+$ sudo -u postgres psql
+psql=# GRANT ALL PRIVLEGES ON DATABASE techsuite TO me;
+```
+5. Adjust the database URI string in ```server/src/.env```. The format is ```DATABASE_URI="postgresql://<name>:<password>@<host>/<dbname>"```, for example, ```DATABASE_URI="postgresql://me:1984@localhost/techsuite"```
+6. 
+
+### Installing Psycopg2 on Debian/Ubuntu
 1. sudo apt install libpq-dev python3-dev
 2. pip3 install psycopg2
 

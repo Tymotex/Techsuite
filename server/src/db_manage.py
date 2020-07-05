@@ -10,3 +10,4 @@ def create_all():
 def drop_all():
     printColour("Dropping all tables", colour="red")
     db.drop_all()
+

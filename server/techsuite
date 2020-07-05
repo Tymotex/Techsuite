@@ -1,0 +1,33 @@
+#!/bin/sh
+# Setup tool for starting the server and setting up the database
+
+helpLog="Usage: $0 [--setup | --reset | --wipe]"
+while test $# -gt 0; do
+    case "$1" in
+        -h)
+            echo "$helpLog"
+            shift
+            ;;
+        --setup)
+            (echo "create_all()" | python3 -i src/db_manage.py 2> /dev/null) && echo "Done"
+            shift
+            ;;
+        --reset)
+            (printf "drop_all()\ncreate_all()" | python3 -i src/db_manage.py 2> /dev/null) && echo "Done"
+            
+            shift
+            ;;
+        --wipe)
+            (echo "drop_all()" | python3 -i src/db_manage.py 2> /dev/null) && echo "Done"
+            exit 0
+            shift
+            ;;
+        *)
+            echo "$helpLog"
+            exit 1
+            shift
+            ;;
+    esac
+done
+
+python3 src/server.py
