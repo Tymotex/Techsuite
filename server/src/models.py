@@ -1,8 +1,6 @@
 from extensions import db
 from datetime import datetime
 
-# ===== CLASSES =====
-
 # This class will map to a database table. Objects of this class will map to tuples of that table
 class User(db.Model):
     __tablename__ = "techsuite_users"

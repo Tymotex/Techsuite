@@ -7,6 +7,7 @@ while test $# -gt 0; do
         -h)
             echo "$helpLog"
             shift
+            exit 0
             ;;
         --setup)
             (echo "create_all()" | python3 -i src/db_manage.py 2> /dev/null) && echo "Done"

@@ -1,4 +1,7 @@
+# Third party libraries
 from flask import Blueprint, request, jsonify
+
+# Local imports:
 from authentication import auth_signup, auth_login, auth_logout, auth_password_reset, auth_password_reset_request
 from util.util import printColour
 

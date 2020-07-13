@@ -16,6 +16,7 @@ from routes.channels_routes import channels_router
 from routes.users_routes import users_router
 from routes.message_routes import message_router
 from routes.image_routes import image_router
+from routes.admin_routes import admin_router
 from routes.http_error_handler import error_handler
 from messages import message_send
 from extensions import app
@@ -35,6 +36,7 @@ app.register_blueprint(channels_router)
 app.register_blueprint(users_router)
 app.register_blueprint(message_router)
 app.register_blueprint(image_router)
+app.register_blueprint(admin_router)
 
 # Register a default error handler
 app.register_error_handler(Exception, error_handler)
