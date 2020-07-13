@@ -1,4 +1,20 @@
 // import Dashboard from './pages/Dashboard';
+
+
+// Content pages:
+import ChannelsAll from './pages/ChannelsAll';
+import ChannelsMy from './pages/ChannelsMy';
+import ChannelsNew from './pages/ChannelsNew';
+import Channel from './pages/Channel';
+import Profile from './pages/Profile';
+import ProfileEdit from './pages/ProfileEdit';
+import Home from './pages/Home';
+import Register from './pages/Register';
+import Login from './pages/Login';
+import News from './pages/News';
+import Admin from './pages/Admin'
+
+// Other elements:
 import Buttons from './elements/Buttons';
 import Alerts from './elements/Alerts';
 import Grid from './elements/Grid';
@@ -16,18 +32,6 @@ import CmsPage from './pages/Cms';
 import Widgets from './pages/Widgets';
 import BlankPage from './pages/BlankPage';
 import SubNav from './pages/SubNav';
-
-import ChannelsAll from './pages/ChannelsAll';
-import ChannelsMy from './pages/ChannelsMy';
-import ChannelsNew from './pages/ChannelsNew';
-import Channel from './pages/Channel';
-import Profile from './pages/Profile';
-import ProfileEdit from './pages/ProfileEdit';
-import Home from './pages/Home';
-import Register from './pages/Register';
-import Login from './pages/Login';
-import News from './pages/News';
-
 import Feed from './pages/Feed';
 import Modals from './elements/Modals';
 import ProgressBars from './elements/ProgressBars';
@@ -85,6 +89,11 @@ const pageList = [
     name: 'News',
     path: '/news',
     component: News,
+  },
+  {
+    name: 'Admin',
+    path: '/admin',
+    component: Admin,
   },
   {
     name: 'Buttons',

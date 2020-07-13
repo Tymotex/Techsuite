@@ -34,7 +34,15 @@ export default {
       name: 'News',
       url: '/news',
       icon: 'Globe',
-    }
+    },
+    {
+      divider: true,
+    },
+    {
+      name: 'Admin',
+      icon: 'Database',
+      url: '/admin',
+    },
   ],
   bottom: [
     {
