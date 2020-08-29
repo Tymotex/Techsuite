@@ -1,0 +1,46 @@
+#!/usr/bin/sh
+
+printC() {
+    local myVar="$1"
+    C='\033[1;33m'
+    NC='\033[0m' # No Color
+    printf "${C}${myVar}${NC}\n"
+}
+
+showProgress=false
+helpLog="Usage: $0 [--verbose | -i ] <pattern> <path>"
+while test $# -gt 0; do
+    case "$1" in
+        -h)
+            echo "$helpLog"
+            shift
+            exit 0
+            ;;
+        --verbose)
+            showProgress=false
+            shift
+            ;;
+        -i)
+            shift
+            ;;
+        *)
+            break
+            shift
+            ;;
+    esac
+done
+
+pattern=$1
+targetPath=$2
+for path in $(find $targetPath | egrep -v '(\.git)|(node_modules)'); do
+    if test $showProgress = true; then
+        printC "Searching: $path"
+    fi
+    
+    result=$(grep -E --line-number "$pattern" "$path" 2> /dev/null)
+    if ! test -z $result; then
+        printC "Successful match in $path"
+        echo "$result"
+    fi
+done
+

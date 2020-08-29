@@ -1,0 +1,55 @@
+#!/bin/sh
+# Setup tool for starting the server and setting up the database
+
+
+helpLog="Usage: $0 [--setup | --reset | --wipe] [--client | --server]"
+
+startClient=false
+startServer=false
+while test $# -gt 0; do
+    case "$1" in
+        -h)
+            echo "$helpLog"
+            shift
+            exit 0
+            ;;
+        --setup)
+            (echo "create_all()" | python3 -i src/db_manage.py 2> /dev/null) && echo "Done"
+            shift
+            ;;
+        --reset)
+            (printf "drop_all()\ncreate_all()" | python3 -i src/db_manage.py 2> /dev/null) && echo "Done"
+            
+            shift
+            ;;
+        --wipe)
+            (echo "drop_all()" | python3 -i src/db_manage.py 2> /dev/null) && echo "Done"
+            exit 0
+            shift
+            ;;
+        --client)
+            startClient=true
+            shift
+            ;;
+        --server)
+            startServer=true
+            shift
+            ;;
+        *)
+            echo "$helpLog"
+            exit 1
+            shift
+            ;;
+    esac
+done
+
+# Running flask server
+if test $startServer = true; then
+    python3 ../server/src/server.py &
+fi
+
+# Running frontend server
+if test $startClient = true; then
+    npm --prefix ../client start
+fi
+
