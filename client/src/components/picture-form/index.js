@@ -1,1 +1,3 @@
-export { default as PictureForm } from './PictureForm';
+export { default as ProfilePictureForm } from './ProfilePictureForm';
+// TODO: Deprecated? How to do multiple exports?
+

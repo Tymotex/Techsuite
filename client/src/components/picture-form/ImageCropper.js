@@ -7,7 +7,7 @@ import 'react-image-crop/dist/ReactCrop.css';
 import axios from 'axios';
 import { BASE_URL } from '../../constants/api-routes';
 
-class PictureForm extends PureComponent {
+class ImageCropper extends PureComponent {
     constructor(props) {
         super(props);
         this.state = {
@@ -17,7 +17,14 @@ class PictureForm extends PureComponent {
                 width: 30,
                 aspect: 1,
             },
-            croppedImageUrl: null
+            croppedImageUrl: null,
+            selectedImageFile: null,
+            cropBoundaries: {
+                widthStart: -1,
+                heightStart: -1,
+                widthEnd: -1,
+                heightEnd: -1
+            }
         };
         this.onSelectFile = this.onSelectFile.bind(this);
         this.onImageLoaded = this.onImageLoaded.bind(this);
@@ -25,7 +32,7 @@ class PictureForm extends PureComponent {
         this.onCropChange = this.onCropChange.bind(this);
         this.makeClientCrop = this.makeClientCrop.bind(this);
         this.getCroppedImg = this.getCroppedImg.bind(this);
-        this.uploadPicture = this.uploadPicture.bind(this);
+        this.uploadImageFile = this.uploadImageFile.bind(this);
     }
     
     // ===== Upload and Cropping Functions =====
@@ -36,6 +43,10 @@ class PictureForm extends PureComponent {
                 this.setState({ src: reader.result })
             );
             reader.readAsDataURL(e.target.files[0]);
+
+            this.setState({
+                selectedImageFile: e.target.files[0]
+            })
         }
     };
     
@@ -55,6 +66,7 @@ class PictureForm extends PureComponent {
         // this.setState({ crop: percentCrop });
         console.log("Readjusting the crop!");
         this.setState({ crop });
+        this.makeClientCrop(crop);
     };
     
     async makeClientCrop(crop) {
@@ -65,7 +77,15 @@ class PictureForm extends PureComponent {
                 crop,
                 'newFile.jpeg'
             );
-            this.setState({ croppedImageUrl });
+            this.setState({ 
+                croppedImageUrl, 
+                cropBoundaries: {
+                    widthStart: crop.x,
+                    heightStart: crop.y,
+                    widthEnd: crop.x + crop.width,
+                    heightEnd: crop.y + crop.height
+                }
+            });
         }
     }
     
@@ -79,7 +99,12 @@ class PictureForm extends PureComponent {
         canvas.width = crop.width;
         canvas.height = crop.height;
         const ctx = canvas.getContext('2d');
-    
+
+        console.log("xstart: " + crop.x);
+        console.log("ystart: " + crop.y);
+        console.log("xend: " + (crop.x + crop.width));
+        console.log("yend: " + (crop.y + crop.height));
+
         ctx.drawImage(
             image,
             crop.x * scaleX,
@@ -92,6 +117,8 @@ class PictureForm extends PureComponent {
             crop.height
         );
     
+        // return canvas.toDataURL("image/png");
+
         return new Promise((resolve, reject) => {
             canvas.toBlob(blob => {
                 if (!blob) {
@@ -107,83 +134,80 @@ class PictureForm extends PureComponent {
         });
     }
 
-    // ===== API call =====
-    uploadPicture(event) {
+    // API call:
+    uploadImageFile(event) {
         event.preventDefault();
-        console.log("Trying to upload picture now!");
-        const formData = new FormData(event.target);
-        const externalImageURL = formData.get("externalImageURL");
-        const croppedImageURL = this.state.croppedImageUrl;
         const currUserToken = Cookie.get("token");
-        if (currUserToken) {
-            if (externalImageURL || croppedImageURL) {
-                const postData = {
-                    method: "POST",
-                    url: `${BASE_URL}/users/profile/uploadphoto`,
-                    data: {
-                        token: currUserToken,
-                        img_url: (externalImageURL) ? externalImageURL : croppedImageURL
-                    },
-                    headers: {
-                        "Content-Type": "application/json"
-                    }
-                };
-                axios(postData)
-                    .then((res) => {
+        const fd = new FormData();
+        fd.append("file", this.state.selectedImageFile, "user_1_.png");
+        fd.append("token", currUserToken); 
+        fd.append("x_start", Math.floor(this.state.cropBoundaries.widthStart));
+        fd.append("y_start", Math.floor(this.state.cropBoundaries.heightStart));
+        fd.append("x_end", Math.floor(this.state.cropBoundaries.widthEnd));
+        fd.append("y_end", Math.floor(this.state.cropBoundaries.heightEnd));
 
-                    })
-                    .catch((err) => {
-                        console.log(err);
-                    })
-            } else {
-                console.log("NO IMAGE INPUT!?");
+        console.log("Cropped image dimensions: ");
+        console.log(this.state.cropBoundaries);
+
+        const postData = {
+            method: "POST",
+            url: `${BASE_URL}/${this.props.uploadEndpoint}`,
+            data: fd,
+            headers: {
+                "Content-Type": "application/json"
             }
-        }
+        };
+        axios(postData)
+            .then((res) => {
+                console.log(res);
+                window.location.reload();
+            })
+            .catch((err) => {
+                console.log(err);
+            })
     }
     
     render() {
         const { crop, croppedImageUrl, src } = this.state;
+        const tmpStyle = {
+            // "text-align": "center"
+        };
+        const imageStyle = {
+            "border": "thick double black"
+        }
         return (
             <>
-                <Form onSubmit={this.uploadPicture}>
+                <h3>Update your profile picture:</h3>
+                <Form onSubmit={this.uploadImageFile}>
                     <FormGroup>
-                        <Label for="image-url">Image URL</Label>
-                        <Input type="text" name="externalImageURL" id="image-url" placeholder="Image URL" />
-                        <FormText color="muted">
-                            Paste the URL to an image here
-                        </FormText>
+                        <Input id="fileinput" type="file" accept="image/*" onChange={this.onSelectFile} />
+                        <Label id="fileinputlabel" for="fileinput">Upload image</Label>
                     </FormGroup>
-                    <FormGroup>
-                        <Label for="exampleFile">File</Label>
-                        <Input type="file" accept="image/*" onChange={this.onSelectFile} />
-                        <FormText color="muted">
-                            Upload an image file
-                        </FormText>
-                    </FormGroup>
-                    <Button>Upload Picture</Button>
+                    <Button color="primary">Update Profile Picture</Button>
+                    
+                    <Row style={{"margin-top": "10px"}}>
+                        <Col sm={12} md={6}>
+                            {src && (
+                                <ReactCrop style={imageStyle}
+                                    src={src}
+                                    crop={crop}
+                                    ruleOfThirds
+                                    onImageLoaded={this.onImageLoaded}
+                                    onComplete={this.onCropComplete}
+                                    onChange={this.onCropChange}
+                                />
+                            )}
+                        </Col>
+                        <Col sm={12} md={6}>
+                            {croppedImageUrl && (
+                                <img alt="Crop" style={imageStyle} src={croppedImageUrl} />
+                            )}
+                        </Col>
+                    </Row>
                 </Form>
-                <Row>
-                    <Col sm={12} md={9} >
-                        {src && (
-                            <ReactCrop
-                                src={src}
-                                crop={crop}
-                                ruleOfThirds
-                                onImageLoaded={this.onImageLoaded}
-                                onComplete={this.onCropComplete}
-                                onChange={this.onCropChange}
-                            />
-                        )}
-                    </Col>
-                    <Col sm={12} md={3}>
-                        {croppedImageUrl && (
-                            <img alt="Crop" style={{ maxWidth: '100%' }} src={croppedImageUrl} />
-                        )}
-                    </Col>
-                </Row>
             </>
         );
     }
 }
 
-export default PictureForm;
+export default ImageCropper;
