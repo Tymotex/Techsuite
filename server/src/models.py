@@ -29,7 +29,6 @@ class Bio(db.Model):
     last_name = db.Column(db.String(50))
     profile_img_url = db.Column(db.String(255))
     cover_img_url = db.Column(db.String(255))
-    birthday = db.Column(db.DateTime)
     summary = db.Column(db.String(1000))
     location = db.Column(db.String(255))
     title = db.Column(db.String(50))

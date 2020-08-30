@@ -8,6 +8,7 @@ import functools, re, random, os
 from dotenv import load_dotenv
 from colored import stylize
 import jwt, requests, hashlib, colored, smtplib
+from PIL import Image
 
 # Source files:
 from exceptions import AccessError, InputError
@@ -19,7 +20,7 @@ load_dotenv("../")
 
 SECRET_MESSAGE = os.getenv("SECRET_MESSAGE")
 SECRET_CODE = hashlib.sha256(SECRET_MESSAGE.encode()).hexdigest()
-PROFILE_IMG_DIRECTORY = os.getcwd() + r"/static/images/"
+PROFILE_IMG_DIRECTORY = os.getcwd() + r"/src/static/images/"        # TODO: Not robust? Cwd should always be project root
 
 # ===== Debugging Utilities =====
 def printColour(text, colour="green", bordersOn=True):
@@ -237,12 +238,13 @@ def download_img_and_get_filename(url, user_id):
 
     # Remove the previous profile picture, if it exists
     try:
-        printColour("Removing exist profile picture: {}".format(filename), colour="red_1")
+        printColour("Removing existing profile picture: {}".format(filename), colour="red_1")
         os.remove(image_path)
     except FileNotFoundError:
         pass
 
     # Fetching and saving the profile picture to server directory
+    print(url)
     res = requests.get(url)
     if res.status_code != 200:
         raise InputError(description="Request to image resource failed")
@@ -250,3 +252,25 @@ def download_img_and_get_filename(url, user_id):
         printColour("Saving picture: {}".format(image_path), colour="blue")
         output_img.write(res.content)
     return filename
+
+def crop_image_file(image_filename, x_start, y_start, x_end, y_end):
+    image_path = PROFILE_IMG_DIRECTORY + image_filename
+    try:
+        pic = Image.open(image_path)
+        # Discard the alpha/transparency channel
+        pic = pic.convert('RGB')   
+    except:
+        raise InputError(description="Not a valid image file!")
+
+    crop_coordinates = (x_start, y_start, x_end, y_end)
+    width, height = pic.size
+    if (x_start > width or y_start > height or
+            x_end > width or y_end > height or
+            x_start < 0 or y_start < 0 or
+            x_end < 0 or y_end < 0 or
+            x_start > x_end or y_start > y_end
+       ):
+        raise InputError(description="Coordinates out of bounds")
+
+    cropped_pic = pic.crop(crop_coordinates)
+    cropped_pic.save(image_path, compression='jpeg')

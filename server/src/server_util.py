@@ -8,6 +8,26 @@ from dotenv import load_dotenv
 load_dotenv()
 PROFILE_IMG_DIRECTORY = os.getcwd() + r"/static/images/"
 
+def crop_image_file(image_filename, x_start, y_start, x_end, y_end):
+    image_path = PROFILE_IMG_DIRECTORY + image_filename
+    try:
+        pic = Image.open(image_path)
+    except:
+        raise InputError(description="Not a valid image file!")
+
+    crop_coordinates = (x_start, y_start, x_end, y_end)
+    width, height = pic.size
+    if (x_start > width or y_start > height or
+            x_end > width or y_end > height or
+            x_start < 0 or y_start < 0 or
+            x_end < 0 or y_end < 0 or
+            x_start > x_end or y_start > y_end
+       ):
+        raise InputError(description="Coordinates out of bounds")
+
+    cropped_pic = pic.crop(crop_coordinates)
+    cropped_pic.save(image_path)
+
 def download_img_and_crop(url, u_id, x_start, y_start, x_end, y_end):
     """
         Given a URL to an web image resource, download it to the

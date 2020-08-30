@@ -82,8 +82,9 @@ def channels_details(token, channel_id):
         curr_member = each_membership[0]
         member_data = {
             "user_id": curr_member.id,
-            "name_first": curr_member.username,
-            "profile_img_url": curr_member.bio.profile_img_url
+            "username": curr_member.username,
+            "profile_img_url": curr_member.bio.profile_img_url,
+            "email": curr_member.email
         }
         channel_members.append(member_data)
         if each_membership[1].is_owner:
@@ -380,3 +381,15 @@ def channels_create(token, name, description, channel_image, visibility):
     return {
         'channel_id': new_channel.id
     }
+
+def channels_upload_photo(token, channel_id, image_url):
+    """
+        Adds a channel photo 
+        Parameters:  
+            token      (str)
+            channel_id (str)
+            image_url  (str)
+        Returns: 
+            {}
+    """
+    return {}

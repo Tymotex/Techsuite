@@ -3,9 +3,10 @@ The file contains all the user functions
 """
 from database import db
 from exceptions import InputError, AccessError
-from util.util import email_is_legit
+from util.util import email_is_legit, printColour
 from util.token import verify_token, get_user_from_token
 from models import User, Channel, Bio, MemberOf
+
 
 # ===== User Functions =====
 def users_profile(token, user_id):
@@ -95,6 +96,7 @@ def users_profile_setemail(token, email):
     # TODO: Update record
     return {}
 
+
 def users_all(token):
     """
         Returns a list of all users and their associated details
@@ -112,6 +114,40 @@ def users_all(token):
     users = [{ "user_id": user.id, "email": user.email, "username": user.username, "profile_img_url": user.bio.profile_img_url } for user in all_users]
     return {
         "users": users
+    }
+
+def users_bio_fetch(token, user_id):
+    verify_token(token)
+    user = User.query.filter_by(id=user_id).first()
+    if not user:
+        raise InputError(description="user_id does not refer to any user in the database")
+    printColour("Fetched " + str(user_id) + "'s bio:")
+    print(user.bio)
+    return {
+        "first_name": user.bio.first_name,
+        "last_name" : user.bio.last_name,
+        "cover_img_url" : user.bio.last_name,
+        "title" : user.bio.title,
+        "summary" : user.bio.summary,
+        "location" : user.bio.location,
+        "education" : user.bio.education
+    }
+
+def users_bio_update(token, user_id, updated_bio):
+    verify_token(token)
+    user = User.query.filter_by(id=user_id).first()
+    if not user:
+        raise InputError(description="user_id does not refer to any user in the database")
+    user.bio.first_name = updated_bio["first_name"]
+    user.bio.last_name=updated_bio["last_name"]
+    user.bio.cover_img_url=updated_bio["cover_img_url"]
+    user.bio.summary=updated_bio["summary"]
+    user.bio.location=updated_bio["location"]
+    user.bio.title=updated_bio["title"]
+    user.bio.education=updated_bio["education"]
+    db.session.commit()
+    return {
+        "succeeded": True
     }
 
 def admin_user_remove(token, user_id):
