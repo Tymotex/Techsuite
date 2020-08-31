@@ -24,7 +24,7 @@ const Showcase = () => {
           <div className="home-hero" style={heroStyles}>
             <h1>Welcome to Techsuite.</h1>
             <p className="text-muted">
-              Chat and collaborate with fellow software engineers!
+              An app for chatting, collaborating and sharing ideas 🌱
             </p>
           </div>
         </Col>
@@ -40,7 +40,7 @@ const Showcase = () => {
               <div className="m-l">
                 <h2 className="h4">Channels</h2>
                 <p className="text-muted">
-                  Create your own channels. 
+                  Create channels, invite other users and collaborate on group projects
                 </p>
               </div>
             </CardBody>
@@ -80,9 +80,9 @@ const Showcase = () => {
             <CardBody className="display-flex">
               <FontAwesomeIcon icon={faNewspaper} style={iconStyles} />
               <div className="m-l">
-                <h2 className="h4">Keep up with trends</h2>
+                <h2 className="h4">Stay tech-savvy</h2>
                 <p className="text-muted">
-                  Stay updated with the rapidly evolving software world!
+                  Keep yourself updated with the rapidly evolving software world
                 </p>
               </div>
             </CardBody>

@@ -1,9 +1,12 @@
-import React from 'react';
 import axios from 'axios';
 import Cookie from 'js-cookie';
 import PropTypes from 'prop-types';
-import { Row, Col, Card } from 'reactstrap';
+import React from 'react';
+import { Card, Col, Row, CardBody } from 'reactstrap';
 import { BASE_URL } from '../../constants/api-routes';
+import "./UserProfile.scss";
+import UserChannels from './UserChannels'; 
+import UserBio from './UserBio';
 
 class UserProfile extends React.Component {
     static propTypes = {
@@ -15,7 +18,8 @@ class UserProfile extends React.Component {
         this.state = {
             isLoading: false,
             fetchSucceeded: false,
-            user: {}
+            user: {},
+            bio: {}
         };
     }
 
@@ -27,11 +31,23 @@ class UserProfile extends React.Component {
         if (currUserToken) {
             axios.get(`${BASE_URL}/users/profile?token=${currUserToken}&user_id=${this.props.userID}`)
                 .then((userProfile) => {
-                    this.setState({
-                        isLoading: false,
-                        fetchSucceeded: true,
-                        user: userProfile.data
-                    });
+
+                    // Now fetch the user's bio 
+                    axios.get(`${BASE_URL}/users/bio?token=${currUserToken}&user_id=${this.props.userID}`)
+                        .then((userBio) => {
+                            this.setState({
+                                isLoading: false,
+                                fetchSucceeded: true,
+                                user: userProfile.data,
+                                bio: userBio.data
+                            });
+                        })
+                        .catch((err) => {
+                            this.setState({
+                                isLoading: false,
+                                fetchSucceeded: false
+                            })
+                        });
                 })
                 .catch((err) => {
                     this.setState({
@@ -47,31 +63,50 @@ class UserProfile extends React.Component {
 
     render() {
         const { email, username, profile_img_url } = this.state.user;
+        const { first_name, last_name, cover_img_url, summary, location, title, education} = this.state.bio;
+
+        console.log(this.state.bio);
+
         return (
-            <Card body>
-                <div className="text-center">
-                    <div className="m-b">
-                        <img src={profile_img_url} style={{ width: "200px", height: "200px" }} className="b-circle" alt="Profile" />
+            <>
+                <Card body>
+                    <div className="text-center" style={{"background-image": "url('https://stillmed.olympic.org/media/Images/OlympicOrg/News/2019/12/11/2019-12-11-mountain-day-featured-01.jpg')", "background-size": "cover"}}>
+                        <div className="user-profile-card">
+                            <div className="m-b">
+                                <img src={profile_img_url} style={{ width: "200px", height: "200px" }} className="b-circle" alt="Profile" />
+                            </div>
+                            <div>
+                                <h2 className="h4"><strong>{`${username}`}</strong></h2>
+                                <div className="user-profile-card-divider">
+                                    <hr />
+                                </div>
+                                <div className="h5 text-muted">Name: {(first_name != null || last_name != null) ? first_name + " " + last_name : "not specified"}</div>
+                                <div className="h5 text-muted">Title: {title != null ? title : "unknown"}</div>
+                                <div className="h5 text-muted">Education: {education != null ? education : "unknown"}</div>
+                                <div className="h5 text-muted">Location: {location != null ? location : "unknown"}</div>
+                                <div className="h5 text-muted">Email: {email}</div>
+                                
+                            </div>
+                        </div>
                     </div>
-                    <div>
-                        <h2 className="h4"><strong>{`${username}`}</strong></h2>
-                        <div className="h5 text-muted">Software Engineering Student</div>
-                        <div className="h5 text-muted">{email}</div>
-                        <hr />
-                        <Row className="text-center m-b">
-                            <Col>
-                                <strong>10</strong>
-                                <div className="text-muted">Channels owned</div>
-                            </Col>
-                            <Col>
-                                <strong>20</strong>
-                                <div className="text-muted">Channels joined</div>
-                            </Col>
-                        </Row>
-                        <hr />
-                    </div>
-                </div>
-            </Card>
+                </Card>
+                <Row>
+                    <Col xs={4}>
+                        <Card>
+                            <CardBody>
+                                <UserBio summary={summary} />
+                            </CardBody>
+                        </Card>
+                    </Col>
+                    <Col xs={8}>
+                        <Card>
+                            <CardBody>
+                                <UserChannels />
+                            </CardBody>
+                        </Card>
+                    </Col>
+                </Row>
+            </>
         );
     }  
 }

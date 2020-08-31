@@ -1,24 +1,21 @@
 $channelPictureLength: 100px;
 
 .channel-card {
-    box-shadow: 2px 3px 3px rgba(80, 80, 80, 0.507)!important;
+    box-shadow: 2px 3px 3px 3px rgba(80, 80, 80, 0.507)!important;
     min-height: 200px;
-    max-height: 200px;
 
     .channel-picture {
-        min-width: $channelPictureLength;
-        max-width: $channelPictureLength;
-        min-height: $channelPictureLength;
-        max-height: $channelPictureLength;
+        // max-width: $channelPictureLength;
+        // max-height: $channelPictureLength;
         &:hover {
             filter: grayscale(1) blur(1px);
         }
     }
 
-    .corner-text {
-        position: absolute;
-        padding: 10px;
-        top: 0px;
-        right: 0px;
-    }
+    // .corner-text {
+    //     position: absolute;
+    //     padding: 10px;
+    //     bottom: 0px;
+    //     right: 0px;
+    // }
 }

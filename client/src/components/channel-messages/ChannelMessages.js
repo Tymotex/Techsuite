@@ -2,7 +2,7 @@ import React from 'react';
 import axios from 'axios';
 import Cookie from 'js-cookie';
 import './ChannelMessages.scss';
-import { Form, FormGroup, Button, Input } from 'reactstrap';
+import { Form, FormGroup, Button, Input, Row, Col } from 'reactstrap';
 import Message from './Message';
 import { BASE_URL } from '../../constants/api-routes';
 import { LoadingSpinner } from '../loading-spinner';
@@ -107,7 +107,6 @@ class ChannelMessages extends React.Component {
         }
     }
 
-    // Forcing the 
     componentDidUpdate() {
         const messageListContainer = document.getElementById("message-list-container");
         messageListContainer.scrollTop = messageListContainer.scrollHeight;
@@ -118,54 +117,20 @@ class ChannelMessages extends React.Component {
         return (
             <>
                 <div class="content container-fluid bootstrap snippets">
-                    <div class="row row-broken">
-                        <div class="col-sm-3 col-xs-12">
-                        <div class="col-inside-lg decor-default chat" style={{overflow: "auto", outline: "none"}} tabindex="5000">
-                            <div class="chat-users">
-                                <h6>Online</h6>
-                                <div class="user">
-                                    <div class="avatar">
-                                    <img src="https://bootdey.com/img/Content/avatar/avatar1.png" alt="User name" />
-                                    <div class="status off"></div>
-                                    </div>
-                                    <div class="name">User name</div>
-                                    <div class="mood">User mood</div>
-                                </div>
-                                <div class="user">
-                                    <div class="avatar">
-                                    <img src="https://bootdey.com/img/Content/avatar/avatar2.png" alt="User name" />
-                                    <div class="status online"></div>
-                                    </div>
-                                    <div class="name">User name</div>
-                                    <div class="mood">User mood</div>
-                                </div>
-                                <div class="user">
-                                    <div class="avatar">
-                                    <img src="https://bootdey.com/img/Content/avatar/avatar3.png" alt="User name" />
-                                    <div class="status busy"></div>
-                                    </div>
-                                    <div class="name">User name</div>
-                                    <div class="mood">User mood</div>
-                                </div>
-                            </div>
-                        </div>
-                        </div>
-                        <div id="message-list-container" class="col-sm-9 col-xs-12 chat" style={{overflow: "auto", outline: "none"}} tabindex="5001">
-                            <div class="col-inside-lg decor-default">
-                                <div class="chat-body">
-                                <h6>Mini Chat</h6>
-                                {(this.state.isLoading) ? (
-                                    <LoadingSpinner />
+                    <div id="message-list-container" class="chat" style={{overflow: "auto", outline: "none"}} tabindex="5001">
+                        <div class="col-inside-lg decor-default">
+                            <div class="chat-body">
+                            {(this.state.isLoading) ? (
+                                <LoadingSpinner />
+                            ) : (
+                                (this.state.fetchSucceeded) ? (
+                                    this.state.messages.map((eachMessage) => (
+                                        <Message key={eachMessage.message_id} {...eachMessage}/>
+                                    ))
                                 ) : (
-                                    (this.state.fetchSucceeded) ? (
-                                        this.state.messages.map((eachMessage) => (
-                                            <Message key={eachMessage.message_id} {...eachMessage}/>
-                                        ))
-                                    ) : (
-                                        <p>Message fetch failed</p>
-                                    )
-                                )}  
-                                </div>
+                                    <p>Message fetch failed</p>
+                                )
+                            )}  
                             </div>
                         </div>
                     </div>
@@ -176,10 +141,16 @@ class ChannelMessages extends React.Component {
                 {/* Type a message form: */}
                 <Form className="messageForm" onSubmit={this.sendMessage}>
                     <FormGroup className="typingAreaFormGroup">
-                        <Input id="typingArea" type="textarea" placeholder="Type a message" name="message" />
-                        <Button className="msg_send_btn" color="primary">
-                            <i className="fa fa-paper-plane-o" aria-hidden="true"></i>
-                        </Button>
+                        <Row>
+                            <Col>
+                                <Input id="typingArea" type="textarea" placeholder="Type a message" name="message" />
+                            </Col>
+                            <Col>
+                                <Button className="msg_send_btn" color="primary">
+                                    <i className="fa fa-paper-plane-o" aria-hidden="true"></i>
+                                </Button>
+                            </Col>
+                        </Row>
                     </FormGroup>
                 </Form>
             </>

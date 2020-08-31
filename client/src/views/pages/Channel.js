@@ -32,15 +32,6 @@ const Channel = (props) => {
                         <CardBody>
                             <ChannelMessages channelID={props.match.params.channelID} />
                         </CardBody>
-
-                        {/* Divider */}
-                        <Container style={centerChildren}>
-                            <hr style={chatDivider} />
-                        </Container>
-                        {/* Form */}
-                        <CardBody>
-                            Something could go here? Maybe something important like a meeting summary?
-                        </CardBody>
                     </Card>
                 </Col>
                 <Col md={12} xl={2}>
@@ -56,15 +47,6 @@ const Channel = (props) => {
                         <CardBody>
                             <UserInvite /> <ChannelLeave />
                         </CardBody>
-                    </Card>
-                    <Card>
-                        <CardHeader>Search Channel Messages</CardHeader>
-                        <Form className="form-inline">
-                            <Input className="form-control" type="search" placeholder="Search" aria-label="Search" />
-                            <Button type="submit">
-                                <i className="fa fa-search" />
-                            </Button>
-                        </Form>
                     </Card>
                 </Col>
             </Row>

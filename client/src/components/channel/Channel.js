@@ -5,7 +5,7 @@ import { Link, withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faStar, faUser, faLock } from '@fortawesome/free-solid-svg-icons'
-import { Card, CardBody, Button } from 'reactstrap';
+import { Card, CardBody, Button, Row, Col } from 'reactstrap';
 import './Channel.scss';
 import { BASE_URL } from '../../constants/api-routes';
 
@@ -52,42 +52,47 @@ class Channel extends React.Component {
         let { channel_id, name, image, description, visibility, member_of, owner_of } = this.props;
         return (
             <Card className="channel-card">
-                <CardBody className="display-flex">
-                    <Link to={`/channel/${channel_id}`}>
-                        <img
-                            className="channel-picture"
-                            src={image}
-                            alt="Responsive"
-                            aria-hidden={true}
-                        />
-                    </Link>
-                    <div className="corner-text">
-                        {(owner_of) ?
-                            <p><FontAwesomeIcon icon={faStar} /> You are an owner</p>:
-                            (member_of) ? 
-                                <p><FontAwesomeIcon icon={faUser} /> You are a member</p> :
-                                <p>Not a member</p>
-                         }
-                    </div>
-                    <div className="m-l">
-                        <Link to={`/channel/${channel_id}`}>
-                            <h2 className="h4">{name}</h2>
-                        </Link>
-                        {(visibility === "public") ? 
-                            <em>Public Channel</em> :
-                            <em>Private Channel  <FontAwesomeIcon icon={faLock} /></em>
-                        }
-                        <p className="text-muted">
-                            {description}
-                        </p>
-                        {/* Showing the button to join/request invite, if the user is NOT an owner/member */}
-                        {(!owner_of && !member_of) ?
-                            (visibility === "public") ? 
-                                <Button onClick={this.joinChannel}>Join Channel</Button> :
-                                <Button onClick={this.requestInvite}>Request To Join</Button> :
-                            ""
-                        }
-                    </div>
+                <CardBody>
+                    <Row>
+                        <Col lg={12} xl={4}>
+                            <Link to={`/channel/${channel_id}`} style={{ textDecoration: 'none' }}>
+                                <img
+                                    className="channel-picture"
+                                    src={image}
+                                    alt="Responsive"
+                                    aria-hidden={true}
+                                />
+                            </Link>
+                        </Col>
+                        <Col lg={12} xl={8} style={{"padding": "10px"}}>
+                            
+                                <Link to={`/channel/${channel_id}`} style={{ textDecoration: 'none' }}>
+                                    <h2 className="h4">{name}</h2>
+                                </Link>
+                                {(visibility === "public") ? 
+                                    <em>Public Channel</em> :
+                                    <em>Private Channel  <FontAwesomeIcon icon={faLock} /></em>
+                                }
+                                <p className="text-muted">
+                                    {description}
+                                </p>
+                                {/* Showing the button to join/request invite, if the user is NOT an owner/member */}
+                                {(!owner_of && !member_of) ?
+                                    (visibility === "public") ? 
+                                        <Button onClick={this.joinChannel}>Join Channel</Button> :
+                                        <Button onClick={this.requestInvite}>Request To Join</Button> :
+                                    ""
+                                }
+                                {(owner_of) ?
+                                    <p><FontAwesomeIcon icon={faStar} /> You are an owner</p>:
+                                    (member_of) ? 
+                                        <p><FontAwesomeIcon icon={faUser} /> You are a member</p> :
+                                        <p>Not a member</p>
+                                }
+                        </Col>
+                    </Row>
+                    
+                   
                 </CardBody>
             </Card>
         );

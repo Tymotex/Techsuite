@@ -13,10 +13,10 @@ const AvatarDropdown = (props) => {
             </DropdownToggle>
             <DropdownMenu right>
                 <DropdownItem>
-                    <Link to={`/user/profile/${userID}`}>View my profile</Link>
+                    <Link to={`/user/profile/${userID}`} style={{ textDecoration: 'none' }}>View my profile</Link>
                 </DropdownItem>
                 <DropdownItem>
-                    <Link to={`/user/profile/${userID}/edit`}>Edit my profile</Link>
+                    <Link to={`/user/profile/${userID}/edit`} style={{ textDecoration: 'none' }}>Edit my profile</Link>
                 </DropdownItem>
                 <DropdownItem divider />
                 <DropdownItem onClick={logout}>

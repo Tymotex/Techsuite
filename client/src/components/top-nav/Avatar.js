@@ -1,4 +1,5 @@
 import React from 'react';
+import "./Avatar.scss";
 
 export default function Avatar({ size, color, className, initials, image }) {
   return (

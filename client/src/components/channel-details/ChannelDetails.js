@@ -35,6 +35,8 @@ class ChannelDetails extends React.Component {
                         fetchSucceeded: true,
                         channel: res.data
                     });
+                    console.log("CHANNEL DETAILS: ");
+                    console.log(this.state.channel);
                 })
                 .catch((err) => {
                     this.setState({
@@ -62,41 +64,58 @@ class ChannelDetails extends React.Component {
                             {description}
                         </p>
                         <h3>Owners:</h3>
-                        <ul>
-                            {owner_members.map((eachMember, i) => (
-                                <li key={i}>
-                                    <FontAwesomeIcon icon={faStar} />  {eachMember.name_first} {eachMember.name_last}
-                                    {(currUserID === eachMember.user_id) ?
-                                        <span> (You)</span> :
-                                        ""
-                                    }
-                                </li>
-                            ))}
-                        </ul>
-                        <h3>All Members:</h3>
-                        <ul>
-                            {all_members.map((eachMember, i) => {
-                                let isOwner = false;
-                                owner_members.forEach((owner) => {
-                                    if (owner.user_id === eachMember.user_id) {
-                                        isOwner = true;
-                                    }
-                                });
-                                return (
-                                    <li key={i}>
-                                        {(isOwner) ?
-                                            <FontAwesomeIcon icon={faStar} /> :
-                                            <FontAwesomeIcon icon={faUser} />
-                                        } {eachMember.name_first} {eachMember.name_last}
+                        <div class="decor-default chat-user-list" style={{overflow: "auto", outline: "none"}} tabindex="5000">
+                            <div class="chat-users">
+                                {owner_members.map((eachMember, i) => (
+                                    <div key={i} class="user">
+                                        
                                         {(currUserID === eachMember.user_id) ?
                                             <span> (You)</span> :
                                             ""
                                         }
-                                    </li>
-                                );
-                            }
-                            )}
-                        </ul>
+                                        <div class="avatar">
+                                            <img src={eachMember.profile_img_url} alt={eachMember.username} />
+                                        </div>
+                                        <div class="name"><FontAwesomeIcon icon={faStar} />  {eachMember.username}</div>
+                                        <div class="mood">{eachMember.email}</div>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                            
+                        <h3>Members:</h3>
+                        <div class="decor-default chat-user-list" style={{overflow: "auto", outline: "none"}} tabindex="5000">
+                            <div class="chat-users">
+                                {all_members.map((eachMember, i) => {
+                                    let isOwner = false;
+                                    owner_members.forEach((owner) => {
+                                        if (owner.user_id === eachMember.user_id) {
+                                            isOwner = true;
+                                        }
+                                    });
+                                    return (
+                                        <div key={i} class="user">
+                                             {eachMember.name_first} {eachMember.name_last}
+                                            {(currUserID === eachMember.user_id) ?
+                                                <span> (You)</span> :
+                                                ""
+                                            }
+                                            <div class="avatar">
+                                                <img src={eachMember.profile_img_url} alt={eachMember.username} />
+                                            </div>
+                                            <div class="name">
+                                                {(isOwner) ?
+                                                    <FontAwesomeIcon icon={faStar} /> :
+                                                    <FontAwesomeIcon icon={faUser} />
+                                                }  {eachMember.username}
+                                            </div>
+                                            <div class="mood">{eachMember.email}</div>
+                                        </div>
+                                    );
+                                }
+                                )}
+                            </div>
+                        </div>
                     </>
         );
     }

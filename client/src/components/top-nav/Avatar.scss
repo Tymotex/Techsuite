@@ -1,0 +1,5 @@
+.avatar-image {
+    &:hover {
+        filter: grayscale(100%) blur(1px);
+    }
+}
