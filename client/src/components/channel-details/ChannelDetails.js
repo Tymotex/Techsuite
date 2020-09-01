@@ -51,7 +51,7 @@ class ChannelDetails extends React.Component {
     }
 
     render() {
-        const { name, description, all_members, owner_members } = this.state.channel;
+        const { name, description, channel_img_url, all_members, owner_members } = this.state.channel;
         const currUserID = Cookie.get("user_id");
         return (
             (this.state.isLoading) ?
@@ -59,6 +59,7 @@ class ChannelDetails extends React.Component {
                 (!this.state.fetchSucceeded) ?
                     <p>Fetch failed. Is the backend running?</p> :
                     <>
+                        <img src={channel_img_url} />
                         <h1>{name}</h1>
                         <p className="text-muted">
                             {description}

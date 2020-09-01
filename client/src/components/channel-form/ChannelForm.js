@@ -64,15 +64,7 @@ class ChannelForm extends React.Component {
                     <Label for="description">Channel Description</Label>
                     <Input type="textarea" name="description" id="description" />
                     <FormText>
-                        Give a short summary of what this channel is about!
-                    </FormText>
-                </FormGroup>
-                {/* Channel Picture */}
-                <FormGroup>
-                    <Label for="channelImage">Channel Image</Label>
-                    <Input type="text" name="channelImage" id="channelImage" />
-                    <FormText>
-                        Upload an image for your channel.
+                        Give a short summary of what this channel is about
                     </FormText>
                 </FormGroup>
                 {/* Visibility? */}

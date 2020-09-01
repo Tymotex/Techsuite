@@ -89,9 +89,9 @@ class UserInvite extends React.Component {
     render() {
         return (
             <>
-                <Button color="primary" onClick={this.toggleModal}>Invite Someone</Button>
+                <Button color="primary" onClick={this.toggleModal} style={{"width": "100%"}}>Invite Someone</Button>
                 <Modal isOpen={this.state.modal} toggle={this.toggleModal}>
-                    <ModalHeader toggle={this.toggleModal}>Invite someone to this channel</ModalHeader>
+                    <ModalHeader toggle={this.toggleModal}>Invite Someone:</ModalHeader>
                     <Form onSubmit={this.inviteUser}>
                         <ModalBody>
                             Select a user:

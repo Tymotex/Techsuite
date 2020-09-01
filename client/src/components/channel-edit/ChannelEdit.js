@@ -6,7 +6,7 @@ import { BASE_URL } from '../../constants/api-routes';
 import { withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
 
-class ChannelLeave extends React.Component {
+class ChannelEdit extends React.Component {
     static propTypes = {
         match: PropTypes.object.isRequired
     }
@@ -18,7 +18,7 @@ class ChannelLeave extends React.Component {
             modal: false
         };
         this.toggleModal = this.toggleModal.bind(this);
-        this.leaveChannel = this.leaveChannel.bind(this);
+        this.editChannel = this.editChannel.bind(this);
     }
 
     toggleModal() {
@@ -27,7 +27,7 @@ class ChannelLeave extends React.Component {
         }));
     }
 
-    leaveChannel(event) {
+    editChannel(event) {
         event.preventDefault();
         const currToken = Cookie.get("token");
         if (currToken) {
@@ -56,15 +56,15 @@ class ChannelLeave extends React.Component {
     render() {
         return (
             <>
-                <Button color="danger" onClick={this.toggleModal} style={{"width": "100%"}}>Leave Channel</Button>
+                <Button color="warning" onClick={this.toggleModal} style={{"width": "100%"}}>Edit Channel</Button>
                 <Modal isOpen={this.state.modal} toggle={this.toggleModal}>
-                    <ModalHeader toggle={this.toggleModal}>Leaving Channel:</ModalHeader>
+                    <ModalHeader toggle={this.toggleModal}>Editing Channel:</ModalHeader>
                     <ModalBody>
-                        Are you sure you want to leave this channel?
+                        Changes here
                     </ModalBody>
                     {/* Buttons in the modal footer: */}
                     <ModalFooter>
-                        <Button color="danger" onClick={this.leaveChannel}>Leave</Button>{' '}
+                        <Button color="primary" onClick={this.editChannel}>Update</Button>{' '}
                         <Button color="secondary" onClick={this.toggleModal}>Cancel</Button>
                     </ModalFooter>
                 </Modal>
@@ -73,4 +73,4 @@ class ChannelLeave extends React.Component {
     }
 }
 
-export default withRouter(ChannelLeave);
+export default withRouter(ChannelEdit);

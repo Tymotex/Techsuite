@@ -180,10 +180,16 @@ class ImageCropper extends PureComponent {
         }
         return (
             <>
-                <h3>Update your profile picture:</h3>
-                <div className="title-hr">
-                    <hr />
-                </div>
+                {/* Form title */}
+                {this.props.title ? (
+                    <>
+                        <h3>{this.props.title}</h3>
+                        <div className="title-hr">
+                            <hr />
+                        </div>
+                    </>
+                ) : (<></>)}
+                {/* Picture form */}
                 <Form onSubmit={this.uploadImageFile}>
                     <FormGroup>
                         <Input id="fileinput" type="file" accept="image/*" onChange={this.onSelectFile} />

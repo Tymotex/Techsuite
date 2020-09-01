@@ -3,6 +3,8 @@ import { Row, Col, Card, CardHeader, CardBody, Container, Button, Form, Input } 
 import { ChannelMessages } from '../../components/channel-messages';
 import { UserInvite } from '../../components/user-invite';
 import { ChannelLeave } from '../../components/channel-leave';
+import { ChannelEdit } from '../../components/channel-edit';
+import { ChannelUploadImage } from '../../components/channel-upload-image';
 import { ChannelDetails } from '../../components/channel-details';
 
 const Channel = (props) => {
@@ -19,7 +21,7 @@ const Channel = (props) => {
     return (
         <div>
             <Row>
-                <Col md={12} xl={10}>
+                <Col md={12} xl={8}>
                     {/* Header card */}
                     <Card>
                         <CardBody>
@@ -34,18 +36,27 @@ const Channel = (props) => {
                         </CardBody>
                     </Card>
                 </Col>
-                <Col md={12} xl={2}>
+                <Col md={12} xl={4}>
                     <Card>
-                        <CardHeader>Side Widgets here?</CardHeader>
+                        <CardHeader style={{"text-align": "center"}}>Channel Functions</CardHeader>
                         <CardBody>
-                            Maybe something that can track stats relevant to this channel.
-                            Maybe a meme generator, an image editor, or some other useful utility.
-                        </CardBody>
-                    </Card>
-                    <Card>
-                        <CardHeader>Channel Functions</CardHeader>
-                        <CardBody>
-                            <UserInvite /> <ChannelLeave />
+                            <Row>
+                                <Col lg={12} xl={6}>
+                                    <UserInvite /> 
+                                </Col>
+                                <Col lg={12} xl={6}>
+                                    <ChannelLeave />
+                                </Col>
+                            </Row>
+                            <br />
+                            <Row>
+                                <Col lg={12} xl={6}>
+                                    <ChannelEdit />
+                                </Col>
+                                <Col lg={12} xl={6}>
+                                    <ChannelUploadImage />
+                                </Col>
+                            </Row>
                         </CardBody>
                     </Card>
                 </Col>

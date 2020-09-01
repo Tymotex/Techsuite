@@ -3,16 +3,16 @@ import React, { PureComponent } from 'react';
 import 'react-image-crop/dist/ReactCrop.css';
 import ImageCropper from './ImageCropper';
 
-class ProfilePictureForm extends PureComponent {
+class ChannelPictureForm extends PureComponent {
     constructor(props) {
         super(props);
     }
 
     render() {
         return (
-            <ImageCropper uploadEndpoint="users/profile/uploadphoto" title="Update your profile picture:"/>          
+            <ImageCropper uploadEndpoint="users/profile/uploadphoto" showTitle={true}/>          
         );
     }
 }
 
-export default ProfilePictureForm;
+export default ChannelPictureForm;

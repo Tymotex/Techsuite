@@ -45,6 +45,7 @@ class Channel(db.Model):
     name = db.Column(db.String(30), nullable=False)     # Allow 30 characters for channel names
     description = db.Column(db.String(1000))            # Allow 1000 characters for channel descriptions
     visibility = db.Column(db.String(30), nullable=False)
+    channel_img_url = db.Column(db.String(255))
     time_created = db.Column(db.DateTime, default=datetime.now)
 
     # uselist=False tells SQLAlchemy that this is a one-to-one relationship

@@ -121,7 +121,7 @@ def handle_user_profile_upload_photo():
     """
         HTTP Route: /users/profile/uploadphoto
         HTTP Method: POST
-        Params: (token, user_id, x_start, y_start, x_end, y_end)
+        Params: (token, user_id, x_start, y_start, x_end, y_end, file)
         Returns JSON: { succeeded }
     """
     token = request.form["token"]
@@ -161,7 +161,7 @@ def handle_user_profile_upload_cover():
     """
         HTTP Route: /users/profile/uploadcover
         HTTP Method: POST
-        Params: (token, user_id)
+        Params: (token, user_id, file)
         Returns JSON: { succeeded }
     """
     token = request.form["token"]

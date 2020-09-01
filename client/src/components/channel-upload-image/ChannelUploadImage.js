@@ -5,8 +5,9 @@ import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 import { BASE_URL } from '../../constants/api-routes';
 import { withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
+import ImageCropper from '../picture-form/ImageCropper';
 
-class ChannelLeave extends React.Component {
+class ChannelUploadImage extends React.Component {
     static propTypes = {
         match: PropTypes.object.isRequired
     }
@@ -18,7 +19,7 @@ class ChannelLeave extends React.Component {
             modal: false
         };
         this.toggleModal = this.toggleModal.bind(this);
-        this.leaveChannel = this.leaveChannel.bind(this);
+        this.uploadImage = this.uploadImage.bind(this);
     }
 
     toggleModal() {
@@ -27,7 +28,7 @@ class ChannelLeave extends React.Component {
         }));
     }
 
-    leaveChannel(event) {
+    uploadImage(event) {
         event.preventDefault();
         const currToken = Cookie.get("token");
         if (currToken) {
@@ -56,15 +57,15 @@ class ChannelLeave extends React.Component {
     render() {
         return (
             <>
-                <Button color="danger" onClick={this.toggleModal} style={{"width": "100%"}}>Leave Channel</Button>
+                <Button color="info" onClick={this.toggleModal} style={{"width": "100%"}}>Upload Image</Button>
                 <Modal isOpen={this.state.modal} toggle={this.toggleModal}>
-                    <ModalHeader toggle={this.toggleModal}>Leaving Channel:</ModalHeader>
+                    <ModalHeader toggle={this.toggleModal}>Uploading Channel Image:</ModalHeader>
                     <ModalBody>
-                        Are you sure you want to leave this channel?
+                        <ImageCropper />
                     </ModalBody>
                     {/* Buttons in the modal footer: */}
                     <ModalFooter>
-                        <Button color="danger" onClick={this.leaveChannel}>Leave</Button>{' '}
+                        <Button color="primary" onClick={this.uploadImage}>Upload</Button>{' '}
                         <Button color="secondary" onClick={this.toggleModal}>Cancel</Button>
                     </ModalFooter>
                 </Modal>
@@ -73,4 +74,4 @@ class ChannelLeave extends React.Component {
     }
 }
 
-export default withRouter(ChannelLeave);
+export default withRouter(ChannelUploadImage);

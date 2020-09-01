@@ -1,3 +1,4 @@
+import os
 from extensions import db
 from models import Channel, User, Message, MemberOf, Bio
 from exceptions import InputError, AccessError
@@ -57,7 +58,7 @@ def channels_details(token, channel_id):
             token       (str)
             channel_id  (channel_id)
         Returns:
-            { name, description, owner_members, all_members }    (dict)
+            { name, description, channel_img_url, owner_members, all_members }    (dict)
         Where:
             owner_members: [{ user_id, username, email, profile_img_url }, ...]  (list of user objects)
             all_members: [{ user_id, username, email, profile_img_url }, ...]    (list of user objects)
@@ -93,6 +94,7 @@ def channels_details(token, channel_id):
     details = {
         "name": selected_channel.name,
         "description": selected_channel.description,
+        "channel_img_url": selected_channel.channel_img_url,
         "owner_members": channel_owners,
         "all_members": channel_members
     }
@@ -258,8 +260,7 @@ def channels_addowner(token, channel_id, user_id):
 
     user_to_add = get_user_from_id(users_list, user_id)[2]
     selected_channel["owner_members"].append(user_to_add)
-    return {
-    }
+    return {}
 
 def channels_removeowner(token, channel_id, user_id):
     """
@@ -309,8 +310,7 @@ def channels_removeowner(token, channel_id, user_id):
     owner_l = [o for o in selected_channel["owner_members"] if o["user_id"] != user_to_remove["user_id"]]
     selected_channel["owner_members"] = owner_l
 
-    return {
-    }
+    return {}
 
 def channels_listall(token):
     """
@@ -320,7 +320,7 @@ def channels_listall(token):
         Returns: 
             { channels }
         Where:
-            List of dictionaries: { channel_id, name, description, visibility, member_of, owner_of }
+            List of dictionaries: { channel_id, name, channel_img_url, description, visibility, member_of, owner_of }
     """
     verify_token(token)
     user = get_user_from_token(token)
@@ -330,6 +330,7 @@ def channels_listall(token):
         curr_channel_data = {
             "channel_id": each_channel.id,
             "name": each_channel.name,
+            "channel_img_url": each_channel.channel_img_url,
             "description": each_channel.description,
             "visibility": each_channel.visibility,
             "member_of": False,
@@ -347,7 +348,7 @@ def channels_listall(token):
         "channels": channels_list
     }
 
-def channels_create(token, name, description, channel_image, visibility):
+def channels_create(token, name, description, visibility):
     """
         Creates a new channel with that name that is either a public or private channel. The created channel object
         has the following fields: { channel_id, name, description, visibility }
@@ -365,10 +366,13 @@ def channels_create(token, name, description, channel_image, visibility):
         raise InputError
     
     creator = get_user_from_token(token)
+    # Adding a default profile picture for the channel
+    channel_image_endpoint = "http://localhost:{0}/images/{1}".format(os.getenv("PORT"), "default_channel.jpg")
     new_channel = Channel(
         visibility=visibility,
         name=name,
-        description=description
+        description=description,
+        channel_img_url=channel_image_endpoint
     )
     ownership = MemberOf(
         user=creator,
@@ -382,7 +386,7 @@ def channels_create(token, name, description, channel_image, visibility):
         'channel_id': new_channel.id
     }
 
-def channels_upload_photo(token, channel_id, image_url):
+def channels_upload_photo(token, channel_id):
     """
         Adds a channel photo 
         Parameters:  

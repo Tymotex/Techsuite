@@ -25,7 +25,7 @@ def handle_channel_details():
         HTTP Route: /channels/details
         HTTP Method: GET
         Params: (token, channel_id)
-        Returns JSON: { name, description, owner_members, all_members }
+        Returns JSON: { name, description, channel_img_url, owner_members, all_members }
     """
     token = request.args.get("token")
     channel_id = int(request.args.get("channel_id"))
@@ -104,6 +104,7 @@ def handle_channel_remove_owner():
     printColour("Channel Remove Owner: {}".format(request_data), colour="violet")
     return jsonify(channels.channels_removeowner(token, channel_id, user_id))
 
+# TODO: Is this deprecated?
 @channels_router.route("/channels/list", methods=['GET'])
 def handle_channels_list():
     """
@@ -137,7 +138,7 @@ def handle_channels_create():
     """
         HTTP Route: /channels/create
         HTTP Method: POST
-        Params: (token, name, description, channel_image, visibility)
+        Params: (token, name, description, visibility)
         Returns JSON: {
             channels_id
         }
@@ -146,7 +147,20 @@ def handle_channels_create():
     token = request_data["token"]
     name = request_data["name"]
     description = request_data["description"]
-    channel_image = request_data["channel_image"]
     visibility = request_data["visibility"]
     printColour("Channels Create: {}".format(request_data), colour="violet")
-    return jsonify(channels.channels_create(token, name, description, channel_image, visibility))
+    return jsonify(channels.channels_create(token, name, description, visibility))
+
+@channels_router.route("/channels/uploadcover", methods=['POST'])
+def handle_channels_upload_cover():
+    """
+        HTTP Route: /channels/uploadcover
+        HTTP Method: POST
+        Params: (token, channel_id, imgfile)
+        Returns JSON: { succeeded }
+    """
+    request_data = request.get_json()
+    token = request_data["token"]
+    channel_id = request_data["channel_id"]
+    img_url = request_data["img_url"]
+    channels.channels_upload_photo(token, channel_id, img_url)

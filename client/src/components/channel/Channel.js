@@ -49,7 +49,8 @@ class Channel extends React.Component {
     }
 
     render() {
-        let { channel_id, name, image, description, visibility, member_of, owner_of } = this.props;
+        const { channel_id, name, channel_img_url, description, visibility, member_of, owner_of } = this.props;
+        console.log("Channel Image URL: " + channel_img_url)
         return (
             <Card className="channel-card">
                 <CardBody>
@@ -58,7 +59,7 @@ class Channel extends React.Component {
                             <Link to={`/channel/${channel_id}`} style={{ textDecoration: 'none' }}>
                                 <img
                                     className="channel-picture"
-                                    src={image}
+                                    src={channel_img_url}
                                     alt="Responsive"
                                     aria-hidden={true}
                                 />
@@ -102,14 +103,14 @@ class Channel extends React.Component {
 Channel.propTypes = {
     name: PropTypes.string,
     description: PropTypes.string,
-    image: PropTypes.string,  // TODO: Placeholder type. Eventually I want to upload image files
+    channel_img_url: PropTypes.string,
     isPublic: PropTypes.bool
 };
 
 Channel.defaultProps = {
     name: "Unnamed",
     description: "This channel's creator didn't set a description",
-    image: "https://i.imgur.com/A2Aw6XG.png",  // TODO: Placeholder
+    channel_img_url: "https://static.thenounproject.com/png/1088616-200.png",
     isPublic: true
 };
 
