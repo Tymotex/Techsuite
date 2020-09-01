@@ -6,6 +6,7 @@ import ReactCrop from 'react-image-crop';
 import 'react-image-crop/dist/ReactCrop.css';
 import axios from 'axios';
 import { BASE_URL } from '../../constants/api-routes';
+import './PictureForm.scss';
 
 class ImageCropper extends PureComponent {
     constructor(props) {
@@ -138,8 +139,10 @@ class ImageCropper extends PureComponent {
     uploadImageFile(event) {
         event.preventDefault();
         const currUserToken = Cookie.get("token");
+        const currUserID = Cookie.get("user_id");
         const fd = new FormData();
-        fd.append("file", this.state.selectedImageFile, "user_1_.png");
+        fd.append("file", this.state.selectedImageFile, "placeholder.png");
+        fd.append("user_id", currUserID); 
         fd.append("token", currUserToken); 
         fd.append("x_start", Math.floor(this.state.cropBoundaries.widthStart));
         fd.append("y_start", Math.floor(this.state.cropBoundaries.heightStart));
@@ -178,6 +181,9 @@ class ImageCropper extends PureComponent {
         return (
             <>
                 <h3>Update your profile picture:</h3>
+                <div className="title-hr">
+                    <hr />
+                </div>
                 <Form onSubmit={this.uploadImageFile}>
                     <FormGroup>
                         <Input id="fileinput" type="file" accept="image/*" onChange={this.onSelectFile} />

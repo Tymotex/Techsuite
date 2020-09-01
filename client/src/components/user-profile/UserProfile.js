@@ -67,10 +67,15 @@ class UserProfile extends React.Component {
 
         console.log(this.state.bio);
 
+        const coverStyle = {
+            "background-image": cover_img_url != null ? `url('${cover_img_url}')` : `linear-gradient(90deg, rgba(2,0,36,1) 0%, rgba(9,9,121,1) 45%, rgba(0,212,255,1) 100%)`, 
+            "background-size": "cover"
+        }
+
         return (
             <>
                 <Card body>
-                    <div className="text-center" style={{"background-image": "url('https://stillmed.olympic.org/media/Images/OlympicOrg/News/2019/12/11/2019-12-11-mountain-day-featured-01.jpg')", "background-size": "cover"}}>
+                    <div className="user-profile text-center" style={coverStyle}>
                         <div className="user-profile-card">
                             <div className="m-b">
                                 <img src={profile_img_url} style={{ width: "200px", height: "200px" }} className="b-circle" alt="Profile" />

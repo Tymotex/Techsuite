@@ -86,8 +86,8 @@ class Channel extends React.Component {
                                 {(owner_of) ?
                                     <p><FontAwesomeIcon icon={faStar} /> You are an owner</p>:
                                     (member_of) ? 
-                                        <p><FontAwesomeIcon icon={faUser} /> You are a member</p> :
-                                        <p>Not a member</p>
+                                        <em><p><FontAwesomeIcon icon={faUser} /> You are a member</p></em> :
+                                        <em><p>You are not a member</p></em>
                                 }
                         </Col>
                     </Row>

@@ -1,4 +1,4 @@
-$channelPictureLength: 100px;
+$channelPictureLength: 175px;
 
 .channel-card {
     box-shadow: 2px 3px 3px 3px rgba(80, 80, 80, 0.507)!important;
@@ -7,15 +7,11 @@ $channelPictureLength: 100px;
     .channel-picture {
         // max-width: $channelPictureLength;
         // max-height: $channelPictureLength;
+        box-shadow: 2px 3px 3px 3px rgba(80, 80, 80, 0.75);
+        border-radius: 50%;
         &:hover {
             filter: grayscale(1) blur(1px);
+            transition: all 0.2s;
         }
     }
-
-    // .corner-text {
-    //     position: absolute;
-    //     padding: 10px;
-    //     bottom: 0px;
-    //     right: 0px;
-    // }
 }

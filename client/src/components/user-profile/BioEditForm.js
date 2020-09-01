@@ -3,6 +3,7 @@ import { Form, FormGroup, Input, InputGroup, InputGroupAddon, InputGroupText, La
 import Cookie from 'js-cookie';
 import axios from 'axios';
 import { BASE_URL } from '../../constants/api-routes';
+import './BioEditForm.scss';
 
 class BioEditForm extends React.Component {
     constructor(props) {
@@ -74,8 +75,9 @@ class BioEditForm extends React.Component {
                 headers: { "Content-Type": "application/json" }
             }
             axios(postData)
-                .then((res) => {
+                .then(() => {
                     console.log("Successfullly updated bio");
+                    window.location.reload();
                 })
                 .catch((err) => {
                     alert(err);
@@ -84,11 +86,14 @@ class BioEditForm extends React.Component {
     }
 
     render() {
-        const { first_name, last_name, cover_img_url, birthday, summary, location, title, education} = this.state.bio;
+        const { first_name, last_name, cover_img_url, summary, location, title, education} = this.state.bio;
         
         return (
             <Form onSubmit={this.updateBio}>
                 <h3>Update your bio:</h3>
+                <div className="title-hr">
+                    <hr  />
+                </div>
                 <FormGroup>
                     <InputGroup>
                         <InputGroupAddon addonType="prepend">
@@ -118,7 +123,7 @@ class BioEditForm extends React.Component {
                         <InputGroupAddon addonType="prepend">
                             <InputGroupText>Education</InputGroupText>
                         </InputGroupAddon>
-                        <Input name="education" placeholder="eg. Bachelor of Engineering (Software) UNSW" defaultValue={education}  />
+                        <Input name="education" placeholder="eg. Bachelor of Engineering (Software) UNSW" defaultValue={education} />
                     </InputGroup>
                 </FormGroup>
                 <FormGroup>
@@ -127,6 +132,14 @@ class BioEditForm extends React.Component {
                             <InputGroupText>Location</InputGroupText>
                         </InputGroupAddon>
                         <Input name="location" placeholder="eg. Sydney" defaultValue={location}  />
+                    </InputGroup>
+                </FormGroup>
+                <FormGroup>
+                    <InputGroup>
+                        <InputGroupAddon addonType="prepend">
+                            <InputGroupText>Bio</InputGroupText>
+                        </InputGroupAddon>
+                        <Input type="textarea" name="summary" placeholder="Eg. I love good coffee, however I am a terrible JavaScript developer." defaultValue={summary} />
                     </InputGroup>
                 </FormGroup>
                 <Button color="primary">Update Bio</Button>

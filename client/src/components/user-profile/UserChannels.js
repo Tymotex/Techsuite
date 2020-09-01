@@ -4,6 +4,7 @@ import axios from 'axios';
 import { ChannelList } from '../../components/channel-list';
 import { BASE_URL } from '../../constants/api-routes';
 import { LoadingSpinner } from '../../components/loading-spinner';
+import './BioEditForm.scss';
 
 class UserChannels extends React.Component {
     constructor(props) {
@@ -49,6 +50,9 @@ class UserChannels extends React.Component {
         return (
             <div>
                 <h3>Channels</h3>
+                <div className="title-hr">
+                    <hr />
+                </div>
                 <ChannelList {...this.state}/>
             </div>
         );

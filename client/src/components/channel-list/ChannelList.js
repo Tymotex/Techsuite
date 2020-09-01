@@ -5,7 +5,7 @@ import { Channel } from '../channel';
 
 const ChannelList = ({ allChannels, myChannels, isLoading, fetchSucceeded, showAll }) => {
     return (
-        <Row>
+        <Row style={{"padding-left": "10px", "padding-right": "10px"}}>
             {(showAll) ? 
                 (allChannels.length > 0) ? 
                     allChannels.map((channel, i) => 
@@ -20,7 +20,7 @@ const ChannelList = ({ allChannels, myChannels, isLoading, fetchSucceeded, showA
                             <Channel {...channel} member_of={true} />
                         </Col>
                     ) :
-                    <p>You currently own no channels!</p>
+                    <p>No channels</p>
             }
         </Row> 
     );

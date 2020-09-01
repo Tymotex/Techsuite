@@ -1,4 +1,5 @@
 import React from 'react';
+import './BioEditForm.scss';
 
 class UserBio extends React.Component {
     constructor(props) {
@@ -10,9 +11,14 @@ class UserBio extends React.Component {
         return (
             <div>
                 <h3>User Bio</h3>
-                <p>
-                    {summary != null ? summary : "No bio has been set"}
-                </p>
+                <div className="title-hr">
+                    <hr />
+                </div>
+                <em>
+                    <p>
+                        {summary != null ? summary : "No bio has been set"}
+                    </p>
+                </em>
             </div>
         );
     }
