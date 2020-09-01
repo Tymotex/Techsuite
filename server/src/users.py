@@ -29,18 +29,25 @@ def users_profile(token, user_id):
         "profile_img_url": user.bio.profile_img_url
     }
 
-def users_profile_upload_photo(token, img_endpoint):
+def users_profile_upload_photo(token, user_id, img_endpoint):
     """
         Given a URL to an image, updates the user's bio tuple to hold
         the new profile picture's URL.  
-        Returns:
-            {}  dict
     """
     verify_token(token)
-    user = get_user_from_token(token)
+    user = User.query.filter_by(id=user_id).first()
     user.bio.profile_img_url = img_endpoint
     db.session.commit()
-    return {}
+
+def users_profile_upload_cover(token, user_id, img_endpoint):
+    """
+        Given a URL to an image, updates the user's bio tuple to hold
+        the new cover image's URL.  
+    """
+    verify_token(token)
+    user = User.query.filter_by(id=user_id).first()
+    user.bio.cover_img_url = img_endpoint
+    db.session.commit()
 
 # def users_get_profile_image_url(token):
 #     """
@@ -126,7 +133,7 @@ def users_bio_fetch(token, user_id):
     return {
         "first_name": user.bio.first_name,
         "last_name" : user.bio.last_name,
-        "cover_img_url" : user.bio.last_name,
+        "cover_img_url" : user.bio.cover_img_url,
         "title" : user.bio.title,
         "summary" : user.bio.summary,
         "location" : user.bio.location,

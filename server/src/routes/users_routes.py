@@ -7,7 +7,7 @@ from dotenv import load_dotenv
 
 # Local imports:
 import users
-from util.util import printColour, download_img_and_get_filename, crop_image_file
+from util.util import printColour, download_img_and_get_filename, crop_image_file, get_latest_filename
 from util.token import get_user_from_token
 
 # Globals and config:
@@ -116,18 +116,16 @@ def allowed_file(filename):
     return '.' in filename and \
            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
-
-
 @users_router.route("/users/profile/uploadphoto", methods=['POST'])
 def handle_user_profile_upload_photo():
     """
         HTTP Route: /users/profile/uploadphoto
         HTTP Method: POST
-        Params: (token, x_start, y_start, x_end, y_end)
+        Params: (token, user_id, x_start, y_start, x_end, y_end)
         Returns JSON: { succeeded }
     """
-
     token = request.form["token"]
+    user_id = request.form["user_id"]
     printColour(request.form["x_start"])
     printColour(request.form["y_start"])
     printColour(request.form["x_end"])
@@ -140,23 +138,52 @@ def handle_user_profile_upload_photo():
 
     # check if the post request has the file part
     if 'file' not in request.files:
-        printColour("USER DIDN'T UPLOAD ANY PHOTO")
+        printColour("User didn't upload a photo?")
         return jsonify({ "succeeded": False })
     else:
         printColour("Saving the user's photo")
         file = request.files['file']
-        print(file)
-        print("==============================")
         if file.filename == '':
             # if user does not select file, browser also submit an empty part without filename
             printColour("No selected file")
             return jsonify({ "succeeded": False })
         if file and allowed_file(file.filename):
-            print(file)
-            user_id = get_user_from_token(token).id
-            filename = "user_{}_profile.jpg".format(user_id)
+            filename = get_latest_filename("user_{}_profile.jpg".format(user_id))
+            printColour("Filename: " + filename)
             file.save(os.path.join(UPLOAD_FOLDER, filename))
             crop_image_file(filename, x_start, y_start, x_end, y_end)
             image_endpoint = "{0}/images/{1}".format(BASE_URL, filename)
-            users.users_profile_upload_photo(token, image_endpoint)
+            users.users_profile_upload_photo(token, user_id, image_endpoint)
+            return jsonify({ "succeeded": True })
+
+@users_router.route("/users/profile/uploadcover", methods=['POST'])
+def handle_user_profile_upload_cover():
+    """
+        HTTP Route: /users/profile/uploadcover
+        HTTP Method: POST
+        Params: (token, user_id)
+        Returns JSON: { succeeded }
+    """
+    token = request.form["token"]
+    user_id = request.form["user_id"]
+    printColour("Attempting to upload cover image for user: " + str(user_id))
+    
+    # Check if the post request has the file part
+    if 'file' not in request.files:
+        printColour("User didn't upload a photo?")
+        return jsonify({ "succeeded": False })
+    else:
+        printColour("Saving the user's photo")
+        file = request.files['file']
+        if file.filename == '':
+            # if user does not select file, browser also submit an empty part without filename
+            printColour("No selected file")
+            return jsonify({ "succeeded": False })
+        if file and allowed_file(file.filename):
+            user_id = get_user_from_token(token).id
+            filename = get_latest_filename("user_{}_profile_cover.jpg".format(user_id))
+            printColour("Filename: " + filename)
+            file.save(os.path.join(UPLOAD_FOLDER, filename))
+            image_endpoint = "{0}/images/{1}".format(BASE_URL, filename)
+            users.users_profile_upload_cover(token, user_id, image_endpoint)
             return jsonify({ "succeeded": True })

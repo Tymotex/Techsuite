@@ -20,7 +20,7 @@ load_dotenv("../")
 
 SECRET_MESSAGE = os.getenv("SECRET_MESSAGE")
 SECRET_CODE = hashlib.sha256(SECRET_MESSAGE.encode()).hexdigest()
-PROFILE_IMG_DIRECTORY = os.getcwd() + r"/src/static/images/"        # TODO: Not robust? Cwd should always be project root
+IMAGE_DIRECTORY = os.getcwd() + r"/src/static/images/"        # TODO: Not robust? Cwd should always be project root
 
 # ===== Debugging Utilities =====
 def printColour(text, colour="green", bordersOn=True):
@@ -234,7 +234,7 @@ def download_img_and_get_filename(url, user_id):
             Filename (str) of the image on success, otherwise returns None
     """
     filename = "user_{}_profile.jpg".format(user_id)
-    image_path = PROFILE_IMG_DIRECTORY + filename
+    image_path = IMAGE_DIRECTORY + filename
 
     # Remove the previous profile picture, if it exists
     try:
@@ -254,7 +254,7 @@ def download_img_and_get_filename(url, user_id):
     return filename
 
 def crop_image_file(image_filename, x_start, y_start, x_end, y_end):
-    image_path = PROFILE_IMG_DIRECTORY + image_filename
+    image_path = IMAGE_DIRECTORY + image_filename
     try:
         pic = Image.open(image_path)
         # Discard the alpha/transparency channel
@@ -274,3 +274,26 @@ def crop_image_file(image_filename, x_start, y_start, x_end, y_end):
 
     cropped_pic = pic.crop(crop_coordinates)
     cropped_pic.save(image_path, compression='jpeg')
+
+def get_latest_filename(filename, version_num=1):
+    """
+        Given a filename, eg. user_1_profile.jpg, returns that filename
+        with the base name appended with a unique number. 
+        Eg. user_1_profile_3.jpg
+    """
+    image_path = IMAGE_DIRECTORY + filename
+    basename = os.path.splitext(filename)[0]
+    version_num = version_num
+    curr_filename = "{0}_{1}.jpg".format(basename, version_num)
+    print("Curr filename: " + curr_filename)
+    
+    file_exists = False
+    for eachFile in os.listdir(IMAGE_DIRECTORY):
+        print("Investigating: " + eachFile)
+        if eachFile == curr_filename:
+            file_exists = True
+            break;
+    if file_exists:
+        return get_latest_filename(filename, version_num + 1)
+    else:
+        return curr_filename

@@ -41,10 +41,10 @@ def auth_signup(email, password, username):
         if each_user.email == email:
             raise InputError(description="Email already exists")
     # Adding a default profile picture for the user
-    image_endpoint = "http://localhost:{0}/images/{1}".format(os.getenv("PORT"), "default.jpg")
+    profile_image_endpoint = "http://localhost:{0}/images/{1}".format(os.getenv("PORT"), "default.jpg")
     # Adding a new user
     new_user_bio = Bio(
-        profile_img_url=image_endpoint
+        profile_img_url=profile_image_endpoint
     )
     new_user = User(
         email=email,

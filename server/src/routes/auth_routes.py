@@ -10,7 +10,7 @@ auth_router = Blueprint("auth", __name__)
 @auth_router.route("/auth/register", methods=['POST'])
 def handle_auth_signup():
     """
-        HTTP Route: /auth/signup
+        HTTP Route: /auth/register
         HTTP Method: POST
         Params: (email, username, password)
         Returns JSON: { token, user_id, username, profile_img_url }
