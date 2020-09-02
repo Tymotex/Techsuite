@@ -81,30 +81,20 @@ def handle_users_bio_update():
     }
     return jsonify(users.users_bio_update(token, user_id, bio))
 
-@users_router.route("/users/bio", methods=['GET'])
+@users_router.route("/users/all", methods=['GET'])
 def handle_users_all():
     """
         HTTP Route: /users/all
         HTTP Method: GET
-        Params: (token, user_id)
-        Returns JSON: {
-            
-        }
+        Params: (token)
+        Returns JSON: { users }
+            Where users: array of objects { user_id, email, username, profile_img_url }
     """
     token = request.args.get("token")
-    return jsonify(users.users_bio(token))
-
+    printColour("Fetching all users")
+    return jsonify(users.users_all(token))
 
 # ===== User Profile Picture Handling =====
-# @users_router.route("/users/profileimage")
-# def get_profile_image_url():
-#     """
-#         TODO: Deprecated?
-#         Returns the URL to the requesting user's profile picture
-#     """
-#     return jsonify(users.users_get_profile_image_url(request.args.get("token")))
-
-
 
 from werkzeug.utils import secure_filename
 
