@@ -49,10 +49,10 @@ class Channel extends React.Component {
     }
 
     render() {
-        const { channel_id, name, channel_img_url, description, visibility, member_of, owner_of } = this.props;
-        console.log("Channel Image URL: " + channel_img_url)
+        const { channel_id, name, channel_img_url, channel_cover_img_url, description, visibility, member_of, owner_of } = this.props;
         return (
             <Card className="channel-card">
+                <span className="channel-background"></span>
                 <CardBody>
                     <Row>
                         <Col lg={12} xl={4}>
@@ -65,7 +65,7 @@ class Channel extends React.Component {
                                 />
                             </Link>
                         </Col>
-                        <Col lg={12} xl={8} style={{"padding": "10px"}}>
+                        <Col lg={12} xl={8} style={{"padding": "10px",}}>
                             
                                 <Link to={`/channel/${channel_id}`} style={{ textDecoration: 'none' }}>
                                     <h2 className="h4">{name}</h2>

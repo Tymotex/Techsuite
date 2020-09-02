@@ -19,39 +19,12 @@ class ChannelUploadImage extends React.Component {
             modal: false
         };
         this.toggleModal = this.toggleModal.bind(this);
-        this.uploadImage = this.uploadImage.bind(this);
     }
 
     toggleModal() {
         this.setState(prevState => ({
             modal: !prevState.modal
         }));
-    }
-
-    uploadImage(event) {
-        event.preventDefault();
-        const currToken = Cookie.get("token");
-        if (currToken) {
-            const postData = {
-                url: `${BASE_URL}/channels/leave`,
-                method: "POST",
-                data: {
-                    token: currToken,
-                    channel_id: this.state.channelID
-                },
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            }
-            axios(postData)
-                .then((res) => {
-                    this.props.history.push("/channels/my");
-                })
-                .catch((err) => {
-                    // TODO: replace alert
-                    alert(err);
-                });
-        }
     }
 
     render() {
@@ -61,12 +34,11 @@ class ChannelUploadImage extends React.Component {
                 <Modal isOpen={this.state.modal} toggle={this.toggleModal}>
                     <ModalHeader toggle={this.toggleModal}>Uploading Channel Image:</ModalHeader>
                     <ModalBody>
-                        <ImageCropper />
+                        <ImageCropper uploadEndpoint="channels/uploadimage" title="" buttonText="Upload Image" channelID={this.state.channelID} />
                     </ModalBody>
                     {/* Buttons in the modal footer: */}
                     <ModalFooter>
-                        <Button color="primary" onClick={this.uploadImage}>Upload</Button>{' '}
-                        <Button color="secondary" onClick={this.toggleModal}>Cancel</Button>
+                        <Button type="button" color="secondary" onClick={this.toggleModal}>Cancel</Button>
                     </ModalFooter>
                 </Modal>
             </>

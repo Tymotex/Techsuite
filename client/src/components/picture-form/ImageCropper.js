@@ -6,7 +6,7 @@ import ReactCrop from 'react-image-crop';
 import 'react-image-crop/dist/ReactCrop.css';
 import axios from 'axios';
 import { BASE_URL } from '../../constants/api-routes';
-import './PictureForm.scss';
+import './ImageCropper.scss';
 
 class ImageCropper extends PureComponent {
     constructor(props) {
@@ -79,13 +79,7 @@ class ImageCropper extends PureComponent {
                 'newFile.jpeg'
             );
             this.setState({ 
-                croppedImageUrl, 
-                cropBoundaries: {
-                    widthStart: crop.x,
-                    heightStart: crop.y,
-                    widthEnd: crop.x + crop.width,
-                    heightEnd: crop.y + crop.height
-                }
+                croppedImageUrl: croppedImageUrl
             });
         }
     }
@@ -105,6 +99,15 @@ class ImageCropper extends PureComponent {
         console.log("ystart: " + crop.y);
         console.log("xend: " + (crop.x + crop.width));
         console.log("yend: " + (crop.y + crop.height));
+
+        this.setState({  
+            cropBoundaries: {
+                widthStart: crop.x * scaleX,
+                heightStart: crop.y * scaleY,
+                widthEnd: (crop.x + crop.width) * scaleX,
+                heightEnd: (crop.y + crop.height) * scaleY
+            }
+        });
 
         ctx.drawImage(
             image,
@@ -143,6 +146,7 @@ class ImageCropper extends PureComponent {
         const fd = new FormData();
         fd.append("file", this.state.selectedImageFile, "placeholder.png");
         fd.append("user_id", currUserID); 
+        fd.append("channel_id", this.props.channelID);
         fd.append("token", currUserToken); 
         fd.append("x_start", Math.floor(this.state.cropBoundaries.widthStart));
         fd.append("y_start", Math.floor(this.state.cropBoundaries.heightStart));
@@ -172,9 +176,8 @@ class ImageCropper extends PureComponent {
     
     render() {
         const { crop, croppedImageUrl, src } = this.state;
-        const tmpStyle = {
-            // "text-align": "center"
-        };
+        const { buttonText } = this.props;
+
         const imageStyle = {
             "border": "thick double black"
         }
@@ -195,12 +198,14 @@ class ImageCropper extends PureComponent {
                         <Input id="fileinput" type="file" accept="image/*" onChange={this.onSelectFile} />
                         <Label id="fileinputlabel" for="fileinput">Upload image</Label>
                     </FormGroup>
-                    <Button color="primary">Update Profile Picture</Button>
+                    <Button color="primary">
+                        {(buttonText != null) ? (buttonText) : ("Update Profile Picture")}
+                    </Button>
                     
                     <Row style={{"margin-top": "10px"}}>
                         <Col sm={12} md={6}>
                             {src && (
-                                <ReactCrop style={imageStyle}
+                                <ReactCrop className="image-cropper"
                                     src={src}
                                     crop={crop}
                                     ruleOfThirds

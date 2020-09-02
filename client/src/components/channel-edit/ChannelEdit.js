@@ -1,10 +1,11 @@
 import React from 'react';
 import Cookie from 'js-cookie';
 import axios from 'axios';
-import { Modal, ModalHeader, ModalBody, ModalFooter, Form, FormGroup, Input, InputGroup, InputGroupAddon, InputGroupText, Button } from 'reactstrap';
+import { Modal, ModalHeader, ModalBody, ModalFooter, Form, FormGroup, Input, InputGroup, InputGroupAddon, InputGroupText, Button, Label } from 'reactstrap';
 import { BASE_URL } from '../../constants/api-routes';
 import { withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
+import InputSwitch from './InputSwitch';
 
 class ChannelEdit extends React.Component {
     static propTypes = {
@@ -50,21 +51,24 @@ class ChannelEdit extends React.Component {
         
         const currUserToken = Cookie.get("token");
         console.log("Token: " + currUserToken);
-        console.log("ChannelID: " + this.props.channelID);
+        console.log("ChannelID: " + this.state.channelID);
 
         if (currUserToken) {
             const postData = {
-                method: 'post',
-                url: `${BASE_URL}/users/bio`,
+                method: 'put',
+                url: `${BASE_URL}/channels/update`,
                 data: {
                     token: currUserToken,
-                    channel_id: this.props.channelID,
+                    channel_id: this.state.channelID,
+                    name: fd.get("name"),
+                    description: fd.get("description"),
+                    visibility: (fd.get("visibility") != null) ? true : false
                 },
                 headers: { "Content-Type": "application/json" }
             }
             axios(postData)
                 .then(() => {
-                    console.log("Successfullly updated bio");
+                    console.log("Successfullly updated channel info");
                     window.location.reload();
                 })
                 .catch((err) => {
@@ -80,7 +84,7 @@ class ChannelEdit extends React.Component {
     }
 
     render() {
-        const { name, description } = this.state.channel;
+        const { name, description, visibility } = this.state.channel;
         return (
             <>
                 <Button color="warning" onClick={this.toggleModal} style={{"width": "100%"}}>Edit Channel Info</Button>
@@ -102,6 +106,11 @@ class ChannelEdit extends React.Component {
                                         <InputGroupText>Description</InputGroupText>
                                     </InputGroupAddon>
                                     <Input type="textarea" name="description" placeholder="eg. Snow" defaultValue={description}  />
+                                </InputGroup>
+                            </FormGroup>
+                            <FormGroup>
+                                <InputGroup style={{"padding-left": "20px"}}>
+                                    <InputSwitch isActive={visibility} activeText={"Public"} inactiveText={"Private"} />
                                 </InputGroup>
                             </FormGroup>
                             <ModalFooter>
