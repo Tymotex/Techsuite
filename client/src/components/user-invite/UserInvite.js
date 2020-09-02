@@ -77,7 +77,7 @@ class UserInvite extends React.Component {
             axios(postData)
                 .then(() => {
                     this.toggleModal();
-                    this.props.history.push("/home")
+                    window.location.reload();
                 })
                 .catch((err) => {
                     // TODO: replace alert

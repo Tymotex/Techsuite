@@ -1,0 +1,18 @@
+$transitionTime: 0.15s;
+
+.user {
+    &:hover {
+        background-color: rgba(170, 193, 255, 0.548);
+        border-radius: 10px;
+        transition: all $transitionTime;
+    }
+}
+
+.link {
+    color: black;
+    text-decoration: none;
+    &:hover {
+        text-decoration: none;
+        transition: all $transitionTime;
+    }
+}

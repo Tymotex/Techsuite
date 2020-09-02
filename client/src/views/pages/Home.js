@@ -68,7 +68,7 @@ const Showcase = () => {
               <div className="m-l">
                 <h2 className="h4">Personalise</h2>
                 <p className="text-muted">
-                  Show others what you are like.
+                  Personalise your channels and user profile
                 </p>
               </div>
             </CardBody>

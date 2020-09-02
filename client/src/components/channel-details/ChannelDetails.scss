@@ -1,0 +1,40 @@
+
+.secondary-title {
+    text-align: left;
+}
+
+
+.channel-header-jumbotron {
+    background-image: url("https://www.muralswallpaper.com/app/uploads/Green-Tropical-Plant-Wallpaper-Mural-Plain.jpg");
+
+    .channel-card {
+        border-radius: 10px;
+        width: 75%;
+        margin: 0 auto;
+        padding: 20px;
+        background-color: white;
+    
+        .channel-image {
+            display: block;
+            margin: 0 auto;
+        }
+    
+        .channel-name {
+            text-align: center;
+        }
+    
+        .channel-description {
+            text-align: center;
+        }
+    }
+
+    .channel-divider {    
+        width: 95%;
+        display: block;
+        margin: 0 auto;
+        border: 0;
+        height: 1px;
+        background: #333;
+        background-image: linear-gradient(to right, #ccc, #333, #ccc);
+    }
+}

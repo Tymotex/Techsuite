@@ -6,6 +6,7 @@ import { ChannelLeave } from '../../components/channel-leave';
 import { ChannelEdit } from '../../components/channel-edit';
 import { ChannelUploadImage } from '../../components/channel-upload-image';
 import { ChannelDetails } from '../../components/channel-details';
+import { ChannelUploadCover } from '../../components/channel-upload-cover';
 
 const Channel = (props) => {
     const centerChildren = {
@@ -21,7 +22,7 @@ const Channel = (props) => {
     return (
         <div>
             <Row>
-                <Col md={12} xl={8}>
+                <Col md={12}>
                     {/* Header card */}
                     <Card>
                         <CardBody>
@@ -29,6 +30,8 @@ const Channel = (props) => {
                         </CardBody>
                     </Card>
                     <hr />
+                </Col>
+                <Col md={12} xl={8}>
                     {/* Message log and form */}
                     <Card>
                         <CardBody>
@@ -55,6 +58,12 @@ const Channel = (props) => {
                                 </Col>
                                 <Col lg={12} xl={6}>
                                     <ChannelUploadImage />
+                                </Col>
+                            </Row>
+                            <br />
+                            <Row>
+                                <Col lg={12} xl={6}>
+                                    <ChannelUploadCover />
                                 </Col>
                             </Row>
                         </CardBody>

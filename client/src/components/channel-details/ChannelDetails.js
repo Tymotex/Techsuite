@@ -7,6 +7,10 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faStar, faUser } from '@fortawesome/free-solid-svg-icons';
 import { BASE_URL } from '../../constants/api-routes';
 import { LoadingSpinner } from '../loading-spinner';
+import { Jumbotron, Row, Col } from 'reactstrap';
+import './ChannelDetails.scss';
+import ChannelMemberList from "./ChannelMemberList";
+import ChannelOwnerList from './ChannelOwnerList';
 
 class ChannelDetails extends React.Component {
     static propTypes = {
@@ -58,66 +62,25 @@ class ChannelDetails extends React.Component {
                 <LoadingSpinner /> :
                 (!this.state.fetchSucceeded) ?
                     <p>Fetch failed. Is the backend running?</p> :
-                    <>
-                        <img src={channel_img_url} />
-                        <h1>{name}</h1>
-                        <p className="text-muted">
-                            {description}
-                        </p>
-                        <h3>Owners:</h3>
-                        <div class="decor-default chat-user-list" style={{overflow: "auto", outline: "none"}} tabindex="5000">
-                            <div class="chat-users">
-                                {owner_members.map((eachMember, i) => (
-                                    <div key={i} class="user">
-                                        
-                                        {(currUserID === eachMember.user_id) ?
-                                            <span> (You)</span> :
-                                            ""
-                                        }
-                                        <div class="avatar">
-                                            <img src={eachMember.profile_img_url} alt={eachMember.username} />
-                                        </div>
-                                        <div class="name"><FontAwesomeIcon icon={faStar} />  {eachMember.username}</div>
-                                        <div class="mood">{eachMember.email}</div>
-                                    </div>
-                                ))}
-                            </div>
+                    <Jumbotron className="channel-header-jumbotron">
+                        <div className="channel-card">
+                            <img className="channel-image" src={channel_img_url} />
+                            <h1 className="channel-name display-3">{name}</h1>
+                            <p className="channel-description lead">{description}</p>
+                            <hr className="channel-divider" />
+                            <br />
+                            <Row>
+                                <Col md={6}>
+                                    <h3 className="secondary-title">Members:</h3>
+                                    <ChannelMemberList members={all_members} owners={owner_members} />
+                                </Col>
+                                <Col md={6}>
+                                    <h3 className="secondary-title">Owners:</h3>
+                                    <ChannelOwnerList owners={owner_members} />
+                                </Col>
+                            </Row>
                         </div>
-                            
-                        <h3>Members:</h3>
-                        <div class="decor-default chat-user-list" style={{overflow: "auto", outline: "none"}} tabindex="5000">
-                            <div class="chat-users">
-                                {all_members.map((eachMember, i) => {
-                                    let isOwner = false;
-                                    owner_members.forEach((owner) => {
-                                        if (owner.user_id === eachMember.user_id) {
-                                            isOwner = true;
-                                        }
-                                    });
-                                    return (
-                                        <div key={i} class="user">
-                                             {eachMember.name_first} {eachMember.name_last}
-                                            {(currUserID === eachMember.user_id) ?
-                                                <span> (You)</span> :
-                                                ""
-                                            }
-                                            <div class="avatar">
-                                                <img src={eachMember.profile_img_url} alt={eachMember.username} />
-                                            </div>
-                                            <div class="name">
-                                                {(isOwner) ?
-                                                    <FontAwesomeIcon icon={faStar} /> :
-                                                    <FontAwesomeIcon icon={faUser} />
-                                                }  {eachMember.username}
-                                            </div>
-                                            <div class="mood">{eachMember.email}</div>
-                                        </div>
-                                    );
-                                }
-                                )}
-                            </div>
-                        </div>
-                    </>
+                    </Jumbotron>
         );
     }
 }

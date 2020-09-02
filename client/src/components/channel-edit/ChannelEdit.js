@@ -1,7 +1,7 @@
 import React from 'react';
 import Cookie from 'js-cookie';
 import axios from 'axios';
-import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
+import { Modal, ModalHeader, ModalBody, ModalFooter, Form, FormGroup, Input, InputGroup, InputGroupAddon, InputGroupText, Button } from 'reactstrap';
 import { BASE_URL } from '../../constants/api-routes';
 import { withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
@@ -15,10 +15,62 @@ class ChannelEdit extends React.Component {
         super(props);
         this.state = {
             channelID: props.match.params.channelID,
+            channel: {},
             modal: false
         };
         this.toggleModal = this.toggleModal.bind(this);
-        this.editChannel = this.editChannel.bind(this);
+        this.updateChannelInfo = this.updateChannelInfo.bind(this);
+    }
+
+    componentWillMount() {
+        const currUserToken = Cookie.get("token");
+        if (currUserToken) {
+            // Now fetch the user's bio 
+            axios.get(`${BASE_URL}/channels/details?token=${currUserToken}&channel_id=${this.state.channelID}`)
+                .then((channel) => {
+                    this.setState({
+                        channel: channel.data
+                    });
+                    console.log("CHANNEL: ");
+                    console.log(channel);
+                })
+                .catch((err) => {
+                    alert("Fetching channel failed by ChannelEdit");
+                });
+        } else {
+            // TODO: how should this case be handled?
+            alert("TOKEN WAS NOT FOUND IN COOKIE");
+        }
+    }
+
+    updateChannelInfo(event) {
+        event.preventDefault();
+        console.log("Updating channel info");
+        const fd = new FormData(event.target);
+        
+        const currUserToken = Cookie.get("token");
+        console.log("Token: " + currUserToken);
+        console.log("ChannelID: " + this.props.channelID);
+
+        if (currUserToken) {
+            const postData = {
+                method: 'post',
+                url: `${BASE_URL}/users/bio`,
+                data: {
+                    token: currUserToken,
+                    channel_id: this.props.channelID,
+                },
+                headers: { "Content-Type": "application/json" }
+            }
+            axios(postData)
+                .then(() => {
+                    console.log("Successfullly updated bio");
+                    window.location.reload();
+                })
+                .catch((err) => {
+                    alert(err);
+                });
+        }
     }
 
     toggleModal() {
@@ -27,46 +79,38 @@ class ChannelEdit extends React.Component {
         }));
     }
 
-    editChannel(event) {
-        event.preventDefault();
-        const currToken = Cookie.get("token");
-        if (currToken) {
-            const postData = {
-                url: `${BASE_URL}/channels/leave`,
-                method: "POST",
-                data: {
-                    token: currToken,
-                    channel_id: this.state.channelID
-                },
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            }
-            axios(postData)
-                .then((res) => {
-                    this.props.history.push("/channels/my");
-                })
-                .catch((err) => {
-                    // TODO: replace alert
-                    alert(err);
-                });
-        }
-    }
-
     render() {
+        const { name, description } = this.state.channel;
         return (
             <>
-                <Button color="warning" onClick={this.toggleModal} style={{"width": "100%"}}>Edit Channel</Button>
+                <Button color="warning" onClick={this.toggleModal} style={{"width": "100%"}}>Edit Channel Info</Button>
                 <Modal isOpen={this.state.modal} toggle={this.toggleModal}>
-                    <ModalHeader toggle={this.toggleModal}>Editing Channel:</ModalHeader>
+                    <ModalHeader toggle={this.toggleModal}>Editing Channel Info:</ModalHeader>
                     <ModalBody>
-                        Changes here
+                        <Form onSubmit={this.updateChannelInfo}>
+                            <FormGroup>
+                                <InputGroup>
+                                    <InputGroupAddon addonType="prepend">
+                                        <InputGroupText>Channel name</InputGroupText>
+                                    </InputGroupAddon>
+                                    <Input name="name" placeholder="eg. GamerDudes" defaultValue={name} />
+                                </InputGroup>
+                            </FormGroup>
+                            <FormGroup>
+                                <InputGroup>
+                                    <InputGroupAddon addonType="prepend">
+                                        <InputGroupText>Description</InputGroupText>
+                                    </InputGroupAddon>
+                                    <Input type="textarea" name="description" placeholder="eg. Snow" defaultValue={description}  />
+                                </InputGroup>
+                            </FormGroup>
+                            <ModalFooter>
+                                <Button color="primary">Update</Button>{' '}
+                                <Button type="button" color="secondary" onClick={this.toggleModal}>Cancel</Button>
+                            </ModalFooter>
+                        </Form>
                     </ModalBody>
                     {/* Buttons in the modal footer: */}
-                    <ModalFooter>
-                        <Button color="primary" onClick={this.editChannel}>Update</Button>{' '}
-                        <Button color="secondary" onClick={this.toggleModal}>Cancel</Button>
-                    </ModalFooter>
                 </Modal>
             </>
         );
