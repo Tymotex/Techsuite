@@ -58,7 +58,7 @@ def channels_details(token, channel_id):
             token       (str)
             channel_id  (channel_id)
         Returns:
-            { name, description, channel_img_url, owner_members, all_members }    (dict)
+            { name, description, visibility, channel_img_url, owner_members, all_members }    (dict)
         Where:
             owner_members: [{ user_id, username, email, profile_img_url }, ...]  (list of user objects)
             all_members: [{ user_id, username, email, profile_img_url }, ...]    (list of user objects)
@@ -94,7 +94,9 @@ def channels_details(token, channel_id):
     details = {
         "name": selected_channel.name,
         "description": selected_channel.description,
+        "visibility": selected_channel.visibility,
         "channel_img_url": selected_channel.channel_img_url,
+        "channel_cover_img_url": selected_channel.channel_cover_img_url,
         "owner_members": channel_owners,
         "all_members": channel_members
     }
@@ -331,6 +333,7 @@ def channels_listall(token):
             "channel_id": each_channel.id,
             "name": each_channel.name,
             "channel_img_url": each_channel.channel_img_url,
+            "channel_cover_img_url": each_channel.channel_cover_img_url,
             "description": each_channel.description,
             "visibility": each_channel.visibility,
             "member_of": False,
@@ -366,7 +369,7 @@ def channels_create(token, name, description, visibility):
         raise InputError
     
     creator = get_user_from_token(token)
-    # Adding a default profile picture for the channel
+    # Adding a default picture for the channel
     channel_image_endpoint = "http://localhost:{0}/images/{1}".format(os.getenv("PORT"), "default_channel.jpg")
     new_channel = Channel(
         visibility=visibility,
@@ -386,14 +389,47 @@ def channels_create(token, name, description, visibility):
         'channel_id': new_channel.id
     }
 
-def channels_upload_photo(token, channel_id):
+def channels_upload_photo(token, channel_id, img_url):
     """
         Adds a channel photo 
         Parameters:  
             token      (str)
             channel_id (str)
-            image_url  (str)
-        Returns: 
-            {}
+            img_url    (str)
     """
-    return {}
+    verify_token(token)
+    channel = Channel.query.filter_by(id=channel_id).first()
+    channel.channel_img_url = img_url
+    db.session.commit()
+
+def channels_upload_cover(token, channel_id, img_url):
+    """
+        Adds a channel cover image 
+        Parameters:  
+            token      (str)
+            channel_id (str)
+            img_url    (str)
+    """
+    verify_token(token)
+    channel = Channel.query.filter_by(id=channel_id).first()
+    channel.channel_cover_img_url = img_url
+    db.session.commit()
+
+def channels_update_info(token, channel_id, name, description, visibility):
+    """
+        Updates an existing channel's fields
+        Parameters:  
+            token       (str)
+            channel_id  (str)
+            name        (str)
+            description (str)
+            visibility  (bool)
+    """
+    verify_token(token)
+    channel = Channel.query.filter_by(id=channel_id).first()
+    channel.name = name
+    channel.description = description
+    channel.visibility = visibility
+    db.session.commit()
+
+

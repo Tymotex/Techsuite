@@ -1,8 +1,13 @@
 from flask import Blueprint, request, jsonify
-from util.util import printColour
+from util.util import printColour, crop_image_file, get_latest_filename
 import channels
+from dotenv import load_dotenv
+import os
 
+# Globals and config:
+load_dotenv()
 channels_router = Blueprint("channels", __name__)
+BASE_URL = "http://localhost:{0}".format(os.getenv("PORT"))
 
 @channels_router.route("/channels/invite", methods=['POST'])
 def handle_channel_invite():
@@ -25,7 +30,7 @@ def handle_channel_details():
         HTTP Route: /channels/details
         HTTP Method: GET
         Params: (token, channel_id)
-        Returns JSON: { name, description, channel_img_url, owner_members, all_members }
+        Returns JSON: { name, description, visibility, channel_img_url, owner_members, all_members }
     """
     token = request.args.get("token")
     channel_id = int(request.args.get("channel_id"))
@@ -151,16 +156,99 @@ def handle_channels_create():
     printColour("Channels Create: {}".format(request_data), colour="violet")
     return jsonify(channels.channels_create(token, name, description, visibility))
 
-@channels_router.route("/channels/uploadcover", methods=['POST'])
-def handle_channels_upload_cover():
+@channels_router.route("/channels/update", methods=['PUT'])
+def handle_channels_update_info():
     """
-        HTTP Route: /channels/uploadcover
-        HTTP Method: POST
-        Params: (token, channel_id, imgfile)
+        HTTP Route: /channels/update
+        HTTP Method: PUT
+        Params: (token, channel_id, name, description, visibility)
         Returns JSON: { succeeded }
     """
     request_data = request.get_json()
     token = request_data["token"]
     channel_id = request_data["channel_id"]
-    img_url = request_data["img_url"]
-    channels.channels_upload_photo(token, channel_id, img_url)
+    name = request_data["name"]
+    description = request_data["description"]
+    visibility = request_data["visibility"]
+    channels.channels_update_info(token, channel_id, name, description, visibility)
+    return { "succeeded": True }
+
+# ===== User Profile Picture Handling =====
+
+from werkzeug.utils import secure_filename
+
+UPLOAD_FOLDER = os.getcwd() + r"/src/static/images/"        # TODO: Not robust? Cwd should always be project root
+ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg', 'gif'])
+
+def allowed_file(filename):
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
+@channels_router.route("/channels/uploadimage", methods=['POST'])
+def handle_channels_upload_image():
+    """
+        HTTP Route: /channels/uploadimage
+        HTTP Method: POST
+        Params: (token, channel_id, x_start, y_start, x_end, y_end, file)
+        Returns JSON: { succeeded }
+    """
+    token = request.form["token"]
+    channel_id = request.form["channel_id"]
+    x_start = int(request.form["x_start"])
+    y_start = int(request.form["y_start"])
+    x_end = int(request.form["x_end"])
+    y_end = int(request.form["y_end"])
+
+    printColour("Uploading channel image to channel with ID: " + channel_id)
+
+    # Check if the post request has the file part
+    if 'file' not in request.files:
+        printColour("No channel image uploaded?")
+        return jsonify({ "succeeded": False })
+    else:
+        printColour("Saving channel photo")
+        file = request.files['file']
+        if file.filename == '':
+            # if user does not select file, browser also submit an empty part without filename
+            printColour("No selected file")
+            return jsonify({ "succeeded": False })
+        if file and allowed_file(file.filename):
+            filename = get_latest_filename("channel_{}_profile.jpg".format(channel_id))
+            printColour("Filename: " + filename)
+            file.save(os.path.join(UPLOAD_FOLDER, filename))
+            crop_image_file(filename, x_start, y_start, x_end, y_end)
+            image_endpoint = "{0}/images/{1}".format(BASE_URL, filename)
+            channels.channels_upload_photo(token, channel_id, image_endpoint)
+            return jsonify({ "succeeded": True })
+
+@channels_router.route("/channels/uploadcover", methods=['POST'])
+def handle_channels_upload_cover():
+    """
+        HTTP Route: /channels/uploadcover
+        HTTP Method: POST
+        Params: (token, channel_id, file)
+        Returns JSON: { succeeded }
+    """
+    token = request.form["token"]
+    channel_id = request.form["channel_id"]
+
+    printColour("Uploading channel cover to channel with ID: " + channel_id)
+
+    # Check if the post request has the file part
+    if 'file' not in request.files:
+        printColour("No channel image uploaded?")
+        return jsonify({ "succeeded": False })
+    else:
+        printColour("Saving channel photo")
+        file = request.files['file']
+        if file.filename == '':
+            # if user does not select file, browser also submit an empty part without filename
+            printColour("No selected file")
+            return jsonify({ "succeeded": False })
+        if file and allowed_file(file.filename):
+            filename = get_latest_filename("channel_{}_profile.jpg".format(channel_id))
+            printColour("Filename: " + filename)
+            file.save(os.path.join(UPLOAD_FOLDER, filename))
+            image_endpoint = "{0}/images/{1}".format(BASE_URL, filename)
+            channels.channels_upload_cover(token, channel_id, image_endpoint)
+            return jsonify({ "succeeded": True })

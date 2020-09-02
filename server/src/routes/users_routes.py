@@ -116,10 +116,6 @@ def handle_user_profile_upload_photo():
     """
     token = request.form["token"]
     user_id = request.form["user_id"]
-    printColour(request.form["x_start"])
-    printColour(request.form["y_start"])
-    printColour(request.form["x_end"])
-    printColour(request.form["y_end"])
     x_start = int(request.form["x_start"])
     y_start = int(request.form["y_start"])
     x_end = int(request.form["x_end"])
