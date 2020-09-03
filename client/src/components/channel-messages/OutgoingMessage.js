@@ -3,7 +3,8 @@ import Cookie from 'js-cookie';
 import axios from 'axios';
 import { BASE_URL } from '../../constants/api-routes';
 import moment from 'moment-timezone';
-
+import { Link } from 'react-router-dom';
+import './Message.scss';
 
 class OutgoingMessage extends React.Component {
     constructor(props) {
@@ -51,9 +52,11 @@ class OutgoingMessage extends React.Component {
         const formattedTime = moment.unix(time_created).tz("Australia/Sydney").format("MM/DD/YYYY  |  h:mmA (z)");
         return (
             <div class="answer right">
-                <div class="avatar">
-                    <img src={profile_img_url} alt="User name" />
-                </div>
+                <Link to={`/user/profile/${user_id}`}>    
+                    <div class="avatar">
+                        <img src={profile_img_url} alt="User name" />
+                    </div>
+                </Link>
             <div class="name">{username}</div>
                 <div class="text">
                     {message}

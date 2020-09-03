@@ -2,18 +2,18 @@ import React from 'react';
 import axios from 'axios';
 import Cookie from 'js-cookie';
 import './ChannelMessages.scss';
-import { Form, FormGroup, Button, Input, Row, Col } from 'reactstrap';
+import { Form, FormGroup, Button, Input, Row, Col, InputGroup, InputGroupAddon, InputGroupText } from 'reactstrap';
 import Message from './Message';
 import { BASE_URL } from '../../constants/api-routes';
 import { LoadingSpinner } from '../loading-spinner';
+import EmptyChatIndicator from './EmptyChatIndicator';
+import FadeIn from 'react-fade-in';
 
 import openSocket from 'socket.io-client';
 import TypingPrompt from './TypingPrompt';
 
 
 const socket = openSocket('http://localhost:3001');
-
-
 
 class ChannelMessages extends React.Component {
     constructor(props) {
@@ -108,31 +108,43 @@ class ChannelMessages extends React.Component {
     }
 
     componentDidUpdate() {
-        const messageListContainer = document.getElementById("message-list-container");
-        messageListContainer.scrollTop = messageListContainer.scrollHeight;
+        setTimeout(function() {
+            console.log("FORCING SCROLL DOWN");
+            const messageListContainer = document.getElementById("message-list-container");
+            messageListContainer.scrollTop = messageListContainer.scrollHeight * 2;
+        }, 200);
     }
 
     render() {
-        console.log(this.state.messages);
         return (
             <>
                 <div class="content container-fluid bootstrap snippets">
                     <div id="message-list-container" class="chat" style={{overflow: "auto", outline: "none"}} tabindex="5001">
-                        <div class="col-inside-lg decor-default">
-                            <div class="chat-body">
-                            {(this.state.isLoading) ? (
-                                <LoadingSpinner />
-                            ) : (
-                                (this.state.fetchSucceeded) ? (
-                                    this.state.messages.map((eachMessage) => (
-                                        <Message key={eachMessage.message_id} {...eachMessage}/>
-                                    ))
-                                ) : (
-                                    <p>Message fetch failed</p>
-                                )
-                            )}  
+
+                        {(this.state.messages && this.state.messages.length > 0) ? (
+
+                            <div class="col-inside-lg decor-default">
+                                <div class="chat-body">
+                                    {(this.state.isLoading) ? (
+                                        <LoadingSpinner />
+                                    ) : (
+                                        (this.state.fetchSucceeded) ? (
+                                            this.state.messages.map((eachMessage) => (
+                                                <FadeIn delay="200">
+                                                    <Message key={eachMessage.message_id} {...eachMessage}/>
+                                                </FadeIn>
+                                            ))
+                                        ) : (
+                                            <p>Message fetch failed...</p>
+                                        )
+                                    )}  
+                                </div>
                             </div>
-                        </div>
+
+                        ) : (
+                            <EmptyChatIndicator />
+                        )}
+
                     </div>
                 </div>
 
@@ -141,18 +153,20 @@ class ChannelMessages extends React.Component {
                 {/* Type a message form: */}
                 <Form className="messageForm" onSubmit={this.sendMessage}>
                     <FormGroup className="typingAreaFormGroup">
-                        <Row>
-                            <Col>
-                                <Input id="typingArea" type="textarea" placeholder="Type a message" name="message" />
-                            </Col>
-                            <Col>
-                                <Button className="msg_send_btn" color="primary">
-                                    <i className="fa fa-paper-plane-o" aria-hidden="true"></i>
-                                </Button>
-                            </Col>
-                        </Row>
+                        <InputGroup>
+                            <Input id="typingArea" type="textarea" placeholder="Type a message" name="message" />
+                            <InputGroupAddon addonType="append">
+                                <InputGroupText><Button>
+                                        <i className="fa fa-paper-plane-o" aria-hidden="true"></i>
+                                    </Button></InputGroupText>
+                            </InputGroupAddon>
+                        </InputGroup>
                     </FormGroup>
+
+                    
+
                 </Form>
+                
             </>
         );
     }

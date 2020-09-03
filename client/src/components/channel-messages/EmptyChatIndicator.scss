@@ -1,0 +1,32 @@
+.empty-chat-indicator {
+    position: absolute;
+    width: 94%;
+    text-align: center;
+    height: 45%;
+    top: 35%;
+    bottom: 50%;
+    font-size: 200%;
+}
+
+/* width */
+::-webkit-scrollbar {
+    width: 10px;
+}
+  
+/* Track */
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    box-shadow: inset 0 0 2px grey;
+    border-radius: 10px;
+}
+  
+/* Handle */
+::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 10px;
+}
+  
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}

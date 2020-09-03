@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import axios from 'axios';
 import Cookie from 'js-cookie';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faStar, faUser } from '@fortawesome/free-solid-svg-icons';
+import { faStar, faUser, faLock } from '@fortawesome/free-solid-svg-icons';
 import { BASE_URL } from '../../constants/api-routes';
 import { LoadingSpinner } from '../loading-spinner';
 import { Jumbotron, Row, Col } from 'reactstrap';
@@ -55,7 +55,9 @@ class ChannelDetails extends React.Component {
     }
 
     render() {
-        const { name, description, channel_img_url, channel_cover_img_url, all_members, owner_members } = this.state.channel;
+        const { name, description, visibility, channel_img_url, channel_cover_img_url, all_members, owner_members } = this.state.channel;
+        console.log("VISIBILITY: ");
+        console.log(visibility);
         return (
             (this.state.isLoading) ?
                 <LoadingSpinner /> :
@@ -64,7 +66,10 @@ class ChannelDetails extends React.Component {
                     <Jumbotron className="channel-header-jumbotron" style={{"background-image": (channel_cover_img_url != null) ? `url('${channel_cover_img_url}')` : `linear-gradient(90deg, rgba(2,0,36,1) 0%, rgba(9,121,46,1) 45%, rgba(0,255,158,1) 100%)` }}>
                         <div className="channel-card">
                             <img className="channel-image b-circle" src={channel_img_url} style={{ width: "200px", height: "200px" }} alt="Channel Image"  />
-                            <h1 className="channel-name display-3">{name}</h1>
+                            <h1 className="channel-name display-3">
+                                {name + " "} 
+                                {(visibility == "public") ? (<></>) : (<FontAwesomeIcon icon={faLock} />)}
+                            </h1>
                             <p className="channel-description lead">{description}</p>
                             <hr className="channel-divider" />
                             <br />

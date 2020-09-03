@@ -1,0 +1,7 @@
+
+.avatar {
+    &:hover {
+        filter: blur(1px) hue-rotate(90deg);
+        transition: all 0.2s;
+    }
+}

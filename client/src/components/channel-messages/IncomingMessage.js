@@ -4,23 +4,6 @@ import Cookie from 'js-cookie';
 import axios from 'axios';
 import { BASE_URL } from '../../constants/api-routes';
 
-// const IncomingMessage = ({ message, time_created }) => {
-//     const formattedTime = moment.unix(time_created).tz("Australia/Sydney").format("MM/DD/YYYY  |  h:mmA (z)");
-//     return (
-//         <div class="answer left">
-//             <div class="avatar">
-//             <img src="https://bootdey.com/img/Content/avatar/avatar2.png" alt="User name" />
-//             <div class="status offline"></div>
-//             </div>
-//             <div class="name">Alexander Herthic</div>
-//             <div class="text">
-//                 {message}
-//             </div>
-//             <div class="time">{formattedTime}</div>
-//         </div>
-//     );
-// };
-
 class IncomingMessage extends React.Component {
     constructor(props) {
         super(props);
@@ -30,7 +13,6 @@ class IncomingMessage extends React.Component {
             user: {}
         };
     }
-
 
     componentDidMount() {;
         this.setState({
@@ -61,7 +43,7 @@ class IncomingMessage extends React.Component {
     render() {
         // Creating a formatted time string based on the time_created unix timestamp
         // Example time format: 05/20/2020 | 7:55PM (AEST)
-        const { message, time_created, user_id } = this.props;
+        const { message, time_created } = this.props;
         console.log(this.state.user);
         const { profile_img_url, username } = this.state.user;
 
