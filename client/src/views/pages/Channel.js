@@ -7,6 +7,7 @@ import { ChannelEdit } from '../../components/channel-edit';
 import { ChannelUploadImage } from '../../components/channel-upload-image';
 import { ChannelDetails } from '../../components/channel-details';
 import { ChannelUploadCover } from '../../components/channel-upload-cover';
+import { ChannelSearchMessages } from '../../components/channel-search-messages';
 
 const Channel = (props) => {
     const centerChildren = {
@@ -64,6 +65,9 @@ const Channel = (props) => {
                             <Row>
                                 <Col lg={12} xl={6}>
                                     <ChannelUploadCover />
+                                </Col>
+                                <Col lg={12} xl={6}>
+                                    <ChannelSearchMessages />
                                 </Col>
                             </Row>
                         </CardBody>

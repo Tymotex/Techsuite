@@ -1,9 +1,10 @@
-import React from 'react';
-import Cookie from 'js-cookie';
 import axios from 'axios';
-import { BASE_URL } from '../../constants/api-routes';
+import Cookie from 'js-cookie';
 import moment from 'moment-timezone';
+import React from 'react';
 import { Link } from 'react-router-dom';
+import ReactTooltip from 'react-tooltip';
+import { BASE_URL } from '../../constants/api-routes';
 import './Message.scss';
 
 class OutgoingMessage extends React.Component {
@@ -12,8 +13,10 @@ class OutgoingMessage extends React.Component {
         this.state = {
             isLoading: false,
             fetchSucceeded: false,
-            user: {}
+            user: {},
+            tooltipOpen: false
         };
+        this.toggle = this.toggle.bind(this);
     }
 
     componentDidMount() {;
@@ -41,7 +44,13 @@ class OutgoingMessage extends React.Component {
             alert("TOKEN WAS NOT FOUND IN COOKIE");
         }
     }
-    
+
+    toggle() {
+        this.setState({
+            tooltipOpen: !this.state.tooltipOpen
+        });
+    }
+
     render() {
         // Creating a formatted time string based on the time_created unix timestamp
         // Example time format: 05/20/2020 | 7:55PM (AEST)
@@ -49,19 +58,23 @@ class OutgoingMessage extends React.Component {
         console.log(this.state.user);
         const { profile_img_url, username } = this.state.user;
 
-        const formattedTime = moment.unix(time_created).tz("Australia/Sydney").format("MM/DD/YYYY  |  h:mmA (z)");
+        const formattedTime = moment.unix(time_created).tz("Australia/Sydney").format("DD/MM/YYYY | h:mmA (z)");
+        const shortFormattedTime = moment.unix(time_created).tz("Australia/Sydney").format("DD/MM/YY, h:mm A");
         return (
             <div class="answer right">
                 <Link to={`/user/profile/${user_id}`}>    
-                    <div class="avatar">
+                    <div class="avatar" >
                         <img src={profile_img_url} alt="User name" />
                     </div>
                 </Link>
-            <div class="name">{username}</div>
-                <div class="text">
+                <div class="name"><strong>{username}</strong></div>
+                <div class="text" data-tip data-for='messageTooltip'>
                     {message}
                 </div>
-                <div class="time">{formattedTime}</div>
+                <ReactTooltip id='messageTooltip' type='info' effect="solid" delayShow="200" delayHide="200" >
+                    <span>{formattedTime}</span>
+                </ReactTooltip>
+                <div class="time">{shortFormattedTime}</div>
             </div>
         );
     }

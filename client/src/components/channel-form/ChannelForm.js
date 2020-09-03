@@ -84,7 +84,7 @@ class ChannelForm extends React.Component {
                     </FormGroup>
                 </FormGroup>
                 <br />
-                <Button size="lg" color="primary">Submit</Button>
+                <Button size="lg" color="primary">Create Channel</Button>
             </Form>
         );
     }

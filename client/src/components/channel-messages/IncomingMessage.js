@@ -1,8 +1,11 @@
-import React from 'react';
-import moment from 'moment-timezone';
-import Cookie from 'js-cookie';
 import axios from 'axios';
+import Cookie from 'js-cookie';
+import moment from 'moment-timezone';
+import React from 'react';
+import { Link } from 'react-router-dom';
+import ReactTooltip from 'react-tooltip';
 import { BASE_URL } from '../../constants/api-routes';
+import './Message.scss';
 
 class IncomingMessage extends React.Component {
     constructor(props) {
@@ -43,21 +46,27 @@ class IncomingMessage extends React.Component {
     render() {
         // Creating a formatted time string based on the time_created unix timestamp
         // Example time format: 05/20/2020 | 7:55PM (AEST)
-        const { message, time_created } = this.props;
+        const { message, time_created, user_id } = this.props;
         console.log(this.state.user);
         const { profile_img_url, username } = this.state.user;
 
-        const formattedTime = moment.unix(time_created).tz("Australia/Sydney").format("MM/DD/YYYY  |  h:mmA (z)");
+        const formattedTime = moment.unix(time_created).tz("Australia/Sydney").format("DD/MM/YYYY | h:mmA (z)");
+        const shortFormattedTime = moment.unix(time_created).tz("Australia/Sydney").format("DD/MM/YY, h:mm A");
         return (
             <div class="answer left">
-                <div class="avatar">
-                    <img src={profile_img_url} alt="User name" />
-                </div>
-                <div class="name">{username}</div>
-                <div class="text">
+                <Link to={`/user/profile/${user_id}`}>   
+                    <div class="avatar">
+                        <img src={profile_img_url} alt="User name" />
+                    </div>
+                </Link>
+                <div class="name"><strong>{username}</strong></div>
+                <div class="text" data-tip data-for='incomingMessageTooltip'>
                     {message}
                 </div>
-                <div class="time">{formattedTime}</div>
+                <ReactTooltip id='incomingMessageTooltip' type='info' effect="solid" delayShow="200" delayHide="200" >
+                    <span>{formattedTime}</span>
+                </ReactTooltip>
+                <div class="time">{shortFormattedTime}</div>
             </div>
         );
     }

@@ -9,6 +9,10 @@ body{
     padding: 20px;
 }
 
+#typingArea {
+    min-height: 60px;
+}
+
 // Alternative chat styling
 .chat-user-list {
     max-height: 200px;
