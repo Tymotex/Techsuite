@@ -3,6 +3,7 @@ from util.util import printColour, crop_image_file, get_latest_filename
 import channels
 from dotenv import load_dotenv
 import os
+from exceptions import InputError
 
 # Globals and config:
 load_dotenv()
@@ -154,6 +155,8 @@ def handle_channels_create():
     description = request_data["description"]
     visibility = request_data["visibility"]
     printColour("Channels Create: {}".format(request_data), colour="violet")
+    if not name or not visibility:
+        raise InputError("Channel name or visibility not specified")
     return jsonify(channels.channels_create(token, name, description, visibility))
 
 @channels_router.route("/channels/update", methods=['PUT'])

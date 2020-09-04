@@ -31,7 +31,7 @@ def auth_signup(email, password, username):
     """
     # Check for improper inputs and raise InputError:
     if not email_is_legit(email):
-        raise InputError(description="Invalid email format")
+        raise InputError(description="Invalid email")
     if len(password) < 6:
         raise InputError(description="Password can't be less than 6 characters")
     
@@ -39,7 +39,7 @@ def auth_signup(email, password, username):
     # Check if the email exists in the database
     for each_user in users:
         if each_user.email == email:
-            raise InputError(description="Email already exists")
+            raise InputError(description="This email has already been registered with")
     # Adding a default profile picture for the user
     profile_image_endpoint = "http://localhost:{0}/images/{1}".format(os.getenv("PORT"), "default.jpg")
     # Adding a new user

@@ -5,6 +5,8 @@ from flask import Blueprint, request, jsonify
 from authentication import auth_signup, auth_login, auth_logout, auth_password_reset, auth_password_reset_request
 from util.util import printColour
 
+from exceptions import InputError
+
 auth_router = Blueprint("auth", __name__)
 
 @auth_router.route("/auth/register", methods=['POST'])

@@ -9,7 +9,7 @@ def error_handler(err):
     response.data = dumps({
         "code": err.code,
         "name": "System Error",
-        "message": err.get_description(),
+        "message": err.get_message(),
     })
     response.content_type = 'application/json'
     return response
