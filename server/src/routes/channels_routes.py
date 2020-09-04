@@ -193,7 +193,6 @@ def handle_channels_upload_image():
         HTTP Route: /channels/uploadimage
         HTTP Method: POST
         Params: (token, channel_id, x_start, y_start, x_end, y_end, file)
-        Returns JSON: { succeeded }
     """
     token = request.form["token"]
     channel_id = request.form["channel_id"]
@@ -207,14 +206,10 @@ def handle_channels_upload_image():
     # Check if the post request has the file part
     if 'file' not in request.files:
         printColour("No channel image uploaded?")
-        return jsonify({ "succeeded": False })
+        raise InputError("No valid image file found. Please try again")
     else:
         printColour("Saving channel photo")
         file = request.files['file']
-        if file.filename == '':
-            # if user does not select file, browser also submit an empty part without filename
-            printColour("No selected file")
-            return jsonify({ "succeeded": False })
         if file and allowed_file(file.filename):
             filename = get_latest_filename("channel_{}_profile.jpg".format(channel_id))
             printColour("Filename: " + filename)
@@ -230,7 +225,6 @@ def handle_channels_upload_cover():
         HTTP Route: /channels/uploadcover
         HTTP Method: POST
         Params: (token, channel_id, file)
-        Returns JSON: { succeeded }
     """
     token = request.form["token"]
     channel_id = request.form["channel_id"]
@@ -240,14 +234,10 @@ def handle_channels_upload_cover():
     # Check if the post request has the file part
     if 'file' not in request.files:
         printColour("No channel image uploaded?")
-        return jsonify({ "succeeded": False })
+        raise InputError("No valid image file found. Please try again")
     else:
         printColour("Saving channel photo")
         file = request.files['file']
-        if file.filename == '':
-            # if user does not select file, browser also submit an empty part without filename
-            printColour("No selected file")
-            return jsonify({ "succeeded": False })
         if file and allowed_file(file.filename):
             filename = get_latest_filename("channel_{}_profile.jpg".format(channel_id))
             printColour("Filename: " + filename)

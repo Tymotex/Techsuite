@@ -232,36 +232,39 @@ def channels_addowner(token, channel_id, user_id):
                 slackr or an owner of this channel
     """
     verify_token(token)
-    #identify user from token
-    calling_user = get_user_from_token(data, token)
-    if not calling_user:
-        raise AccessError(description="Invalid Token")
-    users_list = data["users"]
-
     selected_channel = select_channel(channel_id)
     if not selected_channel:
-        raise InputError(description="Channel ID is not a valid channel")
+        raise InputError(description="Not a valid channel")
+    calling_user = get_user_from_token(token)
 
-    # check whether user_id is already owner in channel
-    is_auth_owner = False
-    is_user_owner = False
-    owners_list = selected_channel["owner_members"]
+    details = channels_details(token, channel_id)
+    # Check whether the target user is actually in the list of members
+    members_list = details["all_members"]
+    user_found = False
+    for member in members_list:
+        if member["user_id"] == user_id:
+            user_found = True
+            break
+    if not user_found:
+        raise InputError("Target user must be a part of this channel")
+
+    # Check whether user_id is already owner in channel
+    owners_list = details["owner_members"]
+    calling_user_is_owner = False
+
     for owner in owners_list:
         if owner["user_id"] == user_id:
-            is_user_owner = True
-        elif owner["user_id"] == calling_user["user_id"]:
-            is_auth_owner = True
+            raise InputError("User is already an owner of the channel")
+        if owner["user_id"] == calling_user.id:
+            calling_user_is_owner = True
+    if not calling_user_is_owner:
+        raise InputError("You are not authorised to add new owners")
 
-    if is_user_owner is True:
-        error = "When user with user id user_id is already an owner of the channel"
-        raise InputError(description=error)
-
-    if not is_auth_owner:
-        error = "authorised user is not an owner of the slackr or owner of the channel"
-        raise AccessError(description=error)
-
-    user_to_add = get_user_from_id(users_list, user_id)[2]
-    selected_channel["owner_members"].append(user_to_add)
+    target_user = User.query.filter_by(id=user_id).first()
+    for each_membership in target_user.channel_membership:
+        if each_membership.channel_id == channel_id:
+            each_membership.is_owner = True
+    db.session.commit()
     return {}
 
 def channels_removeowner(token, channel_id, user_id):
@@ -281,37 +284,41 @@ def channels_removeowner(token, channel_id, user_id):
         user_id              int
     """
     verify_token(token)
-    #identify user from token
-    calling_user = get_user_from_token(data, token)
-    if not calling_user:
-        raise AccessError(description="Invalid Token")
-    users_list = data["users"]
-
-    selected_channel = select_channel(data, channel_id)
+    selected_channel = select_channel(channel_id)
     if not selected_channel:
-        raise InputError(description="Channel ID is not a valid channel")
+        raise InputError(description="Not a valid channel")
+    calling_user = get_user_from_token(token)
 
-    # check whether user_id is already owner in channel
-    is_auth_owner = False
-    is_user_owner = False
-    for owner in selected_channel["owner_members"]:
+    details = channels_details(token, channel_id)
+    # Check whether the target user is actually in the list of members
+    members_list = details["all_members"]
+    user_found = False
+    for member in members_list:
+        if member["user_id"] == user_id:
+            user_found = True
+            break
+    if not user_found:
+        raise InputError("Target user must be a part of this channel")
+
+    # Check whether user_id is not already an owner in channel
+    owners_list = details["owner_members"]
+    calling_user_is_owner = False
+    target_user_is_owner = False
+    for owner in owners_list:
         if owner["user_id"] == user_id:
-            is_user_owner = True
-        if owner["user_id"] == calling_user["user_id"]:
-            is_auth_owner = True
+            target_user_is_owner = True
+        if owner["user_id"] == calling_user.id:
+            calling_user_is_owner = True
+    if not calling_user_is_owner:
+        raise InputError("You are not authorised to remove existing owners")
+    if not target_user_is_owner:
+        raise InputError("Target user is not an owner of the channel")
 
-    if is_user_owner is False:
-        raise InputError(description="When user with user id user_id is not an owner of the channel")
-
-    if not is_auth_owner:
-        error = "authorised user is not an owner of the slackr or owner of the channel"
-        raise AccessError(description=error)
-
-    # Get user information from
-    user_to_remove = get_user_from_id(users_list, user_id)[2]
-    owner_l = [o for o in selected_channel["owner_members"] if o["user_id"] != user_to_remove["user_id"]]
-    selected_channel["owner_members"] = owner_l
-
+    target_user = User.query.filter_by(id=user_id).first()
+    for each_membership in target_user.channel_membership:
+        if each_membership.channel_id == channel_id:
+            each_membership.is_owner = False
+    db.session.commit()
     return {}
 
 def channels_listall(token):
@@ -426,6 +433,8 @@ def channels_update_info(token, channel_id, name, description, visibility):
             visibility  (bool)
     """
     verify_token(token)
+    if not name:
+        raise InputError("Channel name can't be blank")
     channel = Channel.query.filter_by(id=channel_id).first()
     channel.name = name
     channel.description = description
