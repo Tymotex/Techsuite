@@ -36,10 +36,6 @@ class ChannelUploadImage extends React.Component {
                     <ModalBody>
                         <ImageCropper uploadEndpoint="channels/uploadimage" title="" buttonText="Upload Image" channelID={this.state.channelID} />
                     </ModalBody>
-                    {/* Buttons in the modal footer: */}
-                    <ModalFooter>
-                        <Button type="button" color="secondary" onClick={this.toggleModal}>Cancel</Button>
-                    </ModalFooter>
                 </Modal>
             </>
         );

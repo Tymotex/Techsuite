@@ -4,6 +4,7 @@ import axios from 'axios';
 import { ChannelList } from '../../components/channel-list';
 import { BASE_URL } from '../../constants/api-routes';
 import './BioEditForm.scss';
+import { Notification } from '../../components/notification';
 
 class UserChannels extends React.Component {
     constructor(props) {
@@ -17,7 +18,7 @@ class UserChannels extends React.Component {
         };
     }
 
-    componentWillMount() {
+    UNSAFE_componentWillMount() {
         this.setState({
             isLoading: true
         });

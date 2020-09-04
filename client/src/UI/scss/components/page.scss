@@ -7,6 +7,10 @@
   min-height: 100vh;
 }
 
+.app-body {
+  overflow: hidden;
+}
+
 #page-content {
   width: 100%;
   position: relative;
@@ -18,10 +22,7 @@
   }
 }
 #primary-content {
-  padding-top: $pageContentPadding;
-  padding-left: $pageContentPadding;
-  padding-right: $pageContentPadding;
-  height: 100%;
+  padding: $pageContentPadding;
 }
 .page-container {
   width: 100%;

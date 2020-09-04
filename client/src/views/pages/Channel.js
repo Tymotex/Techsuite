@@ -8,20 +8,19 @@ import { ChannelUploadImage } from '../../components/channel-upload-image';
 import { ChannelDetails } from '../../components/channel-details';
 import { ChannelUploadCover } from '../../components/channel-upload-cover';
 import { ChannelSearchMessages } from '../../components/channel-search-messages';
+import { Notification } from '../../components/notification';
+import { UserAddOwner } from '../../components/user-add-owner';
+import { UserRemoveOwner } from '../../components/user-remove-owner';
 
 const Channel = (props) => {
-    const centerChildren = {
-        width: "100%",
-        textAlign: "center"
-    };
-    const chatDivider = {
-        width: "97%",
-        display: "inline-block",
-        margin: "2px"
+    const cardHeaderStyle = {
+        "textAlign": "center",
+        "fontSize": "150%"
     };
 
     return (
         <div>
+            <Notification />
             <Row>
                 <Col md={12}>
                     {/* Header card */}
@@ -42,32 +41,45 @@ const Channel = (props) => {
                 </Col>
                 <Col md={12} xl={4}>
                     <Card>
-                        <CardHeader style={{"textAlign": "center"}}>Channel Functions</CardHeader>
+                        <CardHeader style={cardHeaderStyle}>Channel Functions</CardHeader>
                         <CardBody>
                             <Row>
-                                <Col lg={12} xl={6}>
+                                <Col md={6}>
                                     <UserInvite /> 
                                 </Col>
-                                <Col lg={12} xl={6}>
+                                <Col md={6}>
                                     <ChannelLeave />
                                 </Col>
                             </Row>
                             <br />
                             <Row>
-                                <Col lg={12} xl={6}>
-                                    <ChannelEdit />
-                                </Col>
-                                <Col lg={12} xl={6}>
+                                <Col md={6}>
                                     <ChannelUploadImage />
+                                </Col>
+                                <Col md={6}>
+                                    <ChannelUploadCover />
                                 </Col>
                             </Row>
                             <br />
                             <Row>
-                                <Col lg={12} xl={6}>
-                                    <ChannelUploadCover />
+                                <Col md={6}>
+                                    <ChannelEdit />
                                 </Col>
-                                <Col lg={12} xl={6}>
+                                <Col md={6}>
                                     <ChannelSearchMessages />
+                                </Col>
+                            </Row>
+                        </CardBody>
+                    </Card>
+                    <Card>
+                        <CardHeader style={cardHeaderStyle}>Modify Users</CardHeader>
+                        <CardBody>
+                            <Row>
+                                <Col md={6}>
+                                    <UserAddOwner /> 
+                                </Col>
+                                <Col md={6}>
+                                    <UserRemoveOwner />
                                 </Col>
                             </Row>
                         </CardBody>

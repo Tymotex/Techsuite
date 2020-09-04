@@ -4,6 +4,7 @@ import Cookie from 'js-cookie';
 import axios from 'axios';
 import { BASE_URL } from '../../constants/api-routes';
 import './BioEditForm.scss';
+import { Notification } from '../notification';
 
 class BioEditForm extends React.Component {
     constructor(props) {
@@ -18,7 +19,7 @@ class BioEditForm extends React.Component {
         this.updateBio = this.updateBio.bind(this);
     }
 
-    componentWillMount() {
+    UNSAFE_componentWillMount() {
         this.setState({
             isLoading: true
         });

@@ -1,8 +1,9 @@
 import React from 'react';
 import Cookie from 'js-cookie';
-import { Form, FormGroup, FormText, Input, Label, Button, Row, Col } from 'reactstrap';
+import { Form, FormGroup, Input, Label, Button, Row, Col } from 'reactstrap';
 import axios from 'axios';
 import { BASE_URL } from '../../constants/api-routes';
+import { Notification } from '../../components/notification';
 
 class ProfileCoverForm extends React.Component {
     constructor(props) {
@@ -34,6 +35,10 @@ class ProfileCoverForm extends React.Component {
         const currUserToken = Cookie.get("token");
         const currUserID = Cookie.get("user_id");
         const fd = new FormData();
+        if (this.state.selectedImageFile == null) {
+            Notification.spawnNotification("Failed to upload image", "No valid image file found. Please try again", "danger");
+            return;
+        }
         fd.append("file", this.state.selectedImageFile, "user_1_.png");
         fd.append("token", currUserToken); 
         fd.append("user_id", currUserID); 

@@ -11,6 +11,7 @@ import { Jumbotron, Row, Col } from 'reactstrap';
 import './ChannelDetails.scss';
 import ChannelMemberList from "./ChannelMemberList";
 import ChannelOwnerList from './ChannelOwnerList';
+import { Notification } from '../notification';
 
 class ChannelDetails extends React.Component {
     static propTypes = {
@@ -26,7 +27,7 @@ class ChannelDetails extends React.Component {
         };
     }
 
-    componentWillMount() {
+    UNSAFE_componentWillMount() {
         this.setState({
             isLoading: true
         });
@@ -39,8 +40,6 @@ class ChannelDetails extends React.Component {
                         fetchSucceeded: true,
                         channel: res.data
                     });
-                    console.log("CHANNEL DETAILS: ");
-                    console.log(this.state.channel);
                 })
                 .catch((err) => {
                     this.setState({
@@ -59,14 +58,17 @@ class ChannelDetails extends React.Component {
 
     render() {
         const { name, description, visibility, channel_img_url, channel_cover_img_url, all_members, owner_members } = this.state.channel;
-        console.log("VISIBILITY: ");
-        console.log(visibility);
         return (
             (this.state.isLoading) ?
                 <LoadingSpinner /> :
                 (!this.state.fetchSucceeded) ?
                     <p>Fetch failed. Is the backend running?</p> :
-                    <Jumbotron className="channel-header-jumbotron" style={{"background-image": (channel_cover_img_url != null) ? `url('${channel_cover_img_url}')` : `linear-gradient(90deg, rgba(2,0,36,1) 0%, rgba(9,121,46,1) 45%, rgba(0,255,158,1) 100%)` }}>
+                    <Jumbotron className="channel-header-jumbotron" 
+                                style={{"backgroundImage": (channel_cover_img_url != null) ? (
+                                    `url('${channel_cover_img_url}')`
+                                ) : (
+                                   `linear-gradient(90deg, rgba(2,0,36,1) 0%, rgba(9,9,121,1) 45%, rgba(0,212,255,1) 100%)`
+                                ) }}>
                         <div className="channel-card">
                             <img className="channel-image b-circle" src={channel_img_url} style={{ width: "200px", height: "200px" }} alt="Channel Image"  />
                             <h1 className="channel-name display-3">

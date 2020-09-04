@@ -6,6 +6,7 @@ import { BASE_URL } from '../../constants/api-routes';
 import { withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import InputSwitch from './InputSwitch';
+import { Notification } from '../notification';
 
 class ChannelEdit extends React.Component {
     static propTypes = {
@@ -23,7 +24,7 @@ class ChannelEdit extends React.Component {
         this.updateChannelInfo = this.updateChannelInfo.bind(this);
     }
 
-    componentWillMount() {
+    UNSAFE_componentWillMount() {
         const currUserToken = Cookie.get("token");
         if (currUserToken) {
             // Now fetch the user's bio 
@@ -32,8 +33,6 @@ class ChannelEdit extends React.Component {
                     this.setState({
                         channel: channel.data
                     });
-                    console.log("CHANNEL: ");
-                    console.log(channel);
                 })
                 .catch((err) => {
                     const errorMessage = (err.response.data.message) ? (err.response.data.message) : "Something went wrong";
@@ -72,7 +71,6 @@ class ChannelEdit extends React.Component {
             }
             axios(postData)
                 .then(() => {
-                    console.log("Successfullly updated channel info");
                     window.location.reload();
                 })
                 .catch((err) => {

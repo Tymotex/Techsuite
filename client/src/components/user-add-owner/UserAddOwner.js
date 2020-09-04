@@ -7,7 +7,7 @@ import { withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { Notification } from '../notification';
 
-class UserInvite extends React.Component {
+class UserAddOwner extends React.Component {
     static propTypes = {
         match: PropTypes.object.isRequired,
         history: PropTypes.object.isRequired
@@ -23,7 +23,7 @@ class UserInvite extends React.Component {
             users: []
         };
         this.toggleModal = this.toggleModal.bind(this);
-        this.inviteUser = this.inviteUser.bind(this);
+        this.addOwner = this.addOwner.bind(this);
     }
 
     componentDidMount() {
@@ -32,10 +32,10 @@ class UserInvite extends React.Component {
         });
         const currToken = Cookie.get("token");
         if (currToken) {
-            axios.get(`${BASE_URL}/users/all?token=${currToken}`)
+            axios.get(`${BASE_URL}/channels/details?token=${currToken}&channel_id=${this.state.channelID}`)
                 .then((allUsers) => {
                     this.setState({
-                        users: allUsers.data.users,
+                        users: allUsers.data.all_members,
                         isLoading: false,
                         fetchSucceeded: true
                     });
@@ -57,15 +57,13 @@ class UserInvite extends React.Component {
         }));
     }
 
-    inviteUser(event) {
+    addOwner(event) {
         event.preventDefault();
         const formData = new FormData(event.target);
-        console.log("Trying to invite user!");
         const currToken = Cookie.get("token");
-        console.log(formData.get('user_id'));
         if (currToken) {
             const postData = {
-                url: `${BASE_URL}/channels/invite`,
+                url: `${BASE_URL}/channels/addowner`,
                 method: "POST",
                 data: {
                     token: currToken,
@@ -83,7 +81,7 @@ class UserInvite extends React.Component {
                 })
                 .catch((err) => {
                     const errorMessage = (err.response.data.message) ? (err.response.data.message) : "Something went wrong";
-                    Notification.spawnNotification("Invitation failed", errorMessage, "danger");
+                    Notification.spawnNotification("Failed to add owner", errorMessage, "danger");
                 });
         }
     }
@@ -91,10 +89,10 @@ class UserInvite extends React.Component {
     render() {
         return (
             <>
-                <Button color="primary" onClick={this.toggleModal} style={{"width": "100%"}}>Invite Someone</Button>
+                <Button color="primary" onClick={this.toggleModal} style={{"width": "100%"}}>Add Owner</Button>
                 <Modal isOpen={this.state.modal} toggle={this.toggleModal}>
-                    <ModalHeader toggle={this.toggleModal}>Invite Someone:</ModalHeader>
-                    <Form onSubmit={this.inviteUser}>
+                    <ModalHeader toggle={this.toggleModal}>Add an owner:</ModalHeader>
+                    <Form onSubmit={this.addOwner}>
                         <ModalBody>
                             Select a user:
                                 <FormGroup>
@@ -108,7 +106,7 @@ class UserInvite extends React.Component {
                         </ModalBody>
                         {/* Buttons in the modal footer: */}
                         <ModalFooter>
-                            <Button color="primary">Invite</Button>{' '}
+                            <Button color="primary">Add owner</Button>{' '}
                             <Button color="secondary" onClick={this.toggleModal}>Cancel</Button>
                         </ModalFooter>
                     </Form>
@@ -118,4 +116,4 @@ class UserInvite extends React.Component {
     }
 }
 
-export default withRouter(UserInvite);
+export default withRouter(UserAddOwner);

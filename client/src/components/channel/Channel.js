@@ -8,6 +8,7 @@ import { faStar, faUser, faLock } from '@fortawesome/free-solid-svg-icons'
 import { Card, CardBody, Button, Row, Col } from 'reactstrap';
 import './Channel.scss';
 import { BASE_URL } from '../../constants/api-routes';
+import { Notification } from '../notification';
 
 class Channel extends React.Component { 
     constructor(props) {
@@ -73,13 +74,13 @@ class Channel extends React.Component {
                                 <Link to={`/channel/${channel_id}`} style={{ textDecoration: 'none' }}>
                                     <h2 className="h4">{name}</h2>
                                 </Link>
+                                <p className="text-muted">
+                                    {description}
+                                </p>
                                 {(visibility === "public") ? 
                                     <em>Public Channel</em> :
                                     <em>Private Channel  <FontAwesomeIcon icon={faLock} /></em>
                                 }
-                                <p className="text-muted">
-                                    {description}
-                                </p>
                                 {/* Showing the button to join/request invite, if the user is NOT an owner/member */}
                                 {(!owner_of && !member_of) ?
                                     (visibility === "public") ? 

@@ -8,6 +8,7 @@ import { BASE_URL } from '../../constants/api-routes';
 import { LoadingSpinner } from '../loading-spinner';
 import EmptyChatIndicator from './EmptyChatIndicator';
 import FadeIn from 'react-fade-in';
+import { Notification } from '../notification';
 
 import openSocket from 'socket.io-client';
 import TypingPrompt from './TypingPrompt';
@@ -45,7 +46,7 @@ class ChannelMessages extends React.Component {
         this.broadcastTypingPrompt = this.broadcastTypingPrompt.bind(this);
     }
 
-    componentWillMount() {
+    UNSAFE_componentWillMount() {
         this.fetchMessages();
     }
 
@@ -124,8 +125,8 @@ class ChannelMessages extends React.Component {
 
                         {(this.state.messages && this.state.messages.length > 0) ? (
 
-                            <div class="col-inside-lg decor-default">
-                                <div class="chat-body">
+                            <div className="col-inside-lg decor-default">
+                                <div className="chat-body">
                                     {(this.state.isLoading) ? (
                                         <LoadingSpinner />
                                     ) : (

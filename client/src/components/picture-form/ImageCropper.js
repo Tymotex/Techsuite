@@ -7,6 +7,7 @@ import 'react-image-crop/dist/ReactCrop.css';
 import axios from 'axios';
 import { BASE_URL } from '../../constants/api-routes';
 import './ImageCropper.scss';
+import { Notification } from '../../components/notification';
 
 class ImageCropper extends PureComponent {
     constructor(props) {
@@ -144,6 +145,10 @@ class ImageCropper extends PureComponent {
         const currUserToken = Cookie.get("token");
         const currUserID = Cookie.get("user_id");
         const fd = new FormData();
+        if (this.state.selectedImageFile == null) {
+            Notification.spawnNotification("Failed to upload image", "No valid image file found. Please try again", "danger");
+            return;
+        }
         fd.append("file", this.state.selectedImageFile, "placeholder.png");
         fd.append("user_id", currUserID); 
         fd.append("channel_id", this.props.channelID);

@@ -9,8 +9,8 @@ class ChannelOwnerList extends React.Component {
     render() {
         const { owners } = this.props;
         return (
-            <div class="chat-user-list" style={{overflow: "auto", outline: "none"}} tabindex="5000">
-                <div class="chat-users">
+            <div className="chat-user-list" style={{overflow: "auto", outline: "none"}} tabIndex="5000">
+                <div className="chat-users">
                     {owners.map((eachMember, i) => (
                         <ChannelUser key={i} member={eachMember} isOwner={true} />
                     ))}

@@ -6,6 +6,7 @@ import { Link } from 'react-router-dom';
 import ReactTooltip from 'react-tooltip';
 import { BASE_URL } from '../../constants/api-routes';
 import './Message.scss';
+import { Notification } from '../notification';
 
 class IncomingMessage extends React.Component {
     constructor(props) {
@@ -66,7 +67,7 @@ class IncomingMessage extends React.Component {
                 <div class="text" data-tip data-for='incomingMessageTooltip'>
                     {message}
                 </div>
-                <ReactTooltip id='incomingMessageTooltip' type='info' effect="solid" delayShow="200" delayHide="200" >
+                <ReactTooltip id='incomingMessageTooltip' type='info' effect="solid" delayShow={200} delayHide={200} >
                     <span>{formattedTime}</span>
                 </ReactTooltip>
                 <div class="time">{shortFormattedTime}</div>

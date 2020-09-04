@@ -15,11 +15,11 @@ class ChannelUser extends React.Component {
         const currUserID = Cookie.get("user_id");
         return (
             <Link to={`/user/profile/${member.user_id}`} className="link">    
-                <div class="user">
-                    <div class="avatar">
+                <div className="user">
+                    <div className="avatar">
                         <img src={member.profile_img_url} alt={member.username} />
                     </div>
-                    <div class="name">
+                    <div className="name">
                         {(isOwner) ?
                             <FontAwesomeIcon icon={faStar} /> :
                             <FontAwesomeIcon icon={faUser} />
@@ -30,7 +30,7 @@ class ChannelUser extends React.Component {
                             <span></span>
                         }    
                     </div>
-                    <div class="mood">{member.email}</div>
+                    <div className="mood">{member.email}</div>
                 </div>
             </Link>
         );

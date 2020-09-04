@@ -26,7 +26,7 @@ const Showcase = () => {
           <div className="home-hero" style={heroStyles}>
             <h1>Welcome to Techsuite.</h1>
             <p className="text-muted">
-              An app for chatting, collaborating and sharing ideas 🌱
+              An app for collaborating, networking and sharing ideas 🌱
             </p>
           </div>
         </Col>

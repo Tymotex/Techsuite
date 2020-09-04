@@ -11,7 +11,7 @@ class News extends React.Component {
         }
     }
 
-    componentWillMount() {
+    UNSAFE_componentWillMount() {
         axios.get("https://hacker-news.firebaseio.com/v0/topstories.json?print=pretty")
             .then((res) => {
                 // Top 500 stories:

@@ -13,8 +13,8 @@ class ChannelMemberList extends React.Component {
         const { members, owners } = this.props;
         const currUserID = Cookie.get("user_id");
         return (
-            <div class="chat-user-list" style={{overflow: "auto", outline: "none"}} tabindex="5000">
-                <div class="chat-users">
+            <div className="chat-user-list" style={{overflow: "auto", outline: "none"}} tabIndex="5000">
+                <div className="chat-users">
                     {members.map((eachMember, i) => {
                         let isOwner = false;
                         owners.forEach((owner) => {

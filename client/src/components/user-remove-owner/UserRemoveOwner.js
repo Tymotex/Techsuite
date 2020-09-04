@@ -7,7 +7,7 @@ import { withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { Notification } from '../notification';
 
-class UserInvite extends React.Component {
+class UserRemoveOwner extends React.Component {
     static propTypes = {
         match: PropTypes.object.isRequired,
         history: PropTypes.object.isRequired
@@ -32,10 +32,10 @@ class UserInvite extends React.Component {
         });
         const currToken = Cookie.get("token");
         if (currToken) {
-            axios.get(`${BASE_URL}/users/all?token=${currToken}`)
+            axios.get(`${BASE_URL}/channels/details?token=${currToken}&channel_id=${this.state.channelID}`)
                 .then((allUsers) => {
                     this.setState({
-                        users: allUsers.data.users,
+                        users: allUsers.data.owner_members,
                         isLoading: false,
                         fetchSucceeded: true
                     });
@@ -65,7 +65,7 @@ class UserInvite extends React.Component {
         console.log(formData.get('user_id'));
         if (currToken) {
             const postData = {
-                url: `${BASE_URL}/channels/invite`,
+                url: `${BASE_URL}/channels/removeowner`,
                 method: "POST",
                 data: {
                     token: currToken,
@@ -91,9 +91,9 @@ class UserInvite extends React.Component {
     render() {
         return (
             <>
-                <Button color="primary" onClick={this.toggleModal} style={{"width": "100%"}}>Invite Someone</Button>
+                <Button color="danger" onClick={this.toggleModal} style={{"width": "100%"}}>Remove Owner</Button>
                 <Modal isOpen={this.state.modal} toggle={this.toggleModal}>
-                    <ModalHeader toggle={this.toggleModal}>Invite Someone:</ModalHeader>
+                    <ModalHeader toggle={this.toggleModal}>Remove an owner:</ModalHeader>
                     <Form onSubmit={this.inviteUser}>
                         <ModalBody>
                             Select a user:
@@ -108,7 +108,7 @@ class UserInvite extends React.Component {
                         </ModalBody>
                         {/* Buttons in the modal footer: */}
                         <ModalFooter>
-                            <Button color="primary">Invite</Button>{' '}
+                            <Button color="danger">Remove owner</Button>{' '}
                             <Button color="secondary" onClick={this.toggleModal}>Cancel</Button>
                         </ModalFooter>
                     </Form>
@@ -118,4 +118,4 @@ class UserInvite extends React.Component {
     }
 }
 
-export default withRouter(UserInvite);
+export default withRouter(UserRemoveOwner);

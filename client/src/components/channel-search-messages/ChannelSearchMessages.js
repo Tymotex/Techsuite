@@ -5,6 +5,7 @@ import { Modal, ModalHeader, ModalBody, ModalFooter, Form, FormGroup, Input, Inp
 import { BASE_URL } from '../../constants/api-routes';
 import { withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
+import { Notification } from '../notification';
 
 class ChannelSearchMessages extends React.Component {
     static propTypes = {
@@ -22,7 +23,7 @@ class ChannelSearchMessages extends React.Component {
         this.updateChannelInfo = this.updateChannelInfo.bind(this);
     }
 
-    componentWillMount() {
+    UNSAFE_componentWillMount() {
         const currUserToken = Cookie.get("token");
         if (currUserToken) {
             // Now fetch the user's bio 

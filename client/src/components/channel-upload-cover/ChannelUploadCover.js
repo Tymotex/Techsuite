@@ -5,7 +5,7 @@ import { Button, Modal, ModalHeader, ModalBody, ModalFooter, Form, FormGroup, In
 import { BASE_URL } from '../../constants/api-routes';
 import { withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import ImageCropper from '../picture-form/ImageCropper';
+import { Notification } from '../../components/notification';
 
 class ChannelUploadCover extends React.Component {
     static propTypes = {
@@ -49,6 +49,10 @@ class ChannelUploadCover extends React.Component {
         event.preventDefault();
         const currUserToken = Cookie.get("token");
         const fd = new FormData();
+        if (this.state.selectedImageFile == null) {
+            Notification.spawnNotification("Failed to upload image", "No valid image file found. Please try again", "danger");
+            return;
+        }
         fd.append("file", this.state.selectedImageFile, "user_1_.png");
         fd.append("token", currUserToken); 
         fd.append("channel_id", this.state.channelID); 

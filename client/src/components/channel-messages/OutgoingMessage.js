@@ -6,6 +6,7 @@ import { Link } from 'react-router-dom';
 import ReactTooltip from 'react-tooltip';
 import { BASE_URL } from '../../constants/api-routes';
 import './Message.scss';
+import { Notification } from '../notification';
 
 class OutgoingMessage extends React.Component {
     constructor(props) {
@@ -63,20 +64,20 @@ class OutgoingMessage extends React.Component {
         const formattedTime = moment.unix(time_created).tz("Australia/Sydney").format("DD/MM/YYYY | h:mmA (z)");
         const shortFormattedTime = moment.unix(time_created).tz("Australia/Sydney").format("DD/MM/YY, h:mm A");
         return (
-            <div class="answer right">
+            <div className="answer right">
                 <Link to={`/user/profile/${user_id}`}>    
-                    <div class="avatar" >
+                    <div className="avatar" >
                         <img src={profile_img_url} alt="User name" />
                     </div>
                 </Link>
-                <div class="name"><strong>{username}</strong></div>
-                <div class="text" data-tip data-for='messageTooltip'>
+                <div className="name"><strong>{username}</strong></div>
+                <div className="text" data-tip data-for='messageTooltip'>
                     {message}
                 </div>
                 <ReactTooltip id='messageTooltip' type='info' effect="solid" delayShow={200} delayHide={200} >
                     <span>{formattedTime}</span>
                 </ReactTooltip>
-                <div class="time">{shortFormattedTime}</div>
+                <div className="time">{shortFormattedTime}</div>
             </div>
         );
     }
