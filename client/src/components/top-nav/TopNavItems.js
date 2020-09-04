@@ -7,6 +7,7 @@ import { NavItem } from 'reactstrap';
 import AvatarDropdown from './AvatarDropdown';
 import LogInModalButton from './LogInModalButton';
 import RegisterModalButton from './RegisterModalButton';
+import { Notification } from '../notification';
 
 class TopNavItems extends React.Component {
     constructor(props) {
@@ -38,13 +39,13 @@ class TopNavItems extends React.Component {
                     });
                 })
                 .catch((err) => {
-                    alert(err);
+                    const errorMessage = (err.response.data.message) ? (err.response.data.message) : "Something went wrong";
+                    Notification.spawnNotification("Viewing user profile failed", errorMessage, "danger");
                 });
         }
     }
 
     saveSession(res) {
-        console.log("Successfully logged in");
         this.setState({
             loggedIn: true,
             profileImgURL: res.data.profile_img_url,
@@ -57,10 +58,8 @@ class TopNavItems extends React.Component {
     }
 
     wipeSession() {
-        console.log("Cleared cookies. User is now logged out");
         Cookie.remove("token");
         Cookie.remove("user_id");
-        this.props.history.push("/home");
         this.setState({
             loggedIn: false,
             profileImgURL: "",
@@ -85,9 +84,12 @@ class TopNavItems extends React.Component {
         axios(postData)
             .then((res) => {
                 this.saveSession(res);
+                this.props.history.push("/home");
+                Notification.spawnNotification("Login success", "You have logged in successfully", "success");
             })
             .catch((err) => {
-                console.log(err);
+                const errorMessage = (err.response.data.message) ? (err.response.data.message) : "Something went wrong";
+                Notification.spawnNotification("Login failure", errorMessage, "danger");
             });
     }
 
@@ -111,15 +113,19 @@ class TopNavItems extends React.Component {
         axios(postData)
             .then((res) => {
                 this.saveSession(res);
-                alert("DONE");
+                this.props.history.push("/home");
+                Notification.spawnNotification("Register success", "You have registered successfully", "success");
             })
             .catch((err) => {
-                console.log(err);
-            })
+                const errorMessage = (err.response.data.message) ? (err.response.data.message) : "Something went wrong";
+                Notification.spawnNotification("Registration failed", errorMessage, "danger");
+            });
     }
 
     logout() {
         this.wipeSession();
+        Notification.spawnNotification("Logout success", "You have logged out successfully. Bye!", "success");
+        this.props.history.push("/home");
     }
   
     render() {
@@ -132,6 +138,7 @@ class TopNavItems extends React.Component {
   
         const currUserID = parseInt(Cookie.get("user_id"));
         const { loggedIn, username, profileImgURL } = this.state;
+        
         return (
             <>
                 {/* Rendering the profile dropdown */}

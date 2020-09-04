@@ -40,11 +40,12 @@ class UserInvite extends React.Component {
                     });
                 })
                 .catch((err) => {
-                    alert("Couldn't fetch all the users");
                     this.setState({
                         isLoading: false,
                         fetchSucceeded: false
                     });
+                    const errorMessage = (err.response.data.message) ? (err.response.data.message) : "Something went wrong";
+                    Notification.spawnNotification("Couldn't fetch all users", errorMessage, "danger");
                 });
         }
     }
@@ -80,8 +81,8 @@ class UserInvite extends React.Component {
                     window.location.reload();
                 })
                 .catch((err) => {
-                    // TODO: replace alert
-                    alert(err);
+                    const errorMessage = (err.response.data.message) ? (err.response.data.message) : "Something went wrong";
+                    Notification.spawnNotification("Invitation failed", errorMessage, "danger");
                 });
         }
     }

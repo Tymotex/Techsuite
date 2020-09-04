@@ -47,8 +47,8 @@ class ChannelLeave extends React.Component {
                     this.props.history.push("/channels/my");
                 })
                 .catch((err) => {
-                    // TODO: replace alert
-                    alert(err);
+                    const errorMessage = (err.response.data.message) ? (err.response.data.message) : "Something went wrong";
+                    Notification.spawnNotification("Channel leave failed", errorMessage, "danger");
                 });
         }
     }

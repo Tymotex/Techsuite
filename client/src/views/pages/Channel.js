@@ -42,7 +42,7 @@ const Channel = (props) => {
                 </Col>
                 <Col md={12} xl={4}>
                     <Card>
-                        <CardHeader style={{"text-align": "center"}}>Channel Functions</CardHeader>
+                        <CardHeader style={{"textAlign": "center"}}>Channel Functions</CardHeader>
                         <CardBody>
                             <Row>
                                 <Col lg={12} xl={6}>

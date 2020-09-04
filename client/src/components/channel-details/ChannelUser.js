@@ -8,12 +8,6 @@ import './ChannelUser.scss'
 class ChannelUser extends React.Component {
     constructor(props) {
         super(props);
-        this.viewUserProfile = this.viewUserProfile.bind(this);
-    }
-
-    viewUserProfile(userID) {
-        alert("Viewing user profile: " + userID);
-        
     }
 
     render() {

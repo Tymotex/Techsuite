@@ -31,15 +31,17 @@ class ChannelSearchMessages extends React.Component {
                     this.setState({
                         channel: channel.data
                     });
-                    console.log("CHANNEL: ");
-                    console.log(channel);
                 })
                 .catch((err) => {
-                    alert("Fetching channel failed by ChannelSearchMessages");
+                    const errorMessage = (err.response.data.message) ? (err.response.data.message) : "Something went wrong";
+                    Notification.spawnNotification("Fetching channel details failed", errorMessage, "danger");
                 });
         } else {
-            // TODO: how should this case be handled?
-            alert("TOKEN WAS NOT FOUND IN COOKIE");
+            this.setState({
+                isLoading: false,
+                fetchSucceeded: false
+            });
+            Notification.spawnNotification("Failed", "Please log in first", "danger");
         }
     }
 
@@ -71,7 +73,8 @@ class ChannelSearchMessages extends React.Component {
                     window.location.reload();
                 })
                 .catch((err) => {
-                    alert(err);
+                    const errorMessage = (err.response.data.message) ? (err.response.data.message) : "Something went wrong";
+                    Notification.spawnNotification("Channel update failed", errorMessage, "danger");
                 });
         }
     }

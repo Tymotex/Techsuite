@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Card, CardBody, Row, Col } from 'reactstrap';
+import { Notification } from '../../components/notification';
 
 // Font-awesome icons:
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -19,6 +20,7 @@ const Showcase = () => {
   return (
     <div>
       {/* Welcome header: */}
+      <Notification />
       <Row>
         <Col md={6}>
           <div className="home-hero" style={heroStyles}>

@@ -3,7 +3,6 @@ import Cookie from 'js-cookie';
 import axios from 'axios';
 import { ChannelList } from '../../components/channel-list';
 import { BASE_URL } from '../../constants/api-routes';
-import { LoadingSpinner } from '../../components/loading-spinner';
 import './BioEditForm.scss';
 
 class UserChannels extends React.Component {
@@ -32,17 +31,21 @@ class UserChannels extends React.Component {
                         allChannels: allChannels.data.channels,
                         myChannels: allChannels.data.channels.filter(eachChannel => eachChannel.member_of)
                     });
-                    console.log(this.state);
                 })
                 .catch((err) => {
+                    const errorMessage = (err.response.data.message) ? (err.response.data.message) : "Something went wrong";
+                    Notification.spawnNotification("Viewing channel list failed", errorMessage, "danger");
                     this.setState({
                         isLoading: false,
                         fetchSucceeded: false
                     })
                 })
         } else {
-            // TODO: how should this case be handled?
-            alert("TOKEN WAS NOT FOUND IN COOKIE");
+            this.setState({
+                isLoading: false,
+                fetchSucceeded: false
+            });
+            Notification.spawnNotification("Failed", "Please log in first", "danger");
         }
     }
 

@@ -12,7 +12,7 @@ class ChannelOwnerList extends React.Component {
             <div class="chat-user-list" style={{overflow: "auto", outline: "none"}} tabindex="5000">
                 <div class="chat-users">
                     {owners.map((eachMember, i) => (
-                        <ChannelUser member={eachMember} isOwner={true} />
+                        <ChannelUser key={i} member={eachMember} isOwner={true} />
                     ))}
                 </div>
             </div>

@@ -34,14 +34,19 @@ class BioEditForm extends React.Component {
                     });
                 })
                 .catch((err) => {
+                    const errorMessage = (err.response.data.message) ? (err.response.data.message) : "Something went wrong";
+                    Notification.spawnNotification("Viewing user bio failed", errorMessage, "danger");
                     this.setState({
                         isLoading: false,
                         fetchSucceeded: false
                     })
                 });
         } else {
-            // TODO: how should this case be handled?
-            alert("TOKEN WAS NOT FOUND IN COOKIE");
+            this.setState({
+                isLoading: false,
+                fetchSucceeded: false
+            });
+            Notification.spawnNotification("Failed", "Please log in first", "danger");
         }
     }
 
@@ -80,7 +85,8 @@ class BioEditForm extends React.Component {
                     window.location.reload();
                 })
                 .catch((err) => {
-                    alert(err);
+                    const errorMessage = (err.response.data.message) ? (err.response.data.message) : "Something went wrong";
+                    Notification.spawnNotification("Updating bio failed", errorMessage, "danger");
                 });
         }
     }

@@ -4,6 +4,7 @@ import Cookie from 'js-cookie';
 import { withRouter } from 'react-router-dom';
 import { BASE_URL } from '../../constants/api-routes';
 import { Button, Form, FormGroup, FormText, Label, Input } from 'reactstrap';
+import { Notification } from '../notification';
 
 class ChannelForm extends React.Component {
     constructor(props) {
@@ -12,6 +13,7 @@ class ChannelForm extends React.Component {
     }
 
     createNewChannel(event) {
+        console.log("Clicked");
         event.preventDefault();
         const currUserToken = Cookie.get("token");
         if (currUserToken) {
@@ -38,13 +40,14 @@ class ChannelForm extends React.Component {
             }
             axios(postData)
                 .then((res) => {
-                    console.log("Successfully created a channel!");
                     // Pushing a route to history will invoke a redirect to that route 
                     this.props.history.push("/channels/my");
                 })
                 .catch((err) => {
-                    alert(err);
+                    Notification.spawnNotification("Failed to create channel", "Invalid form input. Please try again", "danger");
                 })
+        } else {
+            Notification.spawnNotification("Failed to create channel", "Please log in first", "danger");
         }
     }
 

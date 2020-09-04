@@ -35,12 +35,15 @@ class Channel extends React.Component {
                     this.props.history.push(`/channel/${this.props.channel_id}`);
                 })
                 .catch((err) => {
-                    // TODO: Replace alert with something else
-                    alert(err);
+                    const errorMessage = (err.response.data.message) ? (err.response.data.message) : "Something went wrong";
+                    Notification.spawnNotification("Joining channel failed", errorMessage, "danger");
                 });
         } else {
-            // TODO: Replace alert with something else
-            alert("No token passed");
+            this.setState({
+                isLoading: false,
+                fetchSucceeded: false
+            });
+            Notification.spawnNotification("Failed", "Please log in first", "danger");
         }
     }
 

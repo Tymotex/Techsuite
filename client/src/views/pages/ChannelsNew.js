@@ -3,48 +3,17 @@ import axios from 'axios';
 import Cookie from 'js-cookie';
 import { BASE_URL } from '../../constants/api-routes';
 import { ChannelForm } from '../../components/channel-form';
+import { Notification } from '../../components/notification';
 
 class ChannelsNew extends React.Component {
     constructor(props) {
         super(props);
-        this.createNewChannel = this.createNewChannel.bind(this);
-    }
-
-    createNewChannel(event) {
-        event.preventDefault();
-        const currUserToken = Cookie.get("token");
-        const history = this.props.history;
-        if (currUserToken) {
-            const formData = new FormData(event.target);
-            console.log("IS PUBLIC???", (formData.get("is_public")) ? true : false)
-            
-            const postData = {
-                method: 'post',
-                url: `${BASE_URL}/channels/create`,
-                data: {
-                    token: currUserToken,
-                    name: formData.get("name"),
-                    is_public: (formData.get("is_public")) ? true : false
-                },
-                headers: {
-                    "Content-Type": "application/json"
-                }
-            }
-            axios(postData)
-                .then((res) => {
-                    console.log("Successfully created a channel!");
-                    history.push("/home");
-                    console.log("Redirecting.");
-                })
-                .catch((err) => {
-                    alert(err);
-                })
-        }
     }
 
     render() {
         return (
             <div>
+                <Notification />
                 <h1>Create a New Channel:</h1>
                 <ChannelForm />
             </div>

@@ -4,6 +4,7 @@ import Cookie from 'js-cookie';
 import { ChannelList } from '../../components/channel-list';
 import { BASE_URL } from '../../constants/api-routes';
 import { LoadingSpinner } from '../../components/loading-spinner';
+import { Notification } from '../../components/notification';
 
 class ChannelsAll extends React.Component {
     constructor(props) {
@@ -17,7 +18,7 @@ class ChannelsAll extends React.Component {
         };
     }
 
-    componentWillMount() {
+    componentDidMount() {
         this.setState({
             isLoading: true
         });
@@ -39,18 +40,30 @@ class ChannelsAll extends React.Component {
                     })
                 });
         } else {
-            // TODO: how should this case be handled?
-            alert("TOKEN WAS NOT FOUND IN COOKIE");
+            Notification.spawnNotification("Can't load channels", "Please log in first", "danger");
+            this.setState({
+                isLoading: false,
+                fetchSucceeded: false
+            });
         }
     }
 
     render() {
         return (
-            (this.state.isLoading) ?
-                <LoadingSpinner /> :
-                (this.state.fetchSucceeded) ? 
-                    <ChannelList {...this.state} /> :
-                    <p>Fetch failed. Is the backend running?</p>
+            <div>
+                <Notification />
+                {(this.state.isLoading) ? (
+                    <LoadingSpinner /> 
+                ) : (
+                    (this.state.fetchSucceeded) ? (
+                        <div>
+                            <ChannelList {...this.state} />
+                        </div>
+                    ) : (
+                        <></>
+                    )
+                )}
+            </div>
         );
     }
 }

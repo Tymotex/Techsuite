@@ -3,6 +3,7 @@ import { Button, Modal, ModalHeader, ModalBody, ModalFooter, Form, FormGroup, In
 import { NavLink } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { LogIn } from 'react-feather';
+import { Notification } from '../notification';
 
 import { NeonButton } from '../neon-button';
 

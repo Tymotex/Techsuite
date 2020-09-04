@@ -98,7 +98,8 @@ class ChannelMessages extends React.Component {
                     });
                 })
                 .catch((err) => {
-                    alert(err);
+                    const errorMessage = (err.response.data.message) ? (err.response.data.message) : "Something went wrong";
+                    Notification.spawnNotification("Fetching channel messages failed", errorMessage, "danger");
                     this.setState({
                         isLoading: false,
                         fetchSucceeded: false
@@ -118,8 +119,8 @@ class ChannelMessages extends React.Component {
     render() {
         return (
             <>
-                <div class="content container-fluid bootstrap snippets">
-                    <div id="message-list-container" class="chat" style={{overflow: "auto", outline: "none"}} tabindex="5001">
+                <div className="content container-fluid bootstrap snippets">
+                    <div id="message-list-container" className="chat" style={{overflow: "auto", outline: "none"}} tabIndex="5001">
 
                         {(this.state.messages && this.state.messages.length > 0) ? (
 
@@ -129,8 +130,8 @@ class ChannelMessages extends React.Component {
                                         <LoadingSpinner />
                                     ) : (
                                         (this.state.fetchSucceeded) ? (
-                                            this.state.messages.map((eachMessage) => (
-                                                <FadeIn delay="200">
+                                            this.state.messages.map((eachMessage, i) => (
+                                                <FadeIn key={i} delay="200">
                                                     <Message key={eachMessage.message_id} {...eachMessage}/>
                                                 </FadeIn>
                                             ))

@@ -23,7 +23,7 @@ class ChannelMemberList extends React.Component {
                             }
                         });
                         return (
-                            <ChannelUser member={eachMember} isOwner={isOwner}/>
+                            <ChannelUser key={i} member={eachMember} isOwner={isOwner}/>
                         );
                     }
                     )}

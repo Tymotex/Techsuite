@@ -49,8 +49,11 @@ class ChannelDetails extends React.Component {
                     })
                 })
         } else {
-            // TODO: how should this case be handled?
-            alert("TOKEN WAS NOT FOUND IN COOKIE");
+            this.setState({
+                isLoading: false,
+                fetchSucceeded: false
+            });
+            Notification.spawnNotification("Failed", "Please log in first", "danger");
         }
     }
 

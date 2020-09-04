@@ -2,6 +2,7 @@ import React from 'react';
 import axios from 'axios';
 import Cookie from 'js-cookie';
 import { BASE_URL } from '../../constants/api-routes';
+import { Notification } from '../../components/notification';
 
 class Admin extends React.Component {
     constructor(props) {
@@ -15,22 +16,27 @@ class Admin extends React.Component {
             axios.get(`${BASE_URL}/admin/reset`)
                 .then((response) => {
                     if (response.data.succeeded) {
-                        alert("Succeeded");
+                        Notification.spawnNotification("Success", "Database reset successfully", "success");
                     } else {
-                        alert("Failed");
+                        Notification.spawnNotification("Failure", "Database failed to reset", "danger");
                     }
                 })
                 .catch((err) => {
-                    alert(err);
+                    Notification.spawnNotification("Failure", "Database failed to reset. Server may be be down", "danger");
                 });
         } else {
-            alert("TOKEN WAS NOT FOUND IN COOKIE");
+            Notification.spawnNotification("Failure", "You don't have permission. Please log in first", "danger");
         }
     }
 
     render() {
         return (
-            <div><strong onClick={this.reset}>Click me to reset</strong></div>
+            <>
+                <Notification />
+                <div>
+                    <strong onClick={this.reset}>Click me to reset</strong>
+                </div>
+            </>
         );
     }
 }

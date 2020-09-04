@@ -18,7 +18,10 @@
   }
 }
 #primary-content {
-  padding: $pageContentPadding;
+  padding-top: $pageContentPadding;
+  padding-left: $pageContentPadding;
+  padding-right: $pageContentPadding;
+  height: 100%;
 }
 .page-container {
   width: 100%;

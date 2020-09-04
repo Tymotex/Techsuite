@@ -40,8 +40,11 @@ class OutgoingMessage extends React.Component {
                     })
                 })
         } else {
-            // TODO: how should this case be handled?
-            alert("TOKEN WAS NOT FOUND IN COOKIE");
+            this.setState({
+                isLoading: false,
+                fetchSucceeded: false
+            });
+            Notification.spawnNotification("Failed", "Please log in first", "danger");
         }
     }
 
@@ -55,7 +58,6 @@ class OutgoingMessage extends React.Component {
         // Creating a formatted time string based on the time_created unix timestamp
         // Example time format: 05/20/2020 | 7:55PM (AEST)
         const { message, time_created, user_id } = this.props;
-        console.log(this.state.user);
         const { profile_img_url, username } = this.state.user;
 
         const formattedTime = moment.unix(time_created).tz("Australia/Sydney").format("DD/MM/YYYY | h:mmA (z)");
@@ -71,7 +73,7 @@ class OutgoingMessage extends React.Component {
                 <div class="text" data-tip data-for='messageTooltip'>
                     {message}
                 </div>
-                <ReactTooltip id='messageTooltip' type='info' effect="solid" delayShow="200" delayHide="200" >
+                <ReactTooltip id='messageTooltip' type='info' effect="solid" delayShow={200} delayHide={200} >
                     <span>{formattedTime}</span>
                 </ReactTooltip>
                 <div class="time">{shortFormattedTime}</div>
