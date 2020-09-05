@@ -85,7 +85,7 @@ class Channel extends React.Component {
                                 {(!owner_of && !member_of) ?
                                     (visibility === "public") ? 
                                         <Button onClick={this.joinChannel}>Join Channel</Button> :
-                                        <Button onClick={this.requestInvite}>Request To Join</Button> :
+                                        <></> :
                                     ""
                                 }
                                 {(owner_of) ?

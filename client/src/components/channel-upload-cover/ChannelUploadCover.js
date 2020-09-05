@@ -80,6 +80,7 @@ class ChannelUploadCover extends React.Component {
             <>
                 <Button color="info" onClick={this.toggleModal} style={{"width": "100%"}}>Upload Cover</Button>
                 <Modal isOpen={this.state.modal} toggle={this.toggleModal}>
+                    <Notification />
                     <ModalHeader toggle={this.toggleModal}>Uploading Channel Cover:</ModalHeader>
                     <ModalBody>
                         <Form onSubmit={this.uploadImageFile}>

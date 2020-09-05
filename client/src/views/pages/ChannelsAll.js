@@ -34,10 +34,12 @@ class ChannelsAll extends React.Component {
                     });
                 })
                 .catch((err) => {
+                    const errorMessage = (err.response.data.message) ? (err.response.data.message) : "Something went wrong";
+                    Notification.spawnNotification("Viewing all channels failed", errorMessage, "danger");
                     this.setState({
                         isLoading: false,
                         fetchSucceeded: false
-                    })
+                    });
                 });
         } else {
             Notification.spawnNotification("Can't load channels", "Please log in first", "danger");

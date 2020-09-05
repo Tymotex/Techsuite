@@ -91,6 +91,7 @@ class UserAddOwner extends React.Component {
             <>
                 <Button color="primary" onClick={this.toggleModal} style={{"width": "100%"}}>Add Owner</Button>
                 <Modal isOpen={this.state.modal} toggle={this.toggleModal}>
+                    <Notification />
                     <ModalHeader toggle={this.toggleModal}>Add an owner:</ModalHeader>
                     <Form onSubmit={this.addOwner}>
                         <ModalBody>

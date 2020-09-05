@@ -17,7 +17,10 @@ class InvalidInputException(Exception):
 
 class AccessError(HTTPException):
     code = 400
-    message = 'No message specified'
+    
+    def __init__(self, description="No message specified"):
+        HTTPException.__init__(self)
+        self.message = description
     
     def get_message(self):
         return self.message

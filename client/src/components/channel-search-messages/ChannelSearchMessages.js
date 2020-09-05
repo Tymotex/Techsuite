@@ -92,6 +92,7 @@ class ChannelSearchMessages extends React.Component {
             <>
                 <Button color="secondary" onClick={this.toggleModal} style={{"width": "100%"}}>Search Messages</Button>
                 <Modal isOpen={this.state.modal} toggle={this.toggleModal}>
+                    <Notification />
                     <ModalHeader toggle={this.toggleModal}>Searching Channel Messages:</ModalHeader>
                     <ModalBody>
                         <Form onSubmit={this.updateChannelInfo}>

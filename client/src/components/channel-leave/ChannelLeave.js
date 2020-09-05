@@ -59,6 +59,7 @@ class ChannelLeave extends React.Component {
             <>
                 <Button color="danger" onClick={this.toggleModal} style={{"width": "100%"}}>Leave Channel</Button>
                 <Modal isOpen={this.state.modal} toggle={this.toggleModal}>
+                    <Notification />
                     <ModalHeader toggle={this.toggleModal}>Leaving Channel:</ModalHeader>
                     <ModalBody>
                         Are you sure you want to leave this channel?

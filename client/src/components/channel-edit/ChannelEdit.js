@@ -92,6 +92,7 @@ class ChannelEdit extends React.Component {
             <>
                 <Button color="warning" onClick={this.toggleModal} style={{"width": "100%"}}>Edit Channel Info</Button>
                 <Modal isOpen={this.state.modal} toggle={this.toggleModal}>
+                    <Notification />
                     <ModalHeader toggle={this.toggleModal}>Editing Channel Info:</ModalHeader>
                     <ModalBody>
                         <Form onSubmit={this.updateChannelInfo}>

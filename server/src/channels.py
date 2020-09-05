@@ -26,15 +26,15 @@ def channels_invite(token, channel_id, user_id):
     # If channel_id is invalid, raise input error
     selected_channel = select_channel(channel_id)
     if not selected_channel:
-        raise InputError(description="channel_id doesn't reference a valid channel that the user is part of.")
+        raise InputError(description="Target channel is not a valid channel that the user is part of.")
     # Check the authorised user is not already a member of the channel
     if not is_user_member(calling_user, selected_channel):
-        raise AccessError(description="Authorised user is not a member of channel with channel_id")
+        raise AccessError(description="You are not a member of this channel")
 
     invited_user = User.query.filter_by(id=user_id).first() 
     # Check that the user exists (ie. the user_id is valid)
     if not invited_user:
-        raise InputError(description="user_id does not refer to a valid user")
+        raise InputError(description="Target user is not a valid user")
     # Check if invited_user is already a member
     if is_user_member(invited_user, selected_channel):
         raise InputError(description="{} is already a member".format(invited_user.username))
@@ -72,7 +72,7 @@ def channels_details(token, channel_id):
         raise InputError(description=f"{channel_id} doesn't point to a valid channel")
     # Raise exception when the user is not a member of the channel with the given channel_id
     if not is_user_member(user, selected_channel):
-        raise AccessError(description="Authorised user is not a member of channel with channel_id")
+        raise AccessError(description="You are not a member of this channel")
 
     channel_owners = []
     channel_members = []
@@ -130,7 +130,7 @@ def channels_messages(token, channel_id, start, limit=50):
     if not selected_channel:
         raise InputError(description="Channel ID is not a valid channel")
     if is_user_member(user, selected_channel) is False:
-        raise AccessError(description="Authorised user is not a member of channel with channel_id")
+        raise AccessError(description="You are not a member of this channel")
 
     # Loop through 50 message dictionaries of list starting from start index
     messsages_list = selected_channel.messages_sent
@@ -181,7 +181,7 @@ def channels_leave(token, channel_id):
         raise InputError(description="Channel ID is not a valid channel")
     # Check user if the user is not currently a member of the selected channel
     if not is_user_member(user, selected_channel):
-        raise AccessError(description="Authorised user is not a member of channel with channel_id")
+        raise AccessError(description="You are not a member of this channel")
 
     membership = MemberOf.query.filter_by(user_id=user.id, channel_id=selected_channel.id).first()
     db.session.delete(membership)
@@ -207,10 +207,10 @@ def channels_join(token, channel_id):
         raise AccessError(description="Invalid Token")
     selected_channel = select_channel(channel_id)
     if not selected_channel:
-        raise InputError(description="Channel ID is not a valid channel")
+        raise InputError(description="Target channel is not a valid channel")
     # Check whether channel is private or not. Raise AccessError if it is
     if not selected_channel.visibility == "public":
-        raise AccessError(description="channel_id refers to a channel that is private.")
+        raise AccessError(description="Target channel isn't public")
 
     new_membership = MemberOf(
         user=user,

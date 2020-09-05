@@ -93,6 +93,7 @@ class UserInvite extends React.Component {
             <>
                 <Button color="primary" onClick={this.toggleModal} style={{"width": "100%"}}>Invite Someone</Button>
                 <Modal isOpen={this.state.modal} toggle={this.toggleModal}>
+                    <Notification />
                     <ModalHeader toggle={this.toggleModal}>Invite Someone:</ModalHeader>
                     <Form onSubmit={this.inviteUser}>
                         <ModalBody>
