@@ -31,6 +31,20 @@ export default {
       divider: true,
     },
     {
+      name: 'Conversations',
+      url: '/conversations',
+      icon: 'Inbox',
+      children: [
+        {
+          name: 'All Channels',
+          url: '/channels/all'
+        }
+      ]
+    },
+    {
+      divider: true,
+    },
+    {
       name: 'News',
       url: '/news',
       icon: 'Globe',
