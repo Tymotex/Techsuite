@@ -3,6 +3,7 @@ from util.util import printColour, crop_image_file, get_latest_filename
 import channels
 from dotenv import load_dotenv
 import os
+import messages
 from exceptions import InputError
 
 # Globals and config:
@@ -245,3 +246,20 @@ def handle_channels_upload_cover():
             image_endpoint = "{0}/images/{1}".format(BASE_URL, filename)
             channels.channels_upload_cover(token, channel_id, image_endpoint)
             return jsonify({ "succeeded": True })
+
+# ===== Message Searching =====
+@channels_router.route("/channels/search", methods=['GET'])
+def handle_search():
+    """
+        HTTP Route: /channels/search
+        HTTP Method: GET
+        Params: (token, channel_id, query_str)
+        Returns JSON: {
+            messages: [ { message_id, u_id, message, time_created, reacts }, ...]
+        }
+    """
+    token = request.args.get("token")
+    channel_id = request.args.get("channel_id")
+    query_str = request.args.get("query_str")
+    return jsonify(messages.messages_search_match(token, channel_id, query_str))
+

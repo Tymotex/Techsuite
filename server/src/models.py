@@ -49,7 +49,7 @@ class Channel(db.Model):
     channel_cover_img_url = db.Column(db.String(255))
     time_created = db.Column(db.DateTime, default=datetime.now)
 
-    # uselist=False tells SQLAlchemy that this is a one-to-one relationship
+    # Note: uselist=False tells SQLAlchemy that this is a one-to-one relationship
     channel_membership = db.relationship("MemberOf", backref="channel", lazy=True)
     messages_sent = db.relationship("Message", backref="channel", lazy=True)
     def __repr__(self):

@@ -6,6 +6,7 @@ import { BASE_URL } from '../../constants/api-routes';
 import { withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { Notification } from '../notification';
+import ChatBox from '../channel-messages/ChatBox';
 
 class ChannelSearchMessages extends React.Component {
     static propTypes = {
@@ -16,26 +17,40 @@ class ChannelSearchMessages extends React.Component {
         super(props);
         this.state = {
             channelID: props.match.params.channelID,
-            channel: {},
-            modal: false
+            messages: [],
+            modal: false,
+            queryStr: ""
         };
         this.toggleModal = this.toggleModal.bind(this);
-        this.updateChannelInfo = this.updateChannelInfo.bind(this);
+        this.searchMessages = this.searchMessages.bind(this);
     }
 
-    UNSAFE_componentWillMount() {
+    UNSAFE_componentDidMount() {
+        var form = document.getElementById("dynamic-search-form");
+        form.addEventListener("change", function() {
+            console.log('form was changed');
+        });
+    }
+
+    searchMessages() {
+        console.log("Sifting through channel messages:");
+        const queryStr = document.getElementById("dynamic-search-field").value;
         const currUserToken = Cookie.get("token");
+        console.log("Token: " + currUserToken);
+        console.log("ChannelID: " + this.state.channelID);
+        console.log("Query:   " + queryStr);
+
         if (currUserToken) {
-            // Now fetch the user's bio 
-            axios.get(`${BASE_URL}/channels/details?token=${currUserToken}&channel_id=${this.state.channelID}`)
-                .then((channel) => {
+            axios.get(`${BASE_URL}/channels/search?token=${currUserToken}&channel_id=${this.state.channelID}&query_str=${queryStr}`)
+                .then((messagePayload) => {
                     this.setState({
-                        channel: channel.data
+                        queryStr: queryStr,
+                        messages: messagePayload.data.messages
                     });
                 })
                 .catch((err) => {
                     const errorMessage = (err.response.data.message) ? (err.response.data.message) : "Something went wrong";
-                    Notification.spawnNotification("Fetching channel details failed", errorMessage, "danger");
+                    Notification.spawnNotification("Message search failed", errorMessage, "danger");
                 });
         } else {
             this.setState({
@@ -46,40 +61,6 @@ class ChannelSearchMessages extends React.Component {
         }
     }
 
-    updateChannelInfo(event) {
-        event.preventDefault();
-        console.log("Updating channel info");
-        const fd = new FormData(event.target);
-        
-        const currUserToken = Cookie.get("token");
-        console.log("Token: " + currUserToken);
-        console.log("ChannelID: " + this.state.channelID);
-
-        if (currUserToken) {
-            const postData = {
-                method: 'put',
-                url: `${BASE_URL}/channels/update`,
-                data: {
-                    token: currUserToken,
-                    channel_id: this.state.channelID,
-                    name: fd.get("name"),
-                    description: fd.get("description"),
-                    visibility: (fd.get("visibility") != null) ? true : false
-                },
-                headers: { "Content-Type": "application/json" }
-            }
-            axios(postData)
-                .then(() => {
-                    console.log("Successfullly updated channel info");
-                    window.location.reload();
-                })
-                .catch((err) => {
-                    const errorMessage = (err.response.data.message) ? (err.response.data.message) : "Something went wrong";
-                    Notification.spawnNotification("Channel update failed", errorMessage, "danger");
-                });
-        }
-    }
-
     toggleModal() {
         this.setState(prevState => ({
             modal: !prevState.modal
@@ -87,7 +68,7 @@ class ChannelSearchMessages extends React.Component {
     }
 
     render() {
-        const { name, description, visibility } = this.state.channel;
+        const { messages, queryStr } = this.state;
         return (
             <>
                 <Button color="secondary" onClick={this.toggleModal} style={{"width": "100%"}}>Search Messages</Button>
@@ -95,20 +76,26 @@ class ChannelSearchMessages extends React.Component {
                     <Notification />
                     <ModalHeader toggle={this.toggleModal}>Searching Channel Messages:</ModalHeader>
                     <ModalBody>
-                        <Form onSubmit={this.updateChannelInfo}>
+                        <Form>
                             <FormGroup>
                                 <InputGroup>
                                     <InputGroupAddon addonType="prepend">
                                         <InputGroupText>Search for</InputGroupText>
                                     </InputGroupAddon>
-                                    <Input name="searchMessage" placeholder="eg. good movie" />
+                                    <Input id="dynamic-search-field" name="queryString" placeholder="Start typing..." defaultValue={queryStr} onChange={this.searchMessages} />
                                 </InputGroup>
                             </FormGroup>
-                            <ModalFooter>
-                                <Button color="primary">Search</Button>{' '}
-                                <Button type="button" color="secondary" onClick={this.toggleModal}>Cancel</Button>
-                            </ModalFooter>
                         </Form>
+                    
+                        {/* Results display: */}
+                        {(messages && messages.length > 0) ? (
+                            <ChatBox messages={messages} isLoading={false} fetchSucceeded={true}/>
+                        ) : (
+                            <div>
+                                No results
+                            </div>
+                        )}
+
                     </ModalBody>
                     {/* Buttons in the modal footer: */}
                 </Modal>

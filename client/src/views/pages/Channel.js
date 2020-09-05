@@ -79,7 +79,7 @@ class Channel extends React.Component {
                                 </Card>
                                 <hr />
                             </Col>
-                            <Col md={12} xl={8}>
+                            <Col lg={12} xl={8}>
                                 {/* Message log and form */}
                                 <Card>
                                     <CardBody>
@@ -87,7 +87,7 @@ class Channel extends React.Component {
                                     </CardBody>
                                 </Card>
                             </Col>
-                            <Col md={12} xl={4}>
+                            <Col lg={12} xl={4}>
                                 <Card>
                                     <CardHeader style={cardHeaderStyle}>Channel Functions</CardHeader>
                                     <CardBody>

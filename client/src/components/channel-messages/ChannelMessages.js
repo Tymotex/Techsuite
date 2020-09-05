@@ -13,6 +13,7 @@ import { Notification } from '../notification';
 import openSocket from 'socket.io-client';
 import TypingPrompt from './TypingPrompt';
 
+import ChatBox from './ChatBox';
 
 const socket = openSocket('http://localhost:3001');
 
@@ -120,36 +121,7 @@ class ChannelMessages extends React.Component {
     render() {
         return (
             <>
-                <div className="content container-fluid bootstrap snippets">
-                    <div id="message-list-container" className="chat" style={{overflow: "auto", outline: "none"}} tabIndex="5001">
-
-                        {(this.state.messages && this.state.messages.length > 0) ? (
-
-                            <div className="col-inside-lg decor-default">
-                                <div className="chat-body">
-                                    {(this.state.isLoading) ? (
-                                        <LoadingSpinner />
-                                    ) : (
-                                        (this.state.fetchSucceeded) ? (
-                                            this.state.messages.map((eachMessage, i) => (
-                                                <FadeIn key={i} delay="200">
-                                                    <Message key={eachMessage.message_id} {...eachMessage}/>
-                                                </FadeIn>
-                                            ))
-                                        ) : (
-                                            <p>Message fetch failed...</p>
-                                        )
-                                    )}  
-                                </div>
-                            </div>
-
-                        ) : (
-                            <EmptyChatIndicator />
-                        )}
-
-                    </div>
-                </div>
-
+                <ChatBox {...this.state} />
                 {/* 'User is typing' prompt */}
                 <TypingPrompt isSomeoneElseTyping={this.state.isSomeoneElseTyping} />
                 {/* Type a message form: */}
@@ -164,11 +136,7 @@ class ChannelMessages extends React.Component {
                             </InputGroupAddon>
                         </InputGroup>
                     </FormGroup>
-
-                    
-
                 </Form>
-                
             </>
         );
     }

@@ -7,11 +7,10 @@ class EmptyChatIndicator extends React.Component {
     }
 
     render() {
+        const { placeholderText } = this.props;
         return (
             <span className="empty-chat-indicator text-muted">
-                Send the first message! 
-                <br />                
-                Type a message in the box below.
+                {placeholderText}
             </span>
         );
     }

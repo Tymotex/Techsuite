@@ -116,18 +116,3 @@ def handle_message_edit():
     message_id = int(request_data["message_id"])
     edited_message = request_data["message"]
     return jsonify(messages.message_edit(token, message_id, edited_message))
-
-# ===== Message Searching =====
-@message_router.route("/search", methods=['GET'])
-def handle_search():
-    """
-    HTTP Route: /search
-    HTTP Method: GET
-    Params: (token, query_str)
-    Returns JSON: {
-        messages: [{ message_id, u_id, message, time_created, reacts, is_pinned }, ...]
-    }
-    """
-    token = request.args.get("token")
-    query_str = request.args.get("query_str")
-    return jsonify(other.search(token, query_str))

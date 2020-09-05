@@ -112,40 +112,47 @@ def message_edit(token, message_id, message):
 
     return {}
 
-# TODO
-def search(token, query_str):
+def messages_search_match(token, channel_id, query_str):
     """
-        Given a query string, return a collection of messages in all of the channels
-        that the user has joined that match the query. Results are sorted from most
+        Given a query string, return a collection of messages from the target channel
+        that matches the query string. Results are sorted from most
         recent message to least recent message
         ERRORS
         - Invalid token
         Returns: {
-            List of dictionaries, where each dictionary contains
-            types { message_id, user_id, message, time_created, reacts, is_pinned  }
-            messages    list(dict)
+            messages: [ { message_id, user_id, message, time_created }, { ... }, ... ]
         }
     """
     verify_token(token)
-    
-    # For an empty string input, nothing happens and is returned
+    # Empty result
     if query_str == "":
-        return None
+        return {}
     
-    user = get_user_from_token(data, token)
+    user = get_user_from_token(token)
     # Searches all messages and compares query_str
     search_results = []
-    for selected_channel in data["channels"]:
-        if is_user_member(user, selected_channel) is True:
-            for message in reversed(selected_channel["messages"]):
-                message_lower_case = message["message"].lower()
-                string_checker = message_lower_case.find(query_str.lower())
-                if string_checker >= 0:
-                    search_results.append(message)
+
+    channel = Channel.query.filter_by(id=channel_id).first()
+    all_messages = channel.messages_sent
+
+    for message_obj in all_messages:
+        curr_message = message_obj.message
+        print(curr_message)
+        print(message_obj.time_created)
+        # Case-insensitive matching
+        if curr_message.lower().find(query_str.lower()) != -1:
+            print("{} matches {}!".format(curr_message, query_str))
+            search_results.append({
+                "message_id": message_obj.id,
+                "user_id": message_obj.user_id,
+                "message": message_obj.message,
+                "time_created": message_obj.time_created.timestamp()
+            })
+    
     sorted_messages = sorted(search_results, key=lambda k: k['time_created'])
     
     # Returns messages that contain query_str
-    # Contains all info on message (message_id, user_id, message, time_created, reacts, pin)
+    # Contains all info on message (message_id, user_id, message, time_created)
     return {
         'messages': sorted_messages
     }
