@@ -3,13 +3,57 @@ from util.util import printColour, crop_image_file, get_latest_filename
 from dotenv import load_dotenv
 import os
 from exceptions import InputError
+import connections
+import pprint
 
 # Globals and config:
 load_dotenv()
-connections_router = Blueprint("channels", __name__)
+connection_router = Blueprint("connections", __name__)
 BASE_URL = "http://localhost:{0}".format(os.getenv("PORT"))
 
-@connections_router.route("/connections/request", methods=['POST'])
+# ===== Fetching Connections =====
+
+@connection_router.route("/connections", methods=['GET'])
+def handle_connection_fetch():
+    """
+        Fetches all of the users that the calling user is connected with
+        Params: (token)
+        Returns JSON: { 
+            users: [ { user_id, email, username, profile_img_url }, ... ]
+        }
+    """
+    token = request.args.get("token")
+    return jsonify(connections.connection_fetch_users(token))
+
+@connection_router.route("/connections/incoming", methods=['GET'])
+def handle_connection_incoming():
+    """
+        Fetches all of the users that have sent a connection request to the caller
+        Params: (token)
+        Returns JSON: { 
+            users: [ { user_id, email, username, profile_img_url }, ... ]
+        }
+    """
+    token = request.args.get("token")
+    printColour("FETCHING INCOMING CONNECTIONS", colour="violet")
+    return jsonify(connections.connection_fetch_incoming_users(token))
+
+@connection_router.route("/connections/outgoing", methods=['GET'])
+def handle_connection_outgoing():
+    """
+        Fetches all of the users that the calling user has sent requests to
+        Params: (token)
+        Returns JSON: { 
+            users: [ { user_id, email, username, profile_img_url }, ... ]
+        }
+    """
+    token = request.args.get("token")
+    printColour("FETCHING OUTGOING CONNECTIONS", colour="violet")
+    return jsonify(connections.connection_fetch_outgoing_users(token))
+
+# ===== Connections Operations =====
+
+@connection_router.route("/connections/request", methods=['POST'])
 def handle_conection_request():
     """
         HTTP Route: /connections/request
@@ -17,22 +61,30 @@ def handle_conection_request():
         Params: (token, user_id)
         Returns JSON: {  }
     """
-    return jsonify({})
+    request_data = request.get_json()
+    token = request_data["token"]
+    user_id = int(request_data["user_id"])
+    printColour("Added pending connection request from to user id {}".format(user_id))
+    return jsonify(connections.connection_request(token, user_id))
 
-@connections_router.route("/connections/add", methods=['POST'])
-def handle_conection_add():
+@connection_router.route("/connections/accept", methods=['POST'])
+def handle_conection_accept():
     """
-        HTTP Route: /connections/add
+        HTTP Route: /connections/accept
         HTTP Method: POST
         Params: (token, user_id)
         Returns JSON: {  }
     """
-    return jsonify({})
+    request_data = request.get_json()
+    token = request_data["token"]
+    user_id = int(request_data["user_id"])
+    printColour("Approving connection to user id {}".format(user_id))
+    return jsonify(connections.connection_accept(token, user_id))
 
-@connections_router.route("/connections/remove", methods=['POST'])
-def handle_conection_add():
+@connection_router.route("/connections/decline", methods=['POST'])
+def handle_conection_decline():
     """
-        HTTP Route: /connections/remove
+        HTTP Route: /connections/decline
         HTTP Method: POST
         Params: (token, user_id)
         Returns JSON: {  }
@@ -41,8 +93,8 @@ def handle_conection_add():
 
 # ===== Sending Messages =====
 
-@connections_router.route("/connections/sendmessage", methods=['POST'])
-def handle_conection_add():
+@connection_router.route("/connections/message", methods=['POST'])
+def handle_conection_send_message():
     """
         HTTP Route: /connections/sendmessage
         HTTP Method: POST
@@ -51,8 +103,8 @@ def handle_conection_add():
     """
     return jsonify({})
 
-@connections_router.route("/connections/details", methods=['POST'])
-def handle_conection_add():
+@connection_router.route("/connections/message", methods=['GET'])
+def handle_conection_get_message():
     """
         HTTP Route: /connections/sendmessage
         HTTP Method: POST

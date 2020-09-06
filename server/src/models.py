@@ -18,7 +18,7 @@ class User(db.Model):
     # Relationships
     channel_membership = db.relationship("MemberOf", backref="user", lazy=True)
     messages_sent = db.relationship("Message", backref="user", lazy=True)
-    connections = db.relationship("Connection", backref="user", lazy=True)
+    # connections = db.relationship("Connection", backref="user", lazy=True)
     
     def __repr__(self):
         return "<User {}>".format(self.id)
@@ -86,12 +86,15 @@ class DirectMessage(db.Model):
 
 class Connection(db.Model):
     __tablename__ = "connections"
-    id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey("techsuite_users.id"))
-    
+    id = db.Column(db.Integer, primary_key=True) 
+    user_id = db.Column(db.Integer, db.ForeignKey("techsuite_users.id"))         # ID of this user
+    other_user_id = db.Column(db.Integer)   # ID of other user
+    approved = db.Column(db.Boolean)
+    is_requester = db.Column(db.Boolean)  # True if the current user sent the request
+
     # Direct messages sent:
     messages_sent = db.relationship("DirectMessage", backref="connection", lazy=True)
 
     def __repr__(self):
-        return "<Connection {}>".format(self.id)
+        return "<Connection {} {} {} {}>".format(self.user_id, self.is_requester, self.approved, self.user)
 

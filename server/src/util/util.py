@@ -12,7 +12,7 @@ from PIL import Image
 
 # Source files:
 from exceptions import AccessError, InputError
-from models import User, Channel, Bio, MemberOf, Message
+from models import User, Channel, Bio, MemberOf, Message, Connection
 from database import db
 
 # Globals and config:
@@ -193,12 +193,12 @@ def email_message(email, reset_code, name_first, name_last):
 # ===== Message Utilities =====
 def get_message(data, message_id):
     """
-    Gets message details according to message_id
-    Parameters:
-        data        dict
-        message_id  int
-    Returns:
-        selected_message    dict
+        Gets message details according to message_id
+        Parameters:
+            data        dict
+            message_id  int
+        Returns:
+            selected_message    dict
     """
     channels_list = data["channels"]
     for channel in channels_list:
@@ -212,11 +212,11 @@ def get_message(data, message_id):
 # ===== Channel Utilities =====
 def determine_channel(message_id):
     """
-    Determine which channel the message is in, returns None on error
-    Parameters:
-        message_id  int
-    Returns:
-        selected_channel    dict
+        Determine which channel the message is in, returns None on error
+        Parameters:
+            message_id  int
+        Returns:
+            selected_channel    dict
     """
     channels_list = data["channels"]
     for channel in channels_list:
@@ -233,6 +233,18 @@ def select_channel(channel_id):
         if it exists.
     """
     return Channel.query.filter_by(id=channel_id).first()
+
+# ===== User Connection Utilities =====
+def get_connection(token, other_user_id):
+    """
+        Returns the connection object between the current user (from the input token)
+        and the other user
+    """
+    this_user = get_user_from_token(token)
+    for each_connection in this_user.connections:
+        if each_connection.user_id == other_user_id:
+            return each_connection
+    return None
 
 # ===== Image Manipulation =====
 def download_img_and_get_filename(url, user_id):

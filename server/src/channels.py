@@ -11,7 +11,7 @@ def channels_invite(token, channel_id, user_id):
         Once invited, the user is added to the channel immediately.
         Parameters:
             token       (str)
-            channel_id  (channel_id)
+            channel_id  (int)
             user_id     (int)
         Returns: 
             {}          (dict)

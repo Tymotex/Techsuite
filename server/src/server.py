@@ -17,6 +17,7 @@ from routes.users_routes import users_router
 from routes.message_routes import message_router
 from routes.image_routes import image_router
 from routes.admin_routes import admin_router
+from routes.connection_routes import connection_router
 from routes.http_error_handler import error_handler
 from messages import message_send, message_remove, message_edit
 from extensions import app
@@ -37,6 +38,7 @@ app.register_blueprint(users_router)
 app.register_blueprint(message_router)
 app.register_blueprint(image_router)
 app.register_blueprint(admin_router)
+app.register_blueprint(connection_router)
 
 # Register a default error handler
 app.register_error_handler(Exception, error_handler)
@@ -90,7 +92,7 @@ def upload_file():
 
 
 # ===== Web Socket Messaging =====
-# TODO: Move sockets out of this file
+# TODO: Move socket handling out of this file
 @socketio.on('connect')
 def handle_connect():
     printColour("Socket connection succeeded")
@@ -118,13 +120,24 @@ def handle_edit_message(token, message_id, message):
     emit("message_edited", "The server says: someone has edited a message", broadcast=True)
 
 @socketio.on("started_typing")
-def handle_typing_prompt():
+def handle_typing_prompt(token):
+    # TODO: Get user, broadcast to everyone else in the room that this user is typing
     emit("show_typing_prompt", broadcast=True, include_self=False)
 
 @socketio.on("stopped_typing")
-def handle_typing_prompt():
-    printColour("NUM_USERS_TYPING: {}".format(NUM_USERS_TYPING), colour="red")
+def handle_typing_prompt(token):
+    printColour("NUM_USERS_TYPING: {}".format(NUM_USERS_TYPING), colour="red_1")
     emit("hide_typing_prompt", broadcast=True, include_self=False)    
+
+@socketio.on("channel_join")
+def handle_channel_join():
+    # TODO: Implement this
+    printColour("SOMEONE HAS JOINED THE CHAT", colour="violet")
+
+@socketio.on("channel_leave")
+def handle_channel_leave():
+    # TODO: Implement this
+    printColour("SOMEONE HAS LEFT THE CHAT", colour="violet")
 
 # ===== Starting the server =====
 if __name__ == "__main__":
