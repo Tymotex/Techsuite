@@ -18,6 +18,7 @@ class User(db.Model):
     # Relationships
     channel_membership = db.relationship("MemberOf", backref="user", lazy=True)
     messages_sent = db.relationship("Message", backref="user", lazy=True)
+    connections = db.relationship("Connection", backref="user", lazy=True)
     
     def __repr__(self):
         return "<User {}>".format(self.id)
@@ -72,3 +73,25 @@ class Message(db.Model):
     time_created = db.Column(db.DateTime, default=datetime.now())
     def __repr__(self):
         return "<Message {}>".format(self.id)
+
+class DirectMessage(db.Model):
+    __tablename__ = "direct_messages"
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey("techsuite_users.id"), nullable=False)
+    connection_id = db.Column(db.Integer, db.ForeignKey("connections.id"), nullable=False)
+    message = db.Column(db.String(1000))       # Allow 1000 characters for messages
+    time_created = db.Column(db.DateTime, default=datetime.now())
+    def __repr__(self):
+        return "<Direct Message {}>".format(self.id)
+
+class Connection(db.Model):
+    __tablename__ = "connections"
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey("techsuite_users.id"))
+    
+    # Direct messages sent:
+    messages_sent = db.relationship("DirectMessage", backref="connection", lazy=True)
+
+    def __repr__(self):
+        return "<Connection {}>".format(self.id)
+

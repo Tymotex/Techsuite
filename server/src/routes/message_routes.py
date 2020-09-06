@@ -64,32 +64,6 @@ def handle_message_unreact():
     react_id = int(request_data["react_id"])
     return jsonify(messages.message_unreact(token, message_id, react_id))
 
-@message_router.route("/message/pin", methods=['POST'])
-def handle_message_pin():
-    """
-        HTTP Route: /message/pin
-        HTTP Method: POST
-        Params: (token, message_id)
-        Returns JSON: {  }
-    """
-    request_data = request.get_json()
-    token = request_data["token"]
-    message_id = int(request_data["message_id"])
-    return jsonify(messages.message_pin(token, message_id))
-
-@message_router.route("/message/unpin", methods=['POST'])
-def handle_message_unpin():
-    """
-        HTTP Route: /message/unpin
-        HTTP Method: POST
-        Params: (token, message_id)
-        Returns JSON: {  }
-    """
-    request_data = request.get_json()
-    token = request_data["token"]
-    message_id = int(request_data["message_id"])
-    return jsonify(messages.message_unpin(token, message_id))
-
 @message_router.route("/message/remove", methods=['DELETE'])
 def handle_message_remove():
     """

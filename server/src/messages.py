@@ -2,7 +2,7 @@
 from extensions import db
 from models import Channel, User, Message, MemberOf, Bio
 from exceptions import InputError, AccessError
-from util.util import is_user_member, get_message, determine_channel, select_channel
+from util.util import is_user_member, get_message, determine_channel, select_channel, printColour, user_is_admin, user_is_owner
 from util.token import verify_token, get_user_from_token
 
 def message_send(token, channel_id, message):
@@ -35,81 +35,50 @@ def message_send(token, channel_id, message):
         "message_id": sent_message.id
     }
 
-# TODO
 def message_remove(token, message_id):
     """
         Removes a message from the list of messages
-        Returns:
-            {}  dict
+        Returns: { old_message }  
     """
-    if verify_token(token) is False:
-        raise AccessError(description="Invalid Token")
-
-    # Gets message details, returns None if message doesnt exist
-    selected_message = get_message(data, message_id)
-    if selected_message is None:
-        raise InputError(description="Message no longer exists")
-
-    selected_channel = determine_channel(data, message_id)
-
-    # Checks if user is in the list of owners
-    user = get_user_from_token(data, token)
-    is_user_owner = is_owner(selected_channel, user)
-
-    # Checks if user is a global owner (admin)
-    is_user_admin = is_admin(data, user)
-
-    # User can only remove their own messages if not an owner or admin
-    # Owners or admins can delete anyones message
-    if selected_message["user_id"] != user["user_id"]:
-        if is_user_owner is False:
-            if is_user_admin is False:
-                raise AccessError(description="User is not an owner or admin")
+    verify_token(token)
+    message_obj = Message.query.filter_by(id=message_id).first()
+    printColour("FOUND MESSAGE OBJECT: ")
+    print(message_obj.message)
+    printColour("DONE FINDING MESSAGE OBJECT: ")
+    if not message_obj:
+        raise InputError("Message doesn't exist")
+    calling_user = get_user_from_token(token)
+    if calling_user.id != message_obj.user_id:
+        raise AccessError("You can't modify someone else's message")
 
     # Removes message and saves changes
-    selected_channel["messages"].remove(selected_message)
+    db.session.delete(message_obj)
+    db.session.commit()
+    return {
+        "old_message": message_obj.message
+    }
 
-
-    return {}
-
-# TODO
 def message_edit(token, message_id, message):
     """
         Edits an existing message. Deletes it if the new message is empty
-        Returns:
-            {}  dict
     """
     verify_token(token)
-
     if len(message) > 1000:
-        raise InputError(description="Message over 1000 characters")
-
-    # Locates message to be edited and channel it is in
-    selected_channel = determine_channel(data, message_id)
-    selected_message = get_message(data, message_id)
-
-    # Determines whether user is an owner or not
-    user = get_user_from_token(data, token)
-
-    is_user_owner = is_owner(selected_channel, user)
-
-    # Determines whether user is a global owner (admin)
-    is_user_admin = is_admin(data, user)
-
-    # User can only edit their own messages
-    # Owners and admins can edit anyones message
-    if selected_message["user_id"] != user["user_id"]:
-        if is_user_owner is False:
-            if is_user_admin is False:
-                raise AccessError(description="User is not an owner or admin")
-
-    # Deletes message if new message is an empty string.
-    # Otherwise changes the message to the new message
-    if message == "":
-        selected_channel["messages"].remove(selected_message)
-
-    selected_message["message"] = message
-
+        raise InputError("Message is over 1000 characters")
+    if not message:
+        message_remove(token, message_id)
+    user = get_user_from_token(token)
+    message_obj = Message.query.filter_by(id=message_id).first()
+    is_user_owner = user_is_owner(token, message_obj.channel_id)
+    is_user_admin = user_is_admin(token)
+    if message_obj.user_id == user.id or is_user_admin or is_user_owner:
+        printColour("Editing message from '{}' to '{}'".format(message_obj.message, message), colour="red_1")
+        message_obj = Message.query.filter_by(id=message_id).first()
+        message_obj.message = message
+        db.session.commit()
+    else:
+        printColour("Not permitted to edit message", colour="red_1")
+        raise AccessError("You are not authorised to edit this message")    
     return {}
 
 def messages_search_match(token, channel_id, query_str):

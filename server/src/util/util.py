@@ -119,6 +119,19 @@ def get_user_from_token(token):
         raise AccessError(description="Invalid token supplied")
     return User.query.filter_by(id=decoded_token["user_id"]).first()
 
+# TODO: Implement
+def user_is_admin(token):
+    return True
+
+def user_is_owner(token, channel_id):
+    channel_obj = Channel.query.filter_by(id=channel_id).first()
+    user_obj = get_user_from_token(token)
+    for each_owner in channel_obj.channel_membership:
+        if each_owner.user_id == user_obj.id:
+            return True
+    return False
+
+
 # ===== User Utilities =====
 def is_user_member(user, selected_channel):
     """
@@ -221,7 +234,7 @@ def select_channel(channel_id):
     """
     return Channel.query.filter_by(id=channel_id).first()
 
-# ===== Downloading and Saving Images =====
+# ===== Image Manipulation =====
 def download_img_and_get_filename(url, user_id):
     """
         Given a URL to an web image resource, download it to the

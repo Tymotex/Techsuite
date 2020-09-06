@@ -111,7 +111,7 @@ def auth_logout(token):
             is_success(True/False)  bool
         }
     """
-    # TODO: How does logging out in the backend work? It's pretty stateless with JSON web tokens...
+    # TODO: How does logging out in the backend work? It's stateless with JSON web tokens...
     if verify_token(token):
         return {
             'is_success': True

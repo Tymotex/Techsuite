@@ -18,7 +18,7 @@ from routes.message_routes import message_router
 from routes.image_routes import image_router
 from routes.admin_routes import admin_router
 from routes.http_error_handler import error_handler
-from messages import message_send
+from messages import message_send, message_remove, message_edit
 from extensions import app
 from util.util import printColour
 
@@ -89,12 +89,6 @@ def upload_file():
 
 
 
-
-
-
-
-
-
 # ===== Web Socket Messaging =====
 # TODO: Move sockets out of this file
 @socketio.on('connect')
@@ -111,7 +105,17 @@ def handle_send_message(token, channel_id, message):
     message_send(token, int(channel_id), message)
     # Broadcast the newly sent message to all listening client sockets so the
     # chat field updates in 'realtime'
-    emit("receive_message", "The server has received your message", broadcast=True)
+    emit("receive_message", "The server says: someone has sent a new message", broadcast=True)
+
+@socketio.on("remove_message")
+def handle_remove_message(token, message_id):
+    message_remove(token, message_id)
+    emit("message_removed", "The server says: someone has deleted a message", broadcast=True)
+
+@socketio.on("edit_message")
+def handle_edit_message(token, message_id, message):
+    message_edit(token, message_id, message)
+    emit("message_edited", "The server says: someone has edited a message", broadcast=True)
 
 @socketio.on("started_typing")
 def handle_typing_prompt():
