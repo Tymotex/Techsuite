@@ -31,15 +31,9 @@ export default {
       divider: true,
     },
     {
-      name: 'Conversations',
-      url: '/conversations',
-      icon: 'Inbox',
-      children: [
-        {
-          name: 'All Channels',
-          url: '/channels/all'
-        }
-      ]
+      name: 'Connections',
+      url: '/connections',
+      icon: 'Inbox'
     },
     {
       divider: true,

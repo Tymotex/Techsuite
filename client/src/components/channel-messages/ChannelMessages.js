@@ -72,10 +72,11 @@ class ChannelMessages extends React.Component {
         // Extracting the current value in the text field from the event object
         // and checking whether it is non-empty (contains non-whitespace characters)
         const currMessage = event.target.value;
+        const currToken = Cookie.get("token");
         if (currMessage.trim() !== "") {
-            socket.emit("started_typing");
+            socket.emit("started_typing", currToken);
         } else {
-            socket.emit("stopped_typing");
+            socket.emit("stopped_typing", currToken);
         }
     }
 

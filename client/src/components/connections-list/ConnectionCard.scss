@@ -1,0 +1,18 @@
+.connection-card {
+    margin: 0 auto;
+
+    .connection-card-image {
+        border-radius: 50%;
+        width: 50%;
+        display: block;
+        margin: 0 auto;
+    }
+
+    .connection-card-header {
+        text-align: center;
+    }
+    
+    .connection-card-body {
+        margin: 0 auto;
+    }   
+}

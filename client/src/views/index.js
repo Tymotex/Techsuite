@@ -13,6 +13,7 @@ import Register from './pages/Register';
 import Login from './pages/Login';
 import News from './pages/News';
 import Admin from './pages/Admin'
+import Connections from './pages/Connections'; 
 
 // Other elements:
 import Buttons from './elements/Buttons';
@@ -84,6 +85,11 @@ const pageList = [
     name: 'Create a Channel',
     path: '/channels/new',
     component: ChannelsNew,
+  },
+  {
+    name: 'Connections',
+    path: '/connections',
+    component: Connections
   },
   {
     name: 'News',

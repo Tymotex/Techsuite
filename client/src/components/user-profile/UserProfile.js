@@ -9,6 +9,7 @@ import UserChannels from './UserChannels';
 import UserBio from './UserBio';
 import { Notification } from '../notification';
 import { LoadingSpinner } from '../loading-spinner';
+import ConnectButton from './ConnectButton';
 
 class UserProfile extends React.Component {
     static propTypes = {
@@ -70,7 +71,7 @@ class UserProfile extends React.Component {
     }
 
     render() {
-        const { email, username, profile_img_url } = this.state.user;
+        const { user_id, email, username, profile_img_url } = this.state.user;
         const { first_name, last_name, cover_img_url, summary, location, title, education} = this.state.bio;
         const coverStyle = {
             "background-image": (cover_img_url != null) ? (
@@ -106,6 +107,11 @@ class UserProfile extends React.Component {
                                             <div className="h5 text-muted">Email: {email}</div>
                                             
                                         </div>
+                                        {(user_id == Cookie.get("user_id")) ? (
+                                            <></>
+                                        ) : (
+                                            <ConnectButton isConnected={false} connectionIsPending={true} />
+                                        )}
                                     </div>
                                 </div>
                             </Card>
