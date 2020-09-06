@@ -81,15 +81,19 @@ def handle_conection_accept():
     printColour("Approving connection to user id {}".format(user_id))
     return jsonify(connections.connection_accept(token, user_id))
 
-@connection_router.route("/connections/decline", methods=['POST'])
-def handle_conection_decline():
+@connection_router.route("/connections/remove", methods=['POST'])
+def handle_conection_remove():
     """
-        HTTP Route: /connections/decline
+        HTTP Route: /connections/remove
         HTTP Method: POST
         Params: (token, user_id)
         Returns JSON: {  }
     """
-    return jsonify({})
+    request_data = request.get_json()
+    token = request_data["token"]
+    user_id = int(request_data["user_id"])
+    printColour("Removing connection to user id {}".format(user_id))
+    return jsonify(connections.connection_remove(token, user_id))
 
 # ===== Sending Messages =====
 

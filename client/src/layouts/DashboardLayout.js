@@ -90,8 +90,8 @@ class DashboardLayout extends React.Component {
 					</PageContent>
 					</Page>
 				</div>
-				<Footer>
-				</Footer>
+				{/* <Footer>
+				</Footer> */}
 				{/* <Chat.Container>
 					{this.state.showChat1 && (
 					<Chat.ChatBox name="Messages" status="online" image={avatar1} close={this.closeChat} />

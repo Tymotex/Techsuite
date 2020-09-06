@@ -120,22 +120,19 @@ def connection_accept(token, user_id):
     """
     verify_token(token)
     this_user = get_user_from_token(token)
-    other_user = get_user_from_id(user_id)
+    connections = Connection.query.all()
 
     # Fetch the connection object in both users and set the approved attribute to true
-    for each_connection in this_user.connections:
-        if each_connection.user_id == user_id:
+    for each_connection in connections:
+        if each_connection.user_id == this_user.id and each_connection.other_user_id == user_id:
             each_connection.approved = True
-
-    for each_connection in other_user.connections:
-        if each_connection.user_id == this_user.id:
+        elif each_connection.user_id == user_id and each_connection.other_user_id == this_user.id:
             each_connection.approved = True
 
     db.session.commit()
     return {}
 
-
-def connection_decline(token, user_id):
+def connection_remove(token, user_id):
     """
         Drops a pending/existing connection
         Parameters:
@@ -144,6 +141,16 @@ def connection_decline(token, user_id):
         Returns:
             {}            (dict)
     """
+    verify_token(token)
+    this_user = get_user_from_token(token)
+    connections = Connection.query.all()
+    for each_connection in connections:
+        if each_connection.user_id == this_user.id and each_connection.other_user_id == user_id:
+            db.session.delete(each_connection)
+        elif each_connection.user_id == user_id and each_connection.other_user_id == this_user.id:
+            db.session.delete(each_connection)
+    db.session.commit()
+    return {}
 
 # ===== Message Handling =====
 
