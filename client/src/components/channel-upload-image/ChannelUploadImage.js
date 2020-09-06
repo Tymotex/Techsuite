@@ -4,7 +4,6 @@ import { withRouter } from 'react-router-dom';
 import { Button, Modal, ModalBody, ModalHeader } from 'reactstrap';
 import { Notification } from '../notification';
 import ImageCropper from '../picture-form/ImageCropper';
-import { EmojiReaction } from '../emoji-reaction';
 
 class ChannelUploadImage extends React.Component {
     static propTypes = {

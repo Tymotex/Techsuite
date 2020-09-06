@@ -7,6 +7,7 @@ import ReactTooltip from 'react-tooltip';
 import { BASE_URL } from '../../constants/api-routes';
 import './Message.scss';
 import { Notification } from '../notification';
+import EditButton from './EditButton';
 
 class OutgoingMessage extends React.Component {
     constructor(props) {
@@ -17,7 +18,6 @@ class OutgoingMessage extends React.Component {
             user: {},
             tooltipOpen: false
         };
-        this.toggle = this.toggle.bind(this);
     }
 
     componentDidMount() {;
@@ -58,7 +58,7 @@ class OutgoingMessage extends React.Component {
     render() {
         // Creating a formatted time string based on the time_created unix timestamp
         // Example time format: 05/20/2020 | 7:55PM (AEST)
-        const { message, time_created, user_id } = this.props;
+        const { message_id, message, time_created, user_id } = this.props;
         const { profile_img_url, username } = this.state.user;
 
         const formattedTime = moment.unix(time_created).tz("Australia/Sydney").format("DD/MM/YYYY | h:mmA (z)");
@@ -77,7 +77,12 @@ class OutgoingMessage extends React.Component {
                 <ReactTooltip id='messageTooltip' type='info' effect="solid" delayShow={200} delayHide={200} >
                     <span>{formattedTime}</span>
                 </ReactTooltip>
-                <div className="time">{shortFormattedTime}</div>
+                <div className="time">
+                    <EditButton messageID={message_id} message={message} />
+                    <span>
+                        {shortFormattedTime}
+                    </span>
+                </div>
             </div>
         );
     }

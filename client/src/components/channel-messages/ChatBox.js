@@ -35,7 +35,7 @@ class ChatBox extends React.Component {
                             </div>
                         </div>
                     ) : (
-                        <EmptyChatIndicator placeholder="Send the first message! Type a message in the box below."/>
+                        <EmptyChatIndicator placeholderText="Send the first message! Type a message in the box below."/>
                     )}
 
                 </div>

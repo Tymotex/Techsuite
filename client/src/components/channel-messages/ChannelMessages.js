@@ -29,7 +29,7 @@ class ChannelMessages extends React.Component {
         };
         // Binding socket listener handlers:
         socket.on("receive_message", (message) => {
-            console.log(`Received realtime message: ${message}`);
+            console.log(`Received message: ${message}`);
             this.fetchMessages();
         });
         socket.on("show_typing_prompt", () => {
@@ -43,6 +43,14 @@ class ChannelMessages extends React.Component {
             this.setState({
                 isSomeoneElseTyping: false
             });
+        });
+        socket.on("message_removed", (message) => {
+            console.log(`Received message: ${message}`);
+            this.fetchMessages();
+        });
+        socket.on("message_edited", (message) => {
+            console.log(`Received message: ${message}`);
+            this.fetchMessages();
         });
         this.broadcastTypingPrompt = this.broadcastTypingPrompt.bind(this);
     }
