@@ -67,7 +67,7 @@ class ChannelDetails extends React.Component {
                                 style={{"backgroundImage": (channel_cover_img_url != null) ? (
                                     `url('${channel_cover_img_url}')`
                                 ) : (
-                                   `linear-gradient(90deg, rgba(2,0,36,1) 0%, rgba(9,9,121,1) 45%, rgba(0,212,255,1) 100%)`
+                                   `linear-gradient(160deg, #4d61de 0%, #0a0026 100%)`
                                 ) }}>
                         <div className="channel-card">
                             <img className="channel-image b-circle" src={channel_img_url} style={{ width: "200px", height: "200px" }} alt="Channel Image"  />

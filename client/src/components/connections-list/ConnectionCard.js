@@ -4,6 +4,7 @@ import axios from 'axios';
 import { Row, Col, Card, CardHeader, CardBody, Button } from 'reactstrap';
 import { BASE_URL } from '../../constants/api-routes';
 import './ConnectionCard.scss';
+import { Link } from 'react-router-dom';
 
 class ConnectionCard extends React.Component {
     constructor(props) {
@@ -66,7 +67,9 @@ class ConnectionCard extends React.Component {
         return (
             <>
                 <Card className="connection-card" body inverse style={{ backgroundColor: '#333', borderColor: '#333' }}>
-                    <img className="connection-card-image" src={user.profile_img_url} />
+                    <Link to={`/user/profile/${user.user_id}`}>
+                        <img className="connection-card-image" src={user.profile_img_url} />
+                    </Link>
                     <CardHeader className="connection-card-header">{user.username}</CardHeader>
                     <CardBody className="connection-card-body">
                         <div>

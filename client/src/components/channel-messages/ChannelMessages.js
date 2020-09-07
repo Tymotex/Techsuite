@@ -121,9 +121,8 @@ class ChannelMessages extends React.Component {
 
     componentDidUpdate() {
         setTimeout(function() {
-            console.log("FORCING SCROLL DOWN");
             const messageListContainer = document.getElementById("message-list-container");
-            messageListContainer.scrollTop = messageListContainer.scrollHeight * 2;
+            messageListContainer.scrollTop = messageListContainer.scrollHeight;
         }, 200);
     }
 
@@ -139,9 +138,11 @@ class ChannelMessages extends React.Component {
                         <InputGroup>
                             <Input id="typingArea" type="textarea" placeholder="Type a message" name="message" />
                             <InputGroupAddon addonType="append">
-                                <InputGroupText><Button>
+                                <InputGroupText>
+                                    <Button>
                                         <i className="fa fa-paper-plane-o" aria-hidden="true"></i>
-                                    </Button></InputGroupText>
+                                    </Button>
+                                </InputGroupText>
                             </InputGroupAddon>
                         </InputGroup>
                     </FormGroup>

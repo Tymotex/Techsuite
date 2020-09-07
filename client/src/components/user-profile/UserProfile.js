@@ -10,6 +10,7 @@ import UserBio from './UserBio';
 import { Notification } from '../notification';
 import { LoadingSpinner } from '../loading-spinner';
 import ConnectButton from './ConnectButton';
+import { ConnectionChat } from '../connection-chat';
 
 class UserProfile extends React.Component {
     static propTypes = {
@@ -22,8 +23,11 @@ class UserProfile extends React.Component {
             isLoading: false,
             fetchSucceeded: false,
             user: {},
-            bio: {}
+            bio: {},
+            chatWindowOpen: false
         };
+        this.toggleChatWindow = this.toggleChatWindow.bind(this);
+        this.forceCloseChatWindow = this.forceCloseChatWindow.bind(this);
     }
 
     componentDidMount() {
@@ -70,14 +74,37 @@ class UserProfile extends React.Component {
         }
     }
 
+    toggleChatWindow(userID) {
+        const currToken = Cookie.get("token");
+        if (currToken) {
+            axios.get(`${BASE_URL}/users/profile?token=${currToken}&user_id=${userID}`)
+                .then((userPayload) => {
+                    this.setState({
+                        currentChatUser: userPayload.data,
+                        chatWindowOpen: !this.state.chatWindowOpen
+                    });
+                })
+                .catch((err) => {
+
+                });
+        }
+    }
+
+    forceCloseChatWindow() {
+        this.setState({
+            chatWindowOpen: false
+        });
+    }
+
     render() {
-        const { user_id, email, username, profile_img_url } = this.state.user;
+        const { user } = this.state;
+        const { user_id, email, username, profile_img_url, is_connected_to, connection_is_pending } = user;
         const { first_name, last_name, cover_img_url, summary, location, title, education} = this.state.bio;
         const coverStyle = {
             "background-image": (cover_img_url != null) ? (
                 `url('${cover_img_url}')`
             ) : (
-                `linear-gradient(90deg, rgba(2,0,36,1) 0%, rgba(9,9,121,1) 45%, rgba(0,212,255,1) 100%)`
+                `linear-gradient(160deg, #4d61de 0%, #0a0026 100%)`
             ), 
             "background-size": "cover"
         }
@@ -110,7 +137,11 @@ class UserProfile extends React.Component {
                                         {(user_id == Cookie.get("user_id")) ? (
                                             <></>
                                         ) : (
-                                            <ConnectButton isConnected={false} connectionIsPending={true} />
+                                            <ConnectButton 
+                                                isConnected={is_connected_to} 
+                                                connectionIsPending={connection_is_pending} 
+                                                openMessage={this.toggleChatWindow}
+                                                userID={user_id}/>
                                         )}
                                     </div>
                                 </div>
@@ -136,6 +167,19 @@ class UserProfile extends React.Component {
                         <></>
                     )
                 )}
+
+                {(this.state.chatWindowOpen) ? (
+                    <ConnectionChat.Container>
+                        <ConnectionChat.ChatBox 
+                            name="Messages" 
+                            status="online" 
+                            close={this.forceCloseChatWindow} 
+                            user={user} />
+                    </ConnectionChat.Container>
+                ) : (
+                    <></>
+                )}
+
             </div>
         );
     }  

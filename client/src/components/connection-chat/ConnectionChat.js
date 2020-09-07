@@ -1,5 +1,5 @@
 import React from 'react';
-import { ConnectionChatBox } from './';
+import { ConnectionChatBox } from '.';
 import FA from 'react-fontawesome';
 import './ConnectionChat.scss';
 

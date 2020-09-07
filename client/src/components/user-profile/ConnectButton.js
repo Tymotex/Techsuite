@@ -42,7 +42,7 @@ class ConnectButton extends React.Component {
     }
 
     render() {
-        const { isConnected, connectionIsPending, userID } = this.props;
+        const { isConnected, connectionIsPending, userID, openMessage } = this.props;
         return (
             <div className="connect-button-container">
                 {(connectionIsPending) ? (
@@ -50,7 +50,10 @@ class ConnectButton extends React.Component {
                 ) : (
                     (isConnected) ? (
                         // TODO: Add link here to get to private message page
-                        <Button href="">Message</Button>
+                        <>
+                            <Button outline color="primary" onClick={() => openMessage(userID)}>Message</Button>
+                            <Button outline color="danger">Remove</Button>
+                        </>
                     ) : (
                         <Button onClick={this.sendConnectionRequest}>Connect</Button>
                     )

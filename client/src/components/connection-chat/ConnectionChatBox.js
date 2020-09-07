@@ -4,6 +4,8 @@ import Cookie from 'js-cookie';
 import axios from 'axios';
 import { BASE_URL } from '../../constants/api-routes';
 import ConnectionMessage from './ConnectionMessage';
+import { LoadingSpinner } from '../loading-spinner';
+import FadeIn from 'react-fade-in';
 
 class ConnectionChatBox extends React.Component {
     constructor(props) {
@@ -19,12 +21,21 @@ class ConnectionChatBox extends React.Component {
         this.fetchMessages();
     }
 
+    componentDidUpdate() {
+        setTimeout(function() {
+            const messageListContainer = document.getElementById("connection-messages-container");
+            if (messageListContainer) {
+                messageListContainer.scrollTop = messageListContainer.scrollHeight;
+            }
+        }, 200);
+    }
+
     sendMessage(event) {
         event.preventDefault();
         const fd = new FormData(event.target);
         const message = fd.get("message");
         const currToken = Cookie.get("token");
-        const { userID } = this.props;
+        const { user_id: userID } = this.props.user;
         if (currToken) {
             const postData = {
                 method: 'post',
@@ -38,7 +49,7 @@ class ConnectionChatBox extends React.Component {
             };
             axios(postData)
                 .then((res) => {
-                    alert("Succeeded");
+                    this.fetchMessages();
                     document.getElementById("message-field").value = "";
                 })
                 .catch((err) => {
@@ -59,7 +70,6 @@ class ConnectionChatBox extends React.Component {
                     this.setState({
                         messages: messagePayload.data.messages
                     });
-                    alert("Successful fetch");
                 })
                 .catch((err) => {
                     alert("Failed fetch");
@@ -73,13 +83,23 @@ class ConnectionChatBox extends React.Component {
     render() {
         const { messages } = this.state;
         const { user } = this.props;
-        return (        
+        const thisUserID = Cookie.get("user_id");
+        return (
             <div className="Chat-wrap">
-                {/* Chat display */}
-                <div className="ChatDisplay" style={{"height": "350px"}}>
-                    {messages.map((eachMessage) => (
-                        <ConnectionMessage message={eachMessage} user={user} isOutgoing={true} />
-                    ))}
+                <div id="connection-messages-container" className="chat" style={{overflow: "auto", outline: "none"}} tabIndex="5001">
+                    {(messages && messages.length > 0) ? (
+                        <div className="col-inside-lg decor-default">
+                            <div className="chat-body">
+                                {messages.map((eachMessage, i) => (
+                                    <FadeIn key={i} delay="200">
+                                        <ConnectionMessage message={eachMessage} user={user} isOutgoing={eachMessage.sender_id == thisUserID} />
+                                    </FadeIn>
+                                ))}
+                            </div>
+                        </div>
+                    ) : (
+                        <p></p>
+                    )}
                 </div>
                 {/* Message Form: */}
                 <Form onSubmit={this.sendMessage}>

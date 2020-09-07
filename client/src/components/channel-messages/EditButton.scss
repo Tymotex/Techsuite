@@ -1,0 +1,39 @@
+// Message Edit Button:
+
+.message-popup {
+    position: absolute;
+    left: -10px;
+    top: 20%;
+    right: 20%;
+    margin-right: 10px; 
+    border-radius: 50%;
+    color: white;
+    background-color: rgb(13, 156, 223);
+    background-image: url('../../assets/images/tool-icon.png');
+    background-size: cover;
+    width: 20px;
+    height: 20px;
+
+    box-shadow: 0 0 0 0 rgb(14, 0, 47);
+    &:hover {
+        transform: scale(1);
+        animation: pulse 0.75s infinite;
+    }
+}
+
+@keyframes pulse {
+	0% {
+		transform: scale(0.95);
+		box-shadow: 0 0 0 0 rgba(22, 0, 66, 0.7);
+	}
+
+	70% {
+		transform: scale(1.2);
+		box-shadow: 0 0 0 10px rgba(0, 0, 0, 0);
+	}
+
+	100% {
+		transform: scale(0.95);
+		box-shadow: 0 0 0 0 rgba(0, 0, 0, 0);
+	}
+}

@@ -1,6 +1,6 @@
 import React from 'react';
-import OutgoingMessage from '../channel-messages/OutgoingMessage';
-import IncomingMessage from '../channel-messages/IncomingMessage';
+import OutgoingMessage from './OutgoingMessage';
+import IncomingMessage from './IncomingMessage';
 
 class ConnectionMessage extends React.Component {
     constructor(props) {
@@ -21,7 +21,14 @@ class ConnectionMessage extends React.Component {
                     profile_img_url={user.profile_img_url}
                     username={user.username}   
                 /> :
-                <IncomingMessage {...this.props} />
+                <IncomingMessage 
+                    message_id={message.message_id}
+                    message={message.message}
+                    time_created={message.time_created}
+                    user_id={user.user_id}
+                    profile_img_url={user.profile_img_url}
+                    username={user.username} 
+                />
         );
     }
 }

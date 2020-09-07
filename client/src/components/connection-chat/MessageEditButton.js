@@ -3,12 +3,11 @@ import Cookie from 'js-cookie';
 import { BASE_URL } from '../../constants/api-routes';
 import axios from 'axios';
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter, Form, InputGroup, Input, InputGroupAddon, InputGroupText } from 'reactstrap';
-import './EditButton.scss';
 
 import openSocket from 'socket.io-client';
 const socket = openSocket('http://localhost:3001');
 
-class EditButton extends React.Component {
+class MessageEditButton extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -31,21 +30,43 @@ class EditButton extends React.Component {
         const newMessage = fd.get("edited-message");
         const currToken = Cookie.get("token");
         if (currToken) {
-            console.log(`Emitting edit_message with params: ${currToken} ${this.props.messageID}`);
-            socket.emit("edit_message", currToken, this.props.messageID, newMessage);
+            axios.put(`${BASE_URL}/connections/message`, {
+                headers: { "Content-Type": "application/json" },
+                data: {
+                    token: currToken,
+                    message_id: this.props.messageID,
+                    message: newMessage
+                }
+            })
+            .then(() => {
+                alert("Edit/remove succeeded");
+            })
+            .catch(() => {
+                alert("Edit/remove failed");
+            });
         } else {
-
+            // TODO
         }
     }
 
     deleteMessage() {
         const currToken = Cookie.get("token");
         if (currToken) {
-            console.log(`Emitting remove_message with params: ${currToken} ${this.props.messageID}`);
-            socket.emit("remove_message", currToken, this.props.messageID);
-            // TODO: What error handling options does socketio have?
+            axios.delete(`${BASE_URL}/connections/message`, {
+                    headers: { "Content-Type": "application/json" },
+                    data: {
+                        token: currToken,
+                        message_id: this.props.messageID
+                    }
+                })
+                .then(() => {
+                    alert("Edit/remove succeeded");
+                })
+                .catch(() => {
+                    alert("Edit/remove failed");
+                })
         } else {
-            // TODO: notification for logging in here
+
         }
     }
 
@@ -81,4 +102,4 @@ class EditButton extends React.Component {
     }
 }
 
-export default EditButton;
+export default MessageEditButton;
