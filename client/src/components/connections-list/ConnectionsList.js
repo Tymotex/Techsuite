@@ -1,14 +1,48 @@
 import React from 'react';
 import { Row, Col, Card, CardHeader, CardBody } from 'reactstrap';
 import { ConnectionCard } from './';
+import { ConnectionChat } from '../connection-chat';
+import axios from 'axios';
+import Cookie from 'js-cookie';
+import { BASE_URL } from '../../constants/api-routes';
 
 class ConnectionsList extends React.Component {
     constructor(props) {
         super(props);
+        this.state = {
+            chatWindowOpen: false,
+            currentChatUser: {}
+        };
+        this.toggleChatWindow = this.toggleChatWindow.bind(this);
+        this.forceCloseChatWindow = this.forceCloseChatWindow.bind(this);
+    }
+    
+
+    toggleChatWindow(userID) {
+        const currToken = Cookie.get("token");
+        if (currToken) {
+            axios.get(`${BASE_URL}/users/profile?token=${currToken}&user_id=${userID}`)
+                .then((userPayload) => {
+                    this.setState({
+                        currentChatUser: userPayload.data,
+                        chatWindowOpen: !this.state.chatWindowOpen
+                    });
+                })
+                .catch((err) => {
+
+                });
+        }
+    }
+
+    forceCloseChatWindow() {
+        this.setState({
+            chatWindowOpen: false
+        });
     }
 
     render() {
         const { users, incomingUsers, outgoingUsers } = this.props;
+        const { currentChatUser } = this.state;
         return (
             <div>
                 <Row>
@@ -21,7 +55,12 @@ class ConnectionsList extends React.Component {
                                     <Row>
                                         {(users.map((eachUser) => (
                                             <Col xs={12} md={6} lg={4} xl={3}>
-                                                <ConnectionCard user={eachUser} isPending={false} isOutgoing={false} />
+                                                <ConnectionCard 
+                                                    user={eachUser} 
+                                                    isPending={false} 
+                                                    isOutgoing={false} 
+                                                    openMessage={this.toggleChatWindow}
+                                                    />
                                             </Col>
                                         )))}
                                     </Row>
@@ -73,6 +112,17 @@ class ConnectionsList extends React.Component {
                             </CardBody>
                         </Card>
                     </Col>
+                    {(this.state.chatWindowOpen) ? (
+                        <ConnectionChat.Container>
+                            <ConnectionChat.ChatBox 
+                                name="Messages" 
+                                status="online" 
+                                close={this.forceCloseChatWindow} 
+                                user={currentChatUser} />
+                        </ConnectionChat.Container>
+                    ) : (
+                        <></>
+                    )}
                 </Row>
             </div>
         );

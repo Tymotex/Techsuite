@@ -8,6 +8,9 @@ import './ConnectionCard.scss';
 class ConnectionCard extends React.Component {
     constructor(props) {
         super(props);
+        this.state = {
+            chatWindowOpen: false
+        };
         this.acceptConnection = this.acceptConnection.bind(this);
         this.rejectConnection = this.rejectConnection.bind(this);
     }
@@ -59,32 +62,34 @@ class ConnectionCard extends React.Component {
     }
 
     render() {
-        const { user, isPending, isOutgoing } = this.props;
+        const { user, isPending, isOutgoing, openMessage } = this.props;
         return (
-            <Card className="connection-card" body inverse style={{ backgroundColor: '#333', borderColor: '#333' }}>
-                <img className="connection-card-image" src={user.profile_img_url} />
-                <CardHeader className="connection-card-header">{user.username}</CardHeader>
-                <CardBody className="connection-card-body">
-                    <div>
-                        {(isOutgoing) ? (
-                                <Button outline color="secondary" disabled={true}>Pending</Button>
-                            ) : (
-                                (isPending) ? (
-                                    <>
-                                        <Button outline color="primary" onClick={this.acceptConnection}>Accept</Button>
-                                        <Button outline color="danger" onClick={this.rejectConnection}>Decline</Button>
-                                    </>
+            <>
+                <Card className="connection-card" body inverse style={{ backgroundColor: '#333', borderColor: '#333' }}>
+                    <img className="connection-card-image" src={user.profile_img_url} />
+                    <CardHeader className="connection-card-header">{user.username}</CardHeader>
+                    <CardBody className="connection-card-body">
+                        <div>
+                            {(isOutgoing) ? (
+                                    <Button outline color="secondary" disabled={true}>Pending</Button>
                                 ) : (
-                                    <>
-                                        {/* TODO: Open up a chat window on the bottom right */}
-                                        <Button outline color="primary">Message</Button> 
-                                        <Button outline color="danger" onClick={this.rejectConnection}>Remove</Button>
-                                    </>
-                                )
-                        )}
-                    </div>
-                </CardBody>
-            </Card>
+                                    (isPending) ? (
+                                        <>
+                                            <Button outline color="primary" onClick={this.acceptConnection}>Accept</Button>
+                                            <Button outline color="danger" onClick={this.rejectConnection}>Decline</Button>
+                                        </>
+                                    ) : (
+                                        <>
+                                            {/* TODO: Open up a chat window on the bottom right */}
+                                            <Button outline color="primary" onClick={() => openMessage(user.user_id)}>Message</Button> 
+                                            <Button outline color="danger" onClick={this.rejectConnection}>Remove</Button>
+                                        </>
+                                    )
+                            )}
+                        </div>
+                    </CardBody>
+                </Card>
+            </>
         );
     }
 }

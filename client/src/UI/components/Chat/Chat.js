@@ -40,10 +40,11 @@ class ChatBox extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      expanded: false,
+      expanded: true,
     };
     this.toggle = this.toggle.bind(this);
   }
+
   toggle() {
     this.setState(prevState => ({ expanded: !prevState.expanded }));
   }
@@ -52,8 +53,8 @@ class ChatBox extends React.Component {
       <div className="ChatBox">
         <ChatBoxHeader
           name={this.props.name}
-          toggle={this.toggle}
-          isExpanded={this.state.isExpanded}
+          // toggle={this.toggle}
+          isExpanded={this.props.isExpanded}
           status={this.props.status}
           close={this.props.close}
         />

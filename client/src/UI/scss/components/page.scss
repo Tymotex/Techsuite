@@ -23,7 +23,13 @@
 }
 #primary-content {
   padding: $pageContentPadding;
-  height: 100%;
+  padding-top: 40px;
+  &:focus {
+    outline : 0;
+    outline-color : invert;
+    outline-style : none;
+    outline-width : medium;
+  }
 }
 .page-container {
   width: 100%;

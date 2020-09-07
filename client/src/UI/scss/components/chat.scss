@@ -27,6 +27,16 @@
     padding: 10px 16px;
     border-radius: 2px 2px 0 0;
     cursor: pointer;
+    &:focus {
+        outline : 0;
+        outline-color : invert;
+        outline-style : none;
+        outline-width : medium;
+    }
+    &:hover {
+        background-color: darken(rgb(255, 255, 255), 10%);
+        transition: all 0.2s;
+    }
 }
 
 .ChatDisplay {
@@ -47,5 +57,12 @@
 
     &:hover {
         background: #eee;
+    }
+
+    &:focus {
+        outline : 0;
+        outline-color : invert;
+        outline-style : none;
+        outline-width : medium;
     }
 }
