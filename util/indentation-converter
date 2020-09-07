@@ -15,9 +15,10 @@ print("|===== Formatting file '$targetFilename' to ${numSpaces}-space indentatio
 open my $file, "<", "$targetFilename" or die("Failed to open $targetFilename: $!");
 @lines = <$file>;
 foreach my $line (@lines) {
-    $line =~ /^(\S*)/;
+    $line =~ /^(\s*)/;
     $existingIndent = $1;
-
+    $newIndent = $existingIndent . $existingIndent;
+    $line =~ s/^$existingIndent/$newIndent/g;
 }
 close($file);
 

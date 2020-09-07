@@ -1,24 +1,34 @@
 #!/usr/bin/perl -w
+# Given a filename and the number of spaces, converts all indentation
+
+
+
 
 $argc = $#ARGV + 1;
 if ($argc < 2) {
-     print("Usage: $0 <targetfile> <num of spaces>\n");
-     exit 1;
+        print("Usage: $0 <targetfile> <num of spaces>\n");
+        exit 1;
 }
+
 
 $targetFilename = $ARGV[0];
 $numSpaces = $ARGV[1];
 print("|===== Formatting file '$targetFilename' to ${numSpaces}-space indentation =====|\n"); 
 
+
 open my $file, "<", "$targetFilename" or die("Failed to open $targetFilename: $!");
 @lines = <$file>;
 foreach my $line (@lines) {
-     $line =~ s/^ /  /;
+        $line =~ /^(\s*)/;
+        $existingIndent = $1;
+        $newIndent = $existingIndent . $existingIndent;
+        $line =~ s/^$existingIndent/$newIndent/g;
 }
 close($file);
 
+
 open $file, ">", "$targetFilename-output" or die("Failed to open $targetFilename: $!");
 foreach my $line (@lines) {
-     print $file "$line";
+        print $file "$line";
 }
 close($file);
