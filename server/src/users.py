@@ -26,7 +26,9 @@ def users_profile(token, user_id):
         "user_id": user.id,
         "email": user.email,
         "username": user.username,
-        "profile_img_url": user.bio.profile_img_url
+        "profile_img_url": user.bio.profile_img_url,
+        "is_connected_to": True,
+        "connection_is_pending": False
     }
 
 def users_profile_upload_photo(token, user_id, img_endpoint):

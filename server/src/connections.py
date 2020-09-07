@@ -209,25 +209,36 @@ def connection_send_message(token, user_id, message):
     db.session.commit()
     return {}
 
-def connection_remove_message(token, user_id):
+
+def connection_edit_message(token, message_id, message):
     """
         Drops a pending/existing connection
         Parameters:
             token         (str)
-            user_id        (int)
+            message_id        (int)
         Returns:
             {}            (dict)
     """
+    verify_token(token)
+    this_user = get_user_from_token(token)
+    target_dm = DirectMessage.query.filter_by(id=message_id).first()
+    target_dm.message = message
+    db.session.commit()
+    return {}
 
-def connection_edit_message(token, user_id):
+def connection_remove_message(token, message_id):
     """
         Drops a pending/existing connection
         Parameters:
             token         (str)
-            user_id        (int)
+            message_id        (int)
         Returns:
             {}            (dict)
     """
-
-
+    verify_token(token)
+    this_user = get_user_from_token(token)
+    target_dm = DirectMessage.query.filter_by(id=message_id).first()
+    db.session.delete(target_dm)
+    db.session.commit()
+    return {}
 

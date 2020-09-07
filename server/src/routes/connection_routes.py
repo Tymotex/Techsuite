@@ -125,12 +125,33 @@ def handle_conection_send_message():
     printColour("Sending message to user: {}".format(user_id))
     return jsonify(connections.connection_send_message(token, user_id, message))
 
-@connection_router.route("/connections/message", methods=['GET'])
-def handle_conection_get_message():
+@connection_router.route("/connections/message", methods=['PUT'])
+def handle_conection_edit_message():
     """
-        HTTP Route: /connections/sendmessage
-        HTTP Method: POST
-        Params: (token, user_id)
-        Returns JSON: { messages }
+        HTTP Route: /connections/message
+        HTTP Method: PUT
+        Params: (token, message_id)
+        Returns JSON: {  }
     """
-    return jsonify({})
+    request_data = request.get_json()
+    printColour("HEREHEREHEREHEREHEREHEREHEREHEREHEREHERE")
+    print(request_data)
+    token = request_data["data"]["token"]
+    message_id = int(request_data["data"]["message_id"])
+    message = request_data["data"]["message"]
+    printColour("Editing message with ID: {}".format(message_id))
+    return jsonify(connections.connection_edit_message(token, message_id, message))
+
+@connection_router.route("/connections/message", methods=['DELETE'])
+def handle_conection_remove_message():
+    """
+        HTTP Route: /connections/message
+        HTTP Method: DELETE
+        Params: (token, message_id)
+        Returns JSON: {  }
+    """
+    request_data = request.get_json()
+    token = request_data["token"]
+    message_id = int(request_data["message_id"])
+    printColour("Removing message with ID: {}".format(message_id))
+    return jsonify(connections.connection_remove_message(token, message_id))

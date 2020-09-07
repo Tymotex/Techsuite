@@ -21,7 +21,7 @@ def handle_user_profile():
         HTTP Route: /users/profile
         HTTP Method: GET
         Params: (token, user_id)
-        Returns JSON: { user_id, email, username, profile_img_url }
+        Returns JSON: { user_id, email, username, profile_img_url, is_connected_to }
     """
     token = request.args.get("token")
     user_id = int(request.args.get("user_id"))
