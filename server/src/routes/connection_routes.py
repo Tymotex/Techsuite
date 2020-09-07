@@ -97,15 +97,33 @@ def handle_conection_remove():
 
 # ===== Sending Messages =====
 
+@connection_router.route("/connections/message", methods=['GET'])
+def handle_conection_fetch_messages():
+    """
+        HTTP Route: /connections/message
+        HTTP Method: GET
+        Params: (token, user_id)
+        Returns JSON: { messages: [ { message_id, message, sender_id, time_created } ] }
+    """
+    token = request.args.get("token")
+    user_id = int(request.args.get("user_id"))
+    printColour("Sending message to user: {}".format(user_id))
+    return jsonify(connections.connection_fetch_messages(token, user_id))
+
 @connection_router.route("/connections/message", methods=['POST'])
 def handle_conection_send_message():
     """
-        HTTP Route: /connections/sendmessage
+        HTTP Route: /connections/message
         HTTP Method: POST
         Params: (token, user_id, message)
         Returns JSON: {  }
     """
-    return jsonify({})
+    request_data = request.get_json()
+    token = request_data["token"]
+    user_id = int(request_data["user_id"])
+    message = request_data["message"]
+    printColour("Sending message to user: {}".format(user_id))
+    return jsonify(connections.connection_send_message(token, user_id, message))
 
 @connection_router.route("/connections/message", methods=['GET'])
 def handle_conection_get_message():

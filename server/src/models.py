@@ -77,7 +77,7 @@ class Message(db.Model):
 class DirectMessage(db.Model):
     __tablename__ = "direct_messages"
     id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey("techsuite_users.id"), nullable=False)
+    sender_id = db.Column(db.Integer, db.ForeignKey("techsuite_users.id"), nullable=False)
     connection_id = db.Column(db.Integer, db.ForeignKey("connections.id"), nullable=False)
     message = db.Column(db.String(1000))       # Allow 1000 characters for messages
     time_created = db.Column(db.DateTime, default=datetime.now())

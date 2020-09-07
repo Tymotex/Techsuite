@@ -1,6 +1,6 @@
 import os
 from extensions import db
-from models import Channel, User, Message, MemberOf, Bio, Connection
+from models import Channel, User, Message, MemberOf, Bio, Connection, DirectMessage
 from exceptions import InputError, AccessError
 from util.util import is_user_member, select_channel, get_user_from_id, printColour
 from util.token import get_user_from_token, verify_token
@@ -154,16 +154,60 @@ def connection_remove(token, user_id):
 
 # ===== Message Handling =====
 
-def connection_send_message(token, user_id, message):
+def connection_fetch_messages(token, user_id):
     """
-        Drops a pending/existing connection
+        Fetches all messages between the calling user and the other user
         Parameters:
             token         (str)
-            user_id        (int)
+            user_id       (int)
+        Returns:
+            { messages }  (dict)
+        Where:
+            messages: { message, sender_id }
+    """
+    verify_token(token)
+    this_user = get_user_from_token(token)
+    connections = Connection.query.all()
+    for each_connection in connections:
+        if (each_connection.user_id == this_user.id and each_connection.other_user_id == user_id) or \
+           (each_connection.user_id == user_id and each_connection.other_user_id == this_user.id):
+            return { 
+                "messages": [
+                    {
+                        "message_id": each_msg.id,
+                        "message": each_msg.message, 
+                        "sender_id": each_msg.sender_id,
+                        "time_created": each_msg.time_created.timestamp() 
+                    } for each_msg in each_connection.messages_sent ]
+            }
+    return { "messages": [] }
+
+def connection_send_message(token, user_id, message):
+    """
+        Sends a message from the calling user to the target user
+        Parameters:
+            token         (str)
+            user_id       (int)
             message       (str)
         Returns:
             {}            (dict)
     """
+    verify_token(token)
+    this_user = get_user_from_token(token)
+    connections = Connection.query.all()
+    for each_connection in connections:
+        if (each_connection.user_id == this_user.id and each_connection.other_user_id == user_id) or \
+           (each_connection.user_id == user_id and each_connection.other_user_id == this_user.id):
+            dm = DirectMessage(
+                sender_id=this_user.id,
+                connection_id=each_connection.id,
+                message=message,
+                connection=each_connection
+            )
+            db.session.add(dm)
+            break
+    db.session.commit()
+    return {}
 
 def connection_remove_message(token, user_id):
     """
