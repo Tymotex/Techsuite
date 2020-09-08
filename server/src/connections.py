@@ -146,8 +146,12 @@ def connection_remove(token, user_id):
     connections = Connection.query.all()
     for each_connection in connections:
         if each_connection.user_id == this_user.id and each_connection.other_user_id == user_id:
+            for each_message in DirectMessage.query.filter_by(connection_id=each_connection.id):
+                connection_remove_message(token, each_message.id)
             db.session.delete(each_connection)
         elif each_connection.user_id == user_id and each_connection.other_user_id == this_user.id:
+            for each_message in DirectMessage.query.filter_by(connection_id=each_connection.id):
+                connection_remove_message(token, each_message.id)
             db.session.delete(each_connection)
     db.session.commit()
     return {}
@@ -205,9 +209,9 @@ def connection_send_message(token, user_id, message):
                 connection=each_connection
             )
             db.session.add(dm)
-            break
-    db.session.commit()
-    return {}
+            db.session.commit()
+            return {}
+    raise InputError("Broken connection between you and the recipient")
 
 
 def connection_edit_message(token, message_id, message):

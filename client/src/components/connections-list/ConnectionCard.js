@@ -38,8 +38,8 @@ class ConnectionCard extends React.Component {
                     refreshIncoming(currToken);
                 })
                 .catch((err) => {
-                    // const errorMessage = (err.response.data.message) ? (err.response.data.message) : "Something went wrong";
-                    // Notification.spawnNotification("Failed to add connection", errorMessage, "danger");
+                    const errorMessage = (err.response.data.message) ? (err.response.data.message) : "Something went wrong";
+                    Notification.spawnNotification("Failed to add connection", errorMessage, "danger");
                 });
         }
     }
@@ -65,8 +65,12 @@ class ConnectionCard extends React.Component {
                     refreshOutgoing(currToken);
                 })
                 .catch((err) => {
-                    // const errorMessage = (err.response.data.message) ? (err.response.data.message) : "Something went wrong";
-                    // Notification.spawnNotification("Failed to remove connection", errorMessage, "danger");
+                    if (err.data) {
+                        const errorMessage = (err.response.data.message) ? (err.response.data.message) : "Something went wrong";
+                        Notification.spawnNotification("Failed to remove connection", errorMessage, "danger");
+                    } else {
+                        Notification.spawnNotification("Failed to remove connection", "Techsuite messed up something. Sorry!", "danger");
+                    }
                 });
         }
     }

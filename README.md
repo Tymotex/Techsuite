@@ -46,3 +46,6 @@ psql=# GRANT ALL PRIVLEGES ON DATABASE techsuite TO me;
 1. sudo apt install libpq-dev python3-dev
 2. pip3 install psycopg2
 
+
+Note: to use psql to interface with the techsuite database instance, run `sudo -u postgres psql`, then run `\c techsuite` in the prompt
+

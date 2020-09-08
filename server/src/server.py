@@ -126,7 +126,7 @@ def handle_typing_prompt(token):
 
 @socketio.on("stopped_typing")
 def handle_typing_prompt(token):
-    printColour("NUM_USERS_TYPING: {}".format(NUM_USERS_TYPING), colour="red_1")
+    printColour("NUM_USERS_TYPING: {}".format(42), colour="red_1")
     emit("hide_typing_prompt", broadcast=True, include_self=False)    
 
 @socketio.on("channel_join")

@@ -107,7 +107,7 @@ def handle_conection_fetch_messages():
     """
     token = request.args.get("token")
     user_id = int(request.args.get("user_id"))
-    printColour("Sending message to user: {}".format(user_id))
+    printColour("Fetching messages with user: {}".format(user_id))
     return jsonify(connections.connection_fetch_messages(token, user_id))
 
 @connection_router.route("/connections/message", methods=['POST'])
