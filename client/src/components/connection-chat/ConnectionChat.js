@@ -51,17 +51,17 @@ class ChatBox extends React.Component {
 	}
 
 	render() {
-		const { user } = this.props;
+		const { otherUser, thisUser } = this.props;
 		return (
 			<div className="ChatBox">
 				<ChatBoxHeader
-					name={user.username}
+					name={otherUser.username}
 					toggle={this.toggle}
 					isExpanded={this.props.isExpanded}
 					status={this.props.status}
 					close={this.props.close}
 					/>
-				{this.state.expanded && <ConnectionChatBox user={user} />}
+				{this.state.expanded && <ConnectionChatBox otherUser={otherUser} thisUser={thisUser} />}
 			</div>
 		);
 	}

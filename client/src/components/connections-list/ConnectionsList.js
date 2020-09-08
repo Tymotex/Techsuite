@@ -5,18 +5,88 @@ import { ConnectionChat } from '../connection-chat';
 import axios from 'axios';
 import Cookie from 'js-cookie';
 import { BASE_URL } from '../../constants/api-routes';
+import { ConnectionSearch } from '../connection-search';
 
 class ConnectionsList extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
             chatWindowOpen: false,
-            currentChatUser: {}
+            currentChatUser: {},
+            thisUser: {},
+            users: {},
+            incomingUsers: {},
+            outgoingUsers: {}
         };
         this.toggleChatWindow = this.toggleChatWindow.bind(this);
         this.forceCloseChatWindow = this.forceCloseChatWindow.bind(this);
+        this.fetchConnections = this.fetchConnections.bind(this);
+        this.fetchConnectionsIncoming = this.fetchConnectionsIncoming.bind(this);
+        this.fetchConnectionsOutgoing = this.fetchConnectionsOutgoing.bind(this);
     }
     
+    componentWillMount() {
+        // Fetch the current user's profile data
+        const currToken = Cookie.get("token");
+        const userID = Cookie.get("user_id");
+        if (currToken) {
+            axios.get(`${BASE_URL}/users/profile?token=${currToken}&user_id=${userID}`)
+                .then((userPayload) => {
+                    this.setState({
+                        thisUser: userPayload.data
+                    });
+                })
+                .catch((err) => {
+                    alert("FAILED");
+                });
+            // TODO: Async refactor so that this.setState({ isloading, fetchsucceeded, ...}) works
+            this.fetchConnections(currToken);
+            this.fetchConnectionsIncoming(currToken);
+            this.fetchConnectionsOutgoing(currToken);
+        }
+    } 
+
+    fetchConnections(token) {
+        // alert("Fetching all connections");
+        axios.get(`${BASE_URL}/connections?token=${token}`)
+            .then((connectionsPayload) => {
+                this.setState({
+                    users: connectionsPayload.data.users
+                });
+            })
+            .catch((err) => {
+                const errorMessage = (err.response.data.message) ? (err.response.data.message) : "Something went wrong";
+                Notification.spawnNotification("Fetching connections failed", errorMessage, "danger");
+            });
+    }
+
+    fetchConnectionsIncoming(token) {
+        // alert("Fetching incoming");
+        axios.get(`${BASE_URL}/connections/incoming?token=${token}`)
+            .then((connectionsPayload) => {
+                this.setState({
+                    incomingUsers: connectionsPayload.data.users
+                });
+            })
+            .catch((err) => {
+                const errorMessage = (err.response.data.message) ? (err.response.data.message) : "Something went wrong";
+                Notification.spawnNotification("Fetching connections failed", errorMessage, "danger");
+            });
+    }
+
+    fetchConnectionsOutgoing(token) {
+        // alert("Fetching outgoing");
+        axios.get(`${BASE_URL}/connections/outgoing?token=${token}`)
+            .then((connectionsPayload) => {
+                this.setState({
+                    outgoingUsers: connectionsPayload.data.users
+                });
+            })
+            .catch((err) => {
+                const errorMessage = (err.response.data.message) ? (err.response.data.message) : "Something went wrong";
+                Notification.spawnNotification("Fetching connections failed", errorMessage, "danger");
+            });
+    }
 
     toggleChatWindow(userID) {
         const currToken = Cookie.get("token");
@@ -29,7 +99,7 @@ class ConnectionsList extends React.Component {
                     });
                 })
                 .catch((err) => {
-
+                    alert("FAILED");
                 });
         }
     }
@@ -41,11 +111,13 @@ class ConnectionsList extends React.Component {
     }
 
     render() {
-        const { users, incomingUsers, outgoingUsers } = this.props;
-        const { currentChatUser } = this.state;
+        const { users, incomingUsers, outgoingUsers, currentChatUser, thisUser } = this.state;
         return (
             <div>
                 <Row>
+                    <Col md={12}>
+                        <ConnectionSearch refreshOutgoing={this.fetchConnectionsOutgoing} />
+                    </Col>
                     <Col md={12}>
                         {/* Showing all existing connections */}
                         <Card>
@@ -60,6 +132,9 @@ class ConnectionsList extends React.Component {
                                                     isPending={false} 
                                                     isOutgoing={false} 
                                                     openMessage={this.toggleChatWindow}
+                                                    refreshConnections={this.fetchConnections}
+                                                    refreshIncoming={this.fetchConnectionsIncoming}
+                                                    refreshOutgoing={this.fetchConnectionsOutgoing}
                                                     />
                                             </Col>
                                         )))}
@@ -81,7 +156,13 @@ class ConnectionsList extends React.Component {
                                     <Row>
                                         {(incomingUsers.map((eachUser) => (
                                             <Col lg={12} xl={6}>
-                                                <ConnectionCard user={eachUser} isPending={true} isOutgoing={false} />
+                                                <ConnectionCard 
+                                                    user={eachUser} 
+                                                    isPending={true} 
+                                                    isOutgoing={false}
+                                                    refreshConnections={this.fetchConnections}
+                                                    refreshIncoming={this.fetchConnectionsIncoming}
+                                                    refreshOutgoing={this.fetchConnectionsOutgoing} />
                                             </Col>
                                         )))}
                                     </Row>
@@ -102,7 +183,13 @@ class ConnectionsList extends React.Component {
                                     <Row>
                                         {(outgoingUsers.map((eachUser) => (
                                             <Col lg={12} xl={6}>
-                                                <ConnectionCard user={eachUser} isPending={true} isOutgoing={true} />
+                                                <ConnectionCard 
+                                                    user={eachUser} 
+                                                    isPending={true} 
+                                                    isOutgoing={true}
+                                                    refreshConnections={this.fetchConnections}
+                                                    refreshIncoming={this.fetchConnectionsIncoming}
+                                                    refreshOutgoing={this.fetchConnectionsOutgoing} />
                                             </Col>
                                         )))}
                                     </Row>
@@ -118,7 +205,8 @@ class ConnectionsList extends React.Component {
                                 name="Messages" 
                                 status="online" 
                                 close={this.forceCloseChatWindow} 
-                                user={currentChatUser} />
+                                otherUser={currentChatUser}
+                                thisUser={thisUser} />
                         </ConnectionChat.Container>
                     ) : (
                         <></>

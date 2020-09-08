@@ -57,15 +57,23 @@ class OutgoingMessage extends React.Component {
     render() {
         // Creating a formatted time string based on the time_created unix timestamp
         // Example time format: 05/20/2020 | 7:55PM (AEST)
-        const { message_id, message, time_created, user_id } = this.props;
-        // const { profile_img_url, username } = this.state.user;
+        const { message_id, message, time_created, user } = this.props;
+        const { profile_img_url, username, user_id } = user;
 
         const formattedTime = moment.unix(time_created).tz("Australia/Sydney").format("DD/MM/YYYY | h:mmA (z)");
         const shortFormattedTime = moment.unix(time_created).tz("Australia/Sydney").format("DD/MM/YY, h:mm A");
         return (
             <div className="answer right">
+                <Link to={`/user/profile/${user_id}`}>    
+                    <div className="avatar" >
+                        <img src={profile_img_url} alt={username} />
+                    </div>
+                </Link>
+                <div className="name"><strong>{username}</strong></div>
                 <div className="text" data-tip data-for='messageTooltip'>
-                    {message}
+                    <div>
+                        {message}
+                    </div>
                 </div>
                 <ReactTooltip id='messageTooltip' type='info' effect="solid" delayShow={200} delayHide={200} >
                     <span>{formattedTime}</span>

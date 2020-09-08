@@ -22,8 +22,9 @@ class IncomingMessage extends React.Component {
             isLoading: true
         });
         const currUserToken = Cookie.get("token");
+        const otherUserID = this.props.user.id;
         if (currUserToken) {
-            axios.get(`${BASE_URL}/users/profile?token=${currUserToken}&user_id=${this.props.user_id}`)
+            axios.get(`${BASE_URL}/users/profile?token=${currUserToken}&user_id=${otherUserID}`)
                 .then((userProfile) => {
                     this.setState({
                         isLoading: false,
@@ -49,9 +50,8 @@ class IncomingMessage extends React.Component {
     render() {
         // Creating a formatted time string based on the time_created unix timestamp
         // Example time format: 05/20/2020 | 7:55PM (AEST)
-        const { message, time_created, user_id } = this.props;
-        console.log(this.state.user);
-        const { profile_img_url, username } = this.state.user;
+        const { message, time_created, user } = this.props;
+        const { profile_img_url, username, user_id } = user;
 
         const formattedTime = moment.unix(time_created).tz("Australia/Sydney").format("DD/MM/YYYY | h:mmA (z)");
         const shortFormattedTime = moment.unix(time_created).tz("Australia/Sydney").format("DD/MM/YY, h:mm A");
@@ -64,7 +64,7 @@ class IncomingMessage extends React.Component {
                 </Link>
                 <div class="name"><strong>{username}</strong></div>
                 <div class="text" data-tip data-for='incomingMessageTooltip'>
-                    {message}
+                    <span>{message}</span>
                 </div>
                 <ReactTooltip id='incomingMessageTooltip' type='info' effect="solid" delayShow={200} delayHide={200} >
                     <span>{formattedTime}</span>

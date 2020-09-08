@@ -5,6 +5,7 @@ import { Row, Col, Card, CardHeader, CardBody, Button } from 'reactstrap';
 import { BASE_URL } from '../../constants/api-routes';
 import './ConnectionCard.scss';
 import { Link } from 'react-router-dom';
+import { Notification } from '../notification';
 
 class ConnectionCard extends React.Component {
     constructor(props) {
@@ -13,12 +14,13 @@ class ConnectionCard extends React.Component {
             chatWindowOpen: false
         };
         this.acceptConnection = this.acceptConnection.bind(this);
-        this.rejectConnection = this.rejectConnection.bind(this);
+        this.removeConnection = this.removeConnection.bind(this);
     }
 
     acceptConnection() {
         const { user } = this.props;
         const currToken = Cookie.get("token");
+        const { refreshConnections, refreshIncoming } = this.props;
         if (currToken) {
             const postData = {
                 method: 'post',
@@ -31,17 +33,21 @@ class ConnectionCard extends React.Component {
             };
             axios(postData)
                 .then((res) => {
-                    alert("Success");
+                    Notification.spawnNotification("Success", "You have accepted a connection request", "success");
+                    refreshConnections(currToken);
+                    refreshIncoming(currToken);
                 })
                 .catch((err) => {
-                    alert("failed");
+                    // const errorMessage = (err.response.data.message) ? (err.response.data.message) : "Something went wrong";
+                    // Notification.spawnNotification("Failed to add connection", errorMessage, "danger");
                 });
         }
     }
 
-    rejectConnection() {
+    removeConnection() {
         const { user } = this.props;
         const currToken = Cookie.get("token");
+        const { refreshConnections, refreshOutgoing } = this.props;
         if (currToken) {
             const postData = {
                 method: 'post',
@@ -54,10 +60,13 @@ class ConnectionCard extends React.Component {
             };
             axios(postData)
                 .then((res) => {
-                    alert("Success");
+                    Notification.spawnNotification("Success", "You have removed a connection", "success");
+                    refreshConnections(currToken);
+                    refreshOutgoing(currToken);
                 })
                 .catch((err) => {
-                    alert("failed");
+                    // const errorMessage = (err.response.data.message) ? (err.response.data.message) : "Something went wrong";
+                    // Notification.spawnNotification("Failed to remove connection", errorMessage, "danger");
                 });
         }
     }
@@ -79,13 +88,13 @@ class ConnectionCard extends React.Component {
                                     (isPending) ? (
                                         <>
                                             <Button outline color="primary" onClick={this.acceptConnection}>Accept</Button>
-                                            <Button outline color="danger" onClick={this.rejectConnection}>Decline</Button>
+                                            <Button outline color="danger" onClick={this.removeConnection}>Decline</Button>
                                         </>
                                     ) : (
                                         <>
                                             {/* TODO: Open up a chat window on the bottom right */}
                                             <Button outline color="primary" onClick={() => openMessage(user.user_id)}>Message</Button> 
-                                            <Button outline color="danger" onClick={this.rejectConnection}>Remove</Button>
+                                            <Button outline color="danger" onClick={this.removeConnection}>Remove</Button>
                                         </>
                                     )
                             )}

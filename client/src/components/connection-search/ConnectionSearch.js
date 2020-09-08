@@ -1,5 +1,5 @@
 import React from 'react';
-import { Form, FormGroup, Label, Input, Button } from 'reactstrap';
+import { Form, FormGroup, Label, Input, Button, Card, CardHeader, CardBody } from 'reactstrap';
 import Cookie from 'js-cookie';
 import axios from 'axios';
 import { BASE_URL } from '../../constants/api-routes';
@@ -43,11 +43,11 @@ class ConnectionSearch extends React.Component {
     }
 
     sendConnectionRequest(event) {
-        const { refresh } = this.props;
         event.preventDefault();
         const fd = new FormData(event.target);
         const targetUserID = fd.get("target-user");
         const currToken = Cookie.get("token");
+        const { refreshOutgoing } = this.props;
         if (currToken) {
             // alert(`Sending connection request: ${targetUserID} ${currToken}`);
             const postData = {
@@ -62,6 +62,7 @@ class ConnectionSearch extends React.Component {
             axios(postData)
                 .then((res) => {
                     Notification.spawnNotification("Connection request sent successfully", "Once they accept your request, you may start messaging them!", "success");
+                    refreshOutgoing(currToken);
                 })
                 .catch((err) => {
                     const errorMessage = (err.response.data.message) ? (err.response.data.message) : "Something went wrong";
@@ -75,21 +76,25 @@ class ConnectionSearch extends React.Component {
     render() {
         const { users } = this.state;
         return (
-            <Form onSubmit={this.sendConnectionRequest} className="connection-search-form">
-                <FormGroup>
-                    <Label for="users-dropdown">Select Multiple</Label>
-                    <Input type="select" name="target-user" id="users-dropdown">
-                        {(users && users.length > 0) ? (
-                            users.map((eachUser, i) => (
-                                <option key={i} value={eachUser.user_id}>{eachUser.username}</option>
-                            ))
-                        ) : (
-                            <p>No users to add</p>
-                        )}
-                    </Input>
-                </FormGroup>
-                <Button>Add Connection</Button>
-            </Form>
+            <Card>
+                <CardBody>
+                    <Form onSubmit={this.sendConnectionRequest} className="connection-search-form">
+                        <FormGroup>
+                            <Label for="users-dropdown">Select Multiple</Label>
+                            <Input type="select" name="target-user" id="users-dropdown">
+                                {(users && users.length > 0) ? (
+                                    users.map((eachUser, i) => (
+                                        <option key={i} value={eachUser.user_id}>{eachUser.username}</option>
+                                    ))
+                                ) : (
+                                    <p>No users to add</p>
+                                )}
+                            </Input>
+                        </FormGroup>
+                        <Button>Add Connection</Button>
+                    </Form>
+                </CardBody>
+            </Card>
         );
     }
 }

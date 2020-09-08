@@ -7,6 +7,7 @@ import { withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { Notification } from '../notification';
 import ChatBox from '../channel-messages/ChatBox';
+import './ChannelSearchMessages.scss';
 
 class ChannelSearchMessages extends React.Component {
     static propTypes = {
@@ -82,11 +83,16 @@ class ChannelSearchMessages extends React.Component {
                                     <InputGroupAddon addonType="prepend">
                                         <InputGroupText>Search for</InputGroupText>
                                     </InputGroupAddon>
-                                    <Input id="dynamic-search-field" name="queryString" placeholder="Start typing..." defaultValue={queryStr} onChange={this.searchMessages} />
+                                    <Input 
+                                        id="dynamic-search-field" 
+                                        name="queryString" 
+                                        placeholder="Start typing..." 
+                                        defaultValue={queryStr} 
+                                        onChange={this.searchMessages}
+                                        autocomplete="off" />
                                 </InputGroup>
                             </FormGroup>
                         </Form>
-                    
                         {/* Results display: */}
                         {(messages && messages.length > 0) ? (
                             <ChatBox messages={messages} isLoading={false} fetchSucceeded={true}/>

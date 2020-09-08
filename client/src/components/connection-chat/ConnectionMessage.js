@@ -8,26 +8,20 @@ class ConnectionMessage extends React.Component {
     }
 
     render() {
-        const { message, user } = this.props;
-        console.log(message);
-        console.log(user);
+        const { message, otherUser, thisUser } = this.props;
         return (
             (this.props.isOutgoing) ? 
                 <OutgoingMessage 
                     message_id={message.message_id}
                     message={message.message}
                     time_created={message.time_created}
-                    user_id={user.user_id}
-                    profile_img_url={user.profile_img_url}
-                    username={user.username}   
+                    user={thisUser}
                 /> :
                 <IncomingMessage 
                     message_id={message.message_id}
                     message={message.message}
                     time_created={message.time_created}
-                    user_id={user.user_id}
-                    profile_img_url={user.profile_img_url}
-                    username={user.username} 
+                    user={otherUser}
                 />
         );
     }

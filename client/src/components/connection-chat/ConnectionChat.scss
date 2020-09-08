@@ -281,3 +281,7 @@ body{
     border-radius: 0;
 }
 
+// Workaround for single unbroken string text overflow:
+.text {
+    word-wrap: break-word;
+}
