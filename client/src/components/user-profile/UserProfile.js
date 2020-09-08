@@ -110,7 +110,6 @@ class UserProfile extends React.Component {
         }
         return (
             <div>
-                <Notification />
                 {(this.state.isLoading) ? (
                     <LoadingSpinner /> 
                 ) : (
@@ -134,7 +133,7 @@ class UserProfile extends React.Component {
                                             <div className="h5 text-muted">Email: {email}</div>
                                             
                                         </div>
-                                        {(user_id == Cookie.get("user_id")) ? (
+                                        {(user_id === Cookie.get("user_id")) ? (
                                             <></>
                                         ) : (
                                             <ConnectButton 

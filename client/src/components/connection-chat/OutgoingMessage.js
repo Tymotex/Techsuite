@@ -1,11 +1,7 @@
-import axios from 'axios';
-import Cookie from 'js-cookie';
 import moment from 'moment-timezone';
 import React from 'react';
 import { Link } from 'react-router-dom';
 import ReactTooltip from 'react-tooltip';
-import { BASE_URL } from '../../constants/api-routes';
-import { Notification } from '../notification';
 import MessageEditButton from './MessageEditButton';
 
 class OutgoingMessage extends React.Component {

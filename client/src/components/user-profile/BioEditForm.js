@@ -1,10 +1,10 @@
-import React from 'react';
-import { Form, FormGroup, Input, InputGroup, InputGroupAddon, InputGroupText, Label, Button } from 'reactstrap';
-import Cookie from 'js-cookie';
 import axios from 'axios';
+import Cookie from 'js-cookie';
+import React from 'react';
+import { Button, Form, FormGroup, Input, InputGroup, InputGroupAddon, InputGroupText } from 'reactstrap';
 import { BASE_URL } from '../../constants/api-routes';
-import './BioEditForm.scss';
 import { Notification } from '../notification';
+import './BioEditForm.scss';
 
 class BioEditForm extends React.Component {
     constructor(props) {
@@ -93,7 +93,7 @@ class BioEditForm extends React.Component {
     }
 
     render() {
-        const { first_name, last_name, cover_img_url, summary, location, title, education} = this.state.bio;
+        const { first_name, last_name, summary, location, title, education} = this.state.bio;
         
         return (
             <Form onSubmit={this.updateBio}>

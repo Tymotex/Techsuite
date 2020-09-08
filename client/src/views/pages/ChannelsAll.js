@@ -53,7 +53,6 @@ class ChannelsAll extends React.Component {
     render() {
         return (
             <div>
-                <Notification />
                 {(this.state.isLoading) ? (
                     <LoadingSpinner /> 
                 ) : (

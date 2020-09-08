@@ -54,7 +54,7 @@ export default {
   ],
   bottom: [
     {
-      name: 'GitHub Repo',
+      name: '',
       url: 'https://github.com/Tymotex/DevMessenger',
       icon: 'GitHub',
       external: true,

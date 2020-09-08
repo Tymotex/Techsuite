@@ -7,10 +7,6 @@ import Message from './Message';
 
 
 class ChatBox extends React.Component {
-    constructor(props) {
-        super(props);
-    }
-
     render() {
         const { messages, isLoading, fetchSucceeded } = this.props;
         return (

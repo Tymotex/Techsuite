@@ -1,11 +1,10 @@
-import React, { Component } from 'react';
-import { Card, CardBody, Row, Col } from 'reactstrap';
-import { Notification } from '../../components/notification';
-
+import { faGithub, faHubspot } from '@fortawesome/free-brands-svg-icons';
+import { faComment, faNewspaper, faPalette, faUsers } from '@fortawesome/free-solid-svg-icons';
 // Font-awesome icons:
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faNewspaper, faPalette, faComment } from '@fortawesome/free-solid-svg-icons';
-import { faHubspot } from '@fortawesome/free-brands-svg-icons';
+import React, { Component } from 'react';
+import { Card, CardBody, Col, Row } from 'reactstrap';
+
 
 // The feature showcase is rendered if the user is not logged in
 const Showcase = () => {
@@ -20,13 +19,12 @@ const Showcase = () => {
   return (
     <div>
       {/* Welcome header: */}
-      <Notification />
       <Row>
         <Col md={6}>
           <div className="home-hero" style={heroStyles}>
             <h1>Welcome to Techsuite.</h1>
             <p className="text-muted">
-              An app for collaborating, networking and sharing ideas 🌱
+              An app for collaborating, networking and sharing ideas <span role="img" aria-label="unicode sprout">🌱</span>
             </p>
           </div>
         </Col>
@@ -42,21 +40,21 @@ const Showcase = () => {
               <div className="m-l">
                 <h2 className="h4">Channels</h2>
                 <p className="text-muted">
-                  Create channels, invite other users and collaborate on group projects
+                  Create channels and invite other users to collaborate on group projects or discuss the latest memes
                 </p>
               </div>
             </CardBody>
           </Card>
         </Col>
-        {/* Direct messages: */}
+        {/* Network */}
         <Col md={6}>
           <Card>
             <CardBody className="display-flex">
-              <FontAwesomeIcon icon={faComment} style={iconStyles} />
+              <FontAwesomeIcon icon={faUsers} style={iconStyles} />
               <div className="m-l">
-                <h2 className="h4">Direct messaging</h2>
+                <h2 className="h4">Networking</h2>
                 <p className="text-muted">
-                  Privately message other developers.
+                  Connect with other people and grow your network.
                 </p>
               </div>
             </CardBody>
@@ -85,6 +83,34 @@ const Showcase = () => {
                 <h2 className="h4">Stay tech-savvy</h2>
                 <p className="text-muted">
                   Keep yourself updated with the rapidly evolving software world
+                </p>
+              </div>
+            </CardBody>
+          </Card>
+        </Col>
+        {/* Direct Messaging */}
+        <Col md={6}>
+          <Card>
+            <CardBody className="display-flex">
+              <FontAwesomeIcon icon={faComment} style={iconStyles} />
+              <div className="m-l">
+                <h2 className="h4">Direct messaging</h2>
+                <p className="text-muted">
+                  Privately message other developers.
+                </p>
+              </div>
+            </CardBody>
+          </Card>
+        </Col>
+        {/* GitHub */}
+        <Col md={6}>
+          <Card>
+            <CardBody className="display-flex">
+              <FontAwesomeIcon icon={faGithub} style={iconStyles} />
+              <div className="m-l">
+                <h2 className="h4">Support Open-Source</h2>
+                <p className="text-muted">
+                  <a href="https://github.com/Tymotex/Techsuite">Techsuite GitHub</a>
                 </p>
               </div>
             </CardBody>

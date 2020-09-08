@@ -22,7 +22,7 @@ class IncomingMessage extends React.Component {
             isLoading: true
         });
         const currUserToken = Cookie.get("token");
-        const otherUserID = this.props.user.id;
+        const otherUserID = this.props.user.user_id;
         if (currUserToken) {
             axios.get(`${BASE_URL}/users/profile?token=${currUserToken}&user_id=${otherUserID}`)
                 .then((userProfile) => {
@@ -36,7 +36,7 @@ class IncomingMessage extends React.Component {
                     this.setState({
                         isLoading: false,
                         fetchSucceeded: false
-                    })
+                    });
                 })
         } else {
             this.setState({

@@ -1,12 +1,12 @@
-import React from 'react';
-import Cookie from 'js-cookie';
 import axios from 'axios';
-import { Modal, ModalHeader, ModalBody, ModalFooter, Form, FormGroup, Input, InputGroup, InputGroupAddon, InputGroupText, Button, Label } from 'reactstrap';
-import { BASE_URL } from '../../constants/api-routes';
-import { withRouter } from 'react-router-dom';
+import Cookie from 'js-cookie';
 import PropTypes from 'prop-types';
-import InputSwitch from './InputSwitch';
+import React from 'react';
+import { withRouter } from 'react-router-dom';
+import { Button, Form, FormGroup, Input, InputGroup, InputGroupAddon, InputGroupText, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
+import { BASE_URL } from '../../constants/api-routes';
 import { Notification } from '../notification';
+import InputSwitch from './InputSwitch';
 
 class ChannelEdit extends React.Component {
     static propTypes = {
@@ -92,7 +92,6 @@ class ChannelEdit extends React.Component {
             <>
                 <Button color="warning" onClick={this.toggleModal} style={{"width": "100%"}}>Edit Channel Info</Button>
                 <Modal isOpen={this.state.modal} toggle={this.toggleModal}>
-                    <Notification />
                     <ModalHeader toggle={this.toggleModal}>Editing Channel Info:</ModalHeader>
                     <ModalBody>
                         <Form onSubmit={this.updateChannelInfo}>

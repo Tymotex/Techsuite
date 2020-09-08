@@ -1,13 +1,13 @@
 /* eslint-disable jsx-a11y/media-has-caption, class-methods-use-this */
-import React, { PureComponent } from 'react';
+import axios from 'axios';
 import Cookie from 'js-cookie';
-import { Form, FormGroup, FormText, Input, Label, Button, Row, Col } from 'reactstrap';
+import React, { PureComponent } from 'react';
 import ReactCrop from 'react-image-crop';
 import 'react-image-crop/dist/ReactCrop.css';
-import axios from 'axios';
+import { Button, Col, Form, FormGroup, Input, Label, Row } from 'reactstrap';
+import { Notification } from '../../components/notification';
 import { BASE_URL } from '../../constants/api-routes';
 import './ImageCropper.scss';
-import { Notification } from '../../components/notification';
 
 class ImageCropper extends PureComponent {
     constructor(props) {

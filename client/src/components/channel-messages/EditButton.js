@@ -1,11 +1,9 @@
-import React from 'react';
 import Cookie from 'js-cookie';
-import { BASE_URL } from '../../constants/api-routes';
-import axios from 'axios';
-import { Button, Modal, ModalHeader, ModalBody, ModalFooter, Form, InputGroup, Input, InputGroupAddon, InputGroupText } from 'reactstrap';
+import React from 'react';
+import { Button, Form, Input, InputGroup, InputGroupAddon, InputGroupText, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
+import openSocket from 'socket.io-client';
 import './EditButton.scss';
 
-import openSocket from 'socket.io-client';
 const socket = openSocket('http://localhost:3001');
 
 class EditButton extends React.Component {

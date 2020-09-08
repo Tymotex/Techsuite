@@ -1,15 +1,15 @@
 import React from 'react';
-import { Switch, Route, Redirect } from 'react-router-dom';
-import { SidebarNav, Footer, PageContent, Chat, PageAlert, Page } from '../UI';
+import { Redirect, Route, Switch } from 'react-router-dom';
 import Logo from '../assets/images/techsuite-icon.png';
-import avatar1 from '../assets/images/avatar1.png';
-import nav from '../_nav';
-import routes from '../views';
+import { Notification } from '../components/notification';
+import { TopNavItems } from '../components/top-nav';
+import { Page, PageAlert, PageContent, SidebarNav } from '../UI';
+import Header from '../UI/components/Header/Header';
 import ContextProviders from '../UI/components/utilities/ContextProviders';
 import handleKeyAccessibility, { handleClickAccessibility } from '../UI/helpers/handleTabAccessibility';
+import routes from '../views';
+import nav from '../_nav';
 
-import { TopNavItems } from '../components/top-nav';
-import Header from '../UI/components/Header/Header';
 
 const MOBILE_SIZE = 992;
 
@@ -81,6 +81,7 @@ class DashboardLayout extends React.Component {
 						<TopNavItems />
 					</Header>
 					<PageContent>
+						<Notification />
 						<Switch>
 						{routes.map((page, key) => (
 							<Route path={page.path} component={page.component} key={key} />

@@ -2,10 +2,6 @@ import React from 'react';
 import './BioEditForm.scss';
 
 class UserBio extends React.Component {
-    constructor(props) {
-        super(props);
-    }
-
     render() {
         const { summary } = this.props;
         return (

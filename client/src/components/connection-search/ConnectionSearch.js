@@ -1,10 +1,10 @@
-import React from 'react';
-import { Form, FormGroup, Label, Input, Button, Card, CardHeader, CardBody } from 'reactstrap';
-import Cookie from 'js-cookie';
 import axios from 'axios';
+import Cookie from 'js-cookie';
+import React from 'react';
+import { Button, Card, CardBody, Form, FormGroup, Input, Label } from 'reactstrap';
 import { BASE_URL } from '../../constants/api-routes';
-import './ConnectionSearch.scss';
 import { Notification } from '../notification';
+import './ConnectionSearch.scss';
 
 class ConnectionSearch extends React.Component {
     constructor(props) {

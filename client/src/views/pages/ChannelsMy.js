@@ -51,7 +51,6 @@ class ChannelsMy extends Component {
     render() {
         return (
             <div>
-                <Notification />
                 {(this.state.isLoading) ? (
                     <LoadingSpinner /> 
                 ) : (

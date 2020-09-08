@@ -1,20 +1,20 @@
-import React from 'react';
 import axios from 'axios';
 import Cookie from 'js-cookie';
-import { BASE_URL } from '../../constants/api-routes';
-import { Row, Col, Card, CardHeader, CardBody, Container, Button, Form, Input } from 'reactstrap';
-import { ChannelMessages } from '../../components/channel-messages';
-import { UserInvite } from '../../components/user-invite';
-import { ChannelLeave } from '../../components/channel-leave';
-import { ChannelEdit } from '../../components/channel-edit';
-import { ChannelUploadImage } from '../../components/channel-upload-image';
+import React from 'react';
+import { Card, CardBody, CardHeader, Col, Row } from 'reactstrap';
 import { ChannelDetails } from '../../components/channel-details';
-import { ChannelUploadCover } from '../../components/channel-upload-cover';
+import { ChannelEdit } from '../../components/channel-edit';
+import { ChannelLeave } from '../../components/channel-leave';
+import { ChannelMessages } from '../../components/channel-messages';
 import { ChannelSearchMessages } from '../../components/channel-search-messages';
+import { ChannelUploadCover } from '../../components/channel-upload-cover';
+import { ChannelUploadImage } from '../../components/channel-upload-image';
+import { LoadingSpinner } from '../../components/loading-spinner';
 import { Notification } from '../../components/notification';
 import { UserAddOwner } from '../../components/user-add-owner';
+import { UserInvite } from '../../components/user-invite';
 import { UserRemoveOwner } from '../../components/user-remove-owner';
-import { LoadingSpinner } from '../../components/loading-spinner';
+import { BASE_URL } from '../../constants/api-routes';
 
 
 class Channel extends React.Component {

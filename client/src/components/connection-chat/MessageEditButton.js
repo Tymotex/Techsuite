@@ -1,10 +1,8 @@
-import React from 'react';
 import Cookie from 'js-cookie';
-import { BASE_URL } from '../../constants/api-routes';
-import axios from 'axios';
-import { Button, Modal, ModalHeader, ModalBody, ModalFooter, Form, InputGroup, Input, InputGroupAddon, InputGroupText } from 'reactstrap';
-
+import React from 'react';
+import { Button, Form, Input, InputGroup, InputGroupAddon, InputGroupText, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
 import openSocket from 'socket.io-client';
+
 const socket = openSocket('http://localhost:3001');
 
 class MessageEditButton extends React.Component {
@@ -30,20 +28,22 @@ class MessageEditButton extends React.Component {
         const newMessage = fd.get("edited-message");
         const currToken = Cookie.get("token");
         if (currToken) {
-            axios.put(`${BASE_URL}/connections/message`, {
-                headers: { "Content-Type": "application/json" },
-                data: {
-                    token: currToken,
-                    message_id: this.props.messageID,
-                    message: newMessage
-                }
-            })
-            .then(() => {
-                alert("Edit/remove succeeded");
-            })
-            .catch(() => {
-                alert("Edit/remove failed");
-            });
+            socket.emit("edit_connection_message", currToken, this.props.messageID, newMessage);
+            this.toggleModal();
+            // axios.put(`${BASE_URL}/connections/message`, {
+            //     headers: { "Content-Type": "application/json" },
+            //     data: {
+            //         token: currToken,
+            //         message_id: this.props.messageID,
+            //         message: newMessage
+            //     }
+            // })
+            // .then(() => {
+            //     alert("Edit/remove succeeded");
+            // })
+            // .catch(() => {
+            //     alert("Edit/remove failed");
+            // });
         } else {
             // TODO
         }
@@ -52,19 +52,20 @@ class MessageEditButton extends React.Component {
     deleteMessage() {
         const currToken = Cookie.get("token");
         if (currToken) {
-            axios.delete(`${BASE_URL}/connections/message`, {
-                    headers: { "Content-Type": "application/json" },
-                    data: {
-                        token: currToken,
-                        message_id: this.props.messageID
-                    }
-                })
-                .then(() => {
-                    alert("Edit/remove succeeded");
-                })
-                .catch(() => {
-                    alert("Edit/remove failed");
-                })
+            socket.emit("remove_connection_message", currToken, this.props.messageID);
+            // axios.delete(`${BASE_URL}/connections/message`, {
+            //         headers: { "Content-Type": "application/json" },
+            //         data: {
+            //             token: currToken,
+            //             message_id: this.props.messageID
+            //         }
+            //     })
+            //     .then(() => {
+            //         alert("Edit/remove succeeded");
+            //     })
+            //     .catch(() => {
+            //         alert("Edit/remove failed");
+            //     })
         } else {
 
         }

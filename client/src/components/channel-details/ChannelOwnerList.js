@@ -2,10 +2,6 @@ import React from 'react';
 import ChannelUser from './ChannelUser';
 
 class ChannelOwnerList extends React.Component {
-    constructor(props) {
-        super(props);
-    }
-
     render() {
         const { owners } = this.props;
         return (

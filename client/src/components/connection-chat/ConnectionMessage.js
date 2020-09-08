@@ -3,10 +3,6 @@ import OutgoingMessage from './OutgoingMessage';
 import IncomingMessage from './IncomingMessage';
 
 class ConnectionMessage extends React.Component {
-    constructor(props) {
-        super(props);
-    }
-
     render() {
         const { message, otherUser, thisUser } = this.props;
         return (

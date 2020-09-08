@@ -1,11 +1,10 @@
-import React from 'react';
-import { Button, Modal, ModalHeader, ModalBody, ModalFooter, Form, FormGroup, Input, Label } from 'reactstrap';
-import { NavLink } from 'react-router-dom';
 import PropTypes from 'prop-types';
+import React from 'react';
 import { LogIn } from 'react-feather';
-import { Notification } from '../notification';
-
+import { NavLink } from 'react-router-dom';
+import { Button, Form, FormGroup, Input, Label, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
 import { NeonButton } from '../neon-button';
+
 
 class LogInModal extends React.Component {
     static propTypes = {

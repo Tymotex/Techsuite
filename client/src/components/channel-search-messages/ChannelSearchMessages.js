@@ -1,12 +1,12 @@
-import React from 'react';
-import Cookie from 'js-cookie';
 import axios from 'axios';
-import { Modal, ModalHeader, ModalBody, ModalFooter, Form, FormGroup, Input, InputGroup, InputGroupAddon, InputGroupText, Button, Label } from 'reactstrap';
-import { BASE_URL } from '../../constants/api-routes';
-import { withRouter } from 'react-router-dom';
+import Cookie from 'js-cookie';
 import PropTypes from 'prop-types';
-import { Notification } from '../notification';
+import React from 'react';
+import { withRouter } from 'react-router-dom';
+import { Button, Form, FormGroup, Input, InputGroup, InputGroupAddon, InputGroupText, Modal, ModalBody, ModalHeader } from 'reactstrap';
+import { BASE_URL } from '../../constants/api-routes';
 import ChatBox from '../channel-messages/ChatBox';
+import { Notification } from '../notification';
 import './ChannelSearchMessages.scss';
 
 class ChannelSearchMessages extends React.Component {
@@ -74,7 +74,6 @@ class ChannelSearchMessages extends React.Component {
             <>
                 <Button color="secondary" onClick={this.toggleModal} style={{"width": "100%"}}>Search Messages</Button>
                 <Modal isOpen={this.state.modal} toggle={this.toggleModal}>
-                    <Notification />
                     <ModalHeader toggle={this.toggleModal}>Searching Channel Messages:</ModalHeader>
                     <ModalBody>
                         <Form>

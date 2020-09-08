@@ -1,19 +1,13 @@
-import React from 'react';
 import axios from 'axios';
 import Cookie from 'js-cookie';
-import './ChannelMessages.scss';
-import { Form, FormGroup, Button, Input, Row, Col, InputGroup, InputGroupAddon, InputGroupText } from 'reactstrap';
-import Message from './Message';
-import { BASE_URL } from '../../constants/api-routes';
-import { LoadingSpinner } from '../loading-spinner';
-import EmptyChatIndicator from './EmptyChatIndicator';
-import FadeIn from 'react-fade-in';
-import { Notification } from '../notification';
-
+import React from 'react';
+import { Button, Form, FormGroup, Input, InputGroup, InputGroupAddon, InputGroupText } from 'reactstrap';
 import openSocket from 'socket.io-client';
-import TypingPrompt from './TypingPrompt';
-
+import { BASE_URL } from '../../constants/api-routes';
+import { Notification } from '../notification';
+import './ChannelMessages.scss';
 import ChatBox from './ChatBox';
+import TypingPrompt from './TypingPrompt';
 
 const socket = openSocket('http://localhost:3001');
 

@@ -16,8 +16,8 @@ class NeonButton extends React.Component {
     render() {
         const { toggleModal, children } = this.props;
         return (
-            // The 4 spans are for styling the 4 sides of the button
-            <a className="neon-button" onClick={() => {
+            // Note that the 4 empty spans are for styling the 4 sides of the button
+            <a className="neon-button" href="# " onClick={() => {
                 toggleModal();
                 this.playSFX();
             }}>

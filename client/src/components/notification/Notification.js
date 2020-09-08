@@ -1,33 +1,33 @@
 import React from 'react';
-import ReactNotification from 'react-notifications-component';
-import 'react-notifications-component/dist/theme.css';
-import { store } from 'react-notifications-component';
-import './Notification.scss';
+import {NotificationContainer, NotificationManager} from 'react-notifications';
+import 'react-notifications/lib/notifications.css';
 
 class Notification extends React.Component {
-    constructor(props) {
-        super(props);
-    }
-
     static spawnNotification(title, message, type) {
-        store.addNotification({
-            title: title,
-            message: message,
-            type: type,
-            insert: "top",
-            container: "top-center",
-            animationIn: ["animated", "fadeIn"],
-            animationOut: ["animated", "fadeOut"],
-            dismiss: {
-                duration: 3500,
-                onScreen: true
-            }
-        });
+        switch (type) {
+            case 'info':
+                NotificationManager.info(message);
+                break;
+            case 'success':
+                NotificationManager.success(message, title);
+                break;
+            case 'warning':
+                NotificationManager.warning(message, title, 5000);
+                break;
+            case 'danger':
+                NotificationManager.error(message, title, 5000);
+                break;
+            default:
+                NotificationManager.error(message, title, 5000);
+                break;
+        }
     }
 
     render() {
         return (
-            <ReactNotification />
+            <>
+                <NotificationContainer />
+            </>
         );
     }
 }

@@ -1,20 +1,22 @@
-import React from 'react';
-import Cookie from 'js-cookie';
 import axios from 'axios';
-import { Row, Col, Card, CardHeader, CardBody, Button } from 'reactstrap';
-import { BASE_URL } from '../../constants/api-routes';
-import './ConnectionCard.scss';
+import Cookie from 'js-cookie';
+import React from 'react';
 import { Link } from 'react-router-dom';
+import { Button, Card, CardBody, CardHeader, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
+import { BASE_URL } from '../../constants/api-routes';
 import { Notification } from '../notification';
+import './ConnectionCard.scss';
 
 class ConnectionCard extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            chatWindowOpen: false
+            chatWindowOpen: false,
+            modal: false
         };
         this.acceptConnection = this.acceptConnection.bind(this);
         this.removeConnection = this.removeConnection.bind(this);
+        this.toggleModal = this.toggleModal.bind(this);
     }
 
     acceptConnection() {
@@ -63,6 +65,7 @@ class ConnectionCard extends React.Component {
                     Notification.spawnNotification("Success", "You have removed a connection", "success");
                     refreshConnections(currToken);
                     refreshOutgoing(currToken);
+                    this.toggleModal(false);
                 })
                 .catch((err) => {
                     if (err.data) {
@@ -75,13 +78,25 @@ class ConnectionCard extends React.Component {
         }
     }
 
+    toggleModal(force=null) {
+        if (force != null) {
+            this.setState({
+                modal: force
+            });
+        } else {
+            this.setState(prevState => ({
+                modal: !prevState.modal
+            }));
+        }
+    }
+
     render() {
         const { user, isPending, isOutgoing, openMessage } = this.props;
         return (
             <>
                 <Card className="connection-card" body inverse style={{ backgroundColor: '#333', borderColor: '#333' }}>
                     <Link to={`/user/profile/${user.user_id}`}>
-                        <img className="connection-card-image" src={user.profile_img_url} />
+                        <img className="connection-card-image" src={user.profile_img_url} alt="this connection's profile" />
                     </Link>
                     <CardHeader className="connection-card-header">{user.username}</CardHeader>
                     <CardBody className="connection-card-body">
@@ -98,13 +113,24 @@ class ConnectionCard extends React.Component {
                                         <>
                                             {/* TODO: Open up a chat window on the bottom right */}
                                             <Button outline color="primary" onClick={() => openMessage(user.user_id)}>Message</Button> 
-                                            <Button outline color="danger" onClick={this.removeConnection}>Remove</Button>
+                                            <Button outline color="danger" onClick={this.toggleModal} type="button">Remove</Button>
                                         </>
                                     )
                             )}
                         </div>
                     </CardBody>
                 </Card>
+                {/* Remove connection confirmation modal */}
+                <Modal isOpen={this.state.modal} toggle={this.toggleModal}>
+                    <ModalHeader toggle={this.toggleModal}>Double checking...</ModalHeader>
+                    <ModalBody>
+                        <p>Are you sure you want to remove <strong>{user.username}</strong> as a connection?</p>
+                        <ModalFooter>
+                            <Button color="danger" onClick={this.removeConnection}>Yes</Button>
+                            <Button color="secondary" onClick={this.toggleModal} type="button">Cancel</Button>
+                        </ModalFooter>
+                    </ModalBody>
+                </Modal>
             </>
         );
     }

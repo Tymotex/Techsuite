@@ -6,10 +6,6 @@ import Cookie from 'js-cookie';
 import './ChannelUser.scss'
 
 class ChannelUser extends React.Component {
-    constructor(props) {
-        super(props);
-    }
-
     render() {
         const { member, isOwner } = this.props;
         const currUserID = Cookie.get("user_id");

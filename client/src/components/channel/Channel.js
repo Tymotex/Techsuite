@@ -1,14 +1,14 @@
-import React from 'react';
+import { faLock, faStar, faUser } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import axios from 'axios';
 import Cookie from 'js-cookie';
-import { Link, withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faStar, faUser, faLock } from '@fortawesome/free-solid-svg-icons'
-import { Card, CardBody, Button, Row, Col } from 'reactstrap';
-import './Channel.scss';
+import React from 'react';
+import { Link, withRouter } from 'react-router-dom';
+import { Button, Card, CardBody, Col, Row } from 'reactstrap';
 import { BASE_URL } from '../../constants/api-routes';
 import { Notification } from '../notification';
+import './Channel.scss';
 
 class Channel extends React.Component { 
     constructor(props) {
@@ -53,7 +53,7 @@ class Channel extends React.Component {
     }
 
     render() {
-        const { channel_id, name, channel_img_url, channel_cover_img_url, description, visibility, member_of, owner_of } = this.props;
+        const { channel_id, name, channel_img_url, description, visibility, member_of, owner_of } = this.props;
         return (
             <Card className="channel-card">
                 <span className="channel-background"></span>

@@ -6,11 +6,15 @@ import axios from 'axios';
 import Cookie from 'js-cookie';
 import { BASE_URL } from '../../constants/api-routes';
 import { ConnectionSearch } from '../connection-search';
+import { Notification } from '../notification';
+import { LoadingSpinner } from '../loading-spinner';
 
 class ConnectionsList extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
+            isLoading: false,
+            fetchSucceeded: false,
             chatWindowOpen: false,
             currentChatUser: {},
             thisUser: {},
@@ -26,6 +30,9 @@ class ConnectionsList extends React.Component {
     }
     
     componentWillMount() {
+        this.setState({
+            isLoading: true
+        });
         // Fetch the current user's profile data
         const currToken = Cookie.get("token");
         const userID = Cookie.get("user_id");
@@ -33,16 +40,29 @@ class ConnectionsList extends React.Component {
             axios.get(`${BASE_URL}/users/profile?token=${currToken}&user_id=${userID}`)
                 .then((userPayload) => {
                     this.setState({
-                        thisUser: userPayload.data
+                        thisUser: userPayload.data,
+                        isLoading: false,
+                        fetchSucceeded: true
                     });
                 })
                 .catch((err) => {
-                    alert("FAILED");
+                    if (err.data) {
+                        const errorMessage = (err.response.data.message) ? (err.response.data.message) : "Something went wrong";
+                        Notification.spawnNotification("Failed to add connection", errorMessage, "danger");
+                    } else {
+                        Notification.spawnNotification("Failed to add connection", "Something went wrong. Techsuite messed up!", "danger");
+                    }
+                    this.setState({
+                        isLoading: false,
+                        fetchSucceeded: false
+                    });
                 });
             // TODO: Async refactor so that this.setState({ isloading, fetchsucceeded, ...}) works
             this.fetchConnections(currToken);
             this.fetchConnectionsIncoming(currToken);
             this.fetchConnectionsOutgoing(currToken);
+        } else {
+            Notification.spawnNotification("Can't load your connections", "Please log in first!", "danger");
         }
     } 
 
@@ -111,107 +131,115 @@ class ConnectionsList extends React.Component {
     }
 
     render() {
-        const { users, incomingUsers, outgoingUsers, currentChatUser, thisUser } = this.state;
+        const { isLoading, fetchSucceeded, users, incomingUsers, outgoingUsers, currentChatUser, thisUser } = this.state;
         return (
             <div>
-                <Row>
-                    <Col md={12}>
-                        <ConnectionSearch refreshOutgoing={this.fetchConnectionsOutgoing} />
-                    </Col>
-                    <Col md={12}>
-                        {/* Showing all existing connections */}
-                        <Card>
-                            <CardHeader>Contacts:</CardHeader>
-                            <CardBody>
-                                {(users && users.length > 0) ? (
-                                    <Row>
-                                        {(users.map((eachUser) => (
-                                            <Col xs={12} md={6} lg={4} xl={3}>
-                                                <ConnectionCard 
-                                                    user={eachUser} 
-                                                    isPending={false} 
-                                                    isOutgoing={false} 
-                                                    openMessage={this.toggleChatWindow}
-                                                    refreshConnections={this.fetchConnections}
-                                                    refreshIncoming={this.fetchConnectionsIncoming}
-                                                    refreshOutgoing={this.fetchConnectionsOutgoing}
-                                                    />
-                                            </Col>
-                                        )))}
-                                    </Row>
-                                ) : (
-                                    <p>You currently have no connections</p>
-                                )}
-                            </CardBody>
-                        </Card>
-                    </Col>
-                    {/* Showing all pending incoming request */}
-                    <Col md={6}>
-                        <Card>
-                            <CardHeader>Connection Requests</CardHeader>
-                            <CardBody>
-                                <span>These people would like to connect with you:</span>
-                                <hr />
-                                {(incomingUsers && incomingUsers.length > 0) ? (
-                                    <Row>
-                                        {(incomingUsers.map((eachUser) => (
-                                            <Col lg={12} xl={6}>
-                                                <ConnectionCard 
-                                                    user={eachUser} 
-                                                    isPending={true} 
-                                                    isOutgoing={false}
-                                                    refreshConnections={this.fetchConnections}
-                                                    refreshIncoming={this.fetchConnectionsIncoming}
-                                                    refreshOutgoing={this.fetchConnectionsOutgoing} />
-                                            </Col>
-                                        )))}
-                                    </Row>
-                                ) : (
-                                    <p>No incoming requests</p>
-                                )}
-                            </CardBody>
-                        </Card>
-                    </Col>
-                    {/* Showing all pending outgoing request */}
-                    <Col md={6}>
-                        <Card>
-                            <CardHeader>Pending Connection Requests</CardHeader>
-                            <CardBody>
-                                You have sent a connection request to these people:
-                                <hr />
-                                {(outgoingUsers && outgoingUsers.length > 0) ? (
-                                    <Row>
-                                        {(outgoingUsers.map((eachUser) => (
-                                            <Col lg={12} xl={6}>
-                                                <ConnectionCard 
-                                                    user={eachUser} 
-                                                    isPending={true} 
-                                                    isOutgoing={true}
-                                                    refreshConnections={this.fetchConnections}
-                                                    refreshIncoming={this.fetchConnectionsIncoming}
-                                                    refreshOutgoing={this.fetchConnectionsOutgoing} />
-                                            </Col>
-                                        )))}
-                                    </Row>
-                                ) : (
-                                    <></>
-                                )}
-                            </CardBody>
-                        </Card>
-                    </Col>
-                    {(this.state.chatWindowOpen) ? (
-                        <ConnectionChat.Container>
-                            <ConnectionChat.ChatBox 
-                                name="Messages" 
-                                status="online" 
-                                close={this.forceCloseChatWindow} 
-                                otherUser={currentChatUser}
-                                thisUser={thisUser} />
-                        </ConnectionChat.Container>
+                {(isLoading) ? (
+                    <LoadingSpinner />
+                ) : (
+                    (fetchSucceeded) ? (
+                        <Row>
+                            <Col md={12}>
+                                <ConnectionSearch refreshOutgoing={this.fetchConnectionsOutgoing} />
+                            </Col>
+                            <Col md={12}>
+                                {/* Showing all existing connections */}
+                                <Card>
+                                    <CardHeader>Contacts:</CardHeader>
+                                    <CardBody>
+                                        {(users && users.length > 0) ? (
+                                            <Row>
+                                                {(users.map((eachUser) => (
+                                                    <Col xs={12} md={6} lg={4} xl={3}>
+                                                        <ConnectionCard 
+                                                            user={eachUser} 
+                                                            isPending={false} 
+                                                            isOutgoing={false} 
+                                                            openMessage={this.toggleChatWindow}
+                                                            refreshConnections={this.fetchConnections}
+                                                            refreshIncoming={this.fetchConnectionsIncoming}
+                                                            refreshOutgoing={this.fetchConnectionsOutgoing}
+                                                            />
+                                                    </Col>
+                                                )))}
+                                            </Row>
+                                        ) : (
+                                            <p>You currently have no connections</p>
+                                        )}
+                                    </CardBody>
+                                </Card>
+                            </Col>
+                            {/* Showing all pending incoming request */}
+                            <Col md={6}>
+                                <Card>
+                                    <CardHeader>Connection Requests</CardHeader>
+                                    <CardBody>
+                                        <span>These people would like to connect with you:</span>
+                                        <hr />
+                                        {(incomingUsers && incomingUsers.length > 0) ? (
+                                            <Row>
+                                                {(incomingUsers.map((eachUser) => (
+                                                    <Col lg={12} xl={6}>
+                                                        <ConnectionCard 
+                                                            user={eachUser} 
+                                                            isPending={true} 
+                                                            isOutgoing={false}
+                                                            refreshConnections={this.fetchConnections}
+                                                            refreshIncoming={this.fetchConnectionsIncoming}
+                                                            refreshOutgoing={this.fetchConnectionsOutgoing} />
+                                                    </Col>
+                                                )))}
+                                            </Row>
+                                        ) : (
+                                            <p>No incoming requests</p>
+                                        )}
+                                    </CardBody>
+                                </Card>
+                            </Col>
+                            {/* Showing all pending outgoing request */}
+                            <Col md={6}>
+                                <Card>
+                                    <CardHeader>Pending Connection Requests</CardHeader>
+                                    <CardBody>
+                                        You have sent a connection request to these people:
+                                        <hr />
+                                        {(outgoingUsers && outgoingUsers.length > 0) ? (
+                                            <Row>
+                                                {(outgoingUsers.map((eachUser) => (
+                                                    <Col lg={12} xl={6}>
+                                                        <ConnectionCard 
+                                                            user={eachUser} 
+                                                            isPending={true} 
+                                                            isOutgoing={true}
+                                                            refreshConnections={this.fetchConnections}
+                                                            refreshIncoming={this.fetchConnectionsIncoming}
+                                                            refreshOutgoing={this.fetchConnectionsOutgoing} />
+                                                    </Col>
+                                                )))}
+                                            </Row>
+                                        ) : (
+                                            <></>
+                                        )}
+                                    </CardBody>
+                                </Card>
+                            </Col>
+                            {(this.state.chatWindowOpen) ? (
+                                <ConnectionChat.Container>
+                                    <ConnectionChat.ChatBox 
+                                        name="Messages" 
+                                        status="online" 
+                                        close={this.forceCloseChatWindow} 
+                                        otherUser={currentChatUser}
+                                        thisUser={thisUser} />
+                                </ConnectionChat.Container>
+                            ) : (
+                                <></>
+                            )}
+                        </Row>
                     ) : (
                         <></>
-                    )}
-                </Row>
+                    )
+                )}
             </div>
         );
     }

@@ -93,7 +93,6 @@ class UserRemoveOwner extends React.Component {
             <>
                 <Button color="danger" onClick={this.toggleModal} style={{"width": "100%"}}>Remove Owner</Button>
                 <Modal isOpen={this.state.modal} toggle={this.toggleModal}>
-                    <Notification />
                     <ModalHeader toggle={this.toggleModal}>Remove an owner:</ModalHeader>
                     <Form onSubmit={this.inviteUser}>
                         <ModalBody>

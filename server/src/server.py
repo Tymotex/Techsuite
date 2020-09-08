@@ -22,6 +22,7 @@ from routes.http_error_handler import error_handler
 from messages import message_send, message_remove, message_edit
 from extensions import app
 from util.util import printColour
+from connections import connection_send_message, connection_edit_message, connection_remove_message
 
 # Globals and config
 load_dotenv()
@@ -91,8 +92,11 @@ def upload_file():
 
 
 
-# ===== Web Socket Messaging =====
+# ===== Web Socket Events =====
 # TODO: Move socket handling out of this file
+
+# Channel messaging
+
 @socketio.on('connect')
 def handle_connect():
     printColour("Socket connection succeeded")
@@ -138,6 +142,26 @@ def handle_channel_join():
 def handle_channel_leave():
     # TODO: Implement this
     printColour("SOMEONE HAS LEFT THE CHAT", colour="violet")
+
+# Direct messaging
+
+@socketio.on("send_connection_message")
+def handle_connection_send_message(token, user_id, message):
+    connection_send_message(token, user_id, message)
+    printColour("Client sent a direct message to {}".format(user_id))
+    emit("receive_connection_message", "The server says: your chat partner has sent a new message", broadcast=True)   # TODO: NEed to selectively broadcast
+
+@socketio.on("edit_connection_message")
+def handle_connection_edit_message(token, message_id, message):
+    connection_edit_message(token, message_id, message)
+    printColour("Client edited a direct message")
+    emit("connection_message_edited", "The server says: your chat partner has edited a message", broadcast=True)     # TODO: NEed to selectively broadcast
+
+@socketio.on("remove_connection_message")
+def handle_connection_remove_message(token, message_id):
+    connection_remove_message(token, message_id)
+    printColour("Client removed a direct message")
+    emit("connection_message_removed", "The server says: your chat partner has removed a message", broadcast=True)    # TODO: NEed to selectively broadcast
 
 # ===== Starting the server =====
 if __name__ == "__main__":

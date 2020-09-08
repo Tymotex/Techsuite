@@ -32,7 +32,6 @@ class Admin extends React.Component {
     render() {
         return (
             <>
-                <Notification />
                 <div>
                     <strong onClick={this.reset}>Click me to reset</strong>
                 </div>

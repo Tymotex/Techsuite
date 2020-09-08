@@ -245,4 +245,3 @@ def connection_remove_message(token, message_id):
     db.session.delete(target_dm)
     db.session.commit()
     return {}
-

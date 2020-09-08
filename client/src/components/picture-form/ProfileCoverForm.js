@@ -1,9 +1,9 @@
-import React from 'react';
-import Cookie from 'js-cookie';
-import { Form, FormGroup, Input, Label, Button, Row, Col } from 'reactstrap';
 import axios from 'axios';
-import { BASE_URL } from '../../constants/api-routes';
+import Cookie from 'js-cookie';
+import React from 'react';
+import { Button, Form, FormGroup, Input, Label } from 'reactstrap';
 import { Notification } from '../../components/notification';
+import { BASE_URL } from '../../constants/api-routes';
 
 class ProfileCoverForm extends React.Component {
     constructor(props) {

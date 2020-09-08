@@ -4,10 +4,6 @@ import 'react-image-crop/dist/ReactCrop.css';
 import ImageCropper from './ImageCropper';
 
 class ProfilePictureForm extends PureComponent {
-    constructor(props) {
-        super(props);
-    }
-
     render() {
         return (
             <ImageCropper uploadEndpoint="users/profile/uploadphoto" title="Update your profile picture:"/>          

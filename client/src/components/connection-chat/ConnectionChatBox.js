@@ -1,11 +1,13 @@
-import React from 'react';
-import { Form } from 'reactstrap';
-import Cookie from 'js-cookie';
 import axios from 'axios';
+import Cookie from 'js-cookie';
+import React from 'react';
+import FadeIn from 'react-fade-in';
+import { Form } from 'reactstrap';
+import openSocket from 'socket.io-client';
 import { BASE_URL } from '../../constants/api-routes';
 import ConnectionMessage from './ConnectionMessage';
-import { LoadingSpinner } from '../loading-spinner';
-import FadeIn from 'react-fade-in';
+
+const socket = openSocket('http://localhost:3001');
 
 class ConnectionChatBox extends React.Component {
     constructor(props) {
@@ -15,6 +17,20 @@ class ConnectionChatBox extends React.Component {
         };
         this.sendMessage = this.sendMessage.bind(this);
         this.fetchMessages = this.fetchMessages.bind(this);
+
+        // Binding socket event listeners:
+        socket.on("receive_connection_message", (message) => {
+            console.log(`Received message: ${message}`);
+            this.fetchMessages();
+        });
+        socket.on("connection_message_edited", (message) => {
+            console.log(`Received message: ${message}`);
+            this.fetchMessages();
+        });
+        socket.on("connection_message_removed", (message) => {
+            console.log(`Received message: ${message}`);
+            this.fetchMessages();
+        });
     }
 
     componentWillMount() {
@@ -37,25 +53,27 @@ class ConnectionChatBox extends React.Component {
         const currToken = Cookie.get("token");
         const { user_id: userID } = this.props.otherUser;
         if (currToken) {
-            const postData = {
-                method: 'post',
-                url: `${BASE_URL}/connections/message`,
-                data: {
-                    token: currToken,
-                    user_id: userID,
-                    message: message
-                },
-                headers: { "Content-Type": "application/json" }
-            };
-            axios(postData)
-                .then((res) => {
-                    this.fetchMessages();
-                    document.getElementById("message-field").value = "";
-                })
-                .catch((err) => {
-                    alert("Failed");
-                    document.getElementById("message-field").value = "";
-                });
+            socket.emit("send_connection_message", currToken, userID, message);
+            document.getElementById("message-field").value = "";
+            // const postData = {
+            //     method: 'post',
+            //     url: `${BASE_URL}/connections/message`,
+            //     data: {
+            //         token: currToken,
+            //         user_id: userID,
+            //         message: message
+            //     },
+            //     headers: { "Content-Type": "application/json" }
+            // };
+            // axios(postData)
+            //     .then((res) => {
+            //         this.fetchMessages();
+            //         document.getElementById("message-field").value = "";
+            //     })
+            //     .catch((err) => {
+            //         alert("Failed");
+            //         document.getElementById("message-field").value = "";
+            //     });
         } else {
             // TODO
         }
@@ -92,7 +110,7 @@ class ConnectionChatBox extends React.Component {
                             <div className="chat-body">
                                 {messages.map((eachMessage, i) => (
                                     <FadeIn key={i} delay="200">
-                                        <ConnectionMessage message={eachMessage} otherUser={otherUser} thisUser={thisUser} isOutgoing={eachMessage.sender_id == thisUserID} />
+                                        <ConnectionMessage message={eachMessage} otherUser={otherUser} thisUser={thisUser} isOutgoing={eachMessage.sender_id === thisUserID} />
                                     </FadeIn>
                                 ))}
                             </div>
