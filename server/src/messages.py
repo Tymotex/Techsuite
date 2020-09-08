@@ -16,8 +16,10 @@ def message_send(token, channel_id, message):
             { message_id }
     """
     verify_token(token)
+    if not message:
+        raise InputError("Message can't be empty")
     if len(message) > 1000:
-        raise InputError(description="Message is over 1000 characters")
+        raise InputError("Message is over 1000 characters")
     user = get_user_from_token(token)
     selected_channel = select_channel(channel_id)
     # Raise error if the user is not a part of the channel they are trying to message in
@@ -42,9 +44,6 @@ def message_remove(token, message_id):
     """
     verify_token(token)
     message_obj = Message.query.filter_by(id=message_id).first()
-    printColour("FOUND MESSAGE OBJECT: ")
-    print(message_obj.message)
-    printColour("DONE FINDING MESSAGE OBJECT: ")
     if not message_obj:
         raise InputError("Message doesn't exist")
     calling_user = get_user_from_token(token)
@@ -66,7 +65,7 @@ def message_edit(token, message_id, message):
     if len(message) > 1000:
         raise InputError("Message is over 1000 characters")
     if not message:
-        message_remove(token, message_id)
+        raise InputError("New message can't be empty")
     user = get_user_from_token(token)
     message_obj = Message.query.filter_by(id=message_id).first()
     is_user_owner = user_is_owner(token, message_obj.channel_id)

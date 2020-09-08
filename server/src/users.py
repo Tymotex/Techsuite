@@ -48,6 +48,7 @@ def users_profile_upload_cover(token, user_id, img_endpoint):
     """
     verify_token(token)
     user = User.query.filter_by(id=user_id).first()
+    printColour("Setting user {}'s image endpoint to {}".format(user_id, img_endpoint))
     user.bio.cover_img_url = img_endpoint
     db.session.commit()
 

@@ -310,11 +310,9 @@ def get_latest_filename(filename, version_num=1):
     basename = os.path.splitext(filename)[0]
     version_num = version_num
     curr_filename = "{0}_{1}.jpg".format(basename, version_num)
-    print("Curr filename: " + curr_filename)
     
     file_exists = False
     for eachFile in os.listdir(IMAGE_DIRECTORY):
-        print("Investigating: " + eachFile)
         if eachFile == curr_filename:
             file_exists = True
             break;

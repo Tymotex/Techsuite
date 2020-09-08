@@ -23,6 +23,7 @@ from messages import message_send, message_remove, message_edit
 from extensions import app
 from util.util import printColour
 from connections import connection_send_message, connection_edit_message, connection_remove_message
+from exceptions import InputError
 
 # Globals and config
 load_dotenv()
@@ -95,6 +96,13 @@ def upload_file():
 # ===== Web Socket Events =====
 # TODO: Move socket handling out of this file
 
+# Error event
+def emit_error(error, error_type="input_error"):
+    if (isinstance(error, InputError)):
+        emit("input_error", error.get_message(), broadcast=True)   # TODO Need to selectively broadcast
+    else:
+        emit("input_error", error.__repr__(), broadcast=True)      # TODO Need to selectively broadcast
+
 # Channel messaging
 
 @socketio.on('connect')
@@ -108,20 +116,35 @@ def handle_message(message):
 @socketio.on("send_message")
 def handle_send_message(token, channel_id, message):    
     printColour("Sending message -- {} -- to channel {}".format(message, channel_id), colour="violet")
-    message_send(token, int(channel_id), message)
+    try:
+        message_send(token, int(channel_id), message)
+    except InputError as err:
+        emit_error(err.get_message())
     # Broadcast the newly sent message to all listening client sockets so the
     # chat field updates in 'realtime'
     emit("receive_message", "The server says: someone has sent a new message", broadcast=True)
 
 @socketio.on("remove_message")
 def handle_remove_message(token, message_id):
-    message_remove(token, message_id)
+    try:
+        message_remove(token, message_id)
+    except InputError as err:
+        emit_error(err.get_message())
     emit("message_removed", "The server says: someone has deleted a message", broadcast=True)
 
 @socketio.on("edit_message")
 def handle_edit_message(token, message_id, message):
-    message_edit(token, message_id, message)
-    emit("message_edited", "The server says: someone has edited a message", broadcast=True)
+    try:
+        print("HERE")
+        message_edit(token, message_id, message)
+        print("NOW HERE")
+        emit("message_edited", "The server says: someone has edited a message", broadcast=True)
+    except InputError as err:
+        print(type(err))
+        print("INPUT ERROR OCCURRED")
+        emit_error(err)
+    finally:
+        print("FINALLY")
 
 @socketio.on("started_typing")
 def handle_typing_prompt(token):
@@ -147,19 +170,28 @@ def handle_channel_leave():
 
 @socketio.on("send_connection_message")
 def handle_connection_send_message(token, user_id, message):
-    connection_send_message(token, user_id, message)
+    try:
+        connection_send_message(token, user_id, message)
+    except InputError as err:
+        emit_error(err.get_message())
     printColour("Client sent a direct message to {}".format(user_id))
     emit("receive_connection_message", "The server says: your chat partner has sent a new message", broadcast=True)   # TODO: NEed to selectively broadcast
 
 @socketio.on("edit_connection_message")
 def handle_connection_edit_message(token, message_id, message):
-    connection_edit_message(token, message_id, message)
+    try:
+        connection_edit_message(token, message_id, message)
+    except InputError as err:
+        emit_error(err.get_message())
     printColour("Client edited a direct message")
     emit("connection_message_edited", "The server says: your chat partner has edited a message", broadcast=True)     # TODO: NEed to selectively broadcast
 
 @socketio.on("remove_connection_message")
 def handle_connection_remove_message(token, message_id):
-    connection_remove_message(token, message_id)
+    try:
+        connection_remove_message(token, message_id)
+    except InputError as err:
+        emit_error(err.get_message())
     printColour("Client removed a direct message")
     emit("connection_message_removed", "The server says: your chat partner has removed a message", broadcast=True)    # TODO: NEed to selectively broadcast
 

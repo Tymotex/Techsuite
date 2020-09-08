@@ -134,6 +134,7 @@ def channels_messages(token, channel_id, start, limit=50):
 
     # Loop through 50 message dictionaries of list starting from start index
     messsages_list = selected_channel.messages_sent
+    messsages_list.sort(key=(lambda x: x.time_created))
     
     payload = {
         "messages": [],

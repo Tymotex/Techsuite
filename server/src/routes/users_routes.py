@@ -120,7 +120,7 @@ def handle_user_profile_upload_photo():
     y_start = int(request.form["y_start"])
     x_end = int(request.form["x_end"])
     y_end = int(request.form["y_end"])
-    printColour("ATTEMPTING TO UPLOAD IMAGE FILE. Coordinates: " + str(x_start) + str(y_start) + str(x_end) + str(y_end))
+    printColour("ATTEMPTING TO UPLOAD IMAGE FILE. Coordinates: ({}, {}) to ({}, {})".format(x_start, y_start, x_end, y_end))
 
     # check if the post request has the file part
     if 'file' not in request.files:
@@ -135,7 +135,6 @@ def handle_user_profile_upload_photo():
             return jsonify({ "succeeded": False })
         if file and allowed_file(file.filename):
             filename = get_latest_filename("user_{}_profile.jpg".format(user_id))
-            printColour("Filename: " + filename)
             file.save(os.path.join(UPLOAD_FOLDER, filename))
             crop_image_file(filename, x_start, y_start, x_end, y_end)
             image_endpoint = "{0}/images/{1}".format(BASE_URL, filename)

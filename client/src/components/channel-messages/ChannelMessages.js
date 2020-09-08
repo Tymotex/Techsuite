@@ -46,6 +46,9 @@ class ChannelMessages extends React.Component {
             console.log(`Received message: ${message}`);
             this.fetchMessages();
         });
+        socket.on("input_error", (message) => {
+            Notification.spawnNotification("Input error", message, "danger")
+        })
         this.broadcastTypingPrompt = this.broadcastTypingPrompt.bind(this);
     }
 

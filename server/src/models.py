@@ -48,7 +48,7 @@ class Channel(db.Model):
     visibility = db.Column(db.String(30), nullable=False)
     channel_img_url = db.Column(db.String(255))
     channel_cover_img_url = db.Column(db.String(255))
-    time_created = db.Column(db.DateTime, default=datetime.now)
+    time_created = db.Column(db.DateTime, default=datetime.now) 
 
     # Note: uselist=False tells SQLAlchemy that this is a one-to-one relationship
     channel_membership = db.relationship("MemberOf", backref="channel", lazy=True)
@@ -70,7 +70,7 @@ class Message(db.Model):
     channel_id = db.Column(db.Integer, db.ForeignKey("channels.id"), nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey("techsuite_users.id"), nullable=False)
     message = db.Column(db.String(1000))       # Allow 1000 characters for messages
-    time_created = db.Column(db.DateTime, default=datetime.now())
+    time_created = db.Column(db.DateTime, default=datetime.now)
     def __repr__(self):
         return "<Message {}>".format(self.id)
 
@@ -80,7 +80,7 @@ class DirectMessage(db.Model):
     sender_id = db.Column(db.Integer, db.ForeignKey("techsuite_users.id"), nullable=False)
     connection_id = db.Column(db.Integer, db.ForeignKey("connections.id"), nullable=False)
     message = db.Column(db.String(1000))       # Allow 1000 characters for messages
-    time_created = db.Column(db.DateTime, default=datetime.now())
+    time_created = db.Column(db.DateTime, default=datetime.now)
     def __repr__(self):
         return "<Direct Message {}>".format(self.id)
 

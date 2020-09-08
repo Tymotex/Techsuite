@@ -24,6 +24,9 @@ class AccessError(HTTPException):
     
     def get_message(self):
         return self.message
+        
+    def __repr__(self):
+        return self.get_message()
 
 class InputError(HTTPException):
     code = 400
@@ -35,3 +38,5 @@ class InputError(HTTPException):
     def get_message(self):
         return self.message
 
+    def __repr__(self):
+        return self.get_message()
