@@ -37,14 +37,14 @@ Shall the new role be a superuser? (y/n) y
 4. Enter the ```psql``` interactive shell and grant privileges
 ```
 $ sudo -u postgres psql
-psql=# GRANT ALL PRIVLEGES ON DATABASE techsuite TO me;
+psql=# GRANT ALL PRIVILEGES ON DATABASE techsuite TO me;
 ```
 5. Adjust the database URI string in ```server/src/.env```. The format is ```DATABASE_URI="postgresql://<name>:<password>@<host>/<dbname>"```, for example, ```DATABASE_URI="postgresql://me:1984@localhost/techsuite"```
 6. 
 
 ### Installing Psycopg2 on Debian/Ubuntu
-1. sudo apt install libpq-dev python3-dev
-2. pip3 install psycopg2
+1. `sudo apt install libpq-dev python3-dev`
+2. `pip3 install psycopg2`
 
 
 Note: to use psql to interface with the techsuite database instance, run `sudo -u postgres psql`, then run `\c techsuite` in the prompt
