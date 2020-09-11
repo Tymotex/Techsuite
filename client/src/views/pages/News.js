@@ -1,5 +1,6 @@
 import React from 'react';
 import { HackerNewsDisplay } from '../../components/hacker-news-display';
+import { GitHubTrendingDisplay } from '../../components/github';
 import { Row, Col } from 'reactstrap';
 
 class News extends React.Component {
@@ -10,7 +11,7 @@ class News extends React.Component {
                     <HackerNewsDisplay />
                 </Col>
                 <Col md={6}>
-
+                    <GitHubTrendingDisplay />
                 </Col>
             </Row>
         );
