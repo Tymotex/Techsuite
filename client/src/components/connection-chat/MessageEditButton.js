@@ -1,9 +1,10 @@
 import Cookie from 'js-cookie';
 import React from 'react';
+import { SOCKET_URI } from '../../constants/api-routes';
 import { Button, Form, Input, InputGroup, InputGroupAddon, InputGroupText, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
-import openSocket from 'socket.io-client';
+import io from 'socket.io-client';
 
-const socket = openSocket('http://localhost:3001');
+const socket = io(SOCKET_URI);
 
 class MessageEditButton extends React.Component {
     constructor(props) {

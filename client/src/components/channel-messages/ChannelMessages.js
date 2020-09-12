@@ -2,14 +2,14 @@ import axios from 'axios';
 import Cookie from 'js-cookie';
 import React from 'react';
 import { Button, Form, FormGroup, Input, InputGroup, InputGroupAddon, InputGroupText } from 'reactstrap';
-import openSocket from 'socket.io-client';
-import { BASE_URL } from '../../constants/api-routes';
+import io from 'socket.io-client';
+import { BASE_URL, SOCKET_URI } from '../../constants/api-routes';
 import { Notification } from '../notification';
 import './ChannelMessages.scss';
 import ChatBox from './ChatBox';
 import TypingPrompt from './TypingPrompt';
 
-const socket = openSocket('http://localhost:3001');
+const socket = io(SOCKET_URI);
 
 class ChannelMessages extends React.Component {
     constructor(props) {

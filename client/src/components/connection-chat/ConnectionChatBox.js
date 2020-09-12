@@ -3,11 +3,11 @@ import Cookie from 'js-cookie';
 import React from 'react';
 import FadeIn from 'react-fade-in';
 import { Form } from 'reactstrap';
-import openSocket from 'socket.io-client';
-import { BASE_URL } from '../../constants/api-routes';
+import io from 'socket.io-client';
+import { BASE_URL, SOCKET_URI } from '../../constants/api-routes';
 import ConnectionMessage from './ConnectionMessage';
 
-const socket = openSocket('http://localhost:3001');
+const socket = io(SOCKET_URI);
 
 class ConnectionChatBox extends React.Component {
     constructor(props) {
