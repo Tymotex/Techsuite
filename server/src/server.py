@@ -5,7 +5,7 @@ import sys
 import os
 
 # Third party libraries:
-from flask import Flask
+from flask import Flask, jsonify
 from flask_cors import CORS
 from flask_socketio import SocketIO, send, emit
 from dotenv import load_dotenv
@@ -34,22 +34,23 @@ app.config["TRAP_HTTP_EXCEPTIONS"] = True
 CORS(app)
 
 # Registering modularised routers:
-app.register_blueprint(auth_router)
-app.register_blueprint(channels_router)
-app.register_blueprint(users_router)
-app.register_blueprint(message_router)
-app.register_blueprint(image_router)
-app.register_blueprint(admin_router)
-app.register_blueprint(connection_router)
+app.register_blueprint(auth_router, url_prefix='/api')
+app.register_blueprint(channels_router, url_prefix='/api')
+app.register_blueprint(users_router, url_prefix='/api')
+app.register_blueprint(message_router, url_prefix='/api')
+app.register_blueprint(image_router, url_prefix='/api')
+app.register_blueprint(admin_router, url_prefix='/api')
+app.register_blueprint(connection_router, url_prefix='/api')
 
 # Register a default error handler
 app.register_error_handler(Exception, error_handler)
 
 # ===== Basic Routes (For Testing) =====
 # 'Landing' page:
-@app.route("/", methods=["GET"])
+@app.route("/api", methods=["GET"])
 def index():
-    return '{"message": "Reached the landing page"}'
+    printColour("Reached the API root")
+    return jsonify({"message": "Reached the landing page"})
 
 
 from flask import flash, request, redirect, url_for
@@ -105,15 +106,15 @@ def emit_error(error, error_type="input_error"):
 
 # Channel messaging
 
-@socketio.on('connect')
+@socketio.on('connect', namespace='/ts-socket')
 def handle_connect():
     printColour("Socket connection succeeded")
 
-@socketio.on('message')
+@socketio.on('message', namespace='/ts-socket')
 def handle_message(message):
     printColour("Received a message: {}".format(message))
 
-@socketio.on("send_message")
+@socketio.on("send_message", namespace='/ts-socket')
 def handle_send_message(token, channel_id, message):    
     printColour("Sending message -- {} -- to channel {}".format(message, channel_id), colour="violet")
     try:
@@ -124,7 +125,7 @@ def handle_send_message(token, channel_id, message):
     # chat field updates in 'realtime'
     emit("receive_message", "The server says: someone has sent a new message", broadcast=True)
 
-@socketio.on("remove_message")
+@socketio.on("remove_message", namespace='/ts-socket')
 def handle_remove_message(token, message_id):
     try:
         message_remove(token, message_id)
@@ -132,7 +133,7 @@ def handle_remove_message(token, message_id):
         emit_error(err.get_message())
     emit("message_removed", "The server says: someone has deleted a message", broadcast=True)
 
-@socketio.on("edit_message")
+@socketio.on("edit_message", namespace='/ts-socket')
 def handle_edit_message(token, message_id, message):
     try:
         print("HERE")
@@ -146,29 +147,29 @@ def handle_edit_message(token, message_id, message):
     finally:
         print("FINALLY")
 
-@socketio.on("started_typing")
+@socketio.on("started_typing", namespace='/ts-socket')
 def handle_typing_prompt(token):
     # TODO: Get user, broadcast to everyone else in the room that this user is typing
     emit("show_typing_prompt", broadcast=True, include_self=False)
 
-@socketio.on("stopped_typing")
+@socketio.on("stopped_typing", namespace='/ts-socket')
 def handle_typing_prompt(token):
     printColour("NUM_USERS_TYPING: {}".format(42), colour="red_1")
     emit("hide_typing_prompt", broadcast=True, include_self=False)    
 
-@socketio.on("channel_join")
+@socketio.on("channel_join", namespace='/ts-socket')
 def handle_channel_join():
     # TODO: Implement this
     printColour("SOMEONE HAS JOINED THE CHAT", colour="violet")
 
-@socketio.on("channel_leave")
+@socketio.on("channel_leave", namespace='/ts-socket')
 def handle_channel_leave():
     # TODO: Implement this
     printColour("SOMEONE HAS LEFT THE CHAT", colour="violet")
 
 # Direct messaging
 
-@socketio.on("send_connection_message")
+@socketio.on("send_connection_message", namespace='/ts-socket')
 def handle_connection_send_message(token, user_id, message):
     try:
         connection_send_message(token, user_id, message)
@@ -177,7 +178,7 @@ def handle_connection_send_message(token, user_id, message):
     printColour("Client sent a direct message to {}".format(user_id))
     emit("receive_connection_message", "The server says: your chat partner has sent a new message", broadcast=True)   # TODO: NEed to selectively broadcast
 
-@socketio.on("edit_connection_message")
+@socketio.on("edit_connection_message", namespace='/ts-socket')
 def handle_connection_edit_message(token, message_id, message):
     try:
         connection_edit_message(token, message_id, message)
@@ -186,7 +187,7 @@ def handle_connection_edit_message(token, message_id, message):
     printColour("Client edited a direct message")
     emit("connection_message_edited", "The server says: your chat partner has edited a message", broadcast=True)     # TODO: NEed to selectively broadcast
 
-@socketio.on("remove_connection_message")
+@socketio.on("remove_connection_message", namespace='/ts-socket')
 def handle_connection_remove_message(token, message_id):
     try:
         connection_remove_message(token, message_id)
@@ -200,4 +201,4 @@ if __name__ == "__main__":
     # Optionally supply an explicit port:
     port = int(sys.argv[1]) if len(sys.argv) > 1 else os.getenv("PORT")
     # The port is specified in the .env file (which is parsed and loaded by the python-dotenv module)
-    socketio.run(app, port=port, debug=True)
+    socketio.run(app, port=5000, debug=True)
