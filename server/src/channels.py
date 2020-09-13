@@ -378,7 +378,7 @@ def channels_create(token, name, description, visibility):
     
     creator = get_user_from_token(token)
     # Adding a default picture for the channel
-    channel_image_endpoint = "http://localhost:{0}/images/{1}".format(os.getenv("PORT"), "default_channel.jpg")
+    channel_image_endpoint = os.getenv("BASE_URI") + "/images/{}".format("default_channel.jpg")
     new_channel = Channel(
         visibility=visibility,
         name=name,

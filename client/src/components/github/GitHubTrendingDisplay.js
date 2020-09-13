@@ -3,7 +3,6 @@ import React from "react";
 import { Card, CardBody, CardHeader, Pagination, PaginationItem, PaginationLink } from 'reactstrap';
 import { LoadingSpinner } from '../loading-spinner';
 import ReactPaginate from 'react-paginate';
-const trending = require("trending-github");
 
 class GitHubTrendingDisplay extends React.Component {
     constructor(props) {
