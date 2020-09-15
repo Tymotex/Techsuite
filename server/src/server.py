@@ -83,13 +83,13 @@ def upload_file():
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
             return redirect(url_for('uploaded_file', filename=filename))
     return '''
-    <!doctype html>
-    <title>Upload new File</title>
-    <h1>Upload new File</h1>
-    <form method=post enctype=multipart/form-data>
-      <input type=file name=file>
-      <input type=submit value=Upload>
-    </form>
+        <!doctype html>
+        <title>Upload new File</title>
+        <h1>Upload new File</h1>
+        <form method=post enctype=multipart/form-data>
+        <input type=file name=file>
+        <input type=submit value=Upload>
+        </form>
     '''
 
 
@@ -201,4 +201,5 @@ if __name__ == "__main__":
     # Optionally supply an explicit port:
     port = int(sys.argv[1]) if len(sys.argv) > 1 else os.getenv("PORT")
     # The port is specified in the .env file (which is parsed and loaded by the python-dotenv module)
-    socketio.run(app, port=5000, debug=True)
+    printColour("Server listening on port {}".format(port))
+    socketio.run(app, port=port, debug=True)  # TODO: Allow specified port configuration
