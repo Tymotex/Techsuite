@@ -1,7 +1,8 @@
 #!/bin/sh
 # Setup tool for starting the server and setting up the database
 
-helpLog="Usage: $0 [--setup | --reset | --wipe]"
+targetPort=5000
+helpLog="Usage: $0 [--setup | --reset | --wipe] <port>"
 while test $# -gt 0; do
     case "$1" in
         -h)
@@ -23,12 +24,17 @@ while test $# -gt 0; do
             exit 0
             shift
             ;;
+        
         *)
-            echo "$helpLog"
-            exit 1
+            if echo $1 | egrep '[0-9]+' > /dev/null 2> /dev/null; then
+                targetPort=$1
+            else
+                echo "$helpLog"
+                exit 1
+            fi
             shift
             ;;
     esac
 done
 
-python3 src/server.py
+python3 src/server.py "$targetPort"
