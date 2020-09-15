@@ -1,7 +1,7 @@
 #!/bin/sh
 
 echo "Checking for latest package versions"
-apt-get update
+apt-get update > /dev/null 2> /dev/null
 
 echo "Package installation:"
 while IFS= read -r package; do

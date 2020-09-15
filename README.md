@@ -1,22 +1,21 @@
 # Techsuite
-A social app for developers. Built with React, Flask and PostgreSQL.
+A collaboration and social networking app for developers. Built with React, Flask and PostgreSQL. 
 
-<img src="./images/techsuite-home-1.png"></img>
+<img src="./images/techsuite-home-2.png"></img>
 
-# Setup:
+# Auto Setup (For Development and Production):
 1. `git clone https://github.com/Tymotex/Techsuite.git`
-2. Run `sudo apt update && sudo apt install postgresql postgresql-contrib` to install PostgreSQL 
-3. Navigate to the `server` directory and run `pip3 install -r requirements.txt && cd ../client`
-4. Configure the `.env` file inside `server/src`. Set the formatted database URI connection string: `DATABASE_URI="postgresql://username:password@localhost/techsuite"`
-5. Navigate to the `client` directory and run `npm install`
+2. `cd util/setup && sudo sh setup.py` 
+3. `pip3 install -r server/requirements.txt`
+4. `npm install --prefix ./client`
+5. Configure the `.env` file inside `server/src`. Set the formatted database URI connection string: `DATABASE_URI="postgresql://username:password@localhost/techsuite"`. See [database setup](#database-setup)
 
-# Start:
-1. `python3 server.py` inside the `Techsuite/server` folder
+### Development:
+1. `./techsuite` inside the `Techsuite/server` folder
 2. `npm start` inside the `Techsuite/client` folder
 
-# Issues:
-- Socket broadcast issue for group messaging
-- Broadcasting to unique users
+
+<a name="database-setup">
 
 # Database Setup:
 Instructions for installing PostgreSQL and hooking it up with Flask-SQLAlchemy.
@@ -40,12 +39,13 @@ $ sudo -u postgres psql
 psql=# GRANT ALL PRIVILEGES ON DATABASE techsuite TO me;
 ```
 5. Adjust the database URI string in ```server/src/.env```. The format is ```DATABASE_URI="postgresql://<name>:<password>@<host>/<dbname>"```, for example, ```DATABASE_URI="postgresql://me:1984@localhost/techsuite"```
-6. 
+
+Note: to use psql to interface with the techsuite database instance, run `sudo -u postgres psql`, then run `\c techsuite` in the prompt
 
 ### Installing Psycopg2 on Debian/Ubuntu
 1. `sudo apt install libpq-dev python3-dev`
 2. `pip3 install psycopg2`
 
 
-Note: to use psql to interface with the techsuite database instance, run `sudo -u postgres psql`, then run `\c techsuite` in the prompt
+
 
