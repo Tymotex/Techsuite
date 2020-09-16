@@ -3,6 +3,8 @@ import React from "react";
 import { Card, CardBody, CardHeader } from 'reactstrap';
 import { LoadingSpinner } from '../loading-spinner';
 import { Paginator } from '../paginator';
+import { faStar, faEye, faFileCode } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 class GitHubTrendingDisplay extends React.Component {
     constructor(props) {
@@ -47,14 +49,28 @@ class GitHubTrendingDisplay extends React.Component {
                                 <div>
                                     <a href={eachRepo.html_url} >{eachRepo.full_name}</a>
                                     <div>
-                                        Language: {eachRepo.language}
+                                        About <strong>{eachRepo.name}</strong>: {eachRepo.description}
                                     </div>
                                     <div>
-                                        Stars: {eachRepo.stargazers_count}
+                                        <FontAwesomeIcon icon={faFileCode} /> 
+                                        {eachRepo.language != null ? eachRepo.language : "No language"}
                                     </div>
                                     <div>
-                                        Watchers: {eachRepo.watchers_count}
+                                        <FontAwesomeIcon icon={faStar} /> {`${eachRepo.stargazers_count}`}
                                     </div>
+                                    <div>
+                                        <FontAwesomeIcon icon={faEye} /> {`${eachRepo.watchers_count}`}
+                                    </div>
+                                    <div>
+                                        Open issues: {eachRepo.open_issues}
+                                    </div>
+                                    {eachRepo.homepage != null ? (
+                                        <div>
+                                            <a href={eachRepo.homepage}>Project homepage</a>
+                                        </div>
+                                     ) : (
+                                         <></>
+                                     )}
                                 </div>
                             ))
                         ) : (
