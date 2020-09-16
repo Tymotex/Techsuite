@@ -1,8 +1,8 @@
 import axios from 'axios';
 import React from "react";
-import { Card, CardBody, CardHeader, Pagination, PaginationItem, PaginationLink } from 'reactstrap';
+import { Card, CardBody, CardHeader } from 'reactstrap';
 import { LoadingSpinner } from '../loading-spinner';
-import ReactPaginate from 'react-paginate';
+import { Paginator } from '../paginator';
 
 class GitHubTrendingDisplay extends React.Component {
     constructor(props) {
@@ -18,7 +18,6 @@ class GitHubTrendingDisplay extends React.Component {
         this.setState({
             isLoading: true
         });
-        alert("");
         axios.get("https://api.github.com/search/repositories?q=web&sort=stars&order=desc")
             .then((res) => {
                 this.setState({
@@ -39,20 +38,29 @@ class GitHubTrendingDisplay extends React.Component {
             <Card>
                 <CardHeader>GitHub Trending</CardHeader>
                 <CardBody>
-                    {repos.map((eachRepo) => (
-                        <div>
-                            <a href={eachRepo.html_url} >{eachRepo.full_name}</a>
-                            <div>
-                                Language: {eachRepo.language}
-                            </div>
-                            <div>
-                                Stars: {eachRepo.stargazers_count}
-                            </div>
-                            <div>
-                                Watchers: {eachRepo.watchers_count}
-                            </div>
-                        </div>
-                    ))}
+                    <Paginator />
+                    {(this.state.isLoading) ? (
+                        <LoadingSpinner />
+                    ) : (
+                        (this.state.fetchSucceeded) ? (
+                            repos.map((eachRepo) => (
+                                <div>
+                                    <a href={eachRepo.html_url} >{eachRepo.full_name}</a>
+                                    <div>
+                                        Language: {eachRepo.language}
+                                    </div>
+                                    <div>
+                                        Stars: {eachRepo.stargazers_count}
+                                    </div>
+                                    <div>
+                                        Watchers: {eachRepo.watchers_count}
+                                    </div>
+                                </div>
+                            ))
+                        ) : (
+                            <></>
+                        )
+                    )}
                 </CardBody>
             </Card>
         );

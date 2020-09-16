@@ -3,7 +3,7 @@ import React from "react";
 import { Card, CardBody, CardHeader, Pagination, PaginationItem, PaginationLink } from 'reactstrap';
 import { LoadingSpinner } from '../loading-spinner';
 import Article from './Article';
-import ReactPaginate from 'react-paginate';
+import { Paginator } from '../paginator';
 
 class HackerNewsDisplay extends React.Component {
     constructor(props) {
@@ -58,6 +58,7 @@ class HackerNewsDisplay extends React.Component {
             <Card>
                 <CardHeader>Hacker News</CardHeader>
                 <CardBody>
+                    <Paginator />
                     {(this.state.isLoading) ? (
                         <LoadingSpinner />
                     ) : (
@@ -69,7 +70,6 @@ class HackerNewsDisplay extends React.Component {
                             <></>
                         )
                     )}
-                    <ReactPaginate />
                     {/* TODO OR use reactstrap's paginate. See react paginate: https://www.npmjs.com/package/react-paginate */}
                 </CardBody>
             </Card>
