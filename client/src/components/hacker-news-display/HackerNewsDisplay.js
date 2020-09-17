@@ -57,7 +57,7 @@ class HackerNewsDisplay extends React.Component {
         return (
             <Card>
                 <CardHeader>Hacker News</CardHeader>
-                <CardBody>
+                <CardBody>                    
                     <Paginator />
                     {(this.state.isLoading) ? (
                         <LoadingSpinner />
