@@ -1,16 +1,14 @@
 #!/usr/bin/perl -w
-# Given a filename and the number of spaces, converts all indentation
-
+# Given a maps all indentations from 2 to 4
 
 $argc = $#ARGV + 1;
-if ($argc < 2) {
-    print("Usage: $0 <targetfile> <num of spaces>\n");
+if ($argc < 1) {
+    print("Usage: $0 <targetfile>\n");
     exit 1;
 }
 
 $targetFilename = $ARGV[0];
-$numSpaces = $ARGV[1];
-print("|===== Formatting file '$targetFilename' to ${numSpaces}-space indentation =====|\n"); 
+print("|===== Formatting file '$targetFilename' to 4-space indentation =====|\n"); 
 
 open my $file, "<", "$targetFilename" or die("Failed to open $targetFilename: $!");
 @lines = <$file>;
