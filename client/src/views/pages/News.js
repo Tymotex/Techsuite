@@ -8,10 +8,10 @@ class News extends React.Component {
         return (
             <Row>
                 <Col md={6}>
-                    <HackerNewsDisplay />
+                    <GitHubTrendingDisplay />
                 </Col>
                 <Col md={6}>
-                    <GitHubTrendingDisplay />
+                    <HackerNewsDisplay />
                 </Col>
             </Row>
         );
