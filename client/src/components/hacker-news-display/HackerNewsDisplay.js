@@ -7,6 +7,8 @@ import Article from './Article';
 import { Paginator } from '../paginator';
 import './Display.scss';
 
+import { Nav, NavItem, Dropdown, DropdownItem, DropdownToggle, DropdownMenu, NavLink } from 'reactstrap';
+
 class HackerNewsDisplay extends React.Component {
     constructor(props) {
         super(props);
@@ -79,8 +81,19 @@ class HackerNewsDisplay extends React.Component {
         const numPages = numStories / this.state.numResults;
         return (
             <Card>
-                <CardBody>    
-                    <h3 className="spaced">Hacker News</h3>                
+                <CardBody>   
+                    <h3 className="spaced">Hacker News</h3>     
+                    <Nav tabs>
+                        <NavItem>
+                            <NavLink href="#" active>Hot</NavLink>
+                        </NavItem>
+                        <NavItem>
+                            <NavLink href="#">Top</NavLink>
+                        </NavItem>
+                        <NavItem>
+                            <NavLink href="#">Latest</NavLink>
+                        </NavItem>
+                    </Nav>           
                     <Paginator flipPage={this.getPage} maxPageNum={Math.ceil(numPages)} />
                     {(this.state.isLoading) ? (
                         <LoadingSpinner />

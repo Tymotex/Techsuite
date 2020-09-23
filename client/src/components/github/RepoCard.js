@@ -1,38 +1,45 @@
 import React from 'react';
-import { Card, CardBody, CardHeader } from 'reactstrap';
+import { Card, CardText, CardBody, CardImg, CardTitle, CardSubtitle, Button, Row, Col } from 'reactstrap';
 import { faStar, faEye, faFileCode } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import commaNumber from 'comma-number';
+import './Display.scss';
 
 class RepoCard extends React.Component {
     render() {
         const { repo } = this.props;
+        console.log(repo);
         return (
             <Card>
                 <CardBody>
-                    <strong><a href={repo.html_url} >{repo.full_name}</a></strong>
-                    <div>
-                        About <strong>{repo.name}</strong>: {repo.description}
+                    <Row>
+                        <Col md={3}>
+                            <img src={repo.owner.avatar_url} alt="Card image cap" />
+                        </Col>
+                        <Col md={9}>
+                            <strong><a href={repo.html_url} >{repo.full_name}</a></strong>
+                            <div>
+                                {repo.description}
+                            </div>
+                        </Col>
+                    </Row>
+                    <hr />
+                    <div className="flowRoot">
+                        <span className="leftContent">
+                            <FontAwesomeIcon icon={faStar} /> {commaNumber(repo.stargazers_count)}
+                        </span>
+                        <span className="rightContent">
+                            {commaNumber(repo.watchers_count)} <FontAwesomeIcon icon={faEye} /> 
+                        </span>
                     </div>
-                    <div>
-                        <FontAwesomeIcon icon={faFileCode} /> 
-                        {repo.language != null ? repo.language : "No language"}
+                    <div className="flowRoot">
+                        <span className="leftContent">
+                            Owner: <strong><a className="" href={repo.owner.repos_url}>{repo.owner.login}</a></strong>
+                        </span>
+                        <span className="rightContent">
+                        {repo.language != null ? repo.language : "No language"} <FontAwesomeIcon icon={faFileCode} /> 
+                        </span>
                     </div>
-                    <div>
-                        <FontAwesomeIcon icon={faStar} /> {`${repo.stargazers_count}`}
-                    </div>
-                    <div>
-                        <FontAwesomeIcon icon={faEye} /> {`${repo.watchers_count}`}
-                    </div>
-                    <div>
-                        Open issues: {repo.open_issues}
-                    </div>
-                    {repo.homepage != null ? (
-                        <div>
-                            <a href={repo.homepage}>Project homepage</a>
-                        </div>
-                    ) : (
-                        <></>
-                    )}
                 </CardBody>
             </Card>
         );

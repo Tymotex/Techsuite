@@ -5,6 +5,7 @@ import moment from 'moment-timezone';
 import { Card, CardBody } from 'reactstrap';
 import parse from 'html-react-parser';
 import capitalize from 'capitalize';
+import { ReactTinyLink } from 'react-tiny-link'
 
 class Article extends React.Component {
 
@@ -31,17 +32,24 @@ class Article extends React.Component {
         return (
             <Card>
                 <CardBody>
-                    <strong><a href={url}>{title}</a></strong>
+
+                    <ReactTinyLink
+                        cardSize="small"
+                        showGraphic={true}
+                        maxLine={2}
+                        minLine={1}
+                        url={url}
+                    />
                     {text && parse(`<div class='text-muted'>${text}</div>`)}
                     <div>
-                        By: {by}
+                        By: <em>{by}</em>
+                        <span style={{"float": "right"}}>
+                            <FontAwesomeIcon icon={faFireAlt} />
+                            {" " + score}
+                        </span>
                     </div>
                     <div>
-                        Posted: {shortFormattedTime}
-                    </div>
-                    <div>
-                        <FontAwesomeIcon icon={faFireAlt} />
-                        {" " + score}
+                        Posted: <p className="text-muted" style={{"display": "inline"}}>{shortFormattedTime}</p>
                     </div>
                 </CardBody>
             </Card>

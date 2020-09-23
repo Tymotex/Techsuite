@@ -1,3 +1,15 @@
 .spaced {
     padding: 20px;
 }
+
+.flowRoot {
+    display: flow-root;
+    .leftContent {
+        float: left;
+    }
+    .rightContent {
+        float: right;
+    }
+}
+
+
