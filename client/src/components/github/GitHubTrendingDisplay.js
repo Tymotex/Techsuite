@@ -65,7 +65,7 @@ class GitHubTrendingDisplay extends React.Component {
                     <h3 className="spaced">GitHub Trending Projects</h3>
 
                     {/* Dynamic Search Field */}
-                    <Form onSubmit={(event) => {
+                    <Form className="search-form" onSubmit={(event) => {
                         event.preventDefault();
                         this.fetchRepos(document.getElementById("dynamic-search-field").value);
                     }}>

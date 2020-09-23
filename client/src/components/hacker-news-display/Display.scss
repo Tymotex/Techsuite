@@ -1,3 +1,12 @@
 .spaced {
     padding: 20px;
 }
+
+.link-preview-card {
+    a {
+        text-decoration: none!important;
+        &:hover {
+            color: grey;
+        }
+    }
+}

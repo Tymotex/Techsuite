@@ -32,14 +32,19 @@ class Article extends React.Component {
         return (
             <Card>
                 <CardBody>
-
-                    <ReactTinyLink
-                        cardSize="small"
-                        showGraphic={true}
-                        maxLine={2}
-                        minLine={1}
-                        url={url}
-                    />
+                    {/* HTTP link preview */}
+                    <div className="link-preview-card">
+                        <ReactTinyLink
+                            cardSize="small"
+                            showGraphic={true}
+                            maxLine={2}
+                            minLine={1}
+                            url={url}
+                        />
+                    </div>
+                    <div>
+                        <strong>{title}</strong>
+                    </div>
                     {text && parse(`<div class='text-muted'>${text}</div>`)}
                     <div>
                         By: <em>{by}</em>

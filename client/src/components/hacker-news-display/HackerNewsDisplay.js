@@ -1,13 +1,11 @@
 import axios from 'axios';
 import React from "react";
 import FadeIn from 'react-fade-in';
-import { Card, CardBody, CardHeader, Pagination, PaginationItem, PaginationLink } from 'reactstrap';
+import { Card, CardBody, Nav, NavItem, NavLink } from 'reactstrap';
 import { LoadingSpinner } from '../loading-spinner';
-import Article from './Article';
 import { Paginator } from '../paginator';
+import Article from './Article';
 import './Display.scss';
-
-import { Nav, NavItem, Dropdown, DropdownItem, DropdownToggle, DropdownMenu, NavLink } from 'reactstrap';
 
 class HackerNewsDisplay extends React.Component {
     constructor(props) {
@@ -18,9 +16,11 @@ class HackerNewsDisplay extends React.Component {
             storyIDs: [],
             stories: [],
             currPage: 0,
-            numResults: 10
+            numResults: 10,
+            mode: "hot"
         };
         this.getPage = this.getPage.bind(this);
+        this.setMode = this.setMode.bind(this);
     }
 
     componentWillMount() {
@@ -29,13 +29,20 @@ class HackerNewsDisplay extends React.Component {
         });
         axios.get("https://hacker-news.firebaseio.com/v0/topstories.json?print=pretty")
             .then((res) => {
-                // Fetching the ID of the top 500 stories
+                // Fetching the ID of the top 100 stories
                 this.setState({
-                    storyIDs: res.data,
+                    storyIDs: res.data.slice(0, 100),
                     isLoading: false,
                     fetchSucceeded: false
                 });
-                this.getPage(0);
+                this.state.storyIDs.map(async (eachStoryID) => {
+                    const story = await this.fetchStory(eachStoryID);
+                    this.setState({
+                        stories: [...this.state.stories, story],
+                        fetchSucceeded: true,
+                        isLoading: false
+                    });
+                });
             })
             .catch((err) => {
                 console.log(err);
@@ -48,35 +55,43 @@ class HackerNewsDisplay extends React.Component {
 
     async fetchStory(storyID) {
         const story = await axios.get(`https://hacker-news.firebaseio.com/v0/item/${storyID}.json?print=pretty`);
-        console.log(story.data);
         return story.data;
     }
 
     getPage(pageNum) {
-        if (this.state.isLoading) {
-            return;
-        }
-        const { numResults, storyIDs } = this.state;
         this.setState({
-            stories: [],
-            currPage: pageNum,
-            isLoading: true,
-            fetchSucceeded: false
+            currPage: pageNum
         });
-        storyIDs.slice(pageNum * numResults, numResults * (pageNum + 1)).map(async (eachStoryID) => {
-            const story = await this.fetchStory(eachStoryID);
-            this.setState({
-                stories: [...this.state.stories, story]
-            });
-        })
+    }
+
+    setMode(mode) {
+        switch (mode) {
+            case "hot":
+                // Sorting articles in ascending order of score : time ratio
+                this.state.stories.sort((a, b) => {
+                    return ((a.score / a.time) > (b.score / b.time)) ? -1 : 1;
+                });
+                break;
+            case "top":
+                // Sorting articles in ascending order of score
+                this.state.stories.sort((a, b) => {
+                    return (a.score > b.score) ? -1 : 1;
+                });
+                break;
+            case "latest":
+                // Sorting articles in descending order of timestamp value
+                this.state.stories.sort((a, b) => {
+                    return (a.time > b.time) ? -1 : 1;
+                });
+                break;
+        }
         this.setState({
-            isLoading: false,
-            fetchSucceeded: true
+            mode: mode
         });
     }
 
     render() {
-        const { stories } = this.state;
+        const { stories, mode, isLoading, fetchSucceeded, currPage, numResults } = this.state;
         const numStories = this.state.storyIDs.length;
         const numPages = numStories / this.state.numResults;
         return (
@@ -85,21 +100,23 @@ class HackerNewsDisplay extends React.Component {
                     <h3 className="spaced">Hacker News</h3>     
                     <Nav tabs>
                         <NavItem>
-                            <NavLink href="#" active>Hot</NavLink>
+                            <NavLink href="#" active={mode === "hot"} onClick={() => this.setMode("hot")}>Hot</NavLink>
                         </NavItem>
                         <NavItem>
-                            <NavLink href="#">Top</NavLink>
+                            <NavLink href="#" active={mode === "top"} onClick={() => this.setMode("top")}>Top</NavLink>
                         </NavItem>
                         <NavItem>
-                            <NavLink href="#">Latest</NavLink>
+                            <NavLink href="#" active={mode === "latest"} onClick={() => this.setMode("latest")}>Latest</NavLink>
                         </NavItem>
                     </Nav>           
                     <Paginator flipPage={this.getPage} maxPageNum={Math.ceil(numPages)} />
-                    {(this.state.isLoading) ? (
+                    {(isLoading) ? (
                         <LoadingSpinner />
                     ) : (
-                        (this.state.fetchSucceeded) ? (
-                            stories.map((story, i) => (
+                        (fetchSucceeded) ? (
+                            stories
+                                .slice(currPage * numResults, numResults * (currPage + 1))
+                                .map((story, i) => (
                                 <FadeIn key={i} delay="200">
                                     <Article story={story} />
                                 </FadeIn>
