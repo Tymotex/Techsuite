@@ -71,9 +71,6 @@ class GitHubTrendingDisplay extends React.Component {
                     }}>
                         <FormGroup>
                             <InputGroup>
-                                <InputGroupAddon addonType="prepend">
-                                    <InputGroupText>Search for</InputGroupText>
-                                </InputGroupAddon>
                                 <Input 
                                     id="dynamic-search-field" 
                                     name="queryString" 
