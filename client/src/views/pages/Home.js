@@ -40,7 +40,7 @@ const Showcase = () => {
               <div className="m-l">
                 <h2 className="h4">Channels</h2>
                 <p className="text-muted">
-                  Create channels and invite other users to collaborate on group projects or discuss the latest memes
+                  Create channels and invite other users to collaborate on group projects or discuss ideas
                 </p>
               </div>
             </CardBody>
@@ -54,7 +54,7 @@ const Showcase = () => {
               <div className="m-l">
                 <h2 className="h4">Networking</h2>
                 <p className="text-muted">
-                  Connect with other people and grow your network.
+                  Form connections with other people and grow your network.
                 </p>
               </div>
             </CardBody>
@@ -68,7 +68,7 @@ const Showcase = () => {
               <div className="m-l">
                 <h2 className="h4">Personalise</h2>
                 <p className="text-muted">
-                  Personalise your channels and user profile
+                  Personalise your user profile, channels and user experience
                 </p>
               </div>
             </CardBody>
@@ -96,7 +96,7 @@ const Showcase = () => {
               <div className="m-l">
                 <h2 className="h4">Direct messaging</h2>
                 <p className="text-muted">
-                  Privately message other developers.
+                  Privately message other collaborators.
                 </p>
               </div>
             </CardBody>
@@ -108,7 +108,7 @@ const Showcase = () => {
             <CardBody className="display-flex">
               <FontAwesomeIcon icon={faGithub} style={iconStyles} />
               <div className="m-l">
-                <h2 className="h4">Support Open-Source</h2>
+                <h2 className="h4">Open-Source Project</h2>
                 <p className="text-muted">
                   <a href="https://github.com/Tymotex/Techsuite">Techsuite GitHub</a>
                 </p>

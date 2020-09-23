@@ -1,9 +1,11 @@
 import axios from 'axios';
 import React from "react";
-import { Card, CardBody, CardHeader, Pagination, PaginationItem, PaginationLink } from 'reactstrap';
+import FadeIn from 'react-fade-in';
+import { Card, CardBody, Nav, NavItem, NavLink } from 'reactstrap';
 import { LoadingSpinner } from '../loading-spinner';
+import { Paginator } from '../paginator';
 import Article from './Article';
-import ReactPaginate from 'react-paginate';
+import './Display.scss';
 
 class HackerNewsDisplay extends React.Component {
     constructor(props) {
@@ -11,8 +13,14 @@ class HackerNewsDisplay extends React.Component {
         this.state = {
             isLoading: false,
             fetchSucceeded: false,
-            stories: []
-        }
+            storyIDs: [],
+            stories: [],
+            currPage: 0,
+            numResults: 10,
+            mode: "hot"
+        };
+        this.getPage = this.getPage.bind(this);
+        this.setMode = this.setMode.bind(this);
     }
 
     componentWillMount() {
@@ -21,26 +29,19 @@ class HackerNewsDisplay extends React.Component {
         });
         axios.get("https://hacker-news.firebaseio.com/v0/topstories.json?print=pretty")
             .then((res) => {
-                // Top 500 stories:
+                // Fetching the ID of the top 100 stories
                 this.setState({
+                    storyIDs: res.data.slice(0, 100),
                     isLoading: false,
-                    fetchSucceeded: true
+                    fetchSucceeded: false
                 });
-                var i = 0;
-                res.data.forEach((elem) => {
-                    i++;
-                    if (i < 10) {
-                        axios.get(`https://hacker-news.firebaseio.com/v0/item/${elem}.json?print=pretty`)
-                            .then((storyRes) => {
-                                this.setState({
-                                    stories: [...this.state.stories, storyRes.data]
-                                });
-                                console.log(this.state);
-                            })
-                            .catch((err) => {
-                                console.log(err);
-                            });
-                    }
+                this.state.storyIDs.map(async (eachStoryID) => {
+                    const story = await this.fetchStory(eachStoryID);
+                    this.setState({
+                        stories: [...this.state.stories, story],
+                        fetchSucceeded: true,
+                        isLoading: false
+                    });
                 });
             })
             .catch((err) => {
@@ -52,25 +53,81 @@ class HackerNewsDisplay extends React.Component {
             });
     }
 
+    async fetchStory(storyID) {
+        const story = await axios.get(`https://hacker-news.firebaseio.com/v0/item/${storyID}.json?print=pretty`);
+        return story.data;
+    }
+
+    getPage(pageNum) {
+        this.setState({
+            currPage: pageNum
+        });
+    }
+
+    setMode(mode) {
+        switch (mode) {
+            case "hot":
+                // TODO: Need a better comparison rule here
+                // Sorting articles in ascending order of score : time ratio
+                this.state.stories.sort((a, b) => {
+                    return ((a.score / a.time) > (b.score / b.time)) ? -1 : 1;
+                });
+                break;
+            case "top":
+                // Sorting articles in ascending order of score
+                this.state.stories.sort((a, b) => {
+                    return (a.score > b.score) ? -1 : 1;
+                });
+                break;
+            case "latest":
+                // Sorting articles in descending order of timestamp value
+                this.state.stories.sort((a, b) => {
+                    return (a.time > b.time) ? -1 : 1;
+                });
+                break;
+            default:
+                break;
+        }
+        this.setState({
+            mode: mode
+        });
+    }
+
     render() {
-        const { stories } = this.state;
+        const { stories, mode, isLoading, fetchSucceeded, currPage, numResults } = this.state;
+        const numStories = this.state.storyIDs.length;
+        const numPages = numStories / this.state.numResults;
         return (
             <Card>
-                <CardHeader>Hacker News</CardHeader>
-                <CardBody>
-                    {(this.state.isLoading) ? (
+                <CardBody>   
+                    <h3 className="spaced">Hacker News</h3>     
+                    <Nav tabs>
+                        <NavItem>
+                            <NavLink href="#" active={mode === "hot"} onClick={() => this.setMode("hot")}>Hot</NavLink>
+                        </NavItem>
+                        <NavItem>
+                            <NavLink href="#" active={mode === "top"} onClick={() => this.setMode("top")}>Top</NavLink>
+                        </NavItem>
+                        <NavItem>
+                            <NavLink href="#" active={mode === "latest"} onClick={() => this.setMode("latest")}>Latest</NavLink>
+                        </NavItem>
+                    </Nav>           
+                    <Paginator flipPage={this.getPage} maxPageNum={Math.ceil(numPages)} />
+                    {(isLoading) ? (
                         <LoadingSpinner />
                     ) : (
-                        (this.state.fetchSucceeded) ? (
-                            stories.map(story => (
-                                <Article story={story} />
+                        (fetchSucceeded) ? (
+                            stories
+                                .slice(currPage * numResults, numResults * (currPage + 1))
+                                .map((story, i) => (
+                                <FadeIn key={i} delay="200">
+                                    <Article story={story} />
+                                </FadeIn>
                             ))
                         ) : (
                             <></>
                         )
                     )}
-                    <ReactPaginate />
-                    {/* TODO OR use reactstrap's paginate. See react paginate: https://www.npmjs.com/package/react-paginate */}
                 </CardBody>
             </Card>
         );

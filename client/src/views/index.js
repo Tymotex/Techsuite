@@ -30,7 +30,6 @@ import Avatars from './elements/Avatars';
 import Invoice from './pages/Invoice';
 import Analytics from './pages/Analytics';
 import CmsPage from './pages/Cms';
-import Widgets from './pages/Widgets';
 import BlankPage from './pages/BlankPage';
 import SubNav from './pages/SubNav';
 import Feed from './pages/Feed';
@@ -205,12 +204,7 @@ const pageList = [
     name: 'CMS',
     path: '/apps/cms',
     component: CmsPage,
-  },
-  {
-    name: 'Widgets',
-    path: '/widgets',
-    component: Widgets,
-  },
+  }
 ];
 
 export default pageList;

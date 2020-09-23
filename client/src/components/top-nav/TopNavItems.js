@@ -8,6 +8,8 @@ import AvatarDropdown from './AvatarDropdown';
 import LogInModalButton from './LogInModalButton';
 import RegisterModalButton from './RegisterModalButton';
 import { Notification } from '../notification';
+import { DarkModeSwitch } from "../dark-mode-toggle";
+import './TopNavItem.scss';
 
 class TopNavItems extends React.Component {
     constructor(props) {
@@ -129,33 +131,32 @@ class TopNavItems extends React.Component {
     }
   
     render() {
-        const paddedNavItem = {
-        };
-        const center = {
-            margin: "auto",
-            width: "100%"
-        }
-  
         const currUserID = parseInt(Cookie.get("user_id"));
         const { loggedIn, username, profileImgURL } = this.state;
         
         return (
             <>
+
+                <NavItem className="navItemSwitchCenter">
+                    <DarkModeSwitch viewMode={Cookie.get("viewMode")} />
+                </NavItem>
                 {/* Rendering the profile dropdown */}
                 {(loggedIn) ? (
                     <>
-                        <NavItem style={center}>
+                        <NavItem className="navItemCenter navItemText">
                             Welcome <strong>{username}</strong>
                         </NavItem>
-                        <AvatarDropdown profileImgURL={profileImgURL} userID={currUserID} logout={this.logout} />
+                        <NavItem className="navItemCenter">
+                            <AvatarDropdown profileImgURL={profileImgURL} userID={currUserID} logout={this.logout} />
+                        </NavItem>
                     </> 
                 ) : (
                     <>
-                        <NavItem style={paddedNavItem}>
+                        <NavItem>
                             <LogInModalButton login={this.logInUser}/>
                             {/* <NavLink to="/auth/login"><Button color="primary"><LogIn /> Log In</Button></NavLink> */}
                         </NavItem> 
-                        <NavItem style={paddedNavItem}>
+                        <NavItem>
                             <RegisterModalButton register={this.registerUser} />
                             {/* <NavLink to="/auth/register"><Button color="primary"><UserPlus /> Register</Button></NavLink> */}
                         </NavItem> 
