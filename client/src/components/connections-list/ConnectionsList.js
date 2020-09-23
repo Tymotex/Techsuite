@@ -63,6 +63,10 @@ class ConnectionsList extends React.Component {
             this.fetchConnectionsOutgoing(currToken);
         } else {
             Notification.spawnNotification("Can't load your connections", "Please log in first!", "danger");
+            this.setState({
+                isLoading: false,
+                fetchSucceeded: false
+            });
         }
     } 
 
@@ -159,7 +163,7 @@ class ConnectionsList extends React.Component {
                                                             refreshConnections={this.fetchConnections}
                                                             refreshIncoming={this.fetchConnectionsIncoming}
                                                             refreshOutgoing={this.fetchConnectionsOutgoing}
-                                                            />
+                                                        />
                                                     </Col>
                                                 )))}
                                             </Row>

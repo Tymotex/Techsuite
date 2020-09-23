@@ -138,7 +138,7 @@ class TopNavItems extends React.Component {
             <>
 
                 <NavItem className="navItemSwitchCenter">
-                    <DarkModeSwitch />
+                    <DarkModeSwitch viewMode={Cookie.get("viewMode")} />
                 </NavItem>
                 {/* Rendering the profile dropdown */}
                 {(loggedIn) ? (

@@ -67,6 +67,7 @@ class HackerNewsDisplay extends React.Component {
     setMode(mode) {
         switch (mode) {
             case "hot":
+                // TODO: Need a better comparison rule here
                 // Sorting articles in ascending order of score : time ratio
                 this.state.stories.sort((a, b) => {
                     return ((a.score / a.time) > (b.score / b.time)) ? -1 : 1;
@@ -83,6 +84,8 @@ class HackerNewsDisplay extends React.Component {
                 this.state.stories.sort((a, b) => {
                     return (a.time > b.time) ? -1 : 1;
                 });
+                break;
+            default:
                 break;
         }
         this.setState({
