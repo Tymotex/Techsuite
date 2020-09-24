@@ -19,16 +19,12 @@ const Showcase = () => {
   return (
     <div>
       {/* Welcome header: */}
-      <Row>
-        <Col md={6}>
-          <div className="home-hero" style={heroStyles}>
-            <h1>Welcome to Techsuite.</h1>
-            <p className="text-muted">
-              An app for collaborating, networking and sharing ideas <span role="img" aria-label="unicode sprout">🌱</span>
-            </p>
-          </div>
-        </Col>
-      </Row>
+      <div className="home-hero" style={heroStyles}>
+        <h1>Welcome to Techsuite.</h1>
+        <p className="text-muted">
+          An app for collaborating, networking and sharing ideas <span role="img" aria-label="unicode sprout">🌱</span>
+        </p>
+      </div>
       
       {/* Cards: */}
       <Row>
