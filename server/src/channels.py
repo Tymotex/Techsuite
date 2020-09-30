@@ -100,7 +100,7 @@ def channels_details(token, channel_id):
         "owner_members": channel_owners,
         "all_members": channel_members
     }
-    printColour("Results: {}".format(details), colour="blue")
+    # printColour("Results: {}".format(details), colour="blue")
     return details
 
 
@@ -142,7 +142,7 @@ def channels_messages(token, channel_id, start, limit=50):
     }
     
     if not messsages_list:
-        printColour("Results: {}".format(payload), colour="blue")
+        # printColour("Results: {}".format(payload), colour="blue")
         return payload
     if start >= len(messsages_list):
         raise InputError(description="Starting index is greater than or equal to the total number of messages in the channel")
@@ -159,7 +159,7 @@ def channels_messages(token, channel_id, start, limit=50):
         })
         if i == limit:
             break
-    printColour("Results: {}".format(payload), colour="blue")
+    # printColour("Results: {}".format(payload), colour="blue")
     return payload
 
 def channels_leave(token, channel_id):
@@ -354,7 +354,7 @@ def channels_listall(token):
                 if membership.is_owner:
                     curr_channel_data["owner_of"] = True 
         channels_list.append(curr_channel_data)
-    printColour("Results: {}".format(channels_list), colour="blue")
+    # printColour("Results: {}".format(channels_list), colour="blue")
     return {
         "channels": channels_list
     }

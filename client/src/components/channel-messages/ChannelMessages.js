@@ -11,6 +11,23 @@ import TypingPrompt from './TypingPrompt';
 
 const socket = io(SOCKET_URI);
 
+    socket.on("connect", () => {
+        console.log("connect");
+    });
+    socket.on("status", (status) => {
+        console.log("received status: " + status.data);
+    });
+    socket.on("room_message", (msg) => {
+        console.log("message from room: " + msg);
+    });
+
+
+
+
+
+
+
+
 class ChannelMessages extends React.Component {
     constructor(props) {
         super(props);
@@ -50,7 +67,16 @@ class ChannelMessages extends React.Component {
             Notification.spawnNotification("Input error", message, "danger")
         })
         this.broadcastTypingPrompt = this.broadcastTypingPrompt.bind(this);
+        this.joinRoom = this.joinRoom.bind(this);
     }
+
+
+    joinRoom() {
+        alert("ASS");
+        console.log("ask server to join room");
+        socket.emit("join", {user: "test", room: "Notification"});
+    }
+
 
     UNSAFE_componentWillMount() {
         this.fetchMessages();
@@ -71,9 +97,9 @@ class ChannelMessages extends React.Component {
         const currMessage = event.target.value;
         const currToken = Cookie.get("token");
         if (currMessage.trim() !== "") {
-            socket.emit("started_typing", currToken);
+            socket.emit("started_typing", {"room": "Notifications"});
         } else {
-            socket.emit("stopped_typing", currToken);
+            socket.emit("stopped_typing", {"room": "Notifications"});
         }
     }
 
@@ -125,7 +151,7 @@ class ChannelMessages extends React.Component {
 
     render() {
         return (
-            <>
+            <><div onClick={this.joinRoom}>Join</div>
                 <ChatBox {...this.state} />
                 {/* 'User is typing' prompt */}
                 <TypingPrompt isSomeoneElseTyping={this.state.isSomeoneElseTyping} />

@@ -7,7 +7,7 @@ import os
 # Third party libraries:
 from flask import Flask, jsonify
 from flask_cors import CORS
-from flask_socketio import SocketIO, send, emit
+from flask_socketio import SocketIO, send, emit, join_room, leave_room
 from dotenv import load_dotenv
 
 # Local imports:
@@ -104,15 +104,32 @@ def emit_error(error, error_type="input_error"):
     else:
         emit("input_error", error.__repr__(), broadcast=True)      # TODO Need to selectively broadcast
 
+# Connect/Disconnect hooks
+
+# @socketio.on('connect', namespace='/ts-socket')
+# def handle_connect():
+#     printColour("Socket connection succeeded")
+
+@socketio.on('disconnect', namespace='/ts-socket')
+def handle_connect():
+    printColour("Client disconnected")
+
 # Channel messaging
 
-@socketio.on('connect', namespace='/ts-socket')
-def handle_connect():
-    printColour("Socket connection succeeded")
+@socketio.on("connect")
+def connect():
+    print("client wants to connect")
+    emit("status", { "data": "Connected. Hello!" })
 
-@socketio.on('message', namespace='/ts-socket')
-def handle_message(message):
-    printColour("Received a message: {}".format(message))
+@socketio.on("join", namespace='/ts-socket')
+def on_join(data):
+    user = data["user"]
+    room = data["room"]
+    print(f"client {user} wants to join: {room}")
+    join_room(room)
+    emit("room_message", f"Welcome to {room}, {user}", room=room)
+
+
 
 @socketio.on("send_message", namespace='/ts-socket')
 def handle_send_message(token, channel_id, message):    
@@ -147,25 +164,44 @@ def handle_edit_message(token, message_id, message):
     finally:
         print("FINALLY")
 
+# Channel Rooms:
+
+@socketio.on("user_entered", namespace='/ts-socket')
+def handle_user_channel_join(event_data):
+    """
+        Parameter event_data is a dictionary containing:
+         - user_id
+         - channel_id
+    """
+    user_id = event_data["user_id"]
+    room = event_data["room"]
+    join_room(room)
+    printColour("{} has JOINED {}".format(user_id, room), colour="violet")
+
+@socketio.on("user_left", namespace='/ts-socket')
+def handle_user_channel_leave(event_data):
+    """
+        Parameter event_data is a dictionary containing:
+         - user_id
+         - channel_id
+    """
+    user_id = event_data["user_id"]
+    room = event_data["room"]
+    leave_room(room)
+    printColour("{} has LEFT {}".format(user_id, room), colour="violet")
+
 @socketio.on("started_typing", namespace='/ts-socket')
-def handle_typing_prompt(token):
+def handle_typing_prompt_start(data):
     # TODO: Get user, broadcast to everyone else in the room that this user is typing
-    emit("show_typing_prompt", broadcast=True, include_self=False)
+    room = data["room"]
+    print("Started typing. Broadcasting to room: {}".format(room))
+    send("show_typing_prompt", broadcast=True, room=room)
 
 @socketio.on("stopped_typing", namespace='/ts-socket')
-def handle_typing_prompt(token):
-    printColour("NUM_USERS_TYPING: {}".format(42), colour="red_1")
-    emit("hide_typing_prompt", broadcast=True, include_self=False)    
-
-@socketio.on("channel_join", namespace='/ts-socket')
-def handle_channel_join():
-    # TODO: Implement this
-    printColour("SOMEONE HAS JOINED THE CHAT", colour="violet")
-
-@socketio.on("channel_leave", namespace='/ts-socket')
-def handle_channel_leave():
-    # TODO: Implement this
-    printColour("SOMEONE HAS LEFT THE CHAT", colour="violet")
+def handle_typing_prompt_end(data):
+    room = data["room"]
+    print("Stopped typing. Broadcasting to room: {}".format(room))
+    send("hide_typing_prompt", broadcast=True, room=room)    
 
 # Direct messaging
 

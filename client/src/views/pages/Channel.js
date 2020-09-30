@@ -1,6 +1,7 @@
 import axios from 'axios';
 import Cookie from 'js-cookie';
 import React from 'react';
+import { Prompt } from 'react-router'
 import { Card, CardBody, CardHeader, Col, Row } from 'reactstrap';
 import { ChannelDetails } from '../../components/channel-details';
 import { ChannelEdit } from '../../components/channel-edit';
@@ -14,8 +15,11 @@ import { Notification } from '../../components/notification';
 import { UserAddOwner } from '../../components/user-add-owner';
 import { UserInvite } from '../../components/user-invite';
 import { UserRemoveOwner } from '../../components/user-remove-owner';
-import { BASE_URL } from '../../constants/api-routes';
+import { BASE_URL, SOCKET_URI } from '../../constants/api-routes';
 
+import io from 'socket.io-client';
+
+const socket = io(SOCKET_URI);
 
 class Channel extends React.Component {
     constructor(props) {
@@ -25,9 +29,11 @@ class Channel extends React.Component {
             fetchSucceeded: false,
             channel: {}
         };
+        this.exitChannel = this.exitChannel.bind(this);
     }
 
     componentDidMount() {
+        socket.emit("user_entered", { "user_id": 1, "room": "Notifications" });
         this.setState({
             isLoading: true
         });
@@ -58,6 +64,11 @@ class Channel extends React.Component {
         }
     }
 
+    // Emits a socket event to drop this user from the channel's broadcast group
+    exitChannel() {
+        socket.emit("user_left", { "user_id": 1, "room": "Notifications" })
+    }
+
     render() {
         const cardHeaderStyle = {
             "textAlign": "center",
@@ -66,6 +77,12 @@ class Channel extends React.Component {
     
         return (
             <div>
+
+                <Prompt
+                    when={true}
+                    message={this.exitChannel}
+                />
+
                 {(this.state.isLoading) ? (
                     <LoadingSpinner /> 
                 ) : (

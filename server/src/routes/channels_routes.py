@@ -36,7 +36,7 @@ def handle_channel_details():
     """
     token = request.args.get("token")
     channel_id = int(request.args.get("channel_id"))
-    printColour("Channel Details: {}".format(request.args), colour="violet")
+    # printColour("Channel Details: {}".format(request.args), colour="violet")
     return jsonify(channels.channels_details(token, channel_id))
 
 @channels_router.route("/channels/messages", methods=['GET'])
