@@ -1,6 +1,7 @@
 import axios from 'axios';
 import Cookie from 'js-cookie';
 import React from 'react';
+import { Prompt } from 'react-router'
 import { Button, Form, FormGroup, Input, InputGroup, InputGroupAddon, InputGroupText } from 'reactstrap';
 import io from 'socket.io-client';
 import { BASE_URL, SOCKET_URI } from '../../constants/api-routes';
@@ -65,18 +66,35 @@ class ChannelMessages extends React.Component {
         });
         socket.on("input_error", (message) => {
             Notification.spawnNotification("Input error", message, "danger")
-        })
+        });
         this.broadcastTypingPrompt = this.broadcastTypingPrompt.bind(this);
-        this.joinRoom = this.joinRoom.bind(this);
+
+        // TODO: remove
+        this.pingRoom = this.pingRoom.bind(this);
+        socket.on("pinged", (message) => {
+            console.log("YOU HAVE BEEN PINGED: " + message);
+        });
+
+        this.exitChannelRoom = this.exitChannelRoom.bind(this);
+        this.joinChannelRoom = this.joinChannelRoom.bind(this);
     }
 
-
-    joinRoom() {
-        alert("ASS");
-        console.log("ask server to join room");
-        socket.emit("join", {user: "test", room: "Notification"});
+    // Emits a socket event to enter this user to the channel's broadcast group
+    joinChannelRoom() {
+        // socket.emit("user_enter", { user_id: 1, room: "Notification" })
+        socket.emit("user_enter", {user: "test", room: "Notification"});
     }
 
+    // Emits a socket event to drop this user from the channel's broadcast group
+    exitChannelRoom() {
+        socket.emit("user_leave", { "user_id": 1, "room": "Notification" })
+    }
+
+    // TODO: Remove this test func
+    pingRoom() {
+        console.log("Trying to ping room");
+        socket.emit("pingtest", {user: "test", room: "Notification"});
+    }
 
     UNSAFE_componentWillMount() {
         this.fetchMessages();
@@ -89,6 +107,7 @@ class ChannelMessages extends React.Component {
         } else {
             console.log("Typing text field could not be selected!");
         }
+        this.joinChannelRoom();
     }
 
     broadcastTypingPrompt(event) {
@@ -97,9 +116,9 @@ class ChannelMessages extends React.Component {
         const currMessage = event.target.value;
         const currToken = Cookie.get("token");
         if (currMessage.trim() !== "") {
-            socket.emit("started_typing", {"room": "Notifications"});
+            socket.emit("started_typing", {"room": "Notification"});
         } else {
-            socket.emit("stopped_typing", {"room": "Notifications"});
+            socket.emit("stopped_typing", {"room": "Notification"});
         }
     }
 
@@ -151,7 +170,11 @@ class ChannelMessages extends React.Component {
 
     render() {
         return (
-            <><div onClick={this.joinRoom}>Join</div>
+            <>
+                <Prompt
+                    when={true}
+                    message={this.exitChannelRoom}
+                />
                 <ChatBox {...this.state} />
                 {/* 'User is typing' prompt */}
                 <TypingPrompt isSomeoneElseTyping={this.state.isSomeoneElseTyping} />

@@ -129,6 +129,11 @@ def on_join(data):
     join_room(room)
     emit("room_message", f"Welcome to {room}, {user}", room=room)
 
+@socketio.on("pingtest", namespace='/ts-socket')
+def on_ping(data):
+    room = data["room"]
+    print("Client wants to ping: " + room)
+    emit("pinged", "PINGED!!!", room=room)
 
 
 @socketio.on("send_message", namespace='/ts-socket')
@@ -166,19 +171,29 @@ def handle_edit_message(token, message_id, message):
 
 # Channel Rooms:
 
-@socketio.on("user_entered", namespace='/ts-socket')
-def handle_user_channel_join(event_data):
-    """
-        Parameter event_data is a dictionary containing:
-         - user_id
-         - channel_id
-    """
-    user_id = event_data["user_id"]
-    room = event_data["room"]
-    join_room(room)
-    printColour("{} has JOINED {}".format(user_id, room), colour="violet")
+# @socketio.on("user_enter", namespace='/ts-socket')
+# def handle_user_channel_join(event_data):
+#     """
+#         Parameter event_data is a dictionary containing:
+#          - user_id
+#          - channel_id
+#     """
+#     user_id = event_data["user_id"]
+#     room = event_data["room"]
+#     join_room(room)
+#     printColour("{} has JOINED {}".format(user_id, room), colour="violet")
+#     emit("user_entered", f"Welcome to {room}, {user_id}", room=room)
 
-@socketio.on("user_left", namespace='/ts-socket')
+@socketio.on("user_enter", namespace='/ts-socket')
+def on_join(data):
+    user = data["user"]
+    room = data["room"]
+    print(f"client {user} wants to join: {room}")
+    join_room(room)
+    emit("room_message", f"Welcome to {room}, {user}", room=room)
+
+
+@socketio.on("user_leave", namespace='/ts-socket')
 def handle_user_channel_leave(event_data):
     """
         Parameter event_data is a dictionary containing:
@@ -190,18 +205,20 @@ def handle_user_channel_leave(event_data):
     leave_room(room)
     printColour("{} has LEFT {}".format(user_id, room), colour="violet")
 
+# Typing prompt
+
 @socketio.on("started_typing", namespace='/ts-socket')
 def handle_typing_prompt_start(data):
     # TODO: Get user, broadcast to everyone else in the room that this user is typing
     room = data["room"]
     print("Started typing. Broadcasting to room: {}".format(room))
-    send("show_typing_prompt", broadcast=True, room=room)
+    emit("show_typing_prompt", include_self=False, broadcast=True, room=room)
 
 @socketio.on("stopped_typing", namespace='/ts-socket')
 def handle_typing_prompt_end(data):
     room = data["room"]
     print("Stopped typing. Broadcasting to room: {}".format(room))
-    send("hide_typing_prompt", broadcast=True, room=room)    
+    emit("hide_typing_prompt", include_self=False, broadcast=True, room=room)    
 
 # Direct messaging
 

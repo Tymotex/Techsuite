@@ -29,11 +29,12 @@ class Channel extends React.Component {
             fetchSucceeded: false,
             channel: {}
         };
-        this.exitChannel = this.exitChannel.bind(this);
+        socket.on("user_entered", (message) => {
+            console.log(message);
+        });
     }
 
     componentDidMount() {
-        socket.emit("user_entered", { "user_id": 1, "room": "Notifications" });
         this.setState({
             isLoading: true
         });
@@ -64,11 +65,6 @@ class Channel extends React.Component {
         }
     }
 
-    // Emits a socket event to drop this user from the channel's broadcast group
-    exitChannel() {
-        socket.emit("user_left", { "user_id": 1, "room": "Notifications" })
-    }
-
     render() {
         const cardHeaderStyle = {
             "textAlign": "center",
@@ -77,12 +73,10 @@ class Channel extends React.Component {
     
         return (
             <div>
-
                 <Prompt
                     when={true}
-                    message={this.exitChannel}
+                    message={this.exitChannelRoom}
                 />
-
                 {(this.state.isLoading) ? (
                     <LoadingSpinner /> 
                 ) : (
