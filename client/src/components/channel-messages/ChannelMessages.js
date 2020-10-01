@@ -12,23 +12,6 @@ import TypingPrompt from './TypingPrompt';
 
 const socket = io(SOCKET_URI);
 
-    socket.on("connect", () => {
-        console.log("connect");
-    });
-    socket.on("status", (status) => {
-        console.log("received status: " + status.data);
-    });
-    socket.on("room_message", (msg) => {
-        console.log("message from room: " + msg);
-    });
-
-
-
-
-
-
-
-
 class ChannelMessages extends React.Component {
     constructor(props) {
         super(props);
@@ -37,25 +20,29 @@ class ChannelMessages extends React.Component {
             isLoading: false,
             fetchSucceeded: false,
             messages: [],
-            isSomeoneElseTyping: false
+            typers: []
         };
         // Binding socket listener handlers:
         socket.on("receive_message", (message) => {
             console.log(`Received message: ${message}`);
             this.fetchMessages();
         });
-        socket.on("show_typing_prompt", () => {
-            console.log("User is typing...");
+
+        // 
+        socket.on("add_typer", (user) => {
+            console.log(`${user} is typing`);
             this.setState({
-                isSomeoneElseTyping: true
+                typers: this.state.typers.concat(user)
             });
         });
-        socket.on("hide_typing_prompt", () => {
-            console.log("User is NOT typing...");
+        socket.on("remove_typer", (user) => {
+            console.log(`${user} is no longer typing`);
             this.setState({
-                isSomeoneElseTyping: false
+                typers: this.state.typers.splice(this.state.typers.indexOf(user), 1)
             });
         });
+
+
         socket.on("message_removed", (message) => {
             console.log(`Received message: ${message}`);
             this.fetchMessages();
@@ -96,11 +83,8 @@ class ChannelMessages extends React.Component {
         socket.emit("pingtest", {user: "test", room: "Notification"});
     }
 
-    UNSAFE_componentWillMount() {
-        this.fetchMessages();
-    }
-
     componentDidMount() {
+        this.fetchMessages();
         const textField = document.getElementById("typingArea");
         if (textField) {
             textField.addEventListener("input", this.broadcastTypingPrompt);
@@ -114,11 +98,10 @@ class ChannelMessages extends React.Component {
         // Extracting the current value in the text field from the event object
         // and checking whether it is non-empty (contains non-whitespace characters)
         const currMessage = event.target.value;
-        const currToken = Cookie.get("token");
         if (currMessage.trim() !== "") {
-            socket.emit("started_typing", {"room": "Notification"});
+            socket.emit("user_started_typing", { username: Cookie.get("user_id"), room: "Notification"});
         } else {
-            socket.emit("stopped_typing", {"room": "Notification"});
+            socket.emit("user_stopped_typing", { username: Cookie.get("user_id"), room: "Notification"});
         }
     }
 
@@ -169,6 +152,7 @@ class ChannelMessages extends React.Component {
     }
 
     render() {
+        const { typers } = this.state;
         return (
             <>
                 <Prompt
@@ -177,7 +161,7 @@ class ChannelMessages extends React.Component {
                 />
                 <ChatBox {...this.state} />
                 {/* 'User is typing' prompt */}
-                <TypingPrompt isSomeoneElseTyping={this.state.isSomeoneElseTyping} />
+                <TypingPrompt typers={typers} />
                 {/* Type a message form: */}
                 <Form className="messageForm" onSubmit={this.sendMessage}>
                     <FormGroup className="typingAreaFormGroup">

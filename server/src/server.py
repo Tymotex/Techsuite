@@ -207,18 +207,29 @@ def handle_user_channel_leave(event_data):
 
 # Typing prompt
 
-@socketio.on("started_typing", namespace='/ts-socket')
-def handle_typing_prompt_start(data):
-    # TODO: Get user, broadcast to everyone else in the room that this user is typing
-    room = data["room"]
-    print("Started typing. Broadcasting to room: {}".format(room))
-    emit("show_typing_prompt", include_self=False, broadcast=True, room=room)
+@socketio.on("user_started_typing", namespace='/ts-socket')
+def handle_typing_prompt_start(event_data):
+    """
+        Parameter event_data is a dictionary containing:
+         - username
+         - room
+    """
+    username = event_data["username"]
+    room = event_data["room"]
+    print(username + " started typing. Broadcasting to room: {}".format(room))
+    emit("add_typer", username, include_self=False, broadcast=True, room=room)
 
-@socketio.on("stopped_typing", namespace='/ts-socket')
-def handle_typing_prompt_end(data):
-    room = data["room"]
-    print("Stopped typing. Broadcasting to room: {}".format(room))
-    emit("hide_typing_prompt", include_self=False, broadcast=True, room=room)    
+@socketio.on("user_stopped_typing", namespace='/ts-socket')
+def handle_typing_prompt_end(event_data):
+    """
+        Parameter event_data is a dictionary containing:
+         - username
+         - room
+    """
+    username = event_data["username"]
+    room = event_data["room"]
+    print(username + " stopped typing. Broadcasting to room: {}".format(room))
+    emit("remove_typer", username, include_self=False, broadcast=True, room=room)    
 
 # Direct messaging
 
@@ -229,7 +240,7 @@ def handle_connection_send_message(token, user_id, message):
     except InputError as err:
         emit_error(err.get_message())
     printColour("Client sent a direct message to {}".format(user_id))
-    emit("receive_connection_message", "The server says: your chat partner has sent a new message", broadcast=True)   # TODO: NEed to selectively broadcast
+    emit("receive_connection_message", "The server says: your chat partner has sent a new message", broadcast=True)   # TODO: See https://stackoverflow.com/questions/39423646/flask-socketio-emit-to-specific-user
 
 @socketio.on("edit_connection_message", namespace='/ts-socket')
 def handle_connection_edit_message(token, message_id, message):

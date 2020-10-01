@@ -1,8 +1,8 @@
 import axios from 'axios';
 import Cookie from 'js-cookie';
 import React from 'react';
-import { Prompt } from 'react-router'
 import { Card, CardBody, CardHeader, Col, Row } from 'reactstrap';
+import io from 'socket.io-client';
 import { ChannelDetails } from '../../components/channel-details';
 import { ChannelEdit } from '../../components/channel-edit';
 import { ChannelLeave } from '../../components/channel-leave';
@@ -17,7 +17,6 @@ import { UserInvite } from '../../components/user-invite';
 import { UserRemoveOwner } from '../../components/user-remove-owner';
 import { BASE_URL, SOCKET_URI } from '../../constants/api-routes';
 
-import io from 'socket.io-client';
 
 const socket = io(SOCKET_URI);
 
@@ -73,10 +72,6 @@ class Channel extends React.Component {
     
         return (
             <div>
-                <Prompt
-                    when={true}
-                    message={this.exitChannelRoom}
-                />
                 {(this.state.isLoading) ? (
                     <LoadingSpinner /> 
                 ) : (
