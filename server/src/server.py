@@ -21,7 +21,7 @@ from routes.connection_routes import connection_router
 from routes.http_error_handler import error_handler
 from messages import message_send, message_remove, message_edit
 from extensions import app
-from util.util import printColour
+from util.util import printColour, get_user_from_token
 from connections import connection_send_message, connection_edit_message, connection_remove_message
 from exceptions import InputError
 
@@ -169,29 +169,18 @@ def handle_edit_message(token, message_id, message):
     finally:
         print("FINALLY")
 
-# Channel Rooms:
+# Channel Rooms and Typing Indicator Prompt:
 
-# @socketio.on("user_enter", namespace='/ts-socket')
-# def handle_user_channel_join(event_data):
-#     """
-#         Parameter event_data is a dictionary containing:
-#          - user_id
-#          - channel_id
-#     """
-#     user_id = event_data["user_id"]
-#     room = event_data["room"]
-#     join_room(room)
-#     printColour("{} has JOINED {}".format(user_id, room), colour="violet")
-#     emit("user_entered", f"Welcome to {room}, {user_id}", room=room)
+typers = {}
 
 @socketio.on("user_enter", namespace='/ts-socket')
-def on_join(data):
-    user = data["user"]
-    room = data["room"]
-    print(f"client {user} wants to join: {room}")
+def on_join(event_data):
+    token = event_data["token"]
+    user = get_user_from_token(token)
+    room = event_data["room"]
+    print("user {} joining: {}".format(user.username, room))
     join_room(room)
-    emit("room_message", f"Welcome to {room}, {user}", room=room)
-
+    emit("get_typers", { "typers": typers[room], "user": user.username }, broadcast=True, room=room)
 
 @socketio.on("user_leave", namespace='/ts-socket')
 def handle_user_channel_leave(event_data):
@@ -200,36 +189,49 @@ def handle_user_channel_leave(event_data):
          - user_id
          - channel_id
     """
-    user_id = event_data["user_id"]
+    token = event_data["token"]
+    user = get_user_from_token(token)
     room = event_data["room"]
     leave_room(room)
-    printColour("{} has LEFT {}".format(user_id, room), colour="violet")
-
-# Typing prompt
+    printColour("{} has LEFT {}".format(user.username, room), colour="violet")
 
 @socketio.on("user_started_typing", namespace='/ts-socket')
 def handle_typing_prompt_start(event_data):
     """
         Parameter event_data is a dictionary containing:
-         - username
+         - token
          - room
     """
-    username = event_data["username"]
+    token = event_data["token"]
+    username = get_user_from_token(token).username
     room = event_data["room"]
     print(username + " started typing. Broadcasting to room: {}".format(room))
-    emit("add_typer", username, include_self=False, broadcast=True, room=room)
+    if room not in typers:
+        typers[room] = [ username ]
+        print("Typers of room {}: {}".format(room, typers[room]))
+    else:
+        if username not in typers[room]:
+            typers[room].append(username)
+            print("Typers of room {}: {}".format(room, typers[room]))
+        else:
+            return
+    emit("add_typer", typers[room], broadcast=True, room=room)
 
 @socketio.on("user_stopped_typing", namespace='/ts-socket')
 def handle_typing_prompt_end(event_data):
     """
         Parameter event_data is a dictionary containing:
-         - username
+         - token
          - room
     """
-    username = event_data["username"]
+    token = event_data["token"]
+    username = get_user_from_token(token).username
     room = event_data["room"]
     print(username + " stopped typing. Broadcasting to room: {}".format(room))
-    emit("remove_typer", username, include_self=False, broadcast=True, room=room)    
+    assert(room in typers)
+    typers[room].remove(username)
+    print("Typers of room {}: {}".format(room, typers[room]))
+    emit("remove_typer", typers[room], broadcast=True, room=room)    
 
 # Direct messaging
 

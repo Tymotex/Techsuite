@@ -2,13 +2,17 @@ import React from 'react';
 
 class TypingPrompt extends React.Component {
     render() {
-        const { typers } = this.props;
+        const { typers, thisTyper } = this.props;
+        console.log(typers);
+        console.log(thisTyper);
+        const otherTypers = typers.filter((eachTyper) => eachTyper != thisTyper);
         return (
             <div>
-                {typers.map((eachTyper) => (
-                    <p>
+                Rendering
+                {otherTypers.map((eachTyper) => (
+                    <span>
                         {eachTyper} is typing. 
-                    </p>
+                    </span>
                 ))}
             </div>
         );

@@ -20,7 +20,8 @@ class ChannelMessages extends React.Component {
             isLoading: false,
             fetchSucceeded: false,
             messages: [],
-            typers: []
+            typers: [],
+            thisUser: ""
         };
         // Binding socket listener handlers:
         socket.on("receive_message", (message) => {
@@ -28,21 +29,26 @@ class ChannelMessages extends React.Component {
             this.fetchMessages();
         });
 
-        // 
-        socket.on("add_typer", (user) => {
-            console.log(`${user} is typing`);
+        // Typing prompt events
+        socket.on("get_typers", (eventData) => {
+            // When the user first enters the page, get the other currently typing users
             this.setState({
-                typers: this.state.typers.concat(user)
+                typers: eventData.typers,
+                thisUser: eventData.user
             });
         });
-        socket.on("remove_typer", (user) => {
-            console.log(`${user} is no longer typing`);
+        socket.on("add_typer", (typers) => {
             this.setState({
-                typers: this.state.typers.splice(this.state.typers.indexOf(user), 1)
+                typers: typers
+            });
+        });
+        socket.on("remove_typer", (typers) => {
+            this.setState({
+                typers: typers
             });
         });
 
-
+        // Message receive/edit
         socket.on("message_removed", (message) => {
             console.log(`Received message: ${message}`);
             this.fetchMessages();
@@ -55,13 +61,6 @@ class ChannelMessages extends React.Component {
             Notification.spawnNotification("Input error", message, "danger")
         });
         this.broadcastTypingPrompt = this.broadcastTypingPrompt.bind(this);
-
-        // TODO: remove
-        this.pingRoom = this.pingRoom.bind(this);
-        socket.on("pinged", (message) => {
-            console.log("YOU HAVE BEEN PINGED: " + message);
-        });
-
         this.exitChannelRoom = this.exitChannelRoom.bind(this);
         this.joinChannelRoom = this.joinChannelRoom.bind(this);
     }
@@ -69,18 +68,12 @@ class ChannelMessages extends React.Component {
     // Emits a socket event to enter this user to the channel's broadcast group
     joinChannelRoom() {
         // socket.emit("user_enter", { user_id: 1, room: "Notification" })
-        socket.emit("user_enter", {user: "test", room: "Notification"});
+        socket.emit("user_enter", { token: Cookie.get("token"), room: "Notification"});
     }
 
     // Emits a socket event to drop this user from the channel's broadcast group
     exitChannelRoom() {
-        socket.emit("user_leave", { "user_id": 1, "room": "Notification" })
-    }
-
-    // TODO: Remove this test func
-    pingRoom() {
-        console.log("Trying to ping room");
-        socket.emit("pingtest", {user: "test", room: "Notification"});
+        socket.emit("user_leave", { token: Cookie.get("token"), "room": "Notification" })
     }
 
     componentDidMount() {
@@ -99,9 +92,9 @@ class ChannelMessages extends React.Component {
         // and checking whether it is non-empty (contains non-whitespace characters)
         const currMessage = event.target.value;
         if (currMessage.trim() !== "") {
-            socket.emit("user_started_typing", { username: Cookie.get("user_id"), room: "Notification"});
+            socket.emit("user_started_typing", { token: Cookie.get("token"), room: "Notification"});
         } else {
-            socket.emit("user_stopped_typing", { username: Cookie.get("user_id"), room: "Notification"});
+            socket.emit("user_stopped_typing", { token: Cookie.get("token"), room: "Notification"});
         }
     }
 
@@ -152,7 +145,7 @@ class ChannelMessages extends React.Component {
     }
 
     render() {
-        const { typers } = this.state;
+        const { typers, thisUser } = this.state;
         return (
             <>
                 <Prompt
@@ -161,7 +154,7 @@ class ChannelMessages extends React.Component {
                 />
                 <ChatBox {...this.state} />
                 {/* 'User is typing' prompt */}
-                <TypingPrompt typers={typers} />
+                <TypingPrompt typers={typers} thisTyper={thisUser} />
                 {/* Type a message form: */}
                 <Form className="messageForm" onSubmit={this.sendMessage}>
                     <FormGroup className="typingAreaFormGroup">
