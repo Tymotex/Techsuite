@@ -154,10 +154,8 @@ class ConnectionsList extends React.Component {
                                         <h3>Contacts</h3>
                                     </CardHeader>
                                     <CardBody>
-                                        <ConnectionCardList />
                                         {(users && users.length > 0) ? (
                                             <section class="card-list">
-
                                                 {(users.map((eachUser) => (
                                                     <ConnectionCard 
                                                         user={eachUser} 
@@ -186,19 +184,17 @@ class ConnectionsList extends React.Component {
                                         <span className="text-muted">These people would like to connect with you:</span>
                                         <hr />
                                         {(incomingUsers && incomingUsers.length > 0) ? (
-                                            <Row>
+                                            <section class="card-list">
                                                 {(incomingUsers.map((eachUser) => (
-                                                    <Col lg={12} xl={6}>
-                                                        <ConnectionCard 
-                                                            user={eachUser} 
-                                                            isPending={true} 
-                                                            isOutgoing={false}
-                                                            refreshConnections={this.fetchConnections}
-                                                            refreshIncoming={this.fetchConnectionsIncoming}
-                                                            refreshOutgoing={this.fetchConnectionsOutgoing} />
-                                                    </Col>
+                                                    <ConnectionCard 
+                                                        user={eachUser} 
+                                                        isPending={true} 
+                                                        isOutgoing={false}
+                                                        refreshConnections={this.fetchConnections}
+                                                        refreshIncoming={this.fetchConnectionsIncoming}
+                                                        refreshOutgoing={this.fetchConnectionsOutgoing} />
                                                 )))}
-                                            </Row>
+                                            </section>
                                         ) : (
                                             <p className="text-muted">No incoming requests</p>
                                         )}
@@ -217,19 +213,17 @@ class ConnectionsList extends React.Component {
                                         </p>
                                         <hr />
                                         {(outgoingUsers && outgoingUsers.length > 0) ? (
-                                            <Row>
+                                            <section class="card-list">
                                                 {(outgoingUsers.map((eachUser) => (
-                                                    <Col lg={12} xl={6}>
-                                                        <ConnectionCard 
-                                                            user={eachUser} 
-                                                            isPending={true} 
-                                                            isOutgoing={true}
-                                                            refreshConnections={this.fetchConnections}
-                                                            refreshIncoming={this.fetchConnectionsIncoming}
-                                                            refreshOutgoing={this.fetchConnectionsOutgoing} />
-                                                    </Col>
+                                                    <ConnectionCard 
+                                                        user={eachUser} 
+                                                        isPending={true} 
+                                                        isOutgoing={true}
+                                                        refreshConnections={this.fetchConnections}
+                                                        refreshIncoming={this.fetchConnectionsIncoming}
+                                                        refreshOutgoing={this.fetchConnectionsOutgoing} />
                                                 )))}
-                                            </Row>
+                                            </section>
                                         ) : (
                                             <></>
                                         )}

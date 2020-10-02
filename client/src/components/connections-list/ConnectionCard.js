@@ -96,20 +96,20 @@ class ConnectionCard extends React.Component {
         const { first_name, last_name, education, location, summary } = user;
         return (
             <>
-
                 <article class="card">
                     <header class="card-header">
                         <h2>
-                            {(first_name && last_name) ? (
-                                `${first_name} ${last_name}`
-                            ) : (
-                                "Unknown name"
-                            )}
+                            <Link to={`/user/profile/${user.user_id}`} style={{textDecoration: "none", color: "grey"}}>
+                                {(first_name && last_name) ? (
+                                    `${first_name} ${last_name}`
+                                ) : (
+                                    "Unknown name"
+                                )}
+                            </Link>
                         </h2>
                         <p>{education}</p>
                         <p>{location}</p>
                     </header>
-            
                     <div class="card-author">
                             <a class="author-avatar">
                                 <Link to={`/user/profile/${user.user_id}`}>
@@ -128,46 +128,32 @@ class ConnectionCard extends React.Component {
                             </div>
                     </div>
                     <div class="tags">
-                        <Link to={`/user/profile/${user.user_id}`}>Message</Link>
-                        <Link to={`/user/profile/${user.user_id}`}>Remove</Link>
-                        <Link to={`/user/profile/${user.user_id}`}>Profile</Link>
+                        {(isOutgoing) ? (
+                            <Button outline color="secondary" disabled={true}>Pending</Button>
+                        ) : (
+                            (isPending) ? (
+                                <>
+                                    <a onClick={this.acceptConnection}>Accept</a>
+                                    <a onClick={this.removeConnection}>Reject</a>
+                                </>
+                            ) : (
+                                <>
+                                    <a onClick={() => openMessage(user.user_id)}>Message</a>
+                                    <a onClick={this.toggleModal}>Remove</a>
+                                    <Link to={`/user/profile/${user.user_id}`}>Profile</Link>
+                                </>
+                            )
+                        )}
                     </div>
                 </article>
-
-                <Card className="connection-card" body inverse style={{ backgroundColor: '#333', borderColor: '#333' }}>
-                    <Link to={`/user/profile/${user.user_id}`}>
-                        <img className="connection-card-image" src={user.profile_img_url} alt="this connection's profile" />
-                    </Link>
-                    <CardHeader className="connection-card-header">{user.username}</CardHeader>
-                    <CardBody className="connection-card-body">
-                        <div>
-                            {(isOutgoing) ? (
-                                    <Button outline color="secondary" disabled={true}>Pending</Button>
-                                ) : (
-                                    (isPending) ? (
-                                        <>
-                                            <Button outline color="primary" onClick={this.acceptConnection}>Accept</Button>
-                                            <Button outline color="danger" onClick={this.removeConnection}>Decline</Button>
-                                        </>
-                                    ) : (
-                                        <>
-                                            {/* TODO: Open up a chat window on the bottom right */}
-                                            <Button outline color="primary" onClick={() => openMessage(user.user_id)}>Message</Button> 
-                                            <Button outline color="danger" onClick={this.toggleModal} type="button">Remove</Button>
-                                        </>
-                                    )
-                            )}
-                        </div>
-                    </CardBody>
-                </Card>
                 {/* Remove connection confirmation modal */}
                 <Modal isOpen={this.state.modal} toggle={this.toggleModal}>
-                    <ModalHeader toggle={this.toggleModal}>Double checking...</ModalHeader>
+                    <ModalHeader toggle={() => this.toggleModal(false)}>Double checking...</ModalHeader>
                     <ModalBody>
                         <p>Are you sure you want to remove <strong>{user.username}</strong> as a connection?</p>
                         <ModalFooter>
                             <Button color="danger" onClick={this.removeConnection}>Yes</Button>
-                            <Button color="secondary" onClick={this.toggleModal} type="button">Cancel</Button>
+                            <Button color="secondary" onClick={() => this.toggleModal(false)} type="button">Cancel</Button>
                         </ModalFooter>
                     </ModalBody>
                 </Modal>

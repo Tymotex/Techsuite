@@ -19,7 +19,18 @@ def handle_connection_fetch():
         Fetches all of the users that the calling user is connected with
         Params: (token)
         Returns JSON: { 
-            users: [ { user_id, email, username, profile_img_url }, ... ]
+            users: [ {
+                user_id, 
+                email, 
+                username, 
+                profile_img_url, 
+                summary,
+                first_name,
+                last_name,
+                location,
+                education,
+                ... other bio fields     
+            }, ... ]
         }
     """
     token = request.args.get("token")
