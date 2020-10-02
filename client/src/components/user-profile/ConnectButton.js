@@ -14,8 +14,7 @@ class ConnectButton extends React.Component {
     sendConnectionRequest(event) {
         const { refresh } = this.props;
         event.preventDefault();
-        const fd = new FormData(event.target);
-        const targetUserID = fd.get("target-user");
+        const targetUserID = this.props.userID;
         const currToken = Cookie.get("token");
         if (currToken) {
             // alert(`Sending connection request: ${targetUserID} ${currToken}`);
@@ -35,6 +34,7 @@ class ConnectButton extends React.Component {
                 })
                 .catch((err) => {
                     alert("Failed");
+                    alert(err);
                 });
         } else {
 

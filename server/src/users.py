@@ -5,7 +5,7 @@ from database import db
 from exceptions import InputError, AccessError
 from util.util import email_is_legit, printColour
 from util.token import verify_token, get_user_from_token
-from models import User, Channel, Bio, MemberOf
+from models import User, Channel, Bio, MemberOf, Connection
 
 
 # ===== User Functions =====
@@ -19,16 +19,26 @@ def users_profile(token, user_id):
         { user_id, email, username, profile_img_url }
     """
     verify_token(token)
-    user = User.query.filter_by(id=user_id).first()
-    if not user:
+    calling_user = get_user_from_token(token)
+    target_user = User.query.filter_by(id=user_id).first()
+    if not target_user:
         raise InputError(description="user_id does not refer to any user in the database")
+    
+    connected = False
+    pending = False
+    connection = Connection.query.filter_by(user_id=calling_user.id, other_user_id=target_user.id).first()
+    if connection:
+        if connection.approved:
+            connected = True
+        else:
+            pending = True
     return {
-        "user_id": user.id,
-        "email": user.email,
-        "username": user.username,
-        "profile_img_url": user.bio.profile_img_url,
-        "is_connected_to": True,
-        "connection_is_pending": False
+        "user_id": target_user.id,
+        "email": target_user.email,
+        "username": target_user.username,
+        "profile_img_url": target_user.bio.profile_img_url,
+        "is_connected_to": connected,
+        "connection_is_pending": pending
     }
 
 def users_profile_upload_photo(token, user_id, img_endpoint):

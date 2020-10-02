@@ -149,7 +149,9 @@ class ConnectionsList extends React.Component {
                             <Col md={12}>
                                 {/* Showing all existing connections */}
                                 <Card>
-                                    <CardHeader>Contacts:</CardHeader>
+                                    <CardHeader>
+                                        <h3>Contacts</h3>
+                                    </CardHeader>
                                     <CardBody>
                                         {(users && users.length > 0) ? (
                                             <Row>
@@ -176,9 +178,11 @@ class ConnectionsList extends React.Component {
                             {/* Showing all pending incoming request */}
                             <Col md={6}>
                                 <Card>
-                                    <CardHeader>Connection Requests</CardHeader>
+                                    <CardHeader>
+                                        <h3>Connection Requests</h3>
+                                    </CardHeader>
                                     <CardBody>
-                                        <span>These people would like to connect with you:</span>
+                                        <span className="text-muted">These people would like to connect with you:</span>
                                         <hr />
                                         {(incomingUsers && incomingUsers.length > 0) ? (
                                             <Row>
@@ -195,7 +199,7 @@ class ConnectionsList extends React.Component {
                                                 )))}
                                             </Row>
                                         ) : (
-                                            <p>No incoming requests</p>
+                                            <p className="text-muted">No incoming requests</p>
                                         )}
                                     </CardBody>
                                 </Card>
@@ -203,9 +207,13 @@ class ConnectionsList extends React.Component {
                             {/* Showing all pending outgoing request */}
                             <Col md={6}>
                                 <Card>
-                                    <CardHeader>Pending Connection Requests</CardHeader>
+                                    <CardHeader>
+                                        <h3>Pending Connection Requests</h3>
+                                    </CardHeader>
                                     <CardBody>
-                                        You have sent a connection request to these people:
+                                        <p className="text-muted">
+                                            You have sent a connection request to these people:
+                                        </p>
                                         <hr />
                                         {(outgoingUsers && outgoingUsers.length > 0) ? (
                                             <Row>

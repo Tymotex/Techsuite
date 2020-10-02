@@ -22,10 +22,12 @@ class UserProfile extends React.Component {
         this.state = {
             isLoading: false,
             fetchSucceeded: false,
-            user: {},
+            currentChatUser: {},
+            thisUser: {},
             bio: {},
             chatWindowOpen: false
         };
+        this.getCallingUser = this.getCallingUser.bind(this);
         this.toggleChatWindow = this.toggleChatWindow.bind(this);
         this.forceCloseChatWindow = this.forceCloseChatWindow.bind(this);
     }
@@ -44,7 +46,7 @@ class UserProfile extends React.Component {
                             this.setState({
                                 isLoading: false,
                                 fetchSucceeded: true,
-                                user: userProfile.data,
+                                currentChatUser: userProfile.data,
                                 bio: userBio.data
                             });
                         })
@@ -72,6 +74,41 @@ class UserProfile extends React.Component {
             });
             Notification.spawnNotification("Failed", "Please log in first", "danger");
         }
+        this.getCallingUser();
+    }
+
+    getCallingUser() {
+        // Fetch the current user's profile data
+        const currToken = Cookie.get("token");
+        const userID = Cookie.get("user_id");
+        if (currToken) {
+            axios.get(`${BASE_URL}/users/profile?token=${currToken}&user_id=${userID}`)
+                .then((userPayload) => {
+                    this.setState({
+                        thisUser: userPayload.data,
+                        isLoading: false,
+                        fetchSucceeded: true
+                    });
+                })
+                .catch((err) => {
+                    if (err.data) {
+                        const errorMessage = (err.response.data.message) ? (err.response.data.message) : "Something went wrong";
+                        Notification.spawnNotification("Failed to load your details", errorMessage, "danger");
+                    } else {
+                        Notification.spawnNotification("Failed to load your details", "Something went wrong. Techsuite messed up!", "danger");
+                    }
+                    this.setState({
+                        isLoading: false,
+                        fetchSucceeded: false
+                    });
+                });
+        } else {
+            Notification.spawnNotification("Can't load your details", "Please log in first!", "danger");
+            this.setState({
+                isLoading: false,
+                fetchSucceeded: false
+            });
+        }
     }
 
     toggleChatWindow(userID) {
@@ -97,16 +134,16 @@ class UserProfile extends React.Component {
     }
 
     render() {
-        const { user } = this.state;
-        const { user_id, email, username, profile_img_url, is_connected_to, connection_is_pending } = user;
+        const { currentChatUser, thisUser } = this.state;
+        const { user_id, email, username, profile_img_url, is_connected_to, connection_is_pending } = currentChatUser;
         const { first_name, last_name, cover_img_url, summary, location, title, education} = this.state.bio;
         const coverStyle = {
-            "background-image": (cover_img_url != null) ? (
+            "backgroundImage": (cover_img_url != null) ? (
                 `url('${cover_img_url}')`
             ) : (
                 `linear-gradient(160deg, #4d61de 0%, #0a0026 100%)`
             ), 
-            "background-size": "cover"
+            "backgroundSize": "cover"
         }
         return (
             <div>
@@ -133,7 +170,7 @@ class UserProfile extends React.Component {
                                             <div className="h5 text-muted">Email: {email}</div>
                                             
                                         </div>
-                                        {(user_id === Cookie.get("user_id")) ? (
+                                        {(parseInt(user_id) == parseInt(Cookie.get("user_id"))) ? (
                                             <></>
                                         ) : (
                                             <ConnectButton 
@@ -173,7 +210,8 @@ class UserProfile extends React.Component {
                             name="Messages" 
                             status="online" 
                             close={this.forceCloseChatWindow} 
-                            user={user} />
+                            otherUser={currentChatUser}
+                            thisUser={thisUser} />
                     </ConnectionChat.Container>
                 ) : (
                     <></>

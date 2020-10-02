@@ -13,7 +13,7 @@ from util.token import get_user_from_token
 # Globals and config:
 load_dotenv()
 users_router = Blueprint("users", __name__)
-BASE_URL = "http://localhost:{0}".format(os.getenv("PORT"))
+BASE_URL = os.getenv("BASE_URI")
 
 @users_router.route("/users/profile", methods=['GET'])
 def handle_user_profile():
@@ -21,7 +21,7 @@ def handle_user_profile():
         HTTP Route: /users/profile
         HTTP Method: GET
         Params: (token, user_id)
-        Returns JSON: { user_id, email, username, profile_img_url, is_connected_to }
+        Returns JSON: { user_id, email, username, profile_img_url, is_connected_to, connection_is_pending }
     """
     token = request.args.get("token")
     user_id = int(request.args.get("user_id"))
@@ -138,6 +138,7 @@ def handle_user_profile_upload_photo():
             file.save(os.path.join(UPLOAD_FOLDER, filename))
             crop_image_file(filename, x_start, y_start, x_end, y_end)
             image_endpoint = "{0}/images/{1}".format(BASE_URL, filename)
+            print("IMAGE ENDPOINT!: " + image_endpoint)
             users.users_profile_upload_photo(token, user_id, image_endpoint)
             return jsonify({ "succeeded": True })
 

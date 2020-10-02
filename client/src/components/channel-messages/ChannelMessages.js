@@ -30,23 +30,23 @@ class ChannelMessages extends React.Component {
         });
 
         // Typing prompt events
-        socket.on("get_typers", (eventData) => {
-            // When the user first enters the page, get the other currently typing users
-            this.setState({
-                typers: eventData.typers,
-                thisUser: eventData.user
-            });
-        });
-        socket.on("add_typer", (typers) => {
-            this.setState({
-                typers: typers
-            });
-        });
-        socket.on("remove_typer", (typers) => {
-            this.setState({
-                typers: typers
-            });
-        });
+        // socket.on("get_typers", (eventData) => {
+        //     // When the user first enters the page, get the other currently typing users
+        //     this.setState({
+        //         typers: eventData.typers,
+        //         thisUser: eventData.user
+        //     });
+        // });
+        // socket.on("add_typer", (typers) => {
+        //     this.setState({
+        //         typers: typers
+        //     });
+        // });
+        // socket.on("remove_typer", (typers) => {
+        //     this.setState({
+        //         typers: typers
+        //     });
+        // });
 
         // Message receive/edit
         socket.on("message_removed", (message) => {
@@ -90,12 +90,12 @@ class ChannelMessages extends React.Component {
     broadcastTypingPrompt(event) {
         // Extracting the current value in the text field from the event object
         // and checking whether it is non-empty (contains non-whitespace characters)
-        const currMessage = event.target.value;
-        if (currMessage.trim() !== "") {
-            socket.emit("user_started_typing", { token: Cookie.get("token"), room: "Notification"});
-        } else {
-            socket.emit("user_stopped_typing", { token: Cookie.get("token"), room: "Notification"});
-        }
+        // const currMessage = event.target.value;
+        // if (currMessage.trim() !== "") {
+        //     socket.emit("user_started_typing", { token: Cookie.get("token"), room: "Notification"});
+        // } else {
+        //     socket.emit("user_stopped_typing", { token: Cookie.get("token"), room: "Notification"});
+        // }
     }
 
     sendMessage(event) {
@@ -154,7 +154,7 @@ class ChannelMessages extends React.Component {
                 />
                 <ChatBox {...this.state} />
                 {/* 'User is typing' prompt */}
-                <TypingPrompt typers={typers} thisTyper={thisUser} />
+                {/* <TypingPrompt typers={typers} thisTyper={thisUser} /> */}
                 {/* Type a message form: */}
                 <Form className="messageForm" onSubmit={this.sendMessage}>
                     <FormGroup className="typingAreaFormGroup">

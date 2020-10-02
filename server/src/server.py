@@ -100,15 +100,16 @@ def upload_file():
 # Error event
 def emit_error(error, error_type="input_error"):
     if (isinstance(error, InputError)):
-        emit("input_error", error.get_message(), broadcast=True)   # TODO Need to selectively broadcast
+        emit("input_error", error.get_message())   # TODO Need to selectively broadcast
     else:
-        emit("input_error", error.__repr__(), broadcast=True)      # TODO Need to selectively broadcast
+        emit("input_error", error.__repr__())      # TODO Need to selectively broadcast
 
 # Connect/Disconnect hooks
 
-# @socketio.on('connect', namespace='/ts-socket')
-# def handle_connect():
-#     printColour("Socket connection succeeded")
+@socketio.on('connect', namespace='/ts-socket')
+def handle_connect():
+    join_room(request.sid)
+    print("Client joined to session: {}".format(request.sid))
 
 @socketio.on('disconnect', namespace='/ts-socket')
 def handle_connect():
@@ -171,67 +172,67 @@ def handle_edit_message(token, message_id, message):
 
 # Channel Rooms and Typing Indicator Prompt:
 
-typers = {}
+# typers = {}
 
-@socketio.on("user_enter", namespace='/ts-socket')
-def on_join(event_data):
-    token = event_data["token"]
-    user = get_user_from_token(token)
-    room = event_data["room"]
-    print("user {} joining: {}".format(user.username, room))
-    join_room(room)
-    emit("get_typers", { "typers": typers[room], "user": user.username }, broadcast=True, room=room)
+# @socketio.on("user_enter", namespace='/ts-socket')
+# def on_join(event_data):
+#     token = event_data["token"]
+#     user = get_user_from_token(token)
+#     room = event_data["room"]
+#     print("user {} joining: {}".format(user.username, room))
+#     join_room(room)
+#     emit("get_typers", { "typers": typers[room], "user": user.username }, broadcast=True, room=room)
 
-@socketio.on("user_leave", namespace='/ts-socket')
-def handle_user_channel_leave(event_data):
-    """
-        Parameter event_data is a dictionary containing:
-         - user_id
-         - channel_id
-    """
-    token = event_data["token"]
-    user = get_user_from_token(token)
-    room = event_data["room"]
-    leave_room(room)
-    printColour("{} has LEFT {}".format(user.username, room), colour="violet")
+# @socketio.on("user_leave", namespace='/ts-socket')
+# def handle_user_channel_leave(event_data):
+#     """
+#         Parameter event_data is a dictionary containing:
+#          - user_id
+#          - channel_id
+#     """
+#     token = event_data["token"]
+#     user = get_user_from_token(token)
+#     room = event_data["room"]
+#     leave_room(room)
+#     printColour("{} has LEFT {}".format(user.username, room), colour="violet")
 
-@socketio.on("user_started_typing", namespace='/ts-socket')
-def handle_typing_prompt_start(event_data):
-    """
-        Parameter event_data is a dictionary containing:
-         - token
-         - room
-    """
-    token = event_data["token"]
-    username = get_user_from_token(token).username
-    room = event_data["room"]
-    print(username + " started typing. Broadcasting to room: {}".format(room))
-    if room not in typers:
-        typers[room] = [ username ]
-        print("Typers of room {}: {}".format(room, typers[room]))
-    else:
-        if username not in typers[room]:
-            typers[room].append(username)
-            print("Typers of room {}: {}".format(room, typers[room]))
-        else:
-            return
-    emit("add_typer", typers[room], broadcast=True, room=room)
+# @socketio.on("user_started_typing", namespace='/ts-socket')
+# def handle_typing_prompt_start(event_data):
+#     """
+#         Parameter event_data is a dictionary containing:
+#          - token
+#          - room
+#     """
+#     token = event_data["token"]
+#     username = get_user_from_token(token).username
+#     room = event_data["room"]
+#     print(username + " started typing. Broadcasting to room: {}".format(room))
+#     if room not in typers:
+#         typers[room] = [ username ]
+#         print("Typers of room {}: {}".format(room, typers[room]))
+#     else:
+#         if username not in typers[room]:
+#             typers[room].append(username)
+#             print("Typers of room {}: {}".format(room, typers[room]))
+#         else:
+#             return
+#     emit("add_typer", typers[room], broadcast=True, room=room)
 
-@socketio.on("user_stopped_typing", namespace='/ts-socket')
-def handle_typing_prompt_end(event_data):
-    """
-        Parameter event_data is a dictionary containing:
-         - token
-         - room
-    """
-    token = event_data["token"]
-    username = get_user_from_token(token).username
-    room = event_data["room"]
-    print(username + " stopped typing. Broadcasting to room: {}".format(room))
-    assert(room in typers)
-    typers[room].remove(username)
-    print("Typers of room {}: {}".format(room, typers[room]))
-    emit("remove_typer", typers[room], broadcast=True, room=room)    
+# @socketio.on("user_stopped_typing", namespace='/ts-socket')
+# def handle_typing_prompt_end(event_data):
+#     """
+#         Parameter event_data is a dictionary containing:
+#          - token
+#          - room
+#     """
+#     token = event_data["token"]
+#     username = get_user_from_token(token).username
+#     room = event_data["room"]
+#     print(username + " stopped typing. Broadcasting to room: {}".format(room))
+#     assert(room in typers)
+#     typers[room].remove(username)
+#     print("Typers of room {}: {}".format(room, typers[room]))
+#     emit("remove_typer", typers[room], broadcast=True, room=room)    
 
 # Direct messaging
 
@@ -242,7 +243,7 @@ def handle_connection_send_message(token, user_id, message):
     except InputError as err:
         emit_error(err.get_message())
     printColour("Client sent a direct message to {}".format(user_id))
-    emit("receive_connection_message", "The server says: your chat partner has sent a new message", broadcast=True)   # TODO: See https://stackoverflow.com/questions/39423646/flask-socketio-emit-to-specific-user
+    emit("receive_connection_message", "The server says: your chat partner has sent a new message", broadcast=True)  
 
 @socketio.on("edit_connection_message", namespace='/ts-socket')
 def handle_connection_edit_message(token, message_id, message):
@@ -251,7 +252,7 @@ def handle_connection_edit_message(token, message_id, message):
     except InputError as err:
         emit_error(err.get_message())
     printColour("Client edited a direct message")
-    emit("connection_message_edited", "The server says: your chat partner has edited a message", broadcast=True)     # TODO: NEed to selectively broadcast
+    emit("connection_message_edited", "The server says: your chat partner has edited a message", broadcast=True)     
 
 @socketio.on("remove_connection_message", namespace='/ts-socket')
 def handle_connection_remove_message(token, message_id):
@@ -260,7 +261,7 @@ def handle_connection_remove_message(token, message_id):
     except InputError as err:
         emit_error(err.get_message())
     printColour("Client removed a direct message")
-    emit("connection_message_removed", "The server says: your chat partner has removed a message", broadcast=True)    # TODO: NEed to selectively broadcast
+    emit("connection_message_removed", "The server says: your chat partner has removed a message", broadcast=True)    
 
 # ===== Starting the server =====
 if __name__ == "__main__":
