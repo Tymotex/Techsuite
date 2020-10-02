@@ -4,7 +4,7 @@ from models import Channel, User, Message, MemberOf, Bio, Connection, DirectMess
 from exceptions import InputError, AccessError
 from util.util import is_user_member, select_channel, get_user_from_id, printColour
 from util.token import get_user_from_token, verify_token
-from users import users_profile
+from users import users_profile, users_bio_fetch
 
 # ===== Fetching Connections =====
 
@@ -17,11 +17,15 @@ def connection_fetch_users(token):
             "users": [ { user_id, email, username, profile_img_url }, ... ]
         }        
     """
+    def package_user_info(user_id):
+        package = users_profile(token, user_id)
+        package.update(users_bio_fetch(token, user_id))
+        return package
     verify_token(token)
     calling_user = get_user_from_token(token)
     # Get all the connected users that have been approved
     connected_user_ids = [ conn.other_user_id for conn in Connection.query.all() if (conn.user_id == calling_user.id and conn.approved) ]
-    connected_users = list(map(lambda user_id: users_profile(token, user_id), connected_user_ids))
+    connected_users = list(map(package_user_info, connected_user_ids))
     printColour(connected_users, colour="violet")
     return {
         "users": connected_users

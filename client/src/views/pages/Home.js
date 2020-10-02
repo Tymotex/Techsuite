@@ -5,7 +5,6 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React, { Component } from 'react';
 import { Card, CardBody, Col, Row } from 'reactstrap';
 
-
 // The feature showcase is rendered if the user is not logged in
 const Showcase = () => {
   const heroStyles = {

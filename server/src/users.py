@@ -16,7 +16,7 @@ def users_profile(token, user_id):
             token (str)
             user_id (int)
         Returns: 
-        { user_id, email, username, profile_img_url }
+        { user_id, email, username, profile_img_url, is_connected_to, connection_is_pending }
     """
     verify_token(token)
     calling_user = get_user_from_token(token)

@@ -6,6 +6,7 @@ import { Button, Card, CardBody, CardHeader, Modal, ModalBody, ModalFooter, Moda
 import { BASE_URL } from '../../constants/api-routes';
 import { Notification } from '../notification';
 import './ConnectionCard.scss';
+import './Card.scss';
 
 class ConnectionCard extends React.Component {
     constructor(props) {
@@ -92,8 +93,47 @@ class ConnectionCard extends React.Component {
 
     render() {
         const { user, isPending, isOutgoing, openMessage } = this.props;
+        const { first_name, last_name, education, location, summary } = user;
         return (
             <>
+
+                <article class="card">
+                    <header class="card-header">
+                        <h2>
+                            {(first_name && last_name) ? (
+                                `${first_name} ${last_name}`
+                            ) : (
+                                "Unknown name"
+                            )}
+                        </h2>
+                        <p>{education}</p>
+                        <p>{location}</p>
+                    </header>
+            
+                    <div class="card-author">
+                            <a class="author-avatar">
+                                <Link to={`/user/profile/${user.user_id}`}>
+                                    <img src={user.profile_img_url} />
+                                </Link>
+                            </a>
+                            <svg class="half-circle" viewBox="0 0 106 57">
+                            <path d="M102 4c0 27.1-21.9 49-49 49S4 31.1 4 4"></path>
+                            </svg>
+                            
+                            <div class="author-name">
+                                <div class="author-name-prefix">
+                                    {user.username}    
+                                </div>
+                                <span style={{"color": "darkslategrey"}}>{user.email}</span>
+                            </div>
+                    </div>
+                    <div class="tags">
+                        <Link to={`/user/profile/${user.user_id}`}>Message</Link>
+                        <Link to={`/user/profile/${user.user_id}`}>Remove</Link>
+                        <Link to={`/user/profile/${user.user_id}`}>Profile</Link>
+                    </div>
+                </article>
+
                 <Card className="connection-card" body inverse style={{ backgroundColor: '#333', borderColor: '#333' }}>
                     <Link to={`/user/profile/${user.user_id}`}>
                         <img className="connection-card-image" src={user.profile_img_url} alt="this connection's profile" />

@@ -8,6 +8,7 @@ import { BASE_URL } from '../../constants/api-routes';
 import { ConnectionSearch } from '../connection-search';
 import { Notification } from '../notification';
 import { LoadingSpinner } from '../loading-spinner';
+import ConnectionCardList from './ConnectionCardList';
 
 class ConnectionsList extends React.Component {
     constructor(props) {
@@ -153,22 +154,22 @@ class ConnectionsList extends React.Component {
                                         <h3>Contacts</h3>
                                     </CardHeader>
                                     <CardBody>
+                                        <ConnectionCardList />
                                         {(users && users.length > 0) ? (
-                                            <Row>
+                                            <section class="card-list">
+
                                                 {(users.map((eachUser) => (
-                                                    <Col xs={12} md={6} lg={4} xl={3}>
-                                                        <ConnectionCard 
-                                                            user={eachUser} 
-                                                            isPending={false} 
-                                                            isOutgoing={false} 
-                                                            openMessage={this.toggleChatWindow}
-                                                            refreshConnections={this.fetchConnections}
-                                                            refreshIncoming={this.fetchConnectionsIncoming}
-                                                            refreshOutgoing={this.fetchConnectionsOutgoing}
-                                                        />
-                                                    </Col>
+                                                    <ConnectionCard 
+                                                        user={eachUser} 
+                                                        isPending={false} 
+                                                        isOutgoing={false} 
+                                                        openMessage={this.toggleChatWindow}
+                                                        refreshConnections={this.fetchConnections}
+                                                        refreshIncoming={this.fetchConnectionsIncoming}
+                                                        refreshOutgoing={this.fetchConnectionsOutgoing}
+                                                    />
                                                 )))}
-                                            </Row>
+                                            </section>
                                         ) : (
                                             <p>You currently have no connections</p>
                                         )}
