@@ -141,7 +141,7 @@ class UserProfile extends React.Component {
             "backgroundImage": (cover_img_url != null) ? (
                 `url('${cover_img_url}')`
             ) : (
-                `linear-gradient(160deg, #4d61de 0%, #0a0026 100%)`
+                `radial-gradient(ellipse at bottom, #3d6492 0%, #090A0F 100%)`
             ), 
             "backgroundSize": "cover"
         }
@@ -168,7 +168,6 @@ class UserProfile extends React.Component {
                                             <div className="h5 text-muted">Education: {education != null ? education : "unknown"}</div>
                                             <div className="h5 text-muted">Location: {location != null ? location : "unknown"}</div>
                                             <div className="h5 text-muted">Email: {email}</div>
-                                            
                                         </div>
                                         {(parseInt(user_id) == parseInt(Cookie.get("user_id"))) ? (
                                             <></>
