@@ -7,13 +7,15 @@ from dotenv import load_dotenv
 
 # Local imports:
 import users
-from util.util import printColour, download_img_and_get_filename, crop_image_file, get_latest_filename
+from util.util import printColour, download_img_and_get_filename, crop_image_file, get_latest_filename, get_user_from_id
 from util.token import get_user_from_token
 
 # Globals and config:
 load_dotenv()
 users_router = Blueprint("users", __name__)
 BASE_URL = os.getenv("BASE_URI")
+
+# ===== Profile Management =====
 
 @users_router.route("/users/profile", methods=['GET'])
 def handle_user_profile():
@@ -25,23 +27,12 @@ def handle_user_profile():
     """
     token = request.args.get("token")
     user_id = int(request.args.get("user_id"))
-    printColour("User profile: {}".format(request.args), colour="violet")
+    user = get_user_from_id(user_id)
+    printColour(" ➤ User Profile: Fetching user profile data: {}".format(
+        user.username
+    ), colour="blue")
     return jsonify(users.users_profile(token, user_id))
 
-@users_router.route("/users/profile/setemail", methods=['PUT'])
-def handle_user_profile_setemail():
-    """
-        HTTP Route: /users/profile/setemail
-        HTTP Method: PUT
-        Params: (token, email)
-        Returns JSON: {  }
-    """
-    request_data = request.get_json()
-    token = request_data["token"]
-    email = request_data["email"]
-    return jsonify(users.users_profile_setemail(token, email))
-
-# TODO: new addition
 @users_router.route("/users/bio", methods=['GET'])
 def handle_users_bio_fetch():
     """
@@ -54,7 +45,10 @@ def handle_users_bio_fetch():
     """
     token = request.args.get("token")
     user_id = int(request.args.get("user_id"))
-    printColour("Fetching user " + str(user_id) + "'s bio")
+    user = get_user_from_id(user_id)
+    printColour(" ➤ User Bio: Fetching user {}'s bio".format(
+        user.username
+    ), colour="blue")
     return jsonify(users.users_bio_fetch(token, user_id))
 
 # TODO: new addition
@@ -79,6 +73,10 @@ def handle_users_bio_update():
         "education": request_data["education"],
         "title": request_data["title"]
     }
+    user = get_user_from_id(user_id)
+    printColour(" ➤ User Bio: Updated user {}'s bio".format(
+        user.username
+    ), colour="blue")
     return jsonify(users.users_bio_update(token, user_id, bio))
 
 @users_router.route("/users/all", methods=['GET'])
@@ -91,7 +89,7 @@ def handle_users_all():
             Where users: array of objects { user_id, email, username, profile_img_url }
     """
     token = request.args.get("token")
-    printColour("Fetching all users")
+    printColour(" ➤ User List All: Getting all list of all users", colour="blue")
     return jsonify(users.users_all(token))
 
 # ===== User Profile Picture Handling =====
@@ -120,26 +118,33 @@ def handle_user_profile_upload_photo():
     y_start = int(request.form["y_start"])
     x_end = int(request.form["x_end"])
     y_end = int(request.form["y_end"])
-    printColour("ATTEMPTING TO UPLOAD IMAGE FILE. Coordinates: ({}, {}) to ({}, {})".format(x_start, y_start, x_end, y_end))
+
+    user = get_user_from_id(user_id)
+    printColour(" ➤ User Profile Upload Photo: Uploading profile picture image for {}".format(user.username), colour="blue")
+    printColour(" ➤ Crop coordinates: start = ({}, {}), end = ({}, {})".format(x_start, y_start, x_end, y_end), colour="cyan")
 
     # check if the post request has the file part
     if 'file' not in request.files:
-        printColour("User didn't upload a photo?")
+        printColour(" ➤ User didn't upload a photo", colour="red")
         return jsonify({ "succeeded": False })
     else:
-        printColour("Saving the user's photo")
         file = request.files['file']
         if file.filename == '':
-            # if user does not select file, browser also submit an empty part without filename
-            printColour("No selected file")
+            # If user does not select file, browser also submits an empty part without filename
+            printColour(" ➤ No selected file", colour="red")
             return jsonify({ "succeeded": False })
         if file and allowed_file(file.filename):
+            # Saving the image to local storage
             filename = get_latest_filename("user_{}_profile.jpg".format(user_id))
             file.save(os.path.join(UPLOAD_FOLDER, filename))
             crop_image_file(filename, x_start, y_start, x_end, y_end)
+            # Saving the image endpoint to the user's bio tuple under the profile_img_url field
             image_endpoint = "{0}/images/{1}".format(BASE_URL, filename)
-            print("IMAGE ENDPOINT!: " + image_endpoint)
             users.users_profile_upload_photo(token, user_id, image_endpoint)
+            printColour(" ➤ Successfully uploaded profile image for {}. Available at: {}".format(
+                user.username,
+                image_endpoint
+            ), colour="green", bordersOn=False)
             return jsonify({ "succeeded": True })
 
 @users_router.route("/users/profile/uploadcover", methods=['POST'])
@@ -152,24 +157,45 @@ def handle_user_profile_upload_cover():
     """
     token = request.form["token"]
     user_id = request.form["user_id"]
-    printColour("Attempting to upload cover image for user: " + str(user_id))
-    
+
+    user = get_user_from_id(user_id)
+    printColour(" ➤ User Profile Upload Cover: Uploading cover picture image for {}".format(user.username), colour="blue")
+
     # Check if the post request has the file part
     if 'file' not in request.files:
-        printColour("User didn't upload a photo?")
+        printColour(" ➤ User didn't upload a photo", colour="red")
         return jsonify({ "succeeded": False })
     else:
-        printColour("Saving the user's photo")
         file = request.files['file']
         if file.filename == '':
-            # if user does not select file, browser also submit an empty part without filename
-            printColour("No selected file")
+            # If user does not select file, browser also submits an empty part without filename
+            printColour(" ➤ No selected file", colour="red")
             return jsonify({ "succeeded": False })
         if file and allowed_file(file.filename):
+            # Saving the image to local storage
             user_id = get_user_from_token(token).id
             filename = get_latest_filename("user_{}_profile_cover.jpg".format(user_id))
-            printColour("Filename: " + filename)
             file.save(os.path.join(UPLOAD_FOLDER, filename))
+            # Saving the image endpoint to the user's bio tuple under the cover_img_url field
             image_endpoint = "{0}/images/{1}".format(BASE_URL, filename)
             users.users_profile_upload_cover(token, user_id, image_endpoint)
+            printColour(" ➤ Successfully uploaded cover image for {}. Available at: {}".format(
+                user.username, 
+                image_endpoint
+            ), colour="green", bordersOn=False)
             return jsonify({ "succeeded": True })
+
+# TODO: Unimplemented
+
+@users_router.route("/users/profile/setemail", methods=['PUT'])
+def handle_user_profile_setemail():
+    """
+        HTTP Route: /users/profile/setemail
+        HTTP Method: PUT
+        Params: (token, email)
+        Returns JSON: {  }
+    """
+    request_data = request.get_json()
+    token = request_data["token"]
+    email = request_data["email"]
+    return jsonify(users.users_profile_setemail(token, email))

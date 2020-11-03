@@ -1,5 +1,6 @@
 from flask import Blueprint, request, jsonify
-from util.util import printColour, crop_image_file, get_latest_filename
+from util.util import printColour, crop_image_file, get_latest_filename, get_user_from_id
+from util.token import get_user_from_token
 from dotenv import load_dotenv
 import os
 from exceptions import InputError
@@ -34,6 +35,10 @@ def handle_connection_fetch():
         }
     """
     token = request.args.get("token")
+
+    calling_user = get_user_from_token(token)
+    printColour(" ➤ Connections: {} is fetching a list of their existing connections", colour="blue")
+    
     return jsonify(connections.connection_fetch_users(token))
 
 @connection_router.route("/connections/incoming", methods=['GET'])
@@ -46,7 +51,10 @@ def handle_connection_incoming():
         }
     """
     token = request.args.get("token")
-    printColour("FETCHING INCOMING CONNECTIONS", colour="violet")
+
+    calling_user = get_user_from_token(token)
+    printColour(" ➤ Connections Incoming: {} is fetching a list of their incoming connections", colour="blue")
+
     return jsonify(connections.connection_fetch_incoming_users(token))
 
 @connection_router.route("/connections/outgoing", methods=['GET'])
@@ -59,7 +67,10 @@ def handle_connection_outgoing():
         }
     """
     token = request.args.get("token")
-    printColour("FETCHING OUTGOING CONNECTIONS", colour="violet")
+
+    calling_user = get_user_from_token(token)
+    printColour(" ➤ Connections: {} is fetching a list of their outgoing connections", colour="blue")
+
     return jsonify(connections.connection_fetch_outgoing_users(token))
 
 # ===== Connections Operations =====
@@ -75,6 +86,14 @@ def handle_conection_request():
     request_data = request.get_json()
     token = request_data["token"]
     user_id = int(request_data["user_id"])
+
+    calling_user = get_user_from_token(token)
+    target_user = get_user_from_id(user_id)
+    printColour(" ➤ Connections Request: {} sent a connection request to {}".format(
+        calling_user.username, 
+        target_user.username
+    ), colour="blue")
+
     printColour("Added pending connection request from to user id {}".format(user_id))
     return jsonify(connections.connection_request(token, user_id))
 
@@ -89,7 +108,14 @@ def handle_conection_accept():
     request_data = request.get_json()
     token = request_data["token"]
     user_id = int(request_data["user_id"])
-    printColour("Approving connection to user id {}".format(user_id))
+
+    calling_user = get_user_from_token(token)
+    target_user = get_user_from_id(user_id)
+    printColour(" ➤ Connections Acccept: {} approved {}'s connection request".format(
+        calling_user.username, 
+        target_user.username
+    ), colour="blue")
+
     return jsonify(connections.connection_accept(token, user_id))
 
 @connection_router.route("/connections/remove", methods=['POST'])
@@ -103,7 +129,14 @@ def handle_conection_remove():
     request_data = request.get_json()
     token = request_data["token"]
     user_id = int(request_data["user_id"])
-    printColour("Removing connection to user id {}".format(user_id))
+
+    calling_user = get_user_from_token(token)
+    target_user = get_user_from_id(user_id)
+    printColour(" ➤ Connections Remove: {} removed {} as a connection".format(
+        calling_user.username, 
+        target_user.username
+    ), colour="blue")
+
     return jsonify(connections.connection_remove(token, user_id))
 
 # ===== Sending Messages =====
@@ -118,7 +151,14 @@ def handle_conection_fetch_messages():
     """
     token = request.args.get("token")
     user_id = int(request.args.get("user_id"))
-    printColour("Fetching messages with user: {}".format(user_id))
+
+    calling_user = get_user_from_token(token)
+    target_user = get_user_from_id(user_id)
+    printColour(" ➤ Connections Messages: {} fetched messages with {}".format(
+        calling_user.username, 
+        target_user.username
+    ), colour="blue")
+
     return jsonify(connections.connection_fetch_messages(token, user_id))
 
 @connection_router.route("/connections/message", methods=['POST'])
@@ -133,7 +173,14 @@ def handle_conection_send_message():
     token = request_data["token"]
     user_id = int(request_data["user_id"])
     message = request_data["message"]
-    printColour("Sending message to user: {}".format(user_id))
+
+    calling_user = get_user_from_token(token)
+    target_user = get_user_from_id(user_id)
+    printColour(" ➤ Connections Messages: {} sent a message to {}".format(
+        calling_user.username, 
+        target_user.username
+    ), colour="blue")
+
     return jsonify(connections.connection_send_message(token, user_id, message))
 
 @connection_router.route("/connections/message", methods=['PUT'])
@@ -145,12 +192,16 @@ def handle_conection_edit_message():
         Returns JSON: {  }
     """
     request_data = request.get_json()
-    printColour("HEREHEREHEREHEREHEREHEREHEREHEREHEREHERE")
-    print(request_data)
     token = request_data["data"]["token"]
     message_id = int(request_data["data"]["message_id"])
     message = request_data["data"]["message"]
-    printColour("Editing message with ID: {}".format(message_id))
+
+    calling_user = get_user_from_token(token)
+    printColour(" ➤ Connections Messages: {} edited message id: {}".format(
+        calling_user.username,
+        message_id
+    ), colour="blue")
+
     return jsonify(connections.connection_edit_message(token, message_id, message))
 
 @connection_router.route("/connections/message", methods=['DELETE'])
@@ -164,5 +215,11 @@ def handle_conection_remove_message():
     request_data = request.get_json()
     token = request_data["token"]
     message_id = int(request_data["message_id"])
-    printColour("Removing message with ID: {}".format(message_id))
+    
+    calling_user = get_user_from_token(token)
+    printColour(" ➤ Connections Messages: {} removed message id: {}".format(
+        calling_user.username,
+        message_id
+    ), colour="blue")
+
     return jsonify(connections.connection_remove_message(token, message_id))

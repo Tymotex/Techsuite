@@ -3,7 +3,7 @@ from flask import Blueprint, request, jsonify
 
 # Local imports:
 from authentication import auth_signup, auth_login, auth_logout, auth_password_reset, auth_password_reset_request
-from util.util import printColour
+from util.util import printColour, get_user_from_id
 
 from exceptions import InputError
 
@@ -21,7 +21,7 @@ def handle_auth_signup():
     email = request_data["email"]
     password = request_data["password"]
     username = request_data["username"]
-    printColour("Auth Signup: {}".format(request_data), colour="violet")
+    printColour(" ➤ Signed up: {}, {}".format(username, email), colour="blue")
     return jsonify(auth_signup(email, password, username))
 
 @auth_router.route("/auth/login", methods=['POST'])
@@ -35,7 +35,7 @@ def handle_auth_login():
     request_data = request.get_json()
     email = request_data["email"]
     password = request_data['password']
-    printColour("Auth Login: {}".format(request_data), colour="violet")
+    printColour(" ➤ Logged in: {}".format(email), colour="blue")
     return jsonify(auth_login(email, password))
 
 @auth_router.route("/auth/logout", methods=['POST'])
@@ -47,7 +47,7 @@ def handle_auth_logout():
         Returns JSON: {  }
     """
     request_data = request.get_json()
-    printColour("Auth Logout: {}".format(request_data), colour="violet")
+    printColour(" ➤ Logged out: {}".format(request_data["token"]), colour="blue")
     return jsonify(auth_logout(request_data["token"]))
 
 @auth_router.route("/auth/forgotpassword/request", methods=['POST'])
@@ -60,7 +60,7 @@ def handle_auth_password_request():
     """
     request_data = request.get_json()
     results = auth_password_reset_request(request_data["email"])
-    printColour("Auth Password Reset Request: {}".format(request_data), colour="violet")
+    printColour(" ➤ Reset password request: {}".format(request_data), colour="blue")
     return jsonify(results)
 
 @auth_router.route("/auth/forgotpassword/reset", methods=['POST'])
@@ -74,5 +74,5 @@ def handle_auth_passwordreset_reset():
     request_data = request.get_json()
     reset_code = request_data['reset_code']
     new_password = request_data['new_password']
-    printColour("Auth Password Reset: {}".format(request_data), colour="violet")
+    printColour(" ➤ Password reset: {}".format(request_data), colour="blue")
     return jsonify(auth_password_reset(reset_code, new_password))
