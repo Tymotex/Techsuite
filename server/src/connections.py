@@ -26,7 +26,6 @@ def connection_fetch_users(token):
     # Get all the connected users that have been approved
     connected_user_ids = [ conn.other_user_id for conn in Connection.query.all() if (conn.user_id == calling_user.id and conn.approved) ]
     connected_users = list(map(package_user_info, connected_user_ids))
-    printColour(connected_users, colour="violet")
     return {
         "users": connected_users
     }
@@ -46,7 +45,6 @@ def connection_fetch_incoming_users(token):
     # did NOT initiate the request with
     connected_user_ids = [ conn.other_user_id for conn in Connection.query.all() if (conn.user_id == calling_user.id and not conn.approved and not conn.is_requester) ]
     connected_users = list(map(lambda user_id: users_profile(token, user_id), connected_user_ids))
-    printColour(connected_users, colour="violet")
     return {
         "users": connected_users
     }
@@ -66,7 +64,6 @@ def connection_fetch_outgoing_users(token):
     # DID initiate the request with
     connected_user_ids = [ conn.other_user_id for conn in Connection.query.all() if (conn.user_id == calling_user.id and not conn.approved and conn.is_requester) ]
     connected_users = list(map(lambda user_id: users_profile(token, user_id), connected_user_ids))
-    printColour(connected_users, colour="violet")
     return {
         "users": connected_users
     }

@@ -373,8 +373,10 @@ def channels_create(token, name, description, visibility):
             { channel_id }
     """
     verify_token(token)
+    if not name or not visibility:
+        raise InputError("Channel name or visibility not specified")
     if len(name) > 30:
-        raise InputError
+        raise InputError("Channel name too long. Stay under 30 characters")
     
     creator = get_user_from_token(token)
     # Adding a default picture for the channel
@@ -393,9 +395,7 @@ def channels_create(token, name, description, visibility):
     db.session.add(new_channel)
     db.session.add(ownership)
     db.session.commit()
-    return {
-        'channel_id': new_channel.id
-    }
+    return { 'channel_id': new_channel.id }
 
 def channels_upload_photo(token, channel_id, img_url):
     """

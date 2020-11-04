@@ -6,9 +6,9 @@ import functools, re, random, os
 
 # Third party libraries
 from dotenv import load_dotenv
-from colored import stylize
 import jwt, requests, hashlib, colored, smtplib
 from PIL import Image
+import shutil
 
 # Source files:
 from exceptions import AccessError, InputError
@@ -23,18 +23,56 @@ SECRET_CODE = hashlib.sha256(SECRET_MESSAGE.encode()).hexdigest()
 IMAGE_DIRECTORY = os.getcwd() + r"/src/static/images/"        # TODO: Not robust? Cwd should always be project root
 
 # ===== Debugging Utilities =====
-def printColour(text, colour="green", bordersOn=True):
-    """
-        Given a string and a colour keyword, prints the string with the colour applied.
-        See a list of all the available 256 colours: https://pypi.org/project/colored/
-    """
+
+class colours:
+    BLUE = "\033[94m"
+    CYAN = "\033[96m"
+    GREEN = "\033[92m"
+    ORANGE = "\033[93m"
+    RED = "\033[91m"
+    YELLOW = "\033[33m"
+    END = "\033[0m"
+    BOLD = "\033[1m"
+    VIOLET = "\033[0;35m"
+    UNDERLINE = "\033[4m"
+
+def get_colour(colour):
+    colour = colour.lower()
+    if colour == "blue":
+        return colours.BLUE
+    elif colour == "cyan":
+        return colours.CYAN
+    elif colour == "green":
+        return colours.GREEN
+    elif colour == "orange":
+        return colours.ORANGE
+    elif colour == "red":
+        return colours.RED
+    elif colour == "yellow":
+        return colours.YELLOW
+    elif colour == "violet":
+        return colours.VIOLET
+
+def printColour(*args, bordersOn=False, colour="green", **kwargs):
     if bordersOn:
-        print(stylize("|============================================|", colored.fg(colour)))
-        print(stylize(text, colored.fg(colour)))
-        print(stylize("|============================================|", colored.fg(colour)))
-    else:
-        print(stylize(text, colored.fg(colour)))
-        
+        printBorder()
+    try:
+        print(get_colour(colour) + " ".join(map(str, args)) + colours.END, **kwargs)
+    except:
+        print(args)
+    if bordersOn:
+        printBorder()
+
+def printBorder():
+    """
+        Prints a border exactly equal to the current terminal instance"s width
+    """
+    terminal_dim = shutil.get_terminal_size((80, 20))
+    print("╠", end="")
+    for i in range(1, terminal_dim.columns - 1):
+        print("═", end="")
+    print("╣")
+
 def funcDebugBorders(func):
     """ 
         A simple decorator that adds a start and end marker for a function call.
@@ -56,7 +94,7 @@ def email_is_legit(email):
     """
         Given a string, determines if it matches the standard email regex.
     """
-    regex = r'^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$'
+    regex = r"^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$"
     return bool(re.search(regex, email))
 
 # ===== Token Functions =====
@@ -85,7 +123,7 @@ def generate_token(user_data):
 def verify_token(token):
     """
         Given a token, checks the database and returns true if the token exists.
-        If the token doesn't exist, then return false.
+        If the token doesn"t exist, then return false.
         Unfortunately, we need to check ourselves whether that user_id associated with
         the token has access rights, etc.
         Parameters:
@@ -210,22 +248,6 @@ def get_message(data, message_id):
     return None
 
 # ===== Channel Utilities =====
-def determine_channel(message_id):
-    """
-        Determine which channel the message is in, returns None on error
-        Parameters:
-            message_id  int
-        Returns:
-            selected_channel    dict
-    """
-    channels_list = data["channels"]
-    for channel in channels_list:
-        for message in channel["messages"]:
-            if message["message_id"] == message_id:
-                selected_channel = channel
-                return selected_channel
-    #returns None if message is not in channel
-    return None
 
 def select_channel(channel_id):
     """ 
@@ -250,8 +272,8 @@ def get_connection(token, other_user_id):
 def download_img_and_get_filename(url, user_id):
     """
         Given a URL to an web image resource, download it to the
-        project directory's 'static/images' folder with a unique filename
-        of format: user_x_profile.jpg where x is the user's ID
+        project directory"s "static/images" folder with a unique filename
+        of format: user_x_profile.jpg where x is the user"s ID
         Parameters:
             url         (str)
             user_id     (int)
@@ -283,7 +305,7 @@ def crop_image_file(image_filename, x_start, y_start, x_end, y_end):
     try:
         pic = Image.open(image_path)
         # Discard the alpha/transparency channel
-        pic = pic.convert('RGB')   
+        pic = pic.convert("RGB")   
     except:
         raise InputError(description="Not a valid image file!")
 
@@ -298,7 +320,7 @@ def crop_image_file(image_filename, x_start, y_start, x_end, y_end):
         raise InputError(description="Coordinates out of bounds")
 
     cropped_pic = pic.crop(crop_coordinates)
-    cropped_pic.save(image_path, compression='jpeg')
+    cropped_pic.save(image_path, compression="jpeg")
 
 def get_latest_filename(filename, version_num=1):
     """

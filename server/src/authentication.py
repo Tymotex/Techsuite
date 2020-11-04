@@ -57,10 +57,10 @@ def auth_signup(email, password, username):
     db.session.add(new_user_bio)
     db.session.commit()
     generated_token = generate_token(new_user)
-    printColour("Returning: {}".format({
-        "user_id": new_user.id,
-        "token": generated_token,
-    }), colour="blue")
+    # printColour("Returning: {}".format({
+    #     "user_id": new_user.id,
+    #     "token": generated_token,
+    # }), colour="blue")
     return {
         "user_id": new_user.id,
         "token": generated_token,
@@ -87,10 +87,10 @@ def auth_login(email, password):
             if each_user.password == hashlib.sha256(password.encode()).hexdigest():
                 # User has been verified once this block is reached
                 generated_token = generate_token(each_user)
-                printColour("Returning: {}".format({
-                    "user_id": each_user.id,
-                    "token": generated_token
-                }), colour="blue")
+                # printColour("Returning: {}".format({
+                #     "user_id": each_user.id,
+                #     "token": generated_token
+                # }), colour="blue")
                 return {
                     "user_id": each_user.id,
                     "token": generated_token,
@@ -113,14 +113,12 @@ def auth_logout(token):
     """
     # TODO: How does logging out in the backend work? It's stateless with JSON web tokens...
     if verify_token(token):
-        return {
-            'is_success': True
-        }
+        return { "is_success": True }
     else:
         raise AccessError(description="Logout failed. Token is invalid")
 
 # ===== Password Reset Functions ======
-# TODO:
+# TODO: Unimplemented
 def auth_password_reset_request(email):
     """
         Given an email address, if the user is a registered user,
@@ -135,7 +133,7 @@ def auth_password_reset_request(email):
     """
     return {}
 
-# TODO:
+# TODO: Unimplemented
 def auth_password_reset(reset_code, new_password):
     """
     Given a reset code for a user, set that user's new password to the password provided
