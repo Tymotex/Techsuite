@@ -6,6 +6,7 @@ import { BASE_URL } from '../../constants/api-routes';
 import { LoadingSpinner } from '../../components/loading-spinner';
 import { Notification } from '../../components/notification';
 import Empty from './Empty';
+import { EmptyFiller } from '../../components/empty-filler';
 
 class ChannelsAll extends React.Component {
     constructor(props) {
