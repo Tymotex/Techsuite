@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import Avatar from './Avatar';
 import { UncontrolledDropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
+import dropdownStyles from "./AvatarDropdown.module.scss";
 
 const AvatarDropdown = (props) => {
     const { profileImgURL, userID, logout } = props;
@@ -13,13 +14,13 @@ const AvatarDropdown = (props) => {
             </DropdownToggle>
             <DropdownMenu right>
                 <DropdownItem>
-                    <Link to={`/user/profile/${userID}`} style={{ textDecoration: 'none' }}>View my profile</Link>
+                    <Link className={dropdownStyles.dropdownLink} to={`/user/profile/${userID}`}>View my profile</Link>
                 </DropdownItem>
                 <DropdownItem>
-                    <Link to={`/user/profile/${userID}/edit`} style={{ textDecoration: 'none' }}>Edit my profile</Link>
+                    <Link className={dropdownStyles.dropdownLink} to={`/user/profile/${userID}/edit`}>Edit my profile</Link>
                 </DropdownItem>
                 <DropdownItem divider />
-                <DropdownItem onClick={logout}>
+                <DropdownItem className={dropdownStyles.dropdownLink} onClick={logout}>
                     Log out
                 </DropdownItem>
             </DropdownMenu>

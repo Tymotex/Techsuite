@@ -14,7 +14,6 @@ class Channel extends React.Component {
     constructor(props) {
         super(props);
         this.joinChannel = this.joinChannel.bind(this);
-        this.requestInvite = this.requestInvite.bind(this);
     }
 
     joinChannel() {
@@ -48,31 +47,29 @@ class Channel extends React.Component {
         }
     }
 
-    requestInvite() {
-        
-    }
-
     render() {
         const { channel_id, name, channel_img_url, description, visibility, member_of, owner_of } = this.props;
         return (
             <Card className="channel-card">
-                <span className="channel-background"></span>
                 <CardBody>
                     <Row>
-                        <Col lg={12} xl={4}>
-                            <Link to={`/channel/${channel_id}`} style={{ textDecoration: 'none' }}>
-                                <img
-                                    className="channel-picture"
-                                    src={channel_img_url}
-                                    alt="Responsive"
-                                    aria-hidden={true}
-                                />
-                            </Link>
+                        <Col lg={12} xl={4} className="channel-picture-section">
+                            <div class="frame">
+                                <span class="helper"></span>
+                                <Link to={`/channel/${channel_id}`} style={{ textDecoration: 'none' }}>
+                                    <img
+                                        className="channel-picture"
+                                        src={channel_img_url}
+                                        alt="Responsive"
+                                        aria-hidden={true}
+                                    />
+                                </Link>
+                            </div>
                         </Col>
                         <Col lg={12} xl={8} style={{"padding": "10px",}}>
                             
-                                <Link to={`/channel/${channel_id}`} style={{ textDecoration: 'none' }}>
-                                    <h2 className="h4">{name}</h2>
+                                <Link className="channel-title" to={`/channel/${channel_id}`}>
+                                    <h4 className="h4">{name}</h4>
                                 </Link>
                                 <p className="text-muted">
                                     {description}
@@ -99,8 +96,6 @@ class Channel extends React.Component {
                                 }
                         </Col>
                     </Row>
-                    
-                   
                 </CardBody>
             </Card>
         );

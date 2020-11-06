@@ -11,6 +11,7 @@ import { Notification } from '../notification';
 import { LoadingSpinner } from '../loading-spinner';
 import ConnectButton from './ConnectButton';
 import { ConnectionChat } from '../connection-chat';
+import BioField from './BioField';
 
 class UserProfile extends React.Component {
     static propTypes = {
@@ -152,22 +153,21 @@ class UserProfile extends React.Component {
                 ) : (
                     (this.state.fetchSucceeded) ? (
                         <div>
-                            <Card body>
+                            <Card body className="main-card top-padded">
                                 <div className="user-profile text-center" style={coverStyle}>
                                     <div className="user-profile-card">
                                         <div className="m-b">
-                                            <img src={profile_img_url} style={{ width: "200px", height: "200px" }} className="b-circle" alt="Profile" />
+                                            <img src={profile_img_url} className="user-profile-image b-circle" alt="Profile" />
                                         </div>
                                         <div>
                                             <h2 className="h4"><strong>{`${username}`}</strong></h2>
-                                            <div className="user-profile-card-divider">
-                                                <hr />
-                                            </div>
-                                            <div className="h5 text-muted">Name: {(first_name != null || last_name != null) ? first_name + " " + last_name : "not specified"}</div>
-                                            <div className="h5 text-muted">Title: {title != null ? title : "unknown"}</div>
-                                            <div className="h5 text-muted">Education: {education != null ? education : "unknown"}</div>
-                                            <div className="h5 text-muted">Location: {location != null ? location : "unknown"}</div>
-                                            <div className="h5 text-muted">Email: {email}</div>
+                                            <hr className="user-profile-card-divider" />
+                                            
+                                            <BioField field="Name" value={(first_name != null || last_name != null) ? first_name + " " + last_name : "not specified"} />
+                                            <BioField field="Title" value={title != null ? title : "Techsuite user"} />
+                                            <BioField field="Education" value={education != null ? education : "unset education"} />
+                                            <BioField field="Location" value={location != null ? location : "no location"} />
+                                            <BioField field="Email" value={email} />
                                         </div>
                                         {(parseInt(user_id) == parseInt(Cookie.get("user_id"))) ? (
                                             <></>
@@ -182,15 +182,15 @@ class UserProfile extends React.Component {
                                 </div>
                             </Card>
                             <Row>
-                                <Col xs={4}>
-                                    <Card>
+                                <Col xs={12} lg={4}>
+                                    <Card className="main-card">
                                         <CardBody>
                                             <UserBio summary={summary} />
                                         </CardBody>
                                     </Card>
                                 </Col>
-                                <Col xs={8}>
-                                    <Card>
+                                <Col xs={12} lg={8}>
+                                    <Card className="main-card">
                                         <CardBody>
                                             <UserChannels />
                                         </CardBody>

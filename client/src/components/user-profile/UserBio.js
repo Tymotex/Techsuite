@@ -7,9 +7,7 @@ class UserBio extends React.Component {
         return (
             <div>
                 <h3>User Bio</h3>
-                <div className="title-hr">
-                    <hr />
-                </div>
+                <hr className="user-profile-card-divider" />
                 <em>
                     <p>
                         {summary != null ? summary : "No bio has been set"}
