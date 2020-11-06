@@ -100,11 +100,13 @@ class ConnectionCard extends React.Component {
                     <header class="card-header">
                         <h2>
                             <Link to={`/user/profile/${user.user_id}`} style={{textDecoration: "none", color: "grey"}}>
-                                {(first_name && last_name) ? (
-                                    `${first_name} ${last_name}`
-                                ) : (
-                                    user.username
-                                )}
+                                <strong>
+                                    {(first_name && last_name) ? (
+                                        `${first_name} ${last_name}`
+                                    ) : (
+                                        user.username
+                                    )}
+                                </strong>
                             </Link>
                         </h2>
                     </header>
@@ -139,14 +141,14 @@ class ConnectionCard extends React.Component {
                         ) : (
                             (isPending) ? (
                                 <>
-                                    <a onClick={this.acceptConnection}>Accept</a>
-                                    <a onClick={this.removeConnection}>Reject</a>
+                                    <a className="approve" onClick={this.acceptConnection}>Accept</a>
+                                    <a className="reject" onClick={this.removeConnection}>Reject</a>
                                 </>
                             ) : (
                                 <>
-                                    <a onClick={() => openMessage(user.user_id)}>Message</a>
-                                    <a onClick={this.toggleModal}>Remove</a>
-                                    <Link to={`/user/profile/${user.user_id}`}>Profile</Link>
+                                    <a className="message" onClick={() => openMessage(user.user_id)}>Message</a>
+                                    <a className="reject" onClick={this.toggleModal}>Remove</a>
+                                    <Link className="profile" to={`/user/profile/${user.user_id}`}>Profile</Link>
                                 </>
                             )
                         )}
