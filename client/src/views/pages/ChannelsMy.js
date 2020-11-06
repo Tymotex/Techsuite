@@ -5,6 +5,7 @@ import { ChannelList } from '../../components/channel-list';
 import { BASE_URL } from '../../constants/api-routes';
 import { LoadingSpinner } from '../../components/loading-spinner';
 import { Notification } from '../../components/notification';
+import Empty from './Empty';
 
 class ChannelsMy extends Component {
     constructor(props) {
@@ -57,7 +58,7 @@ class ChannelsMy extends Component {
                     (this.state.fetchSucceeded) ? (
                         <ChannelList {...this.state} />
                     ) : (
-                        <></>
+                        <Empty />
                     )
                 )}
             </div>

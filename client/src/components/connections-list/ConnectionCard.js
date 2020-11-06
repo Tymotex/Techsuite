@@ -93,7 +93,7 @@ class ConnectionCard extends React.Component {
 
     render() {
         const { user, isPending, isOutgoing, openMessage } = this.props;
-        const { first_name, last_name, education, location, summary } = user;
+        const { first_name, last_name, title, location } = user;
         return (
             <>
                 <article class="card">
@@ -103,13 +103,19 @@ class ConnectionCard extends React.Component {
                                 {(first_name && last_name) ? (
                                     `${first_name} ${last_name}`
                                 ) : (
-                                    "Unknown name"
+                                    user.username
                                 )}
                             </Link>
                         </h2>
-                        <p>{education}</p>
-                        <p>{location}</p>
                     </header>
+                    <div className="information-section">
+                        <p>
+                            Title: <em>{title ? (title) : ("No title")}</em>
+                        </p>
+                        <p>
+                            Location: <em>{location ? (location) : "No location"}</em>
+                        </p>
+                    </div>
                     <div class="card-author">
                             <a class="author-avatar">
                                 <Link to={`/user/profile/${user.user_id}`}>
@@ -129,7 +135,7 @@ class ConnectionCard extends React.Component {
                     </div>
                     <div class="tags">
                         {(isOutgoing) ? (
-                            <Button outline color="secondary" disabled={true}>Pending</Button>
+                            <Button className="disabled" outline color="secondary" disabled={true}>Pending</Button>
                         ) : (
                             (isPending) ? (
                                 <>

@@ -80,6 +80,14 @@ def users_all(token):
     return { "users": users }
 
 def users_bio_fetch(token, user_id):
+    """
+        Returns the target user's bio and its associated details
+        Parameters:
+            token   (str)
+            user_id (int)
+        Returns: 
+            {  first_name, last_name, cover_img_url, title, summary, location, education }
+    """
     verify_token(token)
     user = User.query.filter_by(id=user_id).first()
     if not user:

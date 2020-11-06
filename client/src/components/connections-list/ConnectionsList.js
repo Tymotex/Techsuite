@@ -8,7 +8,9 @@ import { BASE_URL } from '../../constants/api-routes';
 import { ConnectionSearch } from '../connection-search';
 import { Notification } from '../notification';
 import { LoadingSpinner } from '../loading-spinner';
-import ConnectionCardList from './ConnectionCardList';
+import { EmptyFiller } from '../empty-filler';
+import cardStyles from './Card.module.scss';
+
 
 class ConnectionsList extends React.Component {
     constructor(props) {
@@ -149,11 +151,13 @@ class ConnectionsList extends React.Component {
                             </Col>
                             <Col md={12}>
                                 {/* Showing all existing connections */}
-                                <Card>
+                                <Card className={cardStyles.card} >
                                     <CardHeader>
-                                        <h3>Contacts</h3>
+                                        <h3 className={cardStyles.title}>Contacts</h3>
                                     </CardHeader>
                                     <CardBody>
+                                        <span className="text-muted">You are currently connected with these people:</span>
+                                        <hr className={cardStyles.divider} />
                                         {(users && users.length > 0) ? (
                                             <section class="card-list">
                                                 {(users.map((eachUser) => (
@@ -176,13 +180,13 @@ class ConnectionsList extends React.Component {
                             </Col>
                             {/* Showing all pending incoming request */}
                             <Col md={6}>
-                                <Card>
+                                <Card className={cardStyles.card} >
                                     <CardHeader>
-                                        <h3>Connection Requests</h3>
+                                        <h3 className={cardStyles.title}>Connection Requests</h3>
                                     </CardHeader>
                                     <CardBody>
                                         <span className="text-muted">These people would like to connect with you:</span>
-                                        <hr />
+                                        <hr className={cardStyles.divider} />
                                         {(incomingUsers && incomingUsers.length > 0) ? (
                                             <section class="card-list">
                                                 {(incomingUsers.map((eachUser) => (
@@ -203,15 +207,15 @@ class ConnectionsList extends React.Component {
                             </Col>
                             {/* Showing all pending outgoing request */}
                             <Col md={6}>
-                                <Card>
+                                <Card className={cardStyles.card} >
                                     <CardHeader>
-                                        <h3>Pending Connection Requests</h3>
+                                        <h3 className={cardStyles.title}>Pending Connection Requests</h3>
                                     </CardHeader>
                                     <CardBody>
                                         <p className="text-muted">
                                             You have sent a connection request to these people:
                                         </p>
-                                        <hr />
+                                        <hr className={cardStyles.divider} />
                                         {(outgoingUsers && outgoingUsers.length > 0) ? (
                                             <section class="card-list">
                                                 {(outgoingUsers.map((eachUser) => (
@@ -244,7 +248,7 @@ class ConnectionsList extends React.Component {
                             )}
                         </Row>
                     ) : (
-                        <></>
+                        <EmptyFiller />
                     )
                 )}
             </div>

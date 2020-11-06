@@ -44,6 +44,7 @@ def auth_signup(email, password, username):
     profile_image_endpoint = os.getenv("BASE_URI") + "/images/{}".format("default.jpg")
     # Adding a new user
     new_user_bio = Bio(
+        title="Techsuite user",
         profile_img_url=profile_image_endpoint
     )
     new_user = User(

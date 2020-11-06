@@ -31,11 +31,9 @@ class Admin extends React.Component {
 
     render() {
         return (
-            <>
-                <div>
-                    <strong onClick={this.reset}>Click me to reset</strong>
-                </div>
-            </>
+            <div>
+                <strong onClick={this.reset}>Click me to reset</strong>
+            </div>
         );
     }
 }

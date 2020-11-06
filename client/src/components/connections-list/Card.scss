@@ -13,7 +13,7 @@
         background: whitesmoke;
     }
     &::-webkit-scrollbar-thumb {
-        background: #252525;
+        background: #767676;
         border-radius: 10px;
         box-shadow: inset 2px 2px 2px hsla(0,0%,100%,.25), inset -2px -2px 2px rgba(83, 83, 83, 0.25);
     }
@@ -22,15 +22,13 @@
         background: whitesmoke;
     }
 
-
     .card {
-        height: 350px;
         width: 400px;
         min-width: 250px;
         padding: 1.5rem;
         border-radius: 16px;
-        background: #17141d;
-        box-shadow: -1rem 0 3rem #000;
+        background: #fdfdfd;
+        box-shadow: 2px 2px 10px 0px rgba(0,0,0,0.3);
         display: flex;
         flex-direction: column;
         transition: .2s;
@@ -38,6 +36,11 @@
         scroll-snap-align: start;
         clear: both;
         position: relative;
+
+        .information-section {
+            margin-top: 15px;
+            color: darkslategray;
+        }
     }
 
     .card:focus-within~.card, .card:hover~.card {
@@ -53,9 +56,6 @@
     }
 
 
-    .card-header {
-        margin-bottom: auto;
-    }
 
     .card-header p {
         font-size: 14px;
@@ -74,7 +74,7 @@
     }
 
     .card-header h2:hover {
-        background: linear-gradient(90deg,#ff8a00,#e52e71);
+        background: darkslategray;
         text-shadow: none;
         -webkit-text-fill-color: transparent;
         -webkit-background-clip: text;
@@ -82,7 +82,6 @@
     }
 
     .card-author {
-        margin: 3rem 0 0;
         display: grid;
         grid-template-columns: 75px 1fr;
         align-items: center;
@@ -114,7 +113,7 @@
     .author-name-prefix {
         font-style: normal;
         font-weight: 700;
-        color: #7a7a8c;
+        color: #3f3f3f;
     }
 
     .half-circle {
@@ -124,7 +123,7 @@
         width: 60px;
         height: 48px;
         fill: none;
-        stroke: #ff8a00;
+        stroke: #9589ff;
         stroke-width: 8;
         stroke-linecap: round;
         pointer-events: none;
@@ -158,6 +157,12 @@
         -webkit-box-decoration-break: clone;
         background-clip: text;
         border-color: white;
+    }
+
+    .disabled {
+        &:hover {
+            background: black!important;
+        }
     }
 }
 

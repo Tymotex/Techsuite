@@ -5,6 +5,7 @@ import { ChannelList } from '../../components/channel-list';
 import { BASE_URL } from '../../constants/api-routes';
 import { LoadingSpinner } from '../../components/loading-spinner';
 import { Notification } from '../../components/notification';
+import Empty from './Empty';
 
 class ChannelsAll extends React.Component {
     constructor(props) {
@@ -52,19 +53,17 @@ class ChannelsAll extends React.Component {
 
     render() {
         return (
-            <div>
-                {(this.state.isLoading) ? (
-                    <LoadingSpinner /> 
+            (this.state.isLoading) ? (
+                <LoadingSpinner /> 
+            ) : (
+                (this.state.fetchSucceeded) ? (
+                    <div>
+                        <ChannelList {...this.state} />
+                    </div>
                 ) : (
-                    (this.state.fetchSucceeded) ? (
-                        <div>
-                            <ChannelList {...this.state} />
-                        </div>
-                    ) : (
-                        <></>
-                    )
-                )}
-            </div>
+                    <Empty />
+                )
+            )
         );
     }
 }

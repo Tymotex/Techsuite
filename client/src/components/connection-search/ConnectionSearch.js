@@ -18,6 +18,7 @@ import {
 import { BASE_URL } from '../../constants/api-routes';
 import { Notification } from '../notification';
 import './ConnectionSearch.scss';
+import cardStyles from './ConnectionSearch.module.scss';
 
 const SearchField = (props) => {
     const [dropdownOpen, setDropdownOpen] = useState(false);
@@ -171,12 +172,12 @@ class ConnectionSearch extends React.Component {
     render() {
         const { users } = this.state;
         return (
-            <Card>
+            <Card className={cardStyles.card}>
                 <CardBody>
                     <Form onSubmit={this.sendConnectionRequest} className="connection-search-form">
                         <FormGroup>
                             <Label for="users-dropdown">
-                                <h3>Manage Connections</h3>
+                                <h3 className={cardStyles.title}>Manage Connections</h3>
                             </Label>
                             <SearchField users={users} />
                         </FormGroup>

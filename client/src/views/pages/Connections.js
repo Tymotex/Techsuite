@@ -5,7 +5,6 @@ class Connections extends React.Component {
     render() {
         return (
             <div>
-                {/* Add new connection form: */}
                 <ConnectionsList />
             </div>
         )
