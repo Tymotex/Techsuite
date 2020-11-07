@@ -20,7 +20,7 @@ from routes.connection_routes import connection_router
 from routes.http_error_handler import error_handler
 from messages import message_send, message_remove, message_edit
 from extensions import app
-from util.util import printColour, get_user_from_token, select_channel
+from util.util import printColour, get_user_from_token, select_channel, get_user_from_id, get_connection
 from connections import connection_send_message, connection_edit_message, connection_remove_message
 from exceptions import InputError
 
@@ -125,7 +125,7 @@ def handle_remove_message(token, message_id, room):
     )
 
 @socketio.on("edit_message", namespace='/ts-socket')
-def handle_edit_message(token, message_id, message):
+def handle_edit_message(token, message_id, message, room):
     calling_user = get_user_from_token(token)
     printColour(" ➤ Socket event: edit_message. Channel message {} was edited by {}".format(
         message_id, 
@@ -134,13 +134,25 @@ def handle_edit_message(token, message_id, message):
     printColour(" ➤ Emitting event: message_edited", colour="cyan", bordersOn=False)
     try:
         message_edit(token, message_id, message)
-        emit("message_edited", "The server says: someone has edited a message", broadcast=True)
+        emit(
+            "message_edited", 
+            "The server says: someone has edited a message", 
+            broadcast=True, 
+            room=room
+        )
     except InputError as err:
         print(type(err))
         emit_error(err)
 
 @socketio.on("user_enter", namespace='/ts-socket')
 def on_join(event_data):
+    """
+        Parameter event_data is a dictionary containing:
+            - token
+            - user_id
+            - channel_id
+            - room
+    """
     token = event_data["token"]
     user = get_user_from_token(token)
     room = event_data["room"]
@@ -156,8 +168,10 @@ def on_join(event_data):
 def handle_user_channel_leave(event_data):
     """
         Parameter event_data is a dictionary containing:
+            - token
             - user_id
             - channel_id
+            - room
     """
     token = event_data["token"]
     user = get_user_from_token(token)
@@ -169,34 +183,92 @@ def handle_user_channel_leave(event_data):
         room
     ), colour="cyan", bordersOn=False)
 
-# Direct messaging
+# ===== Direct messaging =====
 
 @socketio.on("send_connection_message", namespace='/ts-socket')
-def handle_connection_send_message(token, user_id, message):
+def handle_connection_send_message(token, user_id, message, room):
     try:
         connection_send_message(token, user_id, message)
     except InputError as err:
         emit_error(err.get_message())
     printColour("Client sent a direct message to {}".format(user_id))
-    emit("receive_connection_message", "The server says: your chat partner has sent a new message", broadcast=True)  
+    emit(
+        "receive_connection_message",
+        "The server says: your chat partner has sent a new message",
+        broadcast=True,
+        room=room
+    )  
 
 @socketio.on("edit_connection_message", namespace='/ts-socket')
-def handle_connection_edit_message(token, message_id, message):
+def handle_connection_edit_message(token, message_id, message, room):
     try:
         connection_edit_message(token, message_id, message)
     except InputError as err:
         emit_error(err.get_message())
     printColour("Client edited a direct message")
-    emit("connection_message_edited", "The server says: your chat partner has edited a message", broadcast=True)     
+    emit(
+        "connection_message_edited",
+        "The server says: your chat partner has edited a message",
+        broadcast=True,
+        room=room
+    )     
 
 @socketio.on("remove_connection_message", namespace='/ts-socket')
-def handle_connection_remove_message(token, message_id):
+def handle_connection_remove_message(token, message_id, room):
     try:
         connection_remove_message(token, message_id)
     except InputError as err:
         emit_error(err.get_message())
     printColour("Client removed a direct message")
-    emit("connection_message_removed", "The server says: your chat partner has removed a message", broadcast=True)    
+    emit(
+        "connection_message_removed",
+        "The server says: your chat partner has removed a message",
+        broadcast=True,
+        room=room
+    )    
+
+@socketio.on("connection_user_enter", namespace='/ts-socket')
+def on_join(event_data):
+    """
+        Parameter event_data is a dictionary containing:
+            - token
+            - user_id
+            - room
+    """
+    token = event_data["token"]
+    calling_user = get_user_from_token(token)
+    target_user = get_user_from_id(int(event_data["user_id"]))
+    room = str(get_connection(calling_user.id, target_user.id).id)
+    join_room(room)
+
+    printColour(" ➤ Socket event: connection_user_enter. User {} started connection chat with {} (room: {})".format(
+        calling_user.username, 
+        target_user.username,
+        room
+    ), colour="cyan", bordersOn=False)
+    emit(
+        "connection_user_entered", 
+        room, 
+        broadcast=True, 
+        room=room
+    )
+
+@socketio.on("connection_user_leave", namespace='/ts-socket')
+def handle_user_channel_leave(event_data):
+    """
+        Parameter event_data is a dictionary containing:
+            - token
+            - room
+    """
+    token = event_data["token"]
+    user = get_user_from_token(token)
+    room = event_data["room"]
+    leave_room(room)
+
+    printColour(" ➤ Socket event: connection_user_leave. User {} left channel {}".format(
+        user.username, 
+        room
+    ), colour="cyan", bordersOn=False)
 
 # ===== Starting the server =====
 

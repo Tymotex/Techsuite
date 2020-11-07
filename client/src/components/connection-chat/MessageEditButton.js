@@ -26,25 +26,12 @@ class MessageEditButton extends React.Component {
     updateMessage(event) {
         event.preventDefault();
         const fd = new FormData(event.target);
+        const { room } = this.props;
         const newMessage = fd.get("edited-message");
         const currToken = Cookie.get("token");
         if (currToken) {
-            socket.emit("edit_connection_message", currToken, this.props.messageID, newMessage);
+            socket.emit("edit_connection_message", currToken, this.props.messageID, newMessage, room);
             this.toggleModal();
-            // axios.put(`${BASE_URL}/connections/message`, {
-            //     headers: { "Content-Type": "application/json" },
-            //     data: {
-            //         token: currToken,
-            //         message_id: this.props.messageID,
-            //         message: newMessage
-            //     }
-            // })
-            // .then(() => {
-            //     alert("Edit/remove succeeded");
-            // })
-            // .catch(() => {
-            //     alert("Edit/remove failed");
-            // });
         } else {
             // TODO
         }
@@ -52,23 +39,11 @@ class MessageEditButton extends React.Component {
 
     deleteMessage() {
         const currToken = Cookie.get("token");
+        const { room } = this.props;
         if (currToken) {
-            socket.emit("remove_connection_message", currToken, this.props.messageID);
-            // axios.delete(`${BASE_URL}/connections/message`, {
-            //         headers: { "Content-Type": "application/json" },
-            //         data: {
-            //             token: currToken,
-            //             message_id: this.props.messageID
-            //         }
-            //     })
-            //     .then(() => {
-            //         alert("Edit/remove succeeded");
-            //     })
-            //     .catch(() => {
-            //         alert("Edit/remove failed");
-            //     })
+            socket.emit("remove_connection_message", currToken, this.props.messageID, room);
         } else {
-
+            // TODO
         }
     }
 

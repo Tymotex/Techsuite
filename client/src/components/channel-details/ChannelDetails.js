@@ -63,15 +63,17 @@ class ChannelDetails extends React.Component {
                 <LoadingSpinner /> :
                 (!this.state.fetchSucceeded) ?
                     <p>Fetch failed. Is the backend running?</p> :
-                    <Jumbotron className="channel-header-jumbotron" 
-                                style={{"backgroundImage": (channel_cover_img_url != null) ? (
+                        <Jumbotron className="channel-header-jumbotron" 
+                            style={{"backgroundImage": (channel_cover_img_url != null) ? (
                                     `url('${channel_cover_img_url}')`
                                 ) : (
-                                   `radial-gradient(ellipse at bottom, #3d6492 0%, #090A0F 100%)`
-                                ) }}>
+                                    `radial-gradient(ellipse at bottom, #3d6492 0%, #090A0F 100%)`
+                                )
+                            }}
+                        >
                         <div className="channel-card">
                             <img className="channel-image b-circle" src={channel_img_url} style={{ width: "200px", height: "200px" }} alt="Channel profile"  />
-                            <h1 className="channel-name display-3">
+                            <h1 className="channel-name">
                                 {name + " "} 
                                 {(visibility === "public") ? (<></>) : (<FontAwesomeIcon icon={faLock} />)}
                             </h1>
@@ -79,11 +81,11 @@ class ChannelDetails extends React.Component {
                             <hr className="channel-divider" />
                             <br />
                             <Row>
-                                <Col md={6}>
+                                <Col xs={12} xl={6}>
                                     <h3 className="secondary-title">Members:</h3>
                                     <ChannelMemberList members={all_members} owners={owner_members} />
                                 </Col>
-                                <Col md={6}>
+                                <Col xs={12} xl={6}>
                                     <h3 className="secondary-title">Owners:</h3>
                                     <ChannelOwnerList owners={owner_members} />
                                 </Col>

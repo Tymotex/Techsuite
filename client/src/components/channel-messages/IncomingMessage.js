@@ -57,20 +57,20 @@ class IncomingMessage extends React.Component {
         const formattedTime = moment.unix(time_created).tz("Australia/Sydney").format("DD/MM/YYYY | h:mmA (z)");
         const shortFormattedTime = moment.unix(time_created).tz("Australia/Sydney").format("DD/MM/YY, h:mm A");
         return (
-            <div class="answer left">
+            <div className="answer left">
                 <Link to={`/user/profile/${user_id}`}>   
-                    <div class="avatar">
+                    <div className="avatar">
                         <img src={profile_img_url} alt="User name" />
                     </div>
                 </Link>
-                <div class="name"><strong>{username}</strong></div>
-                <div class="text" data-tip data-for='incomingMessageTooltip'>
+                <div className="name"><strong>{username}</strong></div>
+                <div className="text" data-tip data-for='incomingMessageTooltip'>
                     {message}
                 </div>
                 <ReactTooltip id='incomingMessageTooltip' type='info' effect="solid" delayShow={200} delayHide={200} >
                     <span>{formattedTime}</span>
                 </ReactTooltip>
-                <div class="time">{shortFormattedTime}</div>
+                <div className="time">{shortFormattedTime}</div>
             </div>
         );
     }

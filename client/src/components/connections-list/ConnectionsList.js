@@ -4,13 +4,15 @@ import { ConnectionCard } from './';
 import { ConnectionChat } from '../connection-chat';
 import axios from 'axios';
 import Cookie from 'js-cookie';
-import { BASE_URL } from '../../constants/api-routes';
+import { BASE_URL, SOCKET_URI } from '../../constants/api-routes';
 import { ConnectionSearch } from '../connection-search';
 import { Notification } from '../notification';
 import { LoadingSpinner } from '../loading-spinner';
 import { EmptyFiller } from '../empty-filler';
 import cardStyles from './Card.module.scss';
+import io from 'socket.io-client';
 
+const socket = io(SOCKET_URI);
 
 class ConnectionsList extends React.Component {
     constructor(props) {
@@ -23,13 +25,22 @@ class ConnectionsList extends React.Component {
             thisUser: {},
             users: {},
             incomingUsers: {},
-            outgoingUsers: {}
+            outgoingUsers: {},
+            room: ""
         };
         this.toggleChatWindow = this.toggleChatWindow.bind(this);
         this.forceCloseChatWindow = this.forceCloseChatWindow.bind(this);
         this.fetchConnections = this.fetchConnections.bind(this);
         this.fetchConnectionsIncoming = this.fetchConnectionsIncoming.bind(this);
         this.fetchConnectionsOutgoing = this.fetchConnectionsOutgoing.bind(this);
+        this.joinConnectionRoom = this.joinConnectionRoom.bind(this);
+        this.leaveConnectionRoom = this.leaveConnectionRoom.bind(this);
+
+        // Binding socket event listeners:
+        socket.on("connection_user_entered", (room) => {
+            console.log(`You've joined a room: ${room}`);
+            this.setState({ room: room });
+        });
     }
     
     componentWillMount() {
@@ -124,10 +135,35 @@ class ConnectionsList extends React.Component {
                         currentChatUser: userPayload.data,
                         chatWindowOpen: !this.state.chatWindowOpen
                     });
+                    if (this.state.chatWindowOpen) {
+                        this.joinConnectionRoom();
+                    } else {
+                        this.leaveConnectionRoom();
+                    }
                 })
                 .catch((err) => {
-                    alert("FAILED");
+                    alert(err); // TODO: 
                 });
+        }
+    }
+
+    leaveConnectionRoom() {
+        const { room } = this.state;
+        const currToken = Cookie.get("token");
+        if (currToken) {
+            socket.emit("connection_user_leave", { token: currToken, room: room });
+        } else {
+            // TODO
+        }
+    }
+
+    joinConnectionRoom() {
+        const currToken = Cookie.get("token");
+        const userID = this.state.currentChatUser.user_id;
+        if (currToken) {
+            socket.emit("connection_user_enter", { token: currToken, user_id: userID });
+        } else {
+            // TODO
         }
     }
 
@@ -138,7 +174,7 @@ class ConnectionsList extends React.Component {
     }
 
     render() {
-        const { isLoading, fetchSucceeded, users, incomingUsers, outgoingUsers, currentChatUser, thisUser } = this.state;
+        const { isLoading, fetchSucceeded, users, incomingUsers, outgoingUsers, currentChatUser, thisUser, room } = this.state;
         return (
             <div>
                 {(isLoading) ? (
@@ -241,7 +277,9 @@ class ConnectionsList extends React.Component {
                                         status="online" 
                                         close={this.forceCloseChatWindow} 
                                         otherUser={currentChatUser}
-                                        thisUser={thisUser} />
+                                        thisUser={thisUser}
+                                        socket={socket}
+                                        room={room} />
                                 </ConnectionChat.Container>
                             ) : (
                                 <></>

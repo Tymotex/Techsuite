@@ -193,6 +193,15 @@ def get_user_from_id(user_id):
     """
     return User.query.filter_by(id=user_id).first()
 
+# ===== Connections Utilities =====
+
+def get_connection(this_user_id, other_user_id):
+    """
+        Gets the connection object between this_user and other_user, by ID
+    """
+    connection_obj = Connection.query.filter_by(user_id=this_user_id, other_user_id=other_user_id).first()
+    return connection_obj
+
 # ===== Password Reset Utilities =====
 # TODO:
 def send_email(send_to, gmail_user, gmail_password, msg):
@@ -255,18 +264,6 @@ def select_channel(channel_id):
         if it exists.
     """
     return Channel.query.filter_by(id=channel_id).first()
-
-# ===== User Connection Utilities =====
-def get_connection(token, other_user_id):
-    """
-        Returns the connection object between the current user (from the input token)
-        and the other user
-    """
-    this_user = get_user_from_token(token)
-    for each_connection in this_user.connections:
-        if each_connection.user_id == other_user_id:
-            return each_connection
-    return None
 
 # ===== Image Manipulation =====
 def download_img_and_get_filename(url, user_id):

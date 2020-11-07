@@ -69,6 +69,11 @@ class Channel extends React.Component {
             "textAlign": "center",
             "fontSize": "150%"
         };
+        const cardBodyStyle = {
+            "padding": "5px",
+            "border-radius": "0%",
+            "box-shadow": "2px 2px 10px 0px rgba(0,0,0,0.3)"
+        }
     
         return (
             <div>
@@ -80,22 +85,14 @@ class Channel extends React.Component {
                             <Col md={12}>
                                 {/* Header card */}
                                 <Card>
-                                    <CardBody>
+                                    <CardBody style={cardBodyStyle}>
                                         <ChannelDetails />
                                     </CardBody>
                                 </Card>
                                 <hr />
                             </Col>
-                            <Col lg={12} xl={8}>
-                                {/* Message log and form */}
-                                <Card>
-                                    <CardBody>
-                                        <ChannelMessages channelID={this.props.match.params.channelID} />
-                                    </CardBody>
-                                </Card>
-                            </Col>
                             <Col lg={12} xl={4}>
-                                <Card>
+                                <Card style={cardBodyStyle}>
                                     <CardHeader style={cardHeaderStyle}>Channel Functions</CardHeader>
                                     <CardBody>
                                         <Row>
@@ -126,7 +123,7 @@ class Channel extends React.Component {
                                         </Row>
                                     </CardBody>
                                 </Card>
-                                <Card>
+                                <Card style={cardBodyStyle}>
                                     <CardHeader style={cardHeaderStyle}>Modify Users</CardHeader>
                                     <CardBody>
                                         <Row>
@@ -137,6 +134,14 @@ class Channel extends React.Component {
                                                 <UserRemoveOwner />
                                             </Col>
                                         </Row>
+                                    </CardBody>
+                                </Card>
+                            </Col>
+                            <Col lg={12} xl={8}>
+                                {/* Message log and form */}
+                                <Card style={cardBodyStyle}>
+                                    <CardBody>
+                                        <ChannelMessages channelID={this.props.match.params.channelID} />
                                     </CardBody>
                                 </Card>
                             </Col>

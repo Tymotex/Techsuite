@@ -60,8 +60,8 @@ class ChatBox extends React.Component {
 					isExpanded={this.props.isExpanded}
 					status={this.props.status}
 					close={this.props.close}
-					/>
-				{this.state.expanded && <ConnectionChatBox otherUser={otherUser} thisUser={thisUser} />}
+				/>
+				{this.state.expanded && <ConnectionChatBox otherUser={otherUser} thisUser={thisUser} socket={this.props.socket} />}
 			</div>
 		);
 	}

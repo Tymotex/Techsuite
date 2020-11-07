@@ -3,8 +3,8 @@ $transitionTime: 0.15s;
 .user {
     &:hover {
         background-color: rgba(135, 155, 211, 0.1);
-        border-radius: 10px;
         transition: all $transitionTime;
+        color: darkslategray;
     }
 }
 

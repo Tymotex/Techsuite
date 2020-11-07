@@ -10,7 +10,7 @@ from exceptions import InputError
 # Globals and config:
 load_dotenv()
 channels_router = Blueprint("channels", __name__)
-BASE_URL = "http://localhost:{0}".format(os.getenv("PORT"))
+BASE_URL = os.getenv("BASE_URI")
 
 @channels_router.route("/channels/invite", methods=['POST'])
 def handle_channel_invite():

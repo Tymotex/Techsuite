@@ -27,11 +27,12 @@ class EditButton extends React.Component {
     updateMessage(event) {
         event.preventDefault();
         const fd = new FormData(event.target);
+        const { room } = this.props;
         const newMessage = fd.get("edited-message");
         const currToken = Cookie.get("token");
         if (currToken) {
             console.log(`Emitting edit_message with params: ${currToken} ${this.props.messageID}`);
-            socket.emit("edit_message", currToken, this.props.messageID, newMessage);
+            socket.emit("edit_message", currToken, this.props.messageID, newMessage, room);
         } else {
 
         }
@@ -39,9 +40,10 @@ class EditButton extends React.Component {
 
     deleteMessage() {
         const currToken = Cookie.get("token");
+        const { room } = this.props;
         if (currToken) {
             console.log(`Emitting remove_message with params: ${currToken} ${this.props.messageID}`);
-            socket.emit("remove_message", currToken, this.props.messageID);
+            socket.emit("remove_message", currToken, this.props.messageID, room);
             // TODO: What error handling options does socketio have?
         } else {
             // TODO: notification for logging in here

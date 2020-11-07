@@ -3,11 +3,8 @@ import Cookie from 'js-cookie';
 import React from 'react';
 import FadeIn from 'react-fade-in';
 import { Form } from 'reactstrap';
-import io from 'socket.io-client';
-import { BASE_URL, SOCKET_URI } from '../../constants/api-routes';
+import { BASE_URL } from '../../constants/api-routes';
 import ConnectionMessage from './ConnectionMessage';
-
-const socket = io(SOCKET_URI);
 
 class ConnectionChatBox extends React.Component {
     constructor(props) {
@@ -19,6 +16,7 @@ class ConnectionChatBox extends React.Component {
         this.fetchMessages = this.fetchMessages.bind(this);
 
         // Binding socket event listeners:
+        const { socket } = this.props;
         socket.on("receive_connection_message", (message) => {
             console.log(`Received message: ${message}`);
             this.fetchMessages();
@@ -48,32 +46,14 @@ class ConnectionChatBox extends React.Component {
 
     sendMessage(event) {
         event.preventDefault();
+        const { socket, room } = this.props;
         const fd = new FormData(event.target);
         const message = fd.get("message");
         const currToken = Cookie.get("token");
         const { user_id: userID } = this.props.otherUser;
         if (currToken) {
-            socket.emit("send_connection_message", currToken, userID, message);
+            socket.emit("send_connection_message", currToken, userID, message, room);
             document.getElementById("message-field").value = "";
-            // const postData = {
-            //     method: 'post',
-            //     url: `${BASE_URL}/connections/message`,
-            //     data: {
-            //         token: currToken,
-            //         user_id: userID,
-            //         message: message
-            //     },
-            //     headers: { "Content-Type": "application/json" }
-            // };
-            // axios(postData)
-            //     .then((res) => {
-            //         this.fetchMessages();
-            //         document.getElementById("message-field").value = "";
-            //     })
-            //     .catch((err) => {
-            //         alert("Failed");
-            //         document.getElementById("message-field").value = "";
-            //     });
         } else {
             // TODO
         }
@@ -97,10 +77,9 @@ class ConnectionChatBox extends React.Component {
         }
     }
 
-
     render() {
         const { messages } = this.state;
-        const { otherUser, thisUser } = this.props;
+        const { otherUser, thisUser, room } = this.props;
         const thisUserID = thisUser.user_id;
         return (
             <div className="Chat-wrap">
@@ -110,7 +89,13 @@ class ConnectionChatBox extends React.Component {
                             <div className="chat-body">
                                 {messages.map((eachMessage, i) => (
                                     <FadeIn key={i} delay="200">
-                                        <ConnectionMessage message={eachMessage} otherUser={otherUser} thisUser={thisUser} isOutgoing={eachMessage.sender_id === thisUserID} />
+                                        <ConnectionMessage 
+                                            message={eachMessage} 
+                                            otherUser={otherUser} 
+                                            thisUser={thisUser} 
+                                            isOutgoing={eachMessage.sender_id === thisUserID} 
+                                            room={room} 
+                                        />
                                     </FadeIn>
                                 ))}
                             </div>

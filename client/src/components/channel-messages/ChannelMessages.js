@@ -80,7 +80,7 @@ class ChannelMessages extends React.Component {
             socket.emit(
                 "send_message", 
                 currToken, 
-                this.props.channelID, 
+                thisChannelID, 
                 messageData.get("message"),
                 thisChannelID
             );
@@ -122,14 +122,15 @@ class ChannelMessages extends React.Component {
     }
 
     render() {
-        const { typers, thisUser } = this.state;
+        const { thisUser } = this.state;
+        const { channelID: thisChannelID } = this.props;
         return (
             <>
                 <Prompt
                     when={true}
                     message={this.exitChannelRoom}
                 />
-                <ChatBox {...this.state} />
+                <ChatBox room={thisChannelID} {...this.state} />
                 {/* 'User is typing' prompt */}
                 {/* <TypingPrompt typers={typers} thisTyper={thisUser} /> */}
                 {/* Type a message form: */}
