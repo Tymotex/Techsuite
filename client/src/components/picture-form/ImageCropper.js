@@ -8,16 +8,22 @@ import { Button, Col, Form, FormGroup, Input, Label, Row } from 'reactstrap';
 import { Notification } from '../../components/notification';
 import { BASE_URL } from '../../constants/api-routes';
 import './ImageCropper.scss';
+import fileInputStyles from './FileInput.module.scss';
+
+// Font-awesome icons:
+import { faImage } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 class ImageCropper extends PureComponent {
     constructor(props) {
         super(props);
+
         this.state = {
             src: null,
             crop: {
                 unit: '%',
                 width: 30,
-                aspect: 1,
+                aspect: this.props.aspectRatio,
             },
             croppedImageUrl: null,
             selectedImageFile: null,
@@ -182,30 +188,25 @@ class ImageCropper extends PureComponent {
     render() {
         const { crop, croppedImageUrl, src } = this.state;
         const { buttonText } = this.props;
+        const id = Math.random();
 
-        const imageStyle = {
-            "border": "thick double black"
-        }
         return (
             <>
                 {/* Form title */}
                 {this.props.title ? (
                     <>
                         <h3>{this.props.title}</h3>
-                        <div className="title-hr">
-                            <hr />
-                        </div>
+                        <hr className={fileInputStyles.divider} />
                     </>
                 ) : (<></>)}
                 {/* Picture form */}
                 <Form onSubmit={this.uploadImageFile}>
                     <FormGroup>
-                        <Input id="fileinput" type="file" accept="image/*" onChange={this.onSelectFile} />
-                        <Label id="fileinputlabel" for="fileinput">Upload image</Label>
+                        <Input id={`file-upload-${id}`} className={fileInputStyles.uploadInput} type="file" accept="image/*" onChange={this.onSelectFile} />
+                        <Label className={fileInputStyles.uploadInputLabel} for={`file-upload-${id}`}>
+                            <FontAwesomeIcon icon={faImage} />  Choose Image
+                        </Label>
                     </FormGroup>
-                    <Button color="primary">
-                        {(buttonText != null) ? (buttonText) : ("Update Profile Picture")}
-                    </Button>
                     
                     <Row style={{"margin-top": "10px"}}>
                         <Col sm={12} md={6}>
@@ -220,12 +221,16 @@ class ImageCropper extends PureComponent {
                                 />
                             )}
                         </Col>
+                        {/* Cropped image */}
                         <Col sm={12} md={6}>
                             {croppedImageUrl && (
-                                <img alt="Crop" style={imageStyle} src={croppedImageUrl} />
+                                <img className="cropped-image" alt="Crop" src={croppedImageUrl} />
                             )}
                         </Col>
                     </Row>
+                    <Button color="primary">
+                        {(buttonText != null) ? (buttonText) : ("Update Profile Picture")}
+                    </Button>
                 </Form>
             </>
         );

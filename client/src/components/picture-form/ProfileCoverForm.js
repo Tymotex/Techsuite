@@ -4,6 +4,8 @@ import React from 'react';
 import { Button, Form, FormGroup, Input, Label } from 'reactstrap';
 import { Notification } from '../../components/notification';
 import { BASE_URL } from '../../constants/api-routes';
+import fileInputStyles from './FileInput.module.scss';
+import ImageCropper from './ImageCropper';
 
 class ProfileCoverForm extends React.Component {
     constructor(props) {
@@ -63,19 +65,11 @@ class ProfileCoverForm extends React.Component {
 
     render() {
         return (
-            <div style={{"text-align": "center"}}>
-                <h3>Update your cover image:</h3>
-                <div className="title-hr">
-                    <hr />
-                </div>
-                <Form onSubmit={this.uploadImageFile} style={{"display": "inline-block"}}>
-                    <FormGroup>
-                        <Input id="fileinput" type="file" accept="image/*" onChange={this.onSelectFile} />
-                        <Label id="fileinputlabel" for="fileinput">Upload image</Label>
-                    </FormGroup>
-                    <Button color="primary">Update Cover Image</Button>
-                </Form>
-            </div>
+            <ImageCropper 
+                uploadEndpoint="users/profile/uploadcover" 
+                title="Update your cover image"
+                aspectRatio={16/9}
+            />   
         );
     }
 }

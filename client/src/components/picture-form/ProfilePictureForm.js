@@ -6,7 +6,11 @@ import ImageCropper from './ImageCropper';
 class ProfilePictureForm extends PureComponent {
     render() {
         return (
-            <ImageCropper uploadEndpoint="users/profile/uploadphoto" title="Update your profile picture:"/>          
+            <ImageCropper 
+                uploadEndpoint="users/profile/uploadphoto" 
+                title="Update your profile picture"
+                aspectRatio={1}
+            />          
         );
     }
 }

@@ -10,7 +10,7 @@ const ChannelList = ({ allChannels, myChannels, isLoading, fetchSucceeded, showA
             {(showAll) ? 
                 (allChannels.length > 0) ? 
                     allChannels.map((channel, i) => 
-                        <Col key={i} md={6}>
+                        <Col key={i} xs={6} lg={6} xl={4}>
                             <Channel {...channel} />
                         </Col>
                     ) :
@@ -20,7 +20,7 @@ const ChannelList = ({ allChannels, myChannels, isLoading, fetchSucceeded, showA
                         linkTo="/channels/new" /> :
                 (myChannels.length > 0) ?
                     myChannels.map((channel, i) => 
-                        <Col key={i} md={6}>
+                        <Col key={i} xs={6} lg={6} xl={4}>
                             <Channel {...channel} member_of={true} />
                         </Col>
                     ) :
