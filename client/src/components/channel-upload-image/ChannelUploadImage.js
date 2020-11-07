@@ -31,7 +31,13 @@ class ChannelUploadImage extends React.Component {
                 <Modal isOpen={this.state.modal} toggle={this.toggleModal}>
                     <ModalHeader toggle={this.toggleModal}>Uploading Channel Image:</ModalHeader>
                     <ModalBody>
-                        <ImageCropper uploadEndpoint="channels/uploadimage" title="" buttonText="Upload Image" channelID={this.state.channelID} />
+                        <ImageCropper 
+                            uploadEndpoint="channels/uploadimage" 
+                            title="" 
+                            buttonText="Upload Image" 
+                            channelID={this.state.channelID} 
+                            aspectRatio={1}
+                        />
                     </ModalBody>
                 </Modal>
             </>
