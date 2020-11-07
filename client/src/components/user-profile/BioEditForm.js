@@ -5,6 +5,7 @@ import { Button, Form, FormGroup, Input, InputGroup, InputGroupAddon, InputGroup
 import { BASE_URL } from '../../constants/api-routes';
 import { Notification } from '../notification';
 import './BioEditForm.scss';
+import editFormStyles from './BioField.module.scss';
 
 class BioEditForm extends React.Component {
     constructor(props) {
@@ -97,10 +98,8 @@ class BioEditForm extends React.Component {
         
         return (
             <Form onSubmit={this.updateBio}>
-                <h3>Update your bio:</h3>
-                <div className="title-hr">
-                    <hr  />
-                </div>
+                <h3>Update your bio</h3>
+                <hr className={editFormStyles.divider} />
                 <FormGroup>
                     <InputGroup>
                         <InputGroupAddon addonType="prepend">

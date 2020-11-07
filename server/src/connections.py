@@ -2,7 +2,7 @@ import os
 from extensions import db
 from models import Channel, User, Message, MemberOf, Bio, Connection, DirectMessage
 from exceptions import InputError, AccessError
-from util.util import is_user_member, select_channel, get_user_from_id, printColour
+from util.util import is_user_member, select_channel, get_user_from_id, printColour, get_connection
 from util.token import get_user_from_token, verify_token
 from users import users_profile, users_bio_fetch
 
@@ -68,6 +68,30 @@ def connection_fetch_outgoing_users(token):
         "users": connected_users
     }
 
+def connection_fetch_info(token, target_user_id):
+    """
+        Gets the connection details between two users
+        Parameters:
+            token   (str)
+        Returns: {
+            is_connected, connection_is_pending, is_requester
+        }  
+    """
+    calling_user = get_user_from_token(token)
+    connection_obj = get_connection(calling_user.id, target_user_id)
+    if connection_obj:
+        return {
+            "is_connected": connection_obj.approved,
+            "connection_is_pending": not connection_obj.approved,
+            "is_requester": connection_obj.is_requester 
+        }    
+    else:
+        return {
+            "is_connected": False,
+            "connection_is_pending": False,
+            "is_requester": False 
+        }    
+
 # ===== Connections Operations =====
 
 def connection_request(token, user_id):
@@ -91,6 +115,7 @@ def connection_request(token, user_id):
     if this_user.id == user_id:
         raise InputError("You can't connect with yourself")
 
+    print("SUCCESS")
     # Add a connection object to both users and set the approved attribute to false,
     # indicating that the connection is pending
     this_user_conn = Connection(

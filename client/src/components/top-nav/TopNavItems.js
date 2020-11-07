@@ -41,8 +41,8 @@ class TopNavItems extends React.Component {
                     });
                 })
                 .catch((err) => {
-                    const errorMessage = (err.response.data.message) ? (err.response.data.message) : "Something went wrong";
-                    Notification.spawnNotification("Viewing user profile failed", errorMessage, "danger");
+                    // const errorMessage = (err.response.data.message) ? (err.response.data.message) : "Something went wrong";
+                    // Notification.spawnNotification("Viewing user profile failed", errorMessage, "danger");
                 });
         }
     }

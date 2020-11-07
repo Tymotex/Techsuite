@@ -37,7 +37,9 @@ def handle_connection_fetch():
     token = request.args.get("token")
 
     calling_user = get_user_from_token(token)
-    printColour(" ➤ Connections: {} is fetching a list of their existing connections", colour="blue")
+    printColour(" ➤ Connections: {} is fetching a list of their existing connections".format({
+        calling_user.username
+    }), colour="blue")
     
     return jsonify(connections.connection_fetch_users(token))
 
@@ -53,7 +55,9 @@ def handle_connection_incoming():
     token = request.args.get("token")
 
     calling_user = get_user_from_token(token)
-    printColour(" ➤ Connections Incoming: {} is fetching a list of their incoming connections", colour="blue")
+    printColour(" ➤ Connections Incoming: {} is fetching a list of their incoming connections".format(
+        calling_user.username
+    ), colour="blue")
 
     return jsonify(connections.connection_fetch_incoming_users(token))
 
@@ -69,9 +73,31 @@ def handle_connection_outgoing():
     token = request.args.get("token")
 
     calling_user = get_user_from_token(token)
-    printColour(" ➤ Connections: {} is fetching a list of their outgoing connections", colour="blue")
+    printColour(" ➤ Connections: {} is fetching a list of their outgoing connections".format(
+        calling_user.username
+    ), colour="blue")
 
     return jsonify(connections.connection_fetch_outgoing_users(token))
+
+@connection_router.route("/connections/info", methods=['GET'])
+def handle_connection_get_info():
+    """
+        Fetches details regarding the connection between two users
+        Params: (token, user_id)
+        Returns JSON: {
+            is_connected, connection_is_pending, is_requester
+        }
+    """
+    token = request.args.get("token")
+    user_id = int(request.args.get("user_id"))
+    calling_user = get_user_from_token(token)
+    target_user = get_user_from_id(user_id)
+    printColour(" ➤ Connections: {} is fetching connection details with {}".format(
+        calling_user.username,
+        target_user.username
+    ), colour="blue")
+    return jsonify(connections.connection_fetch_info(token, user_id))
+
 
 # ===== Connections Operations =====
 
@@ -93,8 +119,6 @@ def handle_conection_request():
         calling_user.username, 
         target_user.username
     ), colour="blue")
-
-    printColour("Added pending connection request from to user id {}".format(user_id))
     return jsonify(connections.connection_request(token, user_id))
 
 @connection_router.route("/connections/accept", methods=['POST'])

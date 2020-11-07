@@ -7,24 +7,31 @@ import BioEditForm from './BioEditForm';
 class UserProfileEditForm extends Component {
 	render() {
 		return (
-			<Row>
-				<Col xs={12}>
-					<Card>
-						<CardBody>
-							<BioEditForm userID={this.props.userID} />
-							<hr />
-							<Row>
-								<Col md={6}>
-									<ProfilePictureForm />
-								</Col>
-								<Col md={6}>
-									<ProfileCoverForm />
-								</Col>
-							</Row>
-						</CardBody>
-					</Card>
-				</Col>
-			</Row>
+			<>
+				<Card>
+					<CardBody>
+						<BioEditForm userID={this.props.userID} />
+						<hr />
+					</CardBody>
+				</Card>
+
+				<Row>
+					<Col md={6}>
+						<Card>
+							<CardBody>
+								<ProfilePictureForm />
+							</CardBody>
+						</Card>
+					</Col>
+					<Col md={6}>
+						<Card>
+							<CardBody>
+								<ProfileCoverForm />
+							</CardBody>
+						</Card>
+					</Col>
+				</Row>
+			</>
 		);
 	}
 }

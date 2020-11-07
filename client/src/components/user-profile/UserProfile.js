@@ -3,7 +3,7 @@ import Cookie from 'js-cookie';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { Card, Col, Row, CardBody } from 'reactstrap';
-import { BASE_URL } from '../../constants/api-routes';
+import { BASE_URL, SOCKET_URI } from '../../constants/api-routes';
 import "./UserProfile.scss";
 import UserChannels from './UserChannels'; 
 import UserBio from './UserBio';
@@ -12,6 +12,9 @@ import { LoadingSpinner } from '../loading-spinner';
 import ConnectButton from './ConnectButton';
 import { ConnectionChat } from '../connection-chat';
 import BioField from './BioField';
+import io from 'socket.io-client';
+
+const socket = io(SOCKET_URI);
 
 class UserProfile extends React.Component {
     static propTypes = {
@@ -23,17 +26,33 @@ class UserProfile extends React.Component {
         this.state = {
             isLoading: false,
             fetchSucceeded: false,
+            chatWindowOpen: false,
             currentChatUser: {},
             thisUser: {},
             bio: {},
-            chatWindowOpen: false
+            chatWindowOpen: false,
+            room: ""
         };
         this.getCallingUser = this.getCallingUser.bind(this);
         this.toggleChatWindow = this.toggleChatWindow.bind(this);
         this.forceCloseChatWindow = this.forceCloseChatWindow.bind(this);
+        this.joinConnectionRoom = this.joinConnectionRoom.bind(this);
+        this.leaveConnectionRoom = this.leaveConnectionRoom.bind(this);
+        this.getTargetUser = this.getTargetUser.bind(this);
+
+        // Binding socket event listeners:
+        socket.on("connection_user_entered", (room) => {
+            console.log(`You've joined a room: ${room}`);
+            this.setState({ room: room });
+        });
     }
 
-    componentDidMount() {
+    UNSAFE_componentWillMount() {
+        this.getTargetUser();
+        this.getCallingUser();
+    }
+
+    getTargetUser() {
         this.setState({
             isLoading: true
         });
@@ -50,14 +69,19 @@ class UserProfile extends React.Component {
                                 currentChatUser: userProfile.data,
                                 bio: userBio.data
                             });
+                            console.log(this.state.currentChatUser);
                         })
                         .catch((err) => {
-                            const errorMessage = (err.response.data.message) ? (err.response.data.message) : "Something went wrong";
-                            Notification.spawnNotification("Couldn't view profile bio", errorMessage, "danger");
-                            this.setState({
-                                isLoading: false,
-                                fetchSucceeded: false
-                            })
+                            if (err.response) {
+                                const errorMessage = (err.response.data.message) ? (err.response.data.message) : "Something went wrong";
+                                Notification.spawnNotification("Couldn't view profile bio", errorMessage, "danger");
+                                this.setState({
+                                    isLoading: false,
+                                    fetchSucceeded: false
+                                })
+                            } else {
+                                Notification.spawnNotification("Couldn't view profile bio", "Something went wrong. Techsuite messed up!", "danger");
+                            }
                         });
                 })
                 .catch((err) => {
@@ -75,7 +99,6 @@ class UserProfile extends React.Component {
             });
             Notification.spawnNotification("Failed", "Please log in first", "danger");
         }
-        this.getCallingUser();
     }
 
     getCallingUser() {
@@ -92,7 +115,7 @@ class UserProfile extends React.Component {
                     });
                 })
                 .catch((err) => {
-                    if (err.data) {
+                    if (err.response) {
                         const errorMessage = (err.response.data.message) ? (err.response.data.message) : "Something went wrong";
                         Notification.spawnNotification("Failed to load your details", errorMessage, "danger");
                     } else {
@@ -121,10 +144,35 @@ class UserProfile extends React.Component {
                         currentChatUser: userPayload.data,
                         chatWindowOpen: !this.state.chatWindowOpen
                     });
+                    if (this.state.chatWindowOpen) {
+                        this.joinConnectionRoom();
+                    } else {
+                        this.leaveConnectionRoom();
+                    }
                 })
                 .catch((err) => {
 
                 });
+        }
+    }
+
+    leaveConnectionRoom() {
+        const { room } = this.state;
+        const currToken = Cookie.get("token");
+        if (currToken) {
+            socket.emit("connection_user_leave", { token: currToken, room: room });
+        } else {
+            // TODO
+        }
+    }
+
+    joinConnectionRoom() {
+        const currToken = Cookie.get("token");
+        const userID = this.state.currentChatUser.user_id;
+        if (currToken) {
+            socket.emit("connection_user_enter", { token: currToken, user_id: userID });
+        } else {
+            // TODO
         }
     }
 
@@ -135,9 +183,10 @@ class UserProfile extends React.Component {
     }
 
     render() {
-        const { currentChatUser, thisUser } = this.state;
+        const { currentChatUser, thisUser, room } = this.state;
         const { user_id, email, username, profile_img_url, is_connected_to, connection_is_pending } = currentChatUser;
         const { first_name, last_name, cover_img_url, summary, location, title, education} = this.state.bio;
+        console.log(currentChatUser);
         const coverStyle = {
             "backgroundImage": (cover_img_url != null) ? (
                 `url('${cover_img_url}')`
@@ -169,14 +218,18 @@ class UserProfile extends React.Component {
                                             <BioField field="Location" value={location != null ? location : "no location"} />
                                             <BioField field="Email" value={email} />
                                         </div>
-                                        {(parseInt(user_id) == parseInt(Cookie.get("user_id"))) ? (
-                                            <></>
+                                        {(currentChatUser.user_id) ? (
+                                            (parseInt(user_id) == parseInt(Cookie.get("user_id"))) ? (
+                                                <></>
+                                            ) : (
+                                                <ConnectButton 
+                                                    {...this.props}
+                                                    {...this.state}
+                                                    openMessage={this.toggleChatWindow}
+                                                />
+                                            )
                                         ) : (
-                                            <ConnectButton 
-                                                isConnected={is_connected_to} 
-                                                connectionIsPending={connection_is_pending} 
-                                                openMessage={this.toggleChatWindow}
-                                                userID={user_id}/>
+                                            <></>
                                         )}
                                     </div>
                                 </div>
@@ -210,7 +263,10 @@ class UserProfile extends React.Component {
                             status="online" 
                             close={this.forceCloseChatWindow} 
                             otherUser={currentChatUser}
-                            thisUser={thisUser} />
+                            thisUser={thisUser}
+                            socket={socket}
+                            room={room}
+                        />
                     </ConnectionChat.Container>
                 ) : (
                     <></>
