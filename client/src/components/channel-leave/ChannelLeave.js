@@ -1,11 +1,11 @@
-import React from 'react';
-import Cookie from 'js-cookie';
 import axios from 'axios';
-import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
-import { BASE_URL } from '../../constants/api-routes';
-import { withRouter } from 'react-router-dom';
+import Cookie from 'js-cookie';
 import PropTypes from 'prop-types';
-import { Notification } from '../notification';
+import React from 'react';
+import { withRouter } from 'react-router-dom';
+import { Button, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
+import { BASE_URL } from '../../constants/api-routes';
+import { errorNotification } from '../error-notification';
 
 class ChannelLeave extends React.Component {
     static propTypes = {
@@ -48,8 +48,7 @@ class ChannelLeave extends React.Component {
                     this.props.history.push("/channels/my");
                 })
                 .catch((err) => {
-                    const errorMessage = (err.response.data.message) ? (err.response.data.message) : "Something went wrong";
-                    Notification.spawnNotification("Channel leave failed", errorMessage, "danger");
+                    errorNotification(err, "Channel leave failed");
                 });
         }
     }

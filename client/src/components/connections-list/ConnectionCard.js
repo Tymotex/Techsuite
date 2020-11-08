@@ -2,11 +2,12 @@ import axios from 'axios';
 import Cookie from 'js-cookie';
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Button, Card, CardBody, CardHeader, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
+import { Button, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
 import { BASE_URL } from '../../constants/api-routes';
+import { errorNotification } from '../error-notification';
 import { Notification } from '../notification';
-import './ConnectionCard.scss';
 import './Card.scss';
+import './ConnectionCard.scss';
 
 class ConnectionCard extends React.Component {
     constructor(props) {
@@ -41,8 +42,7 @@ class ConnectionCard extends React.Component {
                     refreshIncoming(currToken);
                 })
                 .catch((err) => {
-                    const errorMessage = (err.response.data.message) ? (err.response.data.message) : "Something went wrong";
-                    Notification.spawnNotification("Failed to add connection", errorMessage, "danger");
+                    errorNotification(err, "Failed to add connection");
                 });
         }
     }
@@ -69,12 +69,7 @@ class ConnectionCard extends React.Component {
                     this.toggleModal(false);
                 })
                 .catch((err) => {
-                    if (err.data) {
-                        const errorMessage = (err.response.data.message) ? (err.response.data.message) : "Something went wrong";
-                        Notification.spawnNotification("Failed to remove connection", errorMessage, "danger");
-                    } else {
-                        Notification.spawnNotification("Failed to remove connection", "Techsuite messed up something. Sorry!", "danger");
-                    }
+                    errorNotification(err, "Failed to remove connection");
                 });
         }
     }
@@ -119,9 +114,9 @@ class ConnectionCard extends React.Component {
                         </p>
                     </div>
                     <div class="card-author">
-                            <a class="author-avatar">
+                            <a class="author-avatar" href="/#">
                                 <Link to={`/user/profile/${user.user_id}`}>
-                                    <img src={user.profile_img_url} />
+                                    <img src={user.profile_img_url} alt="user's profile"/>
                                 </Link>
                             </a>
                             <svg class="half-circle" viewBox="0 0 106 57">
@@ -141,13 +136,13 @@ class ConnectionCard extends React.Component {
                         ) : (
                             (isPending) ? (
                                 <>
-                                    <a className="approve" onClick={this.acceptConnection}>Accept</a>
-                                    <a className="reject" onClick={this.removeConnection}>Reject</a>
+                                    <a className="approve" onClick={this.acceptConnection} href="/#">Accept</a>
+                                    <a className="reject" onClick={this.removeConnection} href="/#">Reject</a>
                                 </>
                             ) : (
                                 <>
-                                    <a className="message" onClick={() => openMessage(user.user_id)}>Message</a>
-                                    <a className="reject" onClick={this.toggleModal}>Remove</a>
+                                    <a className="message" onClick={() => openMessage(user.user_id)} href="/#">Message</a>
+                                    <a className="reject" onClick={this.toggleModal} href="/#">Remove</a>
                                     <Link className="profile" to={`/user/profile/${user.user_id}`}>Profile</Link>
                                 </>
                             )

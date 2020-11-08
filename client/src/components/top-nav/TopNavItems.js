@@ -1,14 +1,15 @@
-import React from 'react';
-import Cookie from 'js-cookie';
 import axios from 'axios';
-import { BASE_URL } from '../../constants/api-routes';
+import Cookie from 'js-cookie';
+import React from 'react';
 import { withRouter } from 'react-router-dom';
 import { NavItem } from 'reactstrap';
+import { BASE_URL } from '../../constants/api-routes';
+import { DarkModeSwitch } from "../dark-mode-toggle";
+import { errorNotification } from '../error-notification';
+import { Notification } from '../notification';
 import AvatarDropdown from './AvatarDropdown';
 import LogInModalButton from './LogInModalButton';
 import RegisterModalButton from './RegisterModalButton';
-import { Notification } from '../notification';
-import { DarkModeSwitch } from "../dark-mode-toggle";
 import './TopNavItem.scss';
 
 class TopNavItems extends React.Component {
@@ -41,8 +42,7 @@ class TopNavItems extends React.Component {
                     });
                 })
                 .catch((err) => {
-                    // const errorMessage = (err.response.data.message) ? (err.response.data.message) : "Something went wrong";
-                    // Notification.spawnNotification("Viewing user profile failed", errorMessage, "danger");
+                    errorNotification(err, "Viewing user profile failed");
                 });
         }
     }
@@ -90,8 +90,7 @@ class TopNavItems extends React.Component {
                 Notification.spawnNotification("Login success", "You have logged in successfully", "success");
             })
             .catch((err) => {
-                const errorMessage = (err.response.data.message) ? (err.response.data.message) : "Something went wrong";
-                Notification.spawnNotification("Login failure", errorMessage, "danger");
+                errorNotification(err, "Login failure");
             });
     }
 
@@ -119,8 +118,7 @@ class TopNavItems extends React.Component {
                 Notification.spawnNotification("Register success", "You have registered successfully", "success");
             })
             .catch((err) => {
-                const errorMessage = (err.response.data.message) ? (err.response.data.message) : "Something went wrong";
-                Notification.spawnNotification("Registration failed", errorMessage, "danger");
+                errorNotification(err, "Registration failed");
             });
     }
 

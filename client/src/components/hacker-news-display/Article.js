@@ -26,7 +26,6 @@ class Article extends React.Component {
         if (text) {
             text = capitalize(text);
             text = this.truncate(text, 1000, true);
-            console.log(text);
         }
 
         return (

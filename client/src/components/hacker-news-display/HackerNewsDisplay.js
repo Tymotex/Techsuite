@@ -2,6 +2,7 @@ import axios from 'axios';
 import React from "react";
 import FadeIn from 'react-fade-in';
 import { Card, CardBody, Nav, NavItem, NavLink } from 'reactstrap';
+import { errorNotification } from '../error-notification';
 import { LoadingSpinner } from '../loading-spinner';
 import { Paginator } from '../paginator';
 import Article from './Article';
@@ -17,6 +18,7 @@ class HackerNewsDisplay extends React.Component {
             stories: [],
             currPage: 0,
             numResults: 10,
+            numArticles: 100,
             mode: "hot"
         };
         this.getPage = this.getPage.bind(this);
@@ -27,11 +29,12 @@ class HackerNewsDisplay extends React.Component {
         this.setState({
             isLoading: true
         });
+        const { numArticles } = this.state;
         axios.get("https://hacker-news.firebaseio.com/v0/topstories.json?print=pretty")
             .then((res) => {
                 // Fetching the ID of the top 100 stories
                 this.setState({
-                    storyIDs: res.data.slice(0, 100),
+                    storyIDs: res.data.slice(0, numArticles),
                     isLoading: false,
                     fetchSucceeded: false
                 });
@@ -39,17 +42,17 @@ class HackerNewsDisplay extends React.Component {
                     const story = await this.fetchStory(eachStoryID);
                     this.setState({
                         stories: [...this.state.stories, story],
-                        fetchSucceeded: true,
-                        isLoading: false
+                        fetchSucceeded: this.state.stories.length >= numArticles - 1,
+                        isLoading: this.state.stories.length < numArticles - 1
                     });
                 });
             })
             .catch((err) => {
-                console.log(err);
                 this.setState({
                     isLoading: false,
                     fetchSucceeded: false
                 });
+                errorNotification(err, "Failed to get Hacker News articles");
             });
     }
 
@@ -67,10 +70,10 @@ class HackerNewsDisplay extends React.Component {
     setMode(mode) {
         switch (mode) {
             case "hot":
-                // TODO: Need a better comparison rule here
-                // Sorting articles in ascending order of score : time ratio
+                // Sorting articles in ascending order of score : article age ratio
+                const unixTimeNow = Math.floor(Date.now() / 1000);
                 this.state.stories.sort((a, b) => {
-                    return ((a.score / a.time) > (b.score / b.time)) ? -1 : 1;
+                    return ((a.score / (unixTimeNow - a.time)) > (b.score / (unixTimeNow - b.time))) ? -1 : 1;
                 });
                 break;
             case "top":
@@ -103,13 +106,13 @@ class HackerNewsDisplay extends React.Component {
                     <h3 className="spaced">Hacker News</h3>     
                     <Nav tabs>
                         <NavItem>
-                            <NavLink href="#" active={mode === "hot"} onClick={() => this.setMode("hot")}>Hot</NavLink>
+                            <NavLink href="#" active={mode === "hot"} disabled={isLoading} onClick={() => this.setMode("hot")}>Hot</NavLink>
                         </NavItem>
                         <NavItem>
-                            <NavLink href="#" active={mode === "top"} onClick={() => this.setMode("top")}>Top</NavLink>
+                            <NavLink href="#" active={mode === "top"} disabled={isLoading} onClick={() => this.setMode("top")}>Top</NavLink>
                         </NavItem>
                         <NavItem>
-                            <NavLink href="#" active={mode === "latest"} onClick={() => this.setMode("latest")}>Latest</NavLink>
+                            <NavLink href="#" active={mode === "latest"} disabled={isLoading} onClick={() => this.setMode("latest")}>Latest</NavLink>
                         </NavItem>
                     </Nav>           
                     <Paginator flipPage={this.getPage} maxPageNum={Math.ceil(numPages)} />

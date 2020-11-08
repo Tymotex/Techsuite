@@ -1,10 +1,11 @@
-import React, { Component } from 'react';
-import Cookie from 'js-cookie';
 import axios from 'axios';
+import Cookie from 'js-cookie';
+import React, { Component } from 'react';
 import { ChannelList } from '../../components/channel-list';
-import { BASE_URL } from '../../constants/api-routes';
+import { errorNotification } from '../../components/error-notification';
 import { LoadingSpinner } from '../../components/loading-spinner';
 import { Notification } from '../../components/notification';
+import { BASE_URL } from '../../constants/api-routes';
 import Empty from './Empty';
 
 class ChannelsMy extends Component {
@@ -38,7 +39,8 @@ class ChannelsMy extends Component {
                     this.setState({
                         isLoading: false,
                         fetchSucceeded: false
-                    })
+                    });
+                    errorNotification(err, "Couldn't list all channels");
                 })
         } else {
             Notification.spawnNotification("Can't load your channels", "Please log in first", "danger");

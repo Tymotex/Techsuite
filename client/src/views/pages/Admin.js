@@ -1,8 +1,8 @@
-import React from 'react';
 import axios from 'axios';
 import Cookie from 'js-cookie';
-import { BASE_URL } from '../../constants/api-routes';
+import React from 'react';
 import { Notification } from '../../components/notification';
+import { BASE_URL } from '../../constants/api-routes';
 
 class Admin extends React.Component {
     constructor(props) {

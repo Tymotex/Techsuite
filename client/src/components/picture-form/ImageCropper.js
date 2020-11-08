@@ -1,4 +1,7 @@
 /* eslint-disable jsx-a11y/media-has-caption, class-methods-use-this */
+// Font-awesome icons:
+import { faImage } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import axios from 'axios';
 import Cookie from 'js-cookie';
 import React, { PureComponent } from 'react';
@@ -7,12 +10,10 @@ import 'react-image-crop/dist/ReactCrop.css';
 import { Button, Col, Form, FormGroup, Input, Label, Row } from 'reactstrap';
 import { Notification } from '../../components/notification';
 import { BASE_URL } from '../../constants/api-routes';
-import './ImageCropper.scss';
+import { errorNotification } from '../error-notification';
 import fileInputStyles from './FileInput.module.scss';
+import './ImageCropper.scss';
 
-// Font-awesome icons:
-import { faImage } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 class ImageCropper extends PureComponent {
     constructor(props) {
@@ -145,7 +146,6 @@ class ImageCropper extends PureComponent {
         });
     }
 
-    // API call:
     uploadImageFile(event) {
         event.preventDefault();
         const currUserToken = Cookie.get("token");
@@ -181,7 +181,7 @@ class ImageCropper extends PureComponent {
                 window.location.reload();
             })
             .catch((err) => {
-                console.log(err);
+                errorNotification(err, "Couldn't upload image");
             })
     }
     

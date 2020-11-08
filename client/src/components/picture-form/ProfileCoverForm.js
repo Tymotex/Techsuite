@@ -1,10 +1,9 @@
 import axios from 'axios';
 import Cookie from 'js-cookie';
 import React from 'react';
-import { Button, Form, FormGroup, Input, Label } from 'reactstrap';
 import { Notification } from '../../components/notification';
 import { BASE_URL } from '../../constants/api-routes';
-import fileInputStyles from './FileInput.module.scss';
+import { errorNotification } from '../error-notification';
 import ImageCropper from './ImageCropper';
 
 class ProfileCoverForm extends React.Component {
@@ -59,7 +58,7 @@ class ProfileCoverForm extends React.Component {
                 window.location.reload();
             })
             .catch((err) => {
-                console.log(err);
+                errorNotification(err, "Couldn't upload cover");
             })
     }
 

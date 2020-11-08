@@ -6,6 +6,7 @@ import { withRouter } from 'react-router-dom';
 import { Button, Form, FormGroup, Input, InputGroup, InputGroupAddon, InputGroupText, Modal, ModalBody, ModalHeader } from 'reactstrap';
 import { BASE_URL } from '../../constants/api-routes';
 import ChatBox from '../channel-messages/ChatBox';
+import { errorNotification } from '../error-notification';
 import { Notification } from '../notification';
 import './ChannelSearchMessages.scss';
 
@@ -50,8 +51,7 @@ class ChannelSearchMessages extends React.Component {
                     });
                 })
                 .catch((err) => {
-                    const errorMessage = (err.response.data.message) ? (err.response.data.message) : "Something went wrong";
-                    Notification.spawnNotification("Message search failed", errorMessage, "danger");
+                    errorNotification(err, "Message search failed");
                 });
         } else {
             this.setState({

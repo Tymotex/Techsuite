@@ -7,6 +7,7 @@ import ReactTooltip from 'react-tooltip';
 import { BASE_URL } from '../../constants/api-routes';
 import './Message.scss';
 import { Notification } from '../notification';
+import { errorNotification } from '../error-notification';
 
 class IncomingMessage extends React.Component {
     constructor(props) {
@@ -36,7 +37,8 @@ class IncomingMessage extends React.Component {
                     this.setState({
                         isLoading: false,
                         fetchSucceeded: false
-                    })
+                    });
+                    errorNotification(err, "Failed to fetch user profile");
                 })
         } else {
             this.setState({

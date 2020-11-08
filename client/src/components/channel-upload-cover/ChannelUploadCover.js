@@ -1,11 +1,7 @@
-import React from 'react';
-import Cookie from 'js-cookie';
-import axios from 'axios';
-import { Button, Modal, ModalHeader, ModalBody, ModalFooter, Form, FormGroup, Input, Label } from 'reactstrap';
-import { BASE_URL } from '../../constants/api-routes';
-import { withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import { Notification } from '../../components/notification';
+import React from 'react';
+import { withRouter } from 'react-router-dom';
+import { Button, Modal, ModalBody, ModalHeader } from 'reactstrap';
 import ImageCropper from '../../components/picture-form/ImageCropper';
 
 class ChannelUploadCover extends React.Component {

@@ -1,11 +1,11 @@
-import React from 'react';
-import Cookie from 'js-cookie';
 import axios from 'axios';
-import { Button, Modal, ModalHeader, ModalBody, ModalFooter, Form, FormGroup, Input, Label } from 'reactstrap';
-import { BASE_URL } from '../../constants/api-routes';
-import { withRouter } from 'react-router-dom';
+import Cookie from 'js-cookie';
 import PropTypes from 'prop-types';
-import { Notification } from '../notification';
+import React from 'react';
+import { withRouter } from 'react-router-dom';
+import { Button, Form, FormGroup, Input, Label, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
+import { BASE_URL } from '../../constants/api-routes';
+import { errorNotification } from '../error-notification';
 
 class UserInvite extends React.Component {
     static propTypes = {
@@ -45,8 +45,7 @@ class UserInvite extends React.Component {
                         isLoading: false,
                         fetchSucceeded: false
                     });
-                    const errorMessage = (err.response.data.message) ? (err.response.data.message) : "Something went wrong";
-                    Notification.spawnNotification("Couldn't fetch all users", errorMessage, "danger");
+                    errorNotification(err, "Couldn't fetch all users");
                 });
         }
     }
@@ -82,8 +81,7 @@ class UserInvite extends React.Component {
                     window.location.reload();
                 })
                 .catch((err) => {
-                    const errorMessage = (err.response.data.message) ? (err.response.data.message) : "Something went wrong";
-                    Notification.spawnNotification("Invitation failed", errorMessage, "danger");
+                    errorNotification(err, "Channel invitation failed");
                 });
         }
     }

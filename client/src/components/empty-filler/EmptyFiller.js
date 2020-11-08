@@ -1,7 +1,7 @@
 import React from 'react';
 import { Tween } from 'react-gsap';
 
-const EmptyFiller = ({ children }) => {
+const EmptyFiller = ({ customMessage, children }) => {
     return (
 		<main>
 			<div class="container">
@@ -306,7 +306,9 @@ const EmptyFiller = ({ children }) => {
 						<div>
 								<h1>Nothing to see here.</h1>
 								<p>
-										It doesn't seem like you can access this page, or there was no content to be displayed here. 
+									{customMessage ? (customMessage) : (
+										"It doesn't seem like you can access this page, or there was no content to be displayed here."
+									)}									
 								</p>
 						</div>
 					)}

@@ -16,7 +16,7 @@ import { UserAddOwner } from '../../components/user-add-owner';
 import { UserInvite } from '../../components/user-invite';
 import { UserRemoveOwner } from '../../components/user-remove-owner';
 import { BASE_URL, SOCKET_URI } from '../../constants/api-routes';
-
+import { errorNotification } from '../../components/error-notification';
 
 const socket = io(SOCKET_URI);
 
@@ -48,12 +48,11 @@ class Channel extends React.Component {
                     });
                 })
                 .catch((err) => {
-                    const errorMessage = (err.response.data.message) ? (err.response.data.message) : "Something went wrong";
-                    Notification.spawnNotification("Viewing channel failed", errorMessage, "danger");
                     this.setState({
                         isLoading: false,
                         fetchSucceeded: false
                     });
+                    errorNotification(err, "Viewing channel failed");
                 });
         } else {
             Notification.spawnNotification("Can't load channels", "Please log in first", "danger");

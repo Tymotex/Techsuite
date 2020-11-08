@@ -2,17 +2,18 @@ import axios from 'axios';
 import Cookie from 'js-cookie';
 import PropTypes from 'prop-types';
 import React from 'react';
-import { Card, Col, Row, CardBody } from 'reactstrap';
-import { BASE_URL, SOCKET_URI } from '../../constants/api-routes';
-import "./UserProfile.scss";
-import UserChannels from './UserChannels'; 
-import UserBio from './UserBio';
-import { Notification } from '../notification';
-import { LoadingSpinner } from '../loading-spinner';
-import ConnectButton from './ConnectButton';
-import { ConnectionChat } from '../connection-chat';
-import BioField from './BioField';
+import { Card, CardBody, Col, Row } from 'reactstrap';
 import io from 'socket.io-client';
+import { BASE_URL, SOCKET_URI } from '../../constants/api-routes';
+import { ConnectionChat } from '../connection-chat';
+import { errorNotification } from '../error-notification';
+import { LoadingSpinner } from '../loading-spinner';
+import { Notification } from '../notification';
+import BioField from './BioField';
+import ConnectButton from './ConnectButton';
+import UserBio from './UserBio';
+import UserChannels from './UserChannels';
+import "./UserProfile.scss";
 
 const socket = io(SOCKET_URI);
 
@@ -30,7 +31,6 @@ class UserProfile extends React.Component {
             currentChatUser: {},
             thisUser: {},
             bio: {},
-            chatWindowOpen: false,
             room: ""
         };
         this.getCallingUser = this.getCallingUser.bind(this);
@@ -73,24 +73,22 @@ class UserProfile extends React.Component {
                         })
                         .catch((err) => {
                             if (err.response) {
-                                const errorMessage = (err.response.data.message) ? (err.response.data.message) : "Something went wrong";
-                                Notification.spawnNotification("Couldn't view profile bio", errorMessage, "danger");
                                 this.setState({
                                     isLoading: false,
                                     fetchSucceeded: false
-                                })
+                                });
+                                errorNotification(err, "Couldn't view profile bio");
                             } else {
                                 Notification.spawnNotification("Couldn't view profile bio", "Something went wrong. Techsuite messed up!", "danger");
                             }
                         });
                 })
                 .catch((err) => {
-                    const errorMessage = (err.response.data.message) ? (err.response.data.message) : "Something went wrong";
-                    Notification.spawnNotification("Couldn't view profile", errorMessage, "danger");
                     this.setState({
                         isLoading: false,
                         fetchSucceeded: false
                     });
+                    errorNotification(err, "Couldn't view profile");
                 })
         } else {
             this.setState({
@@ -115,16 +113,11 @@ class UserProfile extends React.Component {
                     });
                 })
                 .catch((err) => {
-                    if (err.response) {
-                        const errorMessage = (err.response.data.message) ? (err.response.data.message) : "Something went wrong";
-                        Notification.spawnNotification("Failed to load your details", errorMessage, "danger");
-                    } else {
-                        Notification.spawnNotification("Failed to load your details", "Something went wrong. Techsuite messed up!", "danger");
-                    }
                     this.setState({
                         isLoading: false,
                         fetchSucceeded: false
                     });
+                    errorNotification(err, "Failed to load your details");
                 });
         } else {
             Notification.spawnNotification("Can't load your details", "Please log in first!", "danger");
@@ -151,7 +144,7 @@ class UserProfile extends React.Component {
                     }
                 })
                 .catch((err) => {
-
+                    errorNotification(err, "Failed to fetch user profile");
                 });
         }
     }
@@ -184,7 +177,7 @@ class UserProfile extends React.Component {
 
     render() {
         const { currentChatUser, thisUser, room } = this.state;
-        const { user_id, email, username, profile_img_url, is_connected_to, connection_is_pending } = currentChatUser;
+        const { user_id, email, username, profile_img_url } = currentChatUser;
         const { first_name, last_name, cover_img_url, summary, location, title, education} = this.state.bio;
         console.log(currentChatUser);
         const coverStyle = {
@@ -219,7 +212,7 @@ class UserProfile extends React.Component {
                                             <BioField field="Email" value={email} />
                                         </div>
                                         {(currentChatUser.user_id) ? (
-                                            (parseInt(user_id) == parseInt(Cookie.get("user_id"))) ? (
+                                            (parseInt(user_id) === parseInt(Cookie.get("user_id"))) ? (
                                                 <></>
                                             ) : (
                                                 <ConnectButton 

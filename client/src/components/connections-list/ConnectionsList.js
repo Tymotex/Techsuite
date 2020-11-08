@@ -1,16 +1,17 @@
-import React from 'react';
-import { Row, Col, Card, CardHeader, CardBody } from 'reactstrap';
-import { ConnectionCard } from './';
-import { ConnectionChat } from '../connection-chat';
 import axios from 'axios';
 import Cookie from 'js-cookie';
-import { BASE_URL, SOCKET_URI } from '../../constants/api-routes';
-import { ConnectionSearch } from '../connection-search';
-import { Notification } from '../notification';
-import { LoadingSpinner } from '../loading-spinner';
-import { EmptyFiller } from '../empty-filler';
-import cardStyles from './Card.module.scss';
+import React from 'react';
+import { Card, CardBody, CardHeader, Col, Row } from 'reactstrap';
 import io from 'socket.io-client';
+import { BASE_URL, SOCKET_URI } from '../../constants/api-routes';
+import { ConnectionChat } from '../connection-chat';
+import { ConnectionSearch } from '../connection-search';
+import { EmptyFiller } from '../empty-filler';
+import { errorNotification } from '../error-notification';
+import { LoadingSpinner } from '../loading-spinner';
+import { Notification } from '../notification';
+import { ConnectionCard } from './';
+import cardStyles from './Card.module.scss';
 
 const socket = io(SOCKET_URI);
 
@@ -60,16 +61,11 @@ class ConnectionsList extends React.Component {
                     });
                 })
                 .catch((err) => {
-                    if (err.data) {
-                        const errorMessage = (err.response.data.message) ? (err.response.data.message) : "Something went wrong";
-                        Notification.spawnNotification("Failed to add connection", errorMessage, "danger");
-                    } else {
-                        Notification.spawnNotification("Failed to add connection", "Something went wrong. Techsuite messed up!", "danger");
-                    }
                     this.setState({
                         isLoading: false,
                         fetchSucceeded: false
                     });
+                    errorNotification(err, "Failed to add connection");
                 });
             // TODO: Async refactor so that this.setState({ isloading, fetchsucceeded, ...}) works
             this.fetchConnections(currToken);
@@ -85,7 +81,6 @@ class ConnectionsList extends React.Component {
     } 
 
     fetchConnections(token) {
-        // alert("Fetching all connections");
         axios.get(`${BASE_URL}/connections?token=${token}`)
             .then((connectionsPayload) => {
                 this.setState({
@@ -93,13 +88,11 @@ class ConnectionsList extends React.Component {
                 });
             })
             .catch((err) => {
-                const errorMessage = (err.response.data.message) ? (err.response.data.message) : "Something went wrong";
-                Notification.spawnNotification("Fetching connections failed", errorMessage, "danger");
+                errorNotification(err, "Fetching connections failed");
             });
     }
 
     fetchConnectionsIncoming(token) {
-        // alert("Fetching incoming");
         axios.get(`${BASE_URL}/connections/incoming?token=${token}`)
             .then((connectionsPayload) => {
                 this.setState({
@@ -107,13 +100,11 @@ class ConnectionsList extends React.Component {
                 });
             })
             .catch((err) => {
-                const errorMessage = (err.response.data.message) ? (err.response.data.message) : "Something went wrong";
-                Notification.spawnNotification("Fetching connections failed", errorMessage, "danger");
+                errorNotification(err, "Fetching connections failed");
             });
     }
 
     fetchConnectionsOutgoing(token) {
-        // alert("Fetching outgoing");
         axios.get(`${BASE_URL}/connections/outgoing?token=${token}`)
             .then((connectionsPayload) => {
                 this.setState({
@@ -121,8 +112,7 @@ class ConnectionsList extends React.Component {
                 });
             })
             .catch((err) => {
-                const errorMessage = (err.response.data.message) ? (err.response.data.message) : "Something went wrong";
-                Notification.spawnNotification("Fetching connections failed", errorMessage, "danger");
+                errorNotification(err, "Fetching connections failed");
             });
     }
 
@@ -142,7 +132,7 @@ class ConnectionsList extends React.Component {
                     }
                 })
                 .catch((err) => {
-                    alert(err); // TODO: 
+                    errorNotification(err, "Fetching user profile failed");
                 });
         }
     }

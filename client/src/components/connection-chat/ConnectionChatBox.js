@@ -4,6 +4,7 @@ import React from 'react';
 import FadeIn from 'react-fade-in';
 import { Form } from 'reactstrap';
 import { BASE_URL } from '../../constants/api-routes';
+import { errorNotification } from '../error-notification';
 import ConnectionMessage from './ConnectionMessage';
 
 class ConnectionChatBox extends React.Component {
@@ -70,7 +71,7 @@ class ConnectionChatBox extends React.Component {
                     });
                 })
                 .catch((err) => {
-                    alert("Failed fetch");
+                    errorNotification(err, "Failed to fetch messages");
                 });
         } else {
             // TODO

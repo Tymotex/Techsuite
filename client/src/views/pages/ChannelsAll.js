@@ -1,12 +1,12 @@
-import React from 'react';
 import axios from 'axios';
 import Cookie from 'js-cookie';
+import React from 'react';
 import { ChannelList } from '../../components/channel-list';
-import { BASE_URL } from '../../constants/api-routes';
+import { errorNotification } from '../../components/error-notification';
 import { LoadingSpinner } from '../../components/loading-spinner';
 import { Notification } from '../../components/notification';
+import { BASE_URL } from '../../constants/api-routes';
 import Empty from './Empty';
-import { EmptyFiller } from '../../components/empty-filler';
 
 class ChannelsAll extends React.Component {
     constructor(props) {
@@ -36,12 +36,11 @@ class ChannelsAll extends React.Component {
                     });
                 })
                 .catch((err) => {
-                    const errorMessage = (err.response.data.message) ? (err.response.data.message) : "Something went wrong";
-                    Notification.spawnNotification("Viewing all channels failed", errorMessage, "danger");
                     this.setState({
                         isLoading: false,
                         fetchSucceeded: false
                     });
+                    errorNotification(err, "Viewing all channels failed");
                 });
         } else {
             Notification.spawnNotification("Can't load channels", "Please log in first", "danger");

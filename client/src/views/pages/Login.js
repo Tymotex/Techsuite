@@ -1,8 +1,9 @@
-import React, {Component} from 'react';
-import { Redirect } from 'react-router-dom';
 import axios from 'axios';
 import Cookie from 'js-cookie';
-import { Button, Form, FormGroup, Label, Input, Col, Row, Card, CardBody } from 'reactstrap';
+import React, { Component } from 'react';
+import { Redirect } from 'react-router-dom';
+import { Button, Card, CardBody, Col, Form, FormGroup, Input, Label, Row } from 'reactstrap';
+import { errorNotification } from '../../components/error-notification';
 import { BASE_URL } from '../../constants/api-routes';
 
 class LoginForm extends Component {
@@ -43,7 +44,7 @@ class LoginForm extends Component {
         });
       })
       .catch((err) => {
-        console.log(err);
+        errorNotification(err, "Failed to login");
       })
   }
 

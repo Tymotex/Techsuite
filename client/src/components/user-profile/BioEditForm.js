@@ -3,6 +3,7 @@ import Cookie from 'js-cookie';
 import React from 'react';
 import { Button, Form, FormGroup, Input, InputGroup, InputGroupAddon, InputGroupText } from 'reactstrap';
 import { BASE_URL } from '../../constants/api-routes';
+import { errorNotification } from '../error-notification';
 import { Notification } from '../notification';
 import './BioEditForm.scss';
 import editFormStyles from './BioField.module.scss';
@@ -36,12 +37,11 @@ class BioEditForm extends React.Component {
                     });
                 })
                 .catch((err) => {
-                    const errorMessage = (err.response.data.message) ? (err.response.data.message) : "Something went wrong";
-                    Notification.spawnNotification("Viewing user bio failed", errorMessage, "danger");
                     this.setState({
                         isLoading: false,
                         fetchSucceeded: false
-                    })
+                    });
+                    errorNotification(err, "Viewing user bio failed");
                 });
         } else {
             this.setState({
@@ -87,8 +87,7 @@ class BioEditForm extends React.Component {
                     window.location.reload();
                 })
                 .catch((err) => {
-                    const errorMessage = (err.response.data.message) ? (err.response.data.message) : "Something went wrong";
-                    Notification.spawnNotification("Updating bio failed", errorMessage, "danger");
+                    errorNotification(err, "Updating bio failed");
                 });
         }
     }

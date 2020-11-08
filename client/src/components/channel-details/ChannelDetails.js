@@ -7,6 +7,9 @@ import React from 'react';
 import { withRouter } from 'react-router-dom';
 import { Col, Jumbotron, Row } from 'reactstrap';
 import { BASE_URL } from '../../constants/api-routes';
+import { BACKEND_DOWN_ERR_MESSAGE } from '../../constants/message';
+import { EmptyFiller } from '../empty-filler';
+import { errorNotification } from '../error-notification';
 import { LoadingSpinner } from '../loading-spinner';
 import { Notification } from '../notification';
 import './ChannelDetails.scss';
@@ -46,6 +49,7 @@ class ChannelDetails extends React.Component {
                         isLoading: false,
                         fetchSucceeded: false
                     })
+                    errorNotification(err, "Failed to fetch channel details");
                 })
         } else {
             this.setState({
@@ -62,7 +66,7 @@ class ChannelDetails extends React.Component {
             (this.state.isLoading) ?
                 <LoadingSpinner /> :
                 (!this.state.fetchSucceeded) ?
-                    <p>Fetch failed. Is the backend running?</p> :
+                    <EmptyFiller customMessage={BACKEND_DOWN_ERR_MESSAGE} /> :
                         <Jumbotron className="channel-header-jumbotron" 
                             style={{"backgroundImage": (channel_cover_img_url != null) ? (
                                     `url('${channel_cover_img_url}')`

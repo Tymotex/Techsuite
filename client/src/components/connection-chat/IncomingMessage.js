@@ -1,11 +1,7 @@
-import axios from 'axios';
-import Cookie from 'js-cookie';
 import moment from 'moment-timezone';
 import React from 'react';
 import { Link } from 'react-router-dom';
 import ReactTooltip from 'react-tooltip';
-import { BASE_URL } from '../../constants/api-routes';
-import { Notification } from '../notification';
 
 class IncomingMessage extends React.Component {
     constructor(props) {
@@ -17,36 +13,6 @@ class IncomingMessage extends React.Component {
         };
     }
 
-    componentDidMount() {;
-        this.setState({
-            isLoading: true
-        });
-        const currUserToken = Cookie.get("token");
-        const otherUserID = this.props.user.user_id;
-        if (currUserToken) {
-            axios.get(`${BASE_URL}/users/profile?token=${currUserToken}&user_id=${otherUserID}`)
-                .then((userProfile) => {
-                    this.setState({
-                        isLoading: false,
-                        fetchSucceeded: true,
-                        user: userProfile.data
-                    });
-                })
-                .catch((err) => {
-                    this.setState({
-                        isLoading: false,
-                        fetchSucceeded: false
-                    });
-                })
-        } else {
-            this.setState({
-                isLoading: false,
-                fetchSucceeded: false
-            });
-            Notification.spawnNotification("Failed", "Please log in first", "danger");
-        }
-    }
-    
     render() {
         // Creating a formatted time string based on the time_created unix timestamp
         // Example time format: 05/20/2020 | 7:55PM (AEST)

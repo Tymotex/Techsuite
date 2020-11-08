@@ -1,31 +1,26 @@
 import axios from 'axios';
 import Cookie from 'js-cookie';
 import React, { useState } from 'react';
-import { 
-    Card, 
-    CardBody, 
-    Form, 
-    FormGroup, 
-    Input, 
-    Label, 
-    InputGroupButtonDropdown, 
-    DropdownToggle, 
-    DropdownMenu, 
-    DropdownItem, 
+import {
+    Button,
+    Card,
+    CardBody,
+    Form,
+    FormGroup,
+    Input,
     InputGroup,
-    Button
+    InputGroupButtonDropdown,
+    Label
 } from 'reactstrap';
 import { BASE_URL } from '../../constants/api-routes';
+import { errorNotification } from '../error-notification';
 import { Notification } from '../notification';
-import './ConnectionSearch.scss';
 import cardStyles from './ConnectionSearch.module.scss';
+import './ConnectionSearch.scss';
 
 const SearchField = (props) => {
     const [dropdownOpen, setDropdownOpen] = useState(false);
-    const [splitButtonOpen, setSplitButtonOpen] = useState(false);
-
     const toggleDropDown = () => setDropdownOpen(!dropdownOpen);
-    const toggleSplit = () => setSplitButtonOpen(!splitButtonOpen);
 
     const { users } = props;
     return (
@@ -50,39 +45,6 @@ const SearchField = (props) => {
             </InputGroup>
         </div>
     );
-}
-
-function removeConnection(event) {
-    event.preventDefault();
-    const fd = new FormData(event.target);
-    const targetUserID = fd.get("target-user");
-    const currToken = Cookie.get("token");
-    const { refreshConnections } = this.props;
-    if (currToken) {
-        const postData = {
-            method: 'post',
-            url: `${BASE_URL}/connections/remove`,
-            data: {
-                token: currToken,
-                user_id: targetUserID
-            },
-            headers: { "Content-Type": "application/json" }
-        };
-        axios(postData)
-            .then((res) => {
-                Notification.spawnNotification("Success", "You have removed a connection", "success");
-                refreshConnections(currToken);
-                this.toggleModal(false);
-            })
-            .catch((err) => {
-                if (err.data) {
-                    const errorMessage = (err.response.data.message) ? (err.response.data.message) : "Something went wrong";
-                    Notification.spawnNotification("Failed to remove connection", errorMessage, "danger");
-                } else {
-                    Notification.spawnNotification("Failed to remove connection", "Techsuite messed up something. Sorry!", "danger");
-                }
-            });
-    }
 }
 
 class ConnectionSearch extends React.Component {
@@ -120,8 +82,7 @@ class ConnectionSearch extends React.Component {
                         isLoading: false,
                         fetchSucceeded: false
                     });
-                    const errorMessage = (err.response.data.message) ? (err.response.data.message) : "Something went wrong";
-                    Notification.spawnNotification("Couldn't fetch all users", errorMessage, "danger");
+                    errorNotification(err, "Couldn't fetch all users");
                 });
         }
     }
@@ -149,8 +110,7 @@ class ConnectionSearch extends React.Component {
                     refreshOutgoing(currToken);
                 })
                 .catch((err) => {
-                    const errorMessage = (err.response.data.message) ? (err.response.data.message) : "Something went wrong";
-                    Notification.spawnNotification("Connection request failed", errorMessage, "danger");
+                    errorNotification(err, "Connection request failed");
                 });
         } else {
     

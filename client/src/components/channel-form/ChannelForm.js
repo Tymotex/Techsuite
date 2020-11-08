@@ -5,6 +5,7 @@ import { withRouter } from 'react-router-dom';
 import { BASE_URL } from '../../constants/api-routes';
 import { Button, Form, FormGroup, FormText, Label, Input } from 'reactstrap';
 import { Notification } from '../notification';
+import { errorNotification } from '../error-notification';
 
 class ChannelForm extends React.Component {
     constructor(props) {
@@ -44,7 +45,7 @@ class ChannelForm extends React.Component {
                     this.props.history.push("/channels/my");
                 })
                 .catch((err) => {
-                    Notification.spawnNotification("Failed to create channel", "Invalid form input. Please try again", "danger");
+                    errorNotification(err, "Failed to create channel");
                 })
         } else {
             Notification.spawnNotification("Failed to create channel", "Please log in first", "danger");

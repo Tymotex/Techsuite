@@ -15,35 +15,6 @@ class OutgoingMessage extends React.Component {
         };
     }
 
-    // componentDidMount() {;
-    //     this.setState({
-    //         isLoading: true
-    //     });
-    //     const currUserToken = Cookie.get("token");
-    //     if (currUserToken) {
-    //         axios.get(`${BASE_URL}/users/profile?token=${currUserToken}&user_id=${this.props.user_id}`)
-    //             .then((userProfile) => {
-    //                 this.setState({
-    //                     isLoading: false,
-    //                     fetchSucceeded: true,
-    //                     user: userProfile.data
-    //                 });
-    //             })
-    //             .catch((err) => {
-    //                 this.setState({
-    //                     isLoading: false,
-    //                     fetchSucceeded: false
-    //                 })
-    //             })
-    //     } else {
-    //         this.setState({
-    //             isLoading: false,
-    //             fetchSucceeded: false
-    //         });
-    //         Notification.spawnNotification("Failed", "Please log in first", "danger");
-    //     }
-    // }
-
     toggle() {
         this.setState({
             tooltipOpen: !this.state.tooltipOpen

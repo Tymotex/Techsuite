@@ -1,5 +1,7 @@
 import React from 'react';
 import FadeIn from 'react-fade-in';
+import { BACKEND_DOWN_ERR_MESSAGE } from '../../constants/message';
+import { EmptyFiller } from '../empty-filler';
 import { LoadingSpinner } from '../loading-spinner';
 import './ChannelMessages.scss';
 import EmptyChatIndicator from './EmptyChatIndicator';
@@ -24,7 +26,7 @@ class ChatBox extends React.Component {
                                             </FadeIn>
                                         ))
                                     ) : (
-                                        <p>Message fetch failed...</p>
+                                        <EmptyFiller customMessage={BACKEND_DOWN_ERR_MESSAGE} /> 
                                     )
                                 )}  
                             </div>

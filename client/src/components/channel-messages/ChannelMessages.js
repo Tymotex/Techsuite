@@ -1,14 +1,14 @@
 import axios from 'axios';
 import Cookie from 'js-cookie';
 import React from 'react';
-import { Prompt } from 'react-router'
+import { Prompt } from 'react-router';
 import { Button, Form, FormGroup, Input, InputGroup, InputGroupAddon, InputGroupText } from 'reactstrap';
 import io from 'socket.io-client';
 import { BASE_URL, SOCKET_URI } from '../../constants/api-routes';
+import { errorNotification } from '../error-notification';
 import { Notification } from '../notification';
 import './ChannelMessages.scss';
 import ChatBox from './ChatBox';
-import TypingPrompt from './TypingPrompt';
 
 const socket = io(SOCKET_URI);
 
@@ -104,12 +104,11 @@ class ChannelMessages extends React.Component {
                     });
                 })
                 .catch((err) => {
-                    const errorMessage = (err.response.data.message) ? (err.response.data.message) : "Something went wrong";
-                    Notification.spawnNotification("Fetching channel messages failed", errorMessage, "danger");
                     this.setState({
                         isLoading: false,
                         fetchSucceeded: false
                     });
+                    errorNotification(err, "Fetching channel messages failed");
                 });
         }
     }
@@ -122,7 +121,7 @@ class ChannelMessages extends React.Component {
     }
 
     render() {
-        const { thisUser } = this.state;
+        // const { thisUser } = this.state;
         const { channelID: thisChannelID } = this.props;
         return (
             <>

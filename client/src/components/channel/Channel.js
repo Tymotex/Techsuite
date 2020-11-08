@@ -7,6 +7,7 @@ import React from 'react';
 import { Link, withRouter } from 'react-router-dom';
 import { Button, Card, CardBody, Col, Row } from 'reactstrap';
 import { BASE_URL } from '../../constants/api-routes';
+import { errorNotification } from '../error-notification';
 import { Notification } from '../notification';
 import './Channel.scss';
 
@@ -35,8 +36,7 @@ class Channel extends React.Component {
                     this.props.history.push(`/channel/${this.props.channel_id}`);
                 })
                 .catch((err) => {
-                    const errorMessage = (err.response.data.message) ? (err.response.data.message) : "Something went wrong";
-                    Notification.spawnNotification("Joining channel failed", errorMessage, "danger");
+                    errorNotification(err, "Joining channel failed");
                 });
         } else {
             this.setState({

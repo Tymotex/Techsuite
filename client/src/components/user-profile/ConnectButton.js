@@ -1,16 +1,12 @@
-import React from 'react';
-import { 
-    Button,
-    Modal,
-    ModalBody,
-    ModalHeader,
-    ModalFooter
-} from 'reactstrap';
-import './ConnectButton.scss';
-import Cookie from 'js-cookie';
 import axios from 'axios';
+import Cookie from 'js-cookie';
+import React from 'react';
+import {
+    Button
+} from 'reactstrap';
 import { BASE_URL } from '../../constants/api-routes';
-import { Notification } from '../notification';
+import { errorNotification } from '../error-notification';
+import './ConnectButton.scss';
 
 class ConnectButton extends React.Component {
     constructor(props) {
@@ -44,13 +40,7 @@ class ConnectButton extends React.Component {
                     });
                 })
                 .catch((err) => {
-                    if (err.data) {
-                        const errorMessage = (err.response.data.message) ? (err.response.data.message) : "Something went wrong";
-                        Notification.spawnNotification("Failed to get connection details", errorMessage, "danger");
-                    } else {
-                        Notification.spawnNotification("Failed to get connection details", "Techsuite messed up something. Sorry!", "danger");
-                        console.log(err);
-                    }
+                    errorNotification(err, "Failed to get connection details");
                 });
         }
     }
@@ -80,9 +70,7 @@ class ConnectButton extends React.Component {
                     });
                 })
                 .catch((err) => {
-                    alert("Failed");
-                    alert(err);
-                    alert(err.response.data.message);
+                    errorNotification(err, "Connection request failed");
                 });
         } else {
 
@@ -90,7 +78,7 @@ class ConnectButton extends React.Component {
     }
 
     removeConnection() {
-        const { userID, currentChatUser } = this.props;
+        const { userID } = this.props;
         const currToken = Cookie.get("token");
         if (currToken) {
             const postData = {
@@ -111,13 +99,7 @@ class ConnectButton extends React.Component {
                     });
                 })
                 .catch((err) => {
-                    if (err.data) {
-                        const errorMessage = (err.response.data.message) ? (err.response.data.message) : "Something went wrong";
-                        Notification.spawnNotification("Failed to remove connection", errorMessage, "danger");
-                    } else {
-                        Notification.spawnNotification("Failed to remove connection", "Techsuite messed up something. Sorry!", "danger");
-                        console.log(err);
-                    }
+                    errorNotification(err, "Failed to remove connection");
                 });
         }
     }
@@ -144,40 +126,37 @@ class ConnectButton extends React.Component {
                     });
                 })
                 .catch((err) => {
-                    const errorMessage = (err.response.data.message) ? (err.response.data.message) : "Something went wrong";
-                    Notification.spawnNotification("Failed to add connection", errorMessage, "danger");
+                    errorNotification(err, "Failed to add connection");
                 });
         }
     }
 
     render() {
         const { isConnected, connectionIsPending, isRequester } = this.state;
-        const { userID, currentChatUser, openMessage } = this.props;
+        const { userID, openMessage } = this.props;
         return (
-            <>
-                <div className="connect-button-container">
-                    {(connectionIsPending) ? (
-                        (isRequester) ? (
-                            <Button disabled={true}>Pending</Button>
-                        ) : (
-                            <>
-                                <Button outline color="primary" onClick={this.acceptConnection}>Accept</Button>
-                                <Button outline color="danger" onClick={this.removeConnection}>Reject</Button>
-                            </>
-                        )
+            <div className="connect-button-container">
+                {(connectionIsPending) ? (
+                    (isRequester) ? (
+                        <Button disabled={true}>Pending</Button>
                     ) : (
-                        (isConnected) ? (
-                            // TODO: Add link here to get to private message page
-                            <>
-                                <Button outline color="primary" onClick={() => openMessage(userID)}>Message</Button>
-                                <Button outline color="danger" onClick={this.removeConnection}>Remove</Button>
-                            </>
-                        ) : (
-                            <Button onClick={this.sendConnectionRequest}>Connect</Button>
-                        )
-                    )}
-                </div>
-            </>
+                        <>
+                            <Button outline color="primary" onClick={this.acceptConnection}>Accept</Button>
+                            <Button outline color="danger" onClick={this.removeConnection}>Reject</Button>
+                        </>
+                    )
+                ) : (
+                    (isConnected) ? (
+                        // TODO: Add link here to get to private message page
+                        <>
+                            <Button outline color="primary" onClick={() => openMessage(userID)}>Message</Button>
+                            <Button outline color="danger" onClick={this.removeConnection}>Remove</Button>
+                        </>
+                    ) : (
+                        <Button onClick={this.sendConnectionRequest}>Connect</Button>
+                    )
+                )}
+            </div>
         );
     }
 }

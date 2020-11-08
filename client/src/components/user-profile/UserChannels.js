@@ -1,10 +1,11 @@
-import React from 'react';
-import Cookie from 'js-cookie';
 import axios from 'axios';
+import Cookie from 'js-cookie';
+import React from 'react';
 import { ChannelList } from '../../components/channel-list';
-import { BASE_URL } from '../../constants/api-routes';
-import './BioEditForm.scss';
 import { Notification } from '../../components/notification';
+import { BASE_URL } from '../../constants/api-routes';
+import { errorNotification } from '../error-notification';
+import './BioEditForm.scss';
 
 class UserChannels extends React.Component {
     constructor(props) {
@@ -34,12 +35,11 @@ class UserChannels extends React.Component {
                     });
                 })
                 .catch((err) => {
-                    const errorMessage = (err.response.data.message) ? (err.response.data.message) : "Something went wrong";
-                    Notification.spawnNotification("Viewing channel list failed", errorMessage, "danger");
                     this.setState({
                         isLoading: false,
                         fetchSucceeded: false
-                    })
+                    });
+                    errorNotification(err, "Viewing channel list failed");
                 })
         } else {
             this.setState({

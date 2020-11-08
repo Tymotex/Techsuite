@@ -5,9 +5,10 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import ReactTooltip from 'react-tooltip';
 import { BASE_URL } from '../../constants/api-routes';
-import './Message.scss';
+import { errorNotification } from '../error-notification';
 import { Notification } from '../notification';
 import EditButton from './EditButton';
+import './Message.scss';
 
 class OutgoingMessage extends React.Component {
     constructor(props) {
@@ -38,7 +39,8 @@ class OutgoingMessage extends React.Component {
                     this.setState({
                         isLoading: false,
                         fetchSucceeded: false
-                    })
+                    });
+                    errorNotification(err, "Failed to fetch user profile");
                 })
         } else {
             this.setState({

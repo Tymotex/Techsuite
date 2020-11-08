@@ -1,26 +1,43 @@
 import axios from 'axios';
 import React from "react";
 import FadeIn from 'react-fade-in';
-import { Card, CardBody, Form, FormGroup, InputGroup, InputGroupAddon, InputGroupText, Input, Button } from 'reactstrap';
+import { Button, Card, CardBody, Form, FormGroup, Input, InputGroup, InputGroupAddon } from 'reactstrap';
+import { errorNotification } from '../error-notification';
 import { LoadingSpinner } from '../loading-spinner';
 import { Paginator } from '../paginator';
-import RepoCard from './RepoCard';
 import './Display.scss';
-
+import RepoCard from './RepoCard';
 
 class GitHubTrendingDisplay extends React.Component {
     constructor(props) {
         super(props);
+        this.getPage = this.getPage.bind(this);
+        this.fetchRepos = this.fetchRepos.bind(this);
+        this.randomiseQuery = this.randomiseQuery.bind(this);
         this.state = {
             isLoading: false,
             fetchSucceeded: false,
             repos: [],
             currPage: 0,
             numResults: 10,
-            query: "web"
+            query: this.randomiseQuery()
         };
-        this.getPage = this.getPage.bind(this);
-        this.fetchRepos = this.fetchRepos.bind(this);
+    }
+
+    randomiseQuery() {
+        const queryChoices = [
+            "web", "deep learning", "machine learning", "fullstack", "react",
+            "algorithms", "terminal", "sql", "javascript", "python", "java",
+            "rust", "perl", "shell", "scss", "automation", "java", "C", "C#",
+            "C++", "unity", "IoT", "raspberry pi", "scala", "haskell", "roadmap",
+            "go", "linux", "css", "data visualisation", "data science", "artificial intelligence",
+            "socket", "ruby", "docker", "node.js", "flutter", "vim", "vscode",
+            "unreal engine", "apache", "kotlin", "jest", "redux", "microsoft",
+            "cloud", "web scraping", "flask", "django", "express", "spring",
+            "rails", "angular", "vue", "music", "generation", "neural", "network"
+        ]
+        const randomIndex = Math.floor(Math.random() * queryChoices.length);
+        return queryChoices[randomIndex];
     }
 
     componentWillMount() {
@@ -29,7 +46,6 @@ class GitHubTrendingDisplay extends React.Component {
     }
 
     fetchRepos(query) {
-        
         this.setState({
             isLoading: true
         });
@@ -43,7 +59,7 @@ class GitHubTrendingDisplay extends React.Component {
                 });
             })
             .catch((err) => {
-                console.log(err);
+                errorNotification(err, "Failed to fetch repos from GitHub");
             });
     }
 

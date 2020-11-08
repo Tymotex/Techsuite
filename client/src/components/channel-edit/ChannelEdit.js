@@ -5,6 +5,7 @@ import React from 'react';
 import { withRouter } from 'react-router-dom';
 import { Button, Form, FormGroup, Input, InputGroup, InputGroupAddon, InputGroupText, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
 import { BASE_URL } from '../../constants/api-routes';
+import { errorNotification } from '../error-notification';
 import { Notification } from '../notification';
 import InputSwitch from './InputSwitch';
 
@@ -35,8 +36,7 @@ class ChannelEdit extends React.Component {
                     });
                 })
                 .catch((err) => {
-                    const errorMessage = (err.response.data.message) ? (err.response.data.message) : "Something went wrong";
-                    Notification.spawnNotification("Fetching channel details failed", errorMessage, "danger");
+                    errorNotification(err, "Fetching channel details failed");
                 });
         } else {
             this.setState({
@@ -74,8 +74,7 @@ class ChannelEdit extends React.Component {
                     window.location.reload();
                 })
                 .catch((err) => {
-                    const errorMessage = (err.response.data.message) ? (err.response.data.message) : "Something went wrong";
-                    Notification.spawnNotification("Channel update failed", errorMessage, "danger");
+                    errorNotification(err, "Channel update failed");
                 });
         }
     }
