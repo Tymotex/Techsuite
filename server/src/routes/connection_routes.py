@@ -10,7 +10,7 @@ import pprint
 # Globals and config:
 load_dotenv()
 connection_router = Blueprint("connections", __name__)
-BASE_URL = "http://localhost:{0}".format(os.getenv("PORT"))
+BASE_URL = os.getenv("BASE_URI")
 
 # ===== Fetching Connections =====
 
