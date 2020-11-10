@@ -1,9 +1,15 @@
-import React from 'react';
-import { Button, Modal, ModalHeader, ModalBody, ModalFooter, Form, FormGroup, Input, Label } from 'reactstrap';
+import { faGoogle } from '@fortawesome/free-brands-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import PropTypes from 'prop-types';
+import React from 'react';
 import { UserPlus } from 'react-feather';
-
+import { Button, Form, FormGroup, Input, Label, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
 import { NeonButton } from '../neon-button';
+import externalAuthStyle from './ExternalAuth.module.scss';
+import axios from 'axios';
+import { BASE_URL } from '../../constants/api-routes';
+import { errorNotification } from '../error-notification';
+import { withRouter } from 'react-router-dom';
 
 class RegisterModal extends React.Component {
     static propTypes = {
@@ -13,6 +19,7 @@ class RegisterModal extends React.Component {
     constructor(props) {
         super(props);
         this.toggleModal = this.toggleModal.bind(this);
+        this.signupRedirect = this.signupRedirect.bind(this);
         this.state = {
             modal: false
         };
@@ -24,6 +31,16 @@ class RegisterModal extends React.Component {
         }));
     }
 
+    signupRedirect() {
+        axios(`${BASE_URL}/google/login`)
+            .then((res) => {
+                window.location.assign(res.data.google_uri);
+            })
+            .catch((err) => {
+                errorNotification(err, "Failed to redirect to Google auth page");
+            });
+    }
+
     render() {
         return (
             <>
@@ -31,7 +48,13 @@ class RegisterModal extends React.Component {
                     <UserPlus /> Register
                 </NeonButton>
                 <Modal isOpen={this.state.modal} toggle={this.toggleModal}>
-                    <ModalHeader toggle={this.toggleModal}>Sign Up!</ModalHeader>
+                    <ModalHeader toggle={this.toggleModal}>Register</ModalHeader>
+                    <div className={externalAuthStyle.externalButton}>
+                        <Button color="info" onClick={this.signupRedirect}><FontAwesomeIcon icon={faGoogle} />&ensp; Sign Up With Google</Button>
+                        <p className={externalAuthStyle.alternativeText}>
+                            <em>Or fill out the following</em>
+                        </p>
+                    </div>
                     <Form onSubmit={this.props.register}>
                         <ModalBody>
                             {/* Username: */}
@@ -63,4 +86,4 @@ class RegisterModal extends React.Component {
     }
 }
 
-export default RegisterModal;
+export default withRouter(RegisterModal);

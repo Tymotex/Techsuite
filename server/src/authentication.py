@@ -16,6 +16,7 @@ load_dotenv()
 SECRET_CODE = hashlib.sha256(os.getenv("SECRET_MESSAGE").encode()).hexdigest()
 
 # ===== Authentication Functions =====
+
 def auth_signup(email, password, username):
     """
         Creates a new account, given a user's email and password. Returns a dict containing

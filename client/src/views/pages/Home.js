@@ -4,9 +4,36 @@ import { faComment, faNewspaper, faPalette, faUsers } from '@fortawesome/free-so
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React, { Component } from 'react';
 import { Card, CardBody, Col, Row } from 'reactstrap';
+import { withRouter } from 'react-router-dom';
 
-// The feature showcase is rendered if the user is not logged in
-const Showcase = () => {
+import { matchPath } from 'react-router'
+import Cookie from 'js-cookie';
+
+// Feature showcase
+const Showcase = withRouter((props) => {
+
+  let userID, token;
+
+  // Workaround for Google auth: the callback in the Flask server redirects back
+  // to the homepage and embeds the token and id in the URL like this:
+  //     /home/user_id/token
+  // The token and ID are extracted and removed out of the URL and saved to the 
+  // client's cookies 
+  const match = matchPath(props.history.location.pathname, {
+    path: '/home/:id/:token',
+    exact: true,
+    strict: false
+  });  
+  if (match) {
+    if (match.params.id && match.params.token) {
+      userID = match.params.id;
+      token = match.params.token;
+      Cookie.set("token", token);
+      Cookie.set("user_id", userID);
+      props.history.push("/home");
+    }
+  } 
+  // Proceed with rendering the homepage
   const heroStyles = {
     padding: '50px 0 70px'
   };
@@ -114,14 +141,14 @@ const Showcase = () => {
       </Row>
     </div>
   );
-};
+});
 
-class HomePage extends Component {
-  render() {
-    return (
-      <Showcase />
-    );
-  }
-}
+// class HomePage extends Component {
+//   render() {
+//     return (
+//       <Showcase />
+//     );
+//   }
+// }
 
-export default HomePage;
+export default withRouter(Showcase);

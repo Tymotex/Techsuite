@@ -3,12 +3,15 @@
 import logging
 import sys
 import os
+import json
 
 # Third party libraries:
-from flask import Flask, jsonify
+from flask import Flask, jsonify, redirect
 from flask_cors import CORS
 from flask_socketio import SocketIO, send, emit, join_room, leave_room
 from dotenv import load_dotenv
+from oauthlib.oauth2 import WebApplicationClient
+import requests
 
 # Local imports:
 from routes.auth_routes import auth_router
@@ -23,14 +26,25 @@ from extensions import app
 from util.util import printColour, get_user_from_token, select_channel, get_user_from_id, get_connection
 from connections import connection_send_message, connection_edit_message, connection_remove_message
 from exceptions import InputError
+from authentication import auth_signup, auth_login
 
-# Globals and config
+
+
+
+# Globals and app configuration
 load_dotenv()
 socketio = SocketIO(app, cors_allowed_origins="*")
 app.config["SECRET_KEY"] = os.getenv("SECRET_MESSAGE")
 app.config["TRAP_HTTP_EXCEPTIONS"] = True
 # Allowing cross-origin resource sharing
 CORS(app)
+
+# Google auth configuration
+GOOGLE_CLIENT_ID = os.getenv("GOOGLE_AUTH_API_CLIENT_ID")
+GOOGLE_CLIENT_SECRET = os.getenv("GOOGLE_AUTH_API_CLIENT_SECRET")
+GOOGLE_DISCOVERY_URL = (
+    "https://accounts.google.com/.well-known/openid-configuration"
+)
 
 # Registering modularised routers:
 app.register_blueprint(auth_router, url_prefix='/api')
@@ -42,6 +56,106 @@ app.register_blueprint(connection_router, url_prefix='/api')
 
 # Register a default error handler
 app.register_error_handler(Exception, error_handler)
+
+# ===== Google Auth Routes =====
+# TODO: Move this out of the server file
+
+# OAuth 2 client setup
+client = WebApplicationClient(GOOGLE_CLIENT_ID)
+
+@app.route("/api/asstest", methods=["GET"])
+def asstest():
+    return "HELLO WORLD"
+
+@app.route("/api/google/login", methods=["GET"])
+def google_login_redirect():
+    # Find out what URL to hit for Google login consent page
+    google_provider_cfg = get_google_provider_configuration()
+    authorization_endpoint = google_provider_cfg["authorization_endpoint"]
+
+    # Construct the request for Google login and provide
+    # scopes that let you retrieve user's profile from Google
+    request_uri = client.prepare_request_uri(
+        authorization_endpoint,
+        redirect_uri=request.base_url + "/callback",
+        scope=["openid", "email", "profile"],
+    )
+    print(" ➤ Redirecting user to Google auth page: {}".format(request_uri))
+    # Redirect to Google’s authorization endpoint
+    return jsonify({ "google_uri": request_uri })
+    
+# retrieving Google’s provider configuration:
+def get_google_provider_configuration():
+    return requests.get(GOOGLE_DISCOVERY_URL).json()
+
+@app.route("/api/google/login/callback")
+def callback():
+    # The provider gives US a unique authorisation code after we redirect to them
+    # and after the user consents. Get authorization code Google sent back:
+    code = request.args.get("code")
+
+    # Find out what URL to hit to get tokens that allow you to ask for
+    # things on behalf of a user
+    google_provider_cfg = get_google_provider_configuration()
+    token_endpoint = google_provider_cfg["token_endpoint"]
+
+    # Prepare and send a request to get tokens
+    token_url, headers, body = client.prepare_token_request(
+        token_endpoint,
+        authorization_response=request.url,
+        redirect_url=request.base_url,
+        code=code
+    )
+    token_response = requests.post(
+        token_url,
+        headers=headers,
+        data=body,
+        auth=(GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET),
+    )
+
+    # Parse the tokens!
+    client.parse_request_body_response(json.dumps(token_response.json()))
+
+    """
+        Now that you have the necessary tools to get the user’s profile 
+        information, you need to ask Google for it. Luckily, OIDC defines 
+        a user information endpoint, and its URL for a given provider is 
+        standardized in the provider configuration.
+        You can get the location by checking the userinfo_endpoint field in the
+        provider configuration document. 
+    """
+    # Now that you have tokens (yay) let's find and hit the URL
+    # from Google that gives you the user's profile information,
+    # including their Google profile image and email
+    userinfo_endpoint = google_provider_cfg["userinfo_endpoint"]
+    uri, headers, body = client.add_token(userinfo_endpoint)
+    userinfo_response = requests.get(uri, headers=headers, data=body)
+
+    # You want to make sure their email is verified.
+    # The user authenticated with Google, authorized your
+    # app, and now you've verified their email through Google!
+    if userinfo_response.json().get("email_verified"):
+        unique_id = userinfo_response.json()["sub"]
+        users_email = userinfo_response.json()["email"]
+        picture = userinfo_response.json()["picture"]
+        users_name = userinfo_response.json()["given_name"]
+    else:
+        return "User email not available or not verified by Google.", 400
+
+    # Register the user, or log them in
+    # Workaround for Google auth: the callback in the Flask server redirects back
+    # to the homepage and embeds the token and id in the URL like this:
+    #     /home/user_id/token
+    # The token and ID are extracted and removed out of the URL and saved to the 
+    # client's cookies 
+    try:
+        resp_data = auth_signup(users_email, "asdfasdf", users_name)
+        printColour(" ➤ Google auth callback: Signed up: {}, {}".format(users_name, users_email), colour="blue")
+        return redirect("http://localhost:3000/home/{}/{}".format(resp_data["user_id"], resp_data["token"]))
+    except:
+        resp_data = auth_login(users_email, "asdfasdf")
+        printColour(" ➤ Google auth callback: Logged in: {}, {}".format(users_name, users_email))
+        return redirect("http://localhost:3000/home/{}/{}".format(resp_data["user_id"], resp_data["token"]))
 
 # ===== Basic Routes (For Testing) =====
 # 'Landing' page:
