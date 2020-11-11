@@ -1,5 +1,5 @@
-tsvenv/
 .env
+tsvenv/
 static/images
 __pycache__/
 routes/__pycache__/
