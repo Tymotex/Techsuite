@@ -1,11 +1,11 @@
 self.__precacheManifest = [
   {
-    "revision": "bc2a41bcf90ecc6b828d",
+    "revision": "60c3302c69bf05ce1b2c",
     "url": "/static/css/main.e297f2e2.chunk.css"
   },
   {
-    "revision": "bc2a41bcf90ecc6b828d",
-    "url": "/static/js/main.bc2a41bc.chunk.js"
+    "revision": "60c3302c69bf05ce1b2c",
+    "url": "/static/js/main.60c3302c.chunk.js"
   },
   {
     "revision": "83c9e29962576da94cc5",
@@ -48,19 +48,19 @@ self.__precacheManifest = [
     "url": "/static/media/notification.651771e1.woff"
   },
   {
-    "revision": "0b4ac1dc75df35e169b70d7719afe4cc",
-    "url": "/static/media/notification.0b4ac1dc.ttf"
-  },
-  {
     "revision": "5bee74caefdf9d0a834915f6c8eeb259",
     "url": "/static/media/notification.5bee74ca.svg"
+  },
+  {
+    "revision": "0b4ac1dc75df35e169b70d7719afe4cc",
+    "url": "/static/media/notification.0b4ac1dc.ttf"
   },
   {
     "revision": "e9a72840ee942b16824414bdb258861f",
     "url": "/static/media/tool-icon.e9a72840.png"
   },
   {
-    "revision": "f46c56b1b795dbcb292728bca4a51e87",
+    "revision": "2d5d379d9af4b870ad6a83f50e7cb48d",
     "url": "/index.html"
   }
 ];

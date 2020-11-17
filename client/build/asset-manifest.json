@@ -1,7 +1,7 @@
 {
   "main.css": "/static/css/main.e297f2e2.chunk.css",
-  "main.js": "/static/js/main.bc2a41bc.chunk.js",
-  "main.js.map": "/static/js/main.bc2a41bc.chunk.js.map",
+  "main.js": "/static/js/main.60c3302c.chunk.js",
+  "main.js.map": "/static/js/main.60c3302c.chunk.js.map",
   "static/css/1.49858208.chunk.css": "/static/css/1.49858208.chunk.css",
   "static/js/1.83c9e299.chunk.js": "/static/js/1.83c9e299.chunk.js",
   "static/js/1.83c9e299.chunk.js.map": "/static/js/1.83c9e299.chunk.js.map",
@@ -12,11 +12,11 @@
   "static/media/techsuite-icon.png": "/static/media/techsuite-icon.ed26fc08.png",
   "static/media/puff.svg": "/static/media/puff.41430010.svg",
   "static/media/dots.svg": "/static/media/dots.f8ea5dda.svg",
-  "static/media/notifications.css": "/static/media/notification.5bee74ca.svg",
+  "static/media/notifications.css": "/static/media/notification.0b4ac1dc.ttf",
   "static/media/EditButton.scss": "/static/media/tool-icon.e9a72840.png",
   "static/css/main.e297f2e2.chunk.css.map": "/static/css/main.e297f2e2.chunk.css.map",
   "static/css/1.49858208.chunk.css.map": "/static/css/1.49858208.chunk.css.map",
   "index.html": "/index.html",
-  "precache-manifest.f05b4a30e7fde7f5bdc9a2684adfdf99.js": "/precache-manifest.f05b4a30e7fde7f5bdc9a2684adfdf99.js",
+  "precache-manifest.988bd3e471dff0bd66f8137602447e7c.js": "/precache-manifest.988bd3e471dff0bd66f8137602447e7c.js",
   "service-worker.js": "/service-worker.js"
 }
