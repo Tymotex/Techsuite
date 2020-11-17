@@ -77,7 +77,7 @@ def google_login_redirect():
     # scopes that let you retrieve user's profile from Google
     request_uri = client.prepare_request_uri(
         authorization_endpoint,
-        redirect_uri=request.base_url + "/callback",
+        redirect_uri="https://techsuite.dev/api/google/login/callback",  # TODO: Hardcoded url
         scope=["openid", "email", "profile"],
     )
     print(" ➤ Redirecting user to Google auth page: {}".format(request_uri))
@@ -103,7 +103,7 @@ def callback():
     token_url, headers, body = client.prepare_token_request(
         token_endpoint,
         authorization_response=request.url,
-        redirect_url=request.base_url,
+        redirect_url="https://techsuite.dev/api/google/login/callback",  # TODO: Hardcoded url
         code=code
     )
     token_response = requests.post(
@@ -151,11 +151,11 @@ def callback():
     try:
         resp_data = auth_signup(users_email, "asdfasdf", users_name)
         printColour(" ➤ Google auth callback: Signed up: {}, {}".format(users_name, users_email), colour="blue")
-        return redirect("http://localhost:3000/home/{}/{}".format(resp_data["user_id"], resp_data["token"]))
+        return redirect("https://techsuite.dev/home/{}/{}".format(resp_data["user_id"], resp_data["token"]))
     except:
         resp_data = auth_login(users_email, "asdfasdf")
         printColour(" ➤ Google auth callback: Logged in: {}, {}".format(users_name, users_email))
-        return redirect("http://localhost:3000/home/{}/{}".format(resp_data["user_id"], resp_data["token"]))
+        return redirect("https://techsuite.dev/home/{}/{}".format(resp_data["user_id"], resp_data["token"]))
 
 # ===== Basic Routes (For Testing) =====
 # 'Landing' page:
