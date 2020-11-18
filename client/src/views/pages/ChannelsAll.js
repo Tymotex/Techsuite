@@ -58,7 +58,7 @@ class ChannelsAll extends React.Component {
             ) : (
                 (this.state.fetchSucceeded) ? (
                     <div>
-                        <ChannelList {...this.state} />
+                        <ChannelList {...this.state} showPrompt={true} />
                     </div>
                 ) : (
                     <Empty />

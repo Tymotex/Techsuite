@@ -55,7 +55,7 @@ class UserChannels extends React.Component {
             <div>
                 <h3>Channels</h3>
                 <hr className="user-profile-card-divider" />
-                <ChannelList {...this.state}/>
+                <ChannelList {...this.state} showPrompt={false}/>
             </div>
         );
     }

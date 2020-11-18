@@ -58,7 +58,7 @@ class ChannelsMy extends Component {
                     <LoadingSpinner /> 
                 ) : (
                     (this.state.fetchSucceeded) ? (
-                        <ChannelList {...this.state} />
+                        <ChannelList {...this.state} showPrompt={true} />
                     ) : (
                         <Empty />
                     )

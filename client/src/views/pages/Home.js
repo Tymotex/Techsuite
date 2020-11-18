@@ -2,7 +2,7 @@ import { faGithub, faHubspot } from '@fortawesome/free-brands-svg-icons';
 import { faComment, faNewspaper, faPalette, faUsers } from '@fortawesome/free-solid-svg-icons';
 // Font-awesome icons:
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import React, { Component } from 'react';
+import React from 'react';
 import { Card, CardBody, Col, Row } from 'reactstrap';
 import { withRouter } from 'react-router-dom';
 

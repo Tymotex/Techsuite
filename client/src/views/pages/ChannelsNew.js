@@ -8,6 +8,7 @@ class ChannelsNew extends React.Component {
             <Card>
                 <CardBody>
                     <h1>Create a New Channel:</h1>
+                    <hr />
                     <ChannelForm />
                 </CardBody>
             </Card>

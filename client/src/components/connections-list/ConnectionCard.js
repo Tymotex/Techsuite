@@ -22,10 +22,12 @@ class ConnectionCard extends React.Component {
     }
 
     acceptConnection() {
+        alert("Attempting to accept")
         const { user } = this.props;
         const currToken = Cookie.get("token");
         const { refreshConnections, refreshIncoming } = this.props;
         if (currToken) {
+            alert("Token exists: " + currToken);
             const postData = {
                 method: 'post',
                 url: `${BASE_URL}/connections/accept`,
@@ -37,11 +39,13 @@ class ConnectionCard extends React.Component {
             };
             axios(postData)
                 .then((res) => {
+                    alert("SUCCEEDED ACCEPT");
                     Notification.spawnNotification("Success", "You have accepted a connection request", "success");
                     refreshConnections(currToken);
                     refreshIncoming(currToken);
                 })
                 .catch((err) => {
+                    alert("FAILED ACCEPT");
                     errorNotification(err, "Failed to add connection");
                 });
         }
@@ -136,13 +140,13 @@ class ConnectionCard extends React.Component {
                         ) : (
                             (isPending) ? (
                                 <>
-                                    <a className="approve" onClick={this.acceptConnection} href="/#">Accept</a>
-                                    <a className="reject" onClick={this.removeConnection} href="/#">Reject</a>
+                                    <span className="approve" onClick={this.acceptConnection} href="/#">Accept</span>
+                                    <span className="reject" onClick={this.removeConnection} href="/#">Reject</span>
                                 </>
                             ) : (
                                 <>
-                                    <a className="message" onClick={() => openMessage(user.user_id)} href="/#">Message</a>
-                                    <a className="reject" onClick={this.toggleModal} href="/#">Remove</a>
+                                    <span className="message" onClick={() => openMessage(user.user_id)} href="/#">Message</span>
+                                    <span className="reject" onClick={this.toggleModal} href="/#">Remove</span>
                                     <Link className="profile" to={`/user/profile/${user.user_id}`}>Profile</Link>
                                 </>
                             )
