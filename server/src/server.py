@@ -100,9 +100,10 @@ def callback():
     token_endpoint = google_provider_cfg["token_endpoint"]
 
     # Prepare and send a request to get tokens
+    request_url = request.url[:4] + "s" + request.url[4:]                # TODO: hacky https substitution
     token_url, headers, body = client.prepare_token_request(
         token_endpoint,
-        authorization_response=request.url,
+        authorization_response=request_url,
         redirect_url="https://techsuite.dev/api/google/login/callback",  # TODO: Hardcoded url
         code=code
     )
@@ -392,3 +393,7 @@ if __name__ == "__main__":
     # The port is specified in the .env file (which is parsed and loaded by the python-dotenv module)
     printColour(" ➤ Server listening on port {}".format(port))
     socketio.run(app, port=port, debug=True) 
+
+# HTTPS google auth problem:
+# https://github.com/miguelgrinberg/Flask-SocketIO/issues/606
+# 
