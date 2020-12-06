@@ -27,8 +27,7 @@ from util.util import printColour, get_user_from_token, select_channel, get_user
 from connections import connection_send_message, connection_edit_message, connection_remove_message
 from exceptions import InputError
 from authentication import auth_signup, auth_login
-
-
+from users import users_profile_upload_photo
 
 
 # Globals and app configuration
@@ -151,6 +150,8 @@ def callback():
     # client's cookies 
     try:
         resp_data = auth_signup(users_email, "asdfasdf", users_name)
+        if picture:
+            users_profile_upload_photo(resp_data["token"], resp_data["user_id"], picture)
         printColour(" ➤ Google auth callback: Signed up: {}, {}".format(users_name, users_email), colour="blue")
         return redirect("https://techsuite.dev/home/{}/{}".format(resp_data["user_id"], resp_data["token"]))
     except:
@@ -393,7 +394,3 @@ if __name__ == "__main__":
     # The port is specified in the .env file (which is parsed and loaded by the python-dotenv module)
     printColour(" ➤ Server listening on port {}".format(port))
     socketio.run(app, port=port, debug=True) 
-
-# HTTPS google auth problem:
-# https://github.com/miguelgrinberg/Flask-SocketIO/issues/606
-# 

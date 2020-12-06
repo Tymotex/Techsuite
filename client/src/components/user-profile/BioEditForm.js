@@ -19,6 +19,7 @@ class BioEditForm extends React.Component {
             value: ""
         };
         this.updateBio = this.updateBio.bind(this);
+        this.updateAccountInfo = this.updateAccountInfo.bind(this);
     }
 
     UNSAFE_componentWillMount() {
@@ -54,16 +55,8 @@ class BioEditForm extends React.Component {
 
     updateBio(event) {
         event.preventDefault();
-        console.log("Updating bio");
         const fd = new FormData(event.target);
-        
-        
         const currUserToken = Cookie.get("token");
-        console.log("Token: " + currUserToken);
-        console.log("UserID: " + this.props.userID);
-        console.log("First name: " + fd.get("first_name"));
-        console.log("Last name: " + fd.get("last_name"));
-
         if (currUserToken) {
             const postData = {
                 method: 'post',
@@ -83,7 +76,6 @@ class BioEditForm extends React.Component {
             }
             axios(postData)
                 .then(() => {
-                    console.log("Successfullly updated bio");
                     window.location.reload();
                 })
                 .catch((err) => {
@@ -92,63 +84,120 @@ class BioEditForm extends React.Component {
         }
     }
 
+    updateAccountInfo(event) {
+        event.preventDefault();
+        const fd = new FormData(event.target);
+        const currUserToken = Cookie.get("token");
+        if (currUserToken) {
+            const postData = {
+                method: 'post',
+                url: `${BASE_URL}/users/profile`,
+                data: {
+                    token: currUserToken,
+                    email: fd.get("email"),
+                    username: fd.get("username")
+                },
+                headers: { "Content-Type": "application/json" }
+            }
+            axios(postData)
+                .then(() => {
+                    window.location.reload();
+                })
+                .catch((err) => {
+                    errorNotification(err, "Updating account info failed");
+                });
+        }
+    }
+
     render() {
-        const { first_name, last_name, summary, location, title, education} = this.state.bio;
+        const { 
+            first_name, 
+            last_name,
+            summary,
+            location,
+            title,
+            education,
+            email,
+            username
+        } = this.state.bio;
         
         return (
-            <Form onSubmit={this.updateBio}>
-                <h3>Update your bio</h3>
-                <hr className={editFormStyles.divider} />
-                <FormGroup>
-                    <InputGroup>
-                        <InputGroupAddon addonType="prepend">
-                            <InputGroupText>First name</InputGroupText>
-                        </InputGroupAddon>
-                        <Input name="first_name" placeholder="eg. Jon" defaultValue={first_name} />
-                    </InputGroup>
-                </FormGroup>
-                <FormGroup>
-                    <InputGroup>
-                        <InputGroupAddon addonType="prepend">
-                            <InputGroupText>Last name</InputGroupText>
-                        </InputGroupAddon>
-                        <Input name="last_name" placeholder="eg. Snow" defaultValue={last_name}  />
-                    </InputGroup>
-                </FormGroup>
-                <FormGroup>
-                    <InputGroup>
-                        <InputGroupAddon addonType="prepend">
-                            <InputGroupText>Title</InputGroupText>
-                        </InputGroupAddon>
-                        <Input name="title" placeholder="eg. Fullstack Developer" defaultValue={title}  />
-                    </InputGroup>
-                </FormGroup>
-                <FormGroup>
-                    <InputGroup>
-                        <InputGroupAddon addonType="prepend">
-                            <InputGroupText>Education</InputGroupText>
-                        </InputGroupAddon>
-                        <Input name="education" placeholder="eg. Bachelor of Engineering (Software) UNSW" defaultValue={education} />
-                    </InputGroup>
-                </FormGroup>
-                <FormGroup>
-                    <InputGroup>
-                        <InputGroupAddon addonType="prepend">
-                            <InputGroupText>Location</InputGroupText>
-                        </InputGroupAddon>
-                        <Input name="location" placeholder="eg. Sydney" defaultValue={location}  />
-                    </InputGroup>
-                </FormGroup>
-                <FormGroup>
-                    <InputGroup>
-                        <InputGroupAddon addonType="prepend">
-                            <InputGroupText>Bio</InputGroupText>
-                        </InputGroupAddon>
-                        <Input type="textarea" name="summary" placeholder="Eg. I love good coffee, however I am a terrible JavaScript developer." defaultValue={summary} />
-                    </InputGroup>
-                </FormGroup>
-                <Button color="primary">Update Bio</Button>
-            </Form>
+            <>
+                <Form onSubmit={this.updateAccountInfo}>
+                    <h3>Update your account info</h3>
+                    <hr className={editFormStyles.divider} />
+                    <FormGroup>
+                        <InputGroup>
+                            <InputGroupAddon addonType="prepend">
+                                <InputGroupText>Username</InputGroupText>
+                            </InputGroupAddon>
+                            <Input name="username" defaultValue={username} autoComplete="off"/>
+                        </InputGroup>
+                    </FormGroup>
+                    <FormGroup>
+                        <InputGroup>
+                            <InputGroupAddon addonType="prepend">
+                                <InputGroupText>Email</InputGroupText>
+                            </InputGroupAddon>
+                            <Input name="email" defaultValue={email} autoComplete="off"/>
+                        </InputGroup>
+                    </FormGroup>
+                    <Button color="primary">Update Info</Button>
+                </Form>
+                <Form onSubmit={this.updateBio}>
+                    <h3>Update your bio</h3>
+                    <hr className={editFormStyles.divider} />
+                    <FormGroup>
+                        <InputGroup>
+                            <InputGroupAddon addonType="prepend">
+                                <InputGroupText>First name</InputGroupText>
+                            </InputGroupAddon>
+                            <Input name="first_name" placeholder="eg. Jon" defaultValue={first_name} autoComplete="off"/>
+                        </InputGroup>
+                    </FormGroup>
+                    <FormGroup>
+                        <InputGroup>
+                            <InputGroupAddon addonType="prepend">
+                                <InputGroupText>Last name</InputGroupText>
+                            </InputGroupAddon>
+                            <Input name="last_name" placeholder="eg. Snow" defaultValue={last_name}  autoComplete="off"/>
+                        </InputGroup>
+                    </FormGroup>
+                    <FormGroup>
+                        <InputGroup>
+                            <InputGroupAddon addonType="prepend">
+                                <InputGroupText>Title</InputGroupText>
+                            </InputGroupAddon>
+                            <Input name="title" placeholder="eg. Fullstack Developer" defaultValue={title}  autoComplete="off"/>
+                        </InputGroup>
+                    </FormGroup>
+                    <FormGroup>
+                        <InputGroup>
+                            <InputGroupAddon addonType="prepend">
+                                <InputGroupText>Education</InputGroupText>
+                            </InputGroupAddon>
+                            <Input name="education" placeholder="eg. Bachelor of Engineering (Software) UNSW" defaultValue={education} autoComplete="off"/>
+                        </InputGroup>
+                    </FormGroup>
+                    <FormGroup>
+                        <InputGroup>
+                            <InputGroupAddon addonType="prepend">
+                                <InputGroupText>Location</InputGroupText>
+                            </InputGroupAddon>
+                            <Input name="location" placeholder="eg. Sydney" defaultValue={location}  autoComplete="off"/>
+                        </InputGroup>
+                    </FormGroup>
+                    <FormGroup>
+                        <InputGroup>
+                            <InputGroupAddon addonType="prepend">
+                                <InputGroupText>Bio</InputGroupText>
+                            </InputGroupAddon>
+                            <Input type="textarea" name="summary" placeholder="Eg. I love good coffee, however I am a terrible JavaScript developer." defaultValue={summary} />
+                        </InputGroup>
+                    </FormGroup>
+                    <Button color="primary">Update Bio</Button>
+                </Form>
+            </>
         );
     }
 }

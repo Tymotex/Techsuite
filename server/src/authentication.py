@@ -7,7 +7,7 @@ from dotenv import load_dotenv
 from extensions import db
 from models import User, Bio, Channel, Message, MemberOf
 from exceptions import InputError, AccessError
-from util.util import email_is_legit, send_email, email_message, printColour
+from util.util import email_is_legit, send_email, email_message, printColour, username_valid
 from util.token import generate_token, verify_token
 import users
 
@@ -35,6 +35,8 @@ def auth_signup(email, password, username):
         raise InputError(description="Invalid email")
     if len(password) < 6:
         raise InputError(description="Password can't be less than 6 characters")
+    if not username_valid(username):
+        raise InputError(description="Username must only use alphanumeric characters and be 1-20 characters long")
     
     users = User.query.all()    
     # Check if the email exists in the database
@@ -59,10 +61,6 @@ def auth_signup(email, password, username):
     db.session.add(new_user_bio)
     db.session.commit()
     generated_token = generate_token(new_user)
-    # printColour("Returning: {}".format({
-    #     "user_id": new_user.id,
-    #     "token": generated_token,
-    # }), colour="blue")
     return {
         "user_id": new_user.id,
         "token": generated_token,
@@ -113,7 +111,6 @@ def auth_logout(token):
             is_success(True/False)  bool
         }
     """
-    # TODO: How does logging out in the backend work? It's stateless with JSON web tokens...
     if verify_token(token):
         return { "is_success": True }
     else:
@@ -123,27 +120,13 @@ def auth_logout(token):
 # TODO: Unimplemented
 def auth_password_reset_request(email):
     """
-        Given an email address, if the user is a registered user,
-        sends them an email containing a specific secret code, that when entered
-        in auth_passwordreset_reset, shows that the user trying to reset the password
-        is the one who got sent this email.
-        Raises:
-        - InputError: Invalid email
-        - InputError: If the email doesn't belong to an existing user
-        Returns:
-            {}  (dict)
+        
     """
     return {}
 
 # TODO: Unimplemented
 def auth_password_reset(reset_code, new_password):
     """
-    Given a reset code for a user, set that user's new password to the password provided
-    ERRORS:
-    - reset_code is not a valid reset code
-    - Password entered is not a valid password
-    - reset code can only be used once
-    Returns:
-        {}  (dict)
+
     """
     return {}

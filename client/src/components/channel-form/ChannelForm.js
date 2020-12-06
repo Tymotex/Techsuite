@@ -58,7 +58,7 @@ class ChannelForm extends React.Component {
                 {/* Channel Name */}
                 <FormGroup>
                     <Label for="name">Channel Name</Label>
-                    <Input type="text" name="name" id="name" />
+                    <Input type="text" name="name" id="name" autoComplete="off"/>
                     <FormText>
                         This name will be seen by other users.
                     </FormText>
@@ -66,7 +66,7 @@ class ChannelForm extends React.Component {
                 {/* Channel Description */}
                 <FormGroup>
                     <Label for="description">Channel Description</Label>
-                    <Input type="textarea" name="description" id="description" />
+                    <Input type="textarea" name="description" id="description" autoComplete="off"/>
                     <FormText>
                         Give a short summary of what this channel is about
                     </FormText>

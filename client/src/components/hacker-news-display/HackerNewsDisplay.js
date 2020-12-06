@@ -38,14 +38,22 @@ class HackerNewsDisplay extends React.Component {
                     isLoading: false,
                     fetchSucceeded: false
                 });
-                this.state.storyIDs.map(async (eachStoryID) => {
-                    const story = await this.fetchStory(eachStoryID);
-                    this.setState({
-                        stories: [...this.state.stories, story],
-                        fetchSucceeded: this.state.stories.length >= numArticles - 1,
-                        isLoading: this.state.stories.length < numArticles - 1
+                try {
+                    this.state.storyIDs.map(async (eachStoryID) => {
+                        const story = await this.fetchStory(eachStoryID);
+    
+                        this.setState({
+                            stories: [...this.state.stories, story],
+                            fetchSucceeded: this.state.stories.length >= numArticles - 1,
+                            isLoading: this.state.stories.length < numArticles - 1
+                        });
                     });
-                });
+                } catch(err) {
+                    this.setState({
+                        isLoading: false,
+                        fetchSucceeded: false
+                    });
+                }
             })
             .catch((err) => {
                 this.setState({

@@ -97,6 +97,14 @@ def email_is_legit(email):
     regex = r"^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$"
     return bool(re.search(regex, email))
 
+def username_valid(username):
+    """
+        Given a username, determines if it is follows a valid format:
+        1. Must be entirely alphanumeric
+        2. Length must be 20 characters or fewer and greater than 0 characters
+    """
+    return username.isalnum() and len(username) <= 20 and username
+
 # ===== Token Functions =====
 def generate_token(user_data):
     """

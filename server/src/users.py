@@ -3,7 +3,7 @@ The file contains all the user functions
 """
 from database import db
 from exceptions import InputError, AccessError
-from util.util import email_is_legit, printColour
+from util.util import email_is_legit, printColour, username_valid
 from util.token import verify_token, get_user_from_token
 from models import User, Channel, Bio, MemberOf, Connection
 
@@ -86,12 +86,16 @@ def users_bio_fetch(token, user_id):
             token   (str)
             user_id (int)
         Returns: 
-            {  first_name, last_name, cover_img_url, title, summary, location, education }
+            {  
+                first_name, last_name, cover_img_url, 
+                title, summary, location, education, 
+                email, username 
+            }
     """
     verify_token(token)
     user = User.query.filter_by(id=user_id).first()
     if not user:
-        raise InputError(description="user_id does not refer to any user in the database")
+        raise InputError(description="{} does not refer to any user in the database".format(user_id))
     return {
         "first_name": user.bio.first_name,
         "last_name" : user.bio.last_name,
@@ -99,14 +103,16 @@ def users_bio_fetch(token, user_id):
         "title" : user.bio.title,
         "summary" : user.bio.summary,
         "location" : user.bio.location,
-        "education" : user.bio.education
+        "education" : user.bio.education,
+        "email": user.email,
+        "username": user.username
     }
 
 def users_bio_update(token, user_id, updated_bio):
     verify_token(token)
     user = User.query.filter_by(id=user_id).first()
     if not user:
-        raise InputError(description="user_id does not refer to any user in the database")
+        raise InputError(description="Target user doesn't exist")
     user.bio.first_name = updated_bio["first_name"]
     user.bio.last_name=updated_bio["last_name"]
     user.bio.cover_img_url=updated_bio["cover_img_url"]
@@ -117,40 +123,24 @@ def users_bio_update(token, user_id, updated_bio):
     db.session.commit()
     return { "succeeded": True }
 
-
-
-# def users_get_profile_image_url(token):
-#     """
-#         TODO: DEPRECATED?
-#         Returns:
-#             'http://localhost:.../images/imagefilename.jpg'
-#     """
-#     verify_token(token)
-#     data = get_data()
-#     return {
-#         "profile_img_url": get_user_from_token(data, token)["profile_img_url"]
-#     }
-
-# TODO: Unimplemented
 def users_profile_set_username(token, username):
     """
         Update the authorised user's first and last name
         Parameters:
             token (str)
             username (str)
-        Returns:
-            {}  
     """
     verify_token(token)
-    
-    # TODO: validate the username   
-
-    # Retrieves user's data from the token
     user = get_user_from_token(token)
-    
-    return {}
+    if not user:
+        raise InputError(description="Target user doesn't exist")
+    if not username_valid(username):
+        raise InputError(
+            description="Username, {}, must only use alphanumeric characters and be 1-20 characters long".format(username)
+        )
+    user.username = username
+    db.session.commit()
 
-# TODO: Unimplemented
 def users_profile_setemail(token, email):
     """
         Update the authorised user's email address
@@ -161,34 +151,22 @@ def users_profile_setemail(token, email):
             {} 
     """
     verify_token(token)
-    
-    # Validate the supplied email
+    user = get_user_from_token(token)
+    if not user:
+        raise InputError(description="Target user doesn't exist")
+    # If the email is unchanged, do nothing
+    if user.email == email:
+        return
+    # The supplied email must pass the email regex format 
     if not email_is_legit(email):
         raise InputError(description="Email entered is not a valid email")
-    
-    # TODO Check if email is being used by another user
-    
-    user = get_user_from_token(token)
-    
-    # TODO: Update record
-    return {}
+    # Email mustn't be in use by any existing user
+    existing_user = User.query.filter_by(email=email).first()
+    if existing_user:
+        raise InputError(description="{} is being used by another user".format(email))
+    user.email = email
+    db.session.commit()
 
-# TODO: Unimplemented
-def admin_user_remove(token, user_id):
-    """
-        Given a User by their user ID, remove the user as admin.
-        Returns:
-            {} 
-    """
-    verify_token(token)
-    return {}
-
-# TODO: Unimplemented
-def admin_userpermission_change(token, user_id, permission_id):
-    """
-        Given a user ID, set their authorisation level to permission_id
-        Returns:
-            {}
-    """
-    verify_token(token)
-    return {}
+def users_profile_update(token, email, username):
+    users_profile_set_username(token, username)
+    users_profile_setemail(token, email)

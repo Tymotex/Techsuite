@@ -61,7 +61,7 @@ class LogInModal extends React.Component {
                             {/* Email Address: */}
                             <FormGroup>
                                 <Label htmlFor="email">Email</Label>
-                                <Input type="email" name="email" id="email" />
+                                <Input type="email" name="email" id="email" autoComplete="off"/>
                             </FormGroup>
                             {/* Password: */}
                             <FormGroup>

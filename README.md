@@ -3,15 +3,21 @@ A collaboration and social networking app for developers. Built with React, Flas
 
 <img src="./images/techsuite-home-2.png"></img>
 
-## Current Features:
+## Features:
 - Standalone authentication system and support for one-click Google sign-in and registration
-- User profile personalisation with profile image/cover uploading and bio fields 
-- Friendship management system, similar to Facebook and LinkedIn
-- Realtime private messaging with people you're connected to, similar to messenger
-- Channels with realtime messaging supporting multiple concurrent users, similar to Slack
+- User profile personalisation with profile image/cover uploading and bio customisation 
+- Friendship management system for social networking
+- Realtime private messaging with connected Techsuite peers
+- Channels with realtime messaging which can support multiple concurrent users
 - Channel operations, personalisation and configuration. Eg. image/cover uploading, authorisation levels, membership management and private channels
 - View and search for GitHub's most popular and trendy software projects
 - View articles sourced from HackerNews based on what's most hot/popular/recent
+- Persistent dark mode toggle, responsive and animated UI
+
+#### Planned Features:
+- Connection recommendation and browsing page
+- Entertainment page hooked up to IGDB plus embedded and persistent audio player
+- Automated email notification services
 
 # Setup Instructions:
 1. `git clone https://github.com/Tymotex/Techsuite.git`

@@ -185,17 +185,17 @@ def handle_user_profile_upload_cover():
             ), colour="green", bordersOn=False)
             return jsonify({ "succeeded": True })
 
-# TODO: Unimplemented
-
-@users_router.route("/users/profile/setemail", methods=['PUT'])
-def handle_user_profile_setemail():
+@users_router.route("/users/profile", methods=['POST'])
+def handle_user_profile_update():
     """
-        HTTP Route: /users/profile/setemail
-        HTTP Method: PUT
-        Params: (token, email)
+        HTTP Route: /users/profile
+        HTTP Method: POST
+        Params: (token, email, username)
         Returns JSON: {  }
     """
     request_data = request.get_json()
     token = request_data["token"]
     email = request_data["email"]
-    return jsonify(users.users_profile_setemail(token, email))
+    username = request_data["username"]
+    printColour(" ➤ User Profile Update: setting username to {}, email to {}".format(username, email), colour="blue")
+    return jsonify(users.users_profile_update(token, email, username))

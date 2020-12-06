@@ -11,7 +11,6 @@ import Cookie from 'js-cookie';
 
 // Feature showcase
 const Showcase = withRouter((props) => {
-
   let userID, token;
 
   // Workaround for Google auth: the callback in the Flask server redirects back
@@ -62,7 +61,7 @@ const Showcase = withRouter((props) => {
               <div className="m-l">
                 <h2 className="h4">Channels</h2>
                 <p className="text-muted">
-                  Create channels and invite other users to collaborate on group projects or discuss ideas
+                  Create workspaces and invite other users to collaborate on group projects or discuss ideas.
                 </p>
               </div>
             </CardBody>
@@ -76,7 +75,7 @@ const Showcase = withRouter((props) => {
               <div className="m-l">
                 <h2 className="h4">Networking</h2>
                 <p className="text-muted">
-                  Form connections with other people and grow your network.
+                  Form and manage connections with other people and grow your network.
                 </p>
               </div>
             </CardBody>
@@ -90,7 +89,7 @@ const Showcase = withRouter((props) => {
               <div className="m-l">
                 <h2 className="h4">Personalise</h2>
                 <p className="text-muted">
-                  Personalise your user profile, channels and user experience
+                  Personalise your user profile, channels and user experience.
                 </p>
               </div>
             </CardBody>
@@ -104,7 +103,7 @@ const Showcase = withRouter((props) => {
               <div className="m-l">
                 <h2 className="h4">Stay tech-savvy</h2>
                 <p className="text-muted">
-                  Keep yourself updated with the rapidly evolving software world
+                  Keep yourself updated with the rapidly evolving software world.
                 </p>
               </div>
             </CardBody>
@@ -130,7 +129,7 @@ const Showcase = withRouter((props) => {
             <CardBody className="display-flex">
               <FontAwesomeIcon icon={faGithub} style={iconStyles} />
               <div className="m-l">
-                <h2 className="h4">Open-Source Project</h2>
+                <h2 className="h4">Open-Source</h2>
                 <p className="text-muted">
                   <a href="https://github.com/Tymotex/Techsuite">Techsuite GitHub</a>
                 </p>
@@ -142,13 +141,5 @@ const Showcase = withRouter((props) => {
     </div>
   );
 });
-
-// class HomePage extends Component {
-//   render() {
-//     return (
-//       <Showcase />
-//     );
-//   }
-// }
 
 export default withRouter(Showcase);

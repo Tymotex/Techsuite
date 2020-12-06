@@ -239,8 +239,7 @@ def handle_channels_update_info():
     calling_user = get_user_from_token(token)
     target_channel = select_channel(channel_id)
 
-    printColour(" ➤ Channel Update: {} updated {}. New fields: name={}, visibility={}".format(
-        calling_user.username,
+    printColour(" ➤ Channel Update: new fields: name={}, visibility={}".format(
         name,
         visibility
     ), colour="blue")

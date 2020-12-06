@@ -60,12 +60,12 @@ class RegisterModal extends React.Component {
                             {/* Username: */}
                             <FormGroup>
                                 <Label htmlFor="username">Username</Label>
-                                <Input type="text" name="username" id="username" />
+                                <Input type="text" name="username" id="username" autoComplete="off"/>
                             </FormGroup>
                             {/* Email Address: */}
                             <FormGroup>
                                 <Label htmlFor="email">Email</Label>
-                                <Input type="email" name="email" id="email" />
+                                <Input type="email" name="email" id="email" autoComplete="off"/>
                             </FormGroup>
                             {/* Password: */}
                             <FormGroup>

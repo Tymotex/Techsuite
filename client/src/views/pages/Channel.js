@@ -90,6 +90,14 @@ class Channel extends React.Component {
                                 </Card>
                                 <hr />
                             </Col>
+                            <Col lg={12} xl={8}>
+                                {/* Message log and form */}
+                                <Card style={cardBodyStyle}>
+                                    <CardBody>
+                                        <ChannelMessages channelID={this.props.match.params.channelID} />
+                                    </CardBody>
+                                </Card>
+                            </Col>
                             <Col lg={12} xl={4}>
                                 <Card style={cardBodyStyle}>
                                     <CardHeader style={cardHeaderStyle}>Channel Functions</CardHeader>
@@ -133,14 +141,6 @@ class Channel extends React.Component {
                                                 <UserRemoveOwner />
                                             </Col>
                                         </Row>
-                                    </CardBody>
-                                </Card>
-                            </Col>
-                            <Col lg={12} xl={8}>
-                                {/* Message log and form */}
-                                <Card style={cardBodyStyle}>
-                                    <CardBody>
-                                        <ChannelMessages channelID={this.props.match.params.channelID} />
                                     </CardBody>
                                 </Card>
                             </Col>

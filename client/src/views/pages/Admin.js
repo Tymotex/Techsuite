@@ -3,6 +3,7 @@ import Cookie from 'js-cookie';
 import React from 'react';
 import { Notification } from '../../components/notification';
 import { BASE_URL } from '../../constants/api-routes';
+import Empty from './Empty';
 
 class Admin extends React.Component {
     constructor(props) {
@@ -31,9 +32,7 @@ class Admin extends React.Component {
 
     render() {
         return (
-            <div>
-                <strong onClick={this.reset}>Click me to reset</strong>
-            </div>
+            <Empty />
         );
     }
 }
