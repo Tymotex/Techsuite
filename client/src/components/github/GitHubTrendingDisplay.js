@@ -49,7 +49,6 @@ class GitHubTrendingDisplay extends React.Component {
         this.setState({
             isLoading: true
         });
-        // alert("Query: " + query);
         axios.get(`https://api.github.com/search/repositories?q=${query}&sort=stars&order=desc&per_page=100`)
             .then((res) => {
                 this.setState({
