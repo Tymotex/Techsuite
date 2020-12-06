@@ -5,3 +5,4 @@ src/seeds/
 src/.env
 src/__pycache__/
 src/tsvenv/
+nohup.out
