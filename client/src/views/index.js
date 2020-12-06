@@ -12,6 +12,7 @@ import Home from './pages/Home';
 import Register from './pages/Register';
 import Login from './pages/Login';
 import News from './pages/News';
+import Entertainment from './pages/Entertainment';
 import Admin from './pages/Admin'
 import Connections from './pages/Connections'; 
 
@@ -94,6 +95,11 @@ const pageList = [
     name: 'News',
     path: '/news',
     component: News,
+  },
+  {
+    name: 'Entertainment',
+    path: '/entertainment',
+    component: Entertainment,
   },
   {
     name: 'Admin',

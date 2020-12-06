@@ -28,9 +28,6 @@ export default {
       ]
     },
     {
-      divider: true,
-    },
-    {
       name: 'Connections',
       url: '/connections',
       icon: 'Inbox'
@@ -42,6 +39,11 @@ export default {
       name: 'News',
       url: '/news',
       icon: 'Globe',
+    },
+    {
+      name: 'Entertainment',
+      url: '/entertainment',
+      icon: 'Headphones',
     },
     {
       divider: true,
