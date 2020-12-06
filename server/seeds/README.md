@@ -8,3 +8,5 @@ psql techsuite -f <seedfile.sql>
 ```
 
 The server must be off.
+
+Note: create backups of the current database instance by running `pg_dump techsuite > <snapshotfile.sql>`
