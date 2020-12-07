@@ -15,8 +15,8 @@ A collaboration and social networking app for developers. Built with React, Flas
 - Persistent dark mode toggle, responsive and animated UI
 
 #### Planned Features:
-- Connection recommendation and browsing page
-- Entertainment page hooked up to IGDB plus embedded and persistent audio player
+- Connection recommendation system and users browsing page
+- Entertainment page hooked up to IGDB plus and embedded persistent audio player
 - Automated email notification services
 
 # Setup Instructions:
@@ -40,7 +40,7 @@ This project uses Nginx as a reverse proxy server. [This is an example configura
 
 #### Deployment Resources:
 
-- Ubuntu 20.04 VPS [initial setup guide](https://www.digitalocean.com/community/tutorials/initial-server-setup-with-ubuntu-20-04) used
+- Ubuntu 20.04 VPS [initial setup guide](https://www.digitalocean.com/community/tutorials/initial-server-setup-with-ubuntu-20-04)
 
 - Nginx installation, firewall configuration and daemon usage [guide](https://www.digitalocean.com/community/tutorials/how-to-install-nginx-on-ubuntu-20-04)
 
