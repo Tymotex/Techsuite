@@ -3,6 +3,7 @@ import React from 'react';
 import { withRouter } from 'react-router-dom';
 import { Button, Modal, ModalBody, ModalHeader } from 'reactstrap';
 import ImageCropper from '../picture-form/ImageCropper';
+import buttonStyles from './ChannelUploadImage.module.scss';
 
 class ChannelUploadImage extends React.Component {
     static propTypes = {
@@ -27,7 +28,7 @@ class ChannelUploadImage extends React.Component {
     render() {
         return (
             <>
-                <Button color="info" onClick={this.toggleModal} style={{"width": "100%"}}>Upload Image</Button>
+                <Button className={buttonStyles.button} color="info" onClick={this.toggleModal} style={{"width": "100%"}}>Upload Image</Button>
                 <Modal isOpen={this.state.modal} toggle={this.toggleModal}>
                     <ModalHeader toggle={this.toggleModal}>Uploading Channel Image:</ModalHeader>
                     <ModalBody>

@@ -6,6 +6,7 @@ import { withRouter } from 'react-router-dom';
 import { Button, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
 import { BASE_URL } from '../../constants/api-routes';
 import { errorNotification } from '../error-notification';
+import buttonStyles from './ChannelLeave.module.scss';
 
 class ChannelLeave extends React.Component {
     static propTypes = {
@@ -56,7 +57,7 @@ class ChannelLeave extends React.Component {
     render() {
         return (
             <>
-                <Button color="danger" onClick={this.toggleModal} style={{"width": "100%"}}>Leave Channel</Button>
+                <Button className={buttonStyles.button} color="danger" onClick={this.toggleModal} style={{"width": "100%"}}>Leave Channel</Button>
                 <Modal isOpen={this.state.modal} toggle={this.toggleModal}>
                     <ModalHeader toggle={this.toggleModal}>Leaving Channel:</ModalHeader>
                     <ModalBody>

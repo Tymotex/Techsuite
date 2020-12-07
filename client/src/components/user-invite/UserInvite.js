@@ -7,6 +7,8 @@ import { Button, Form, FormGroup, Input, Label, Modal, ModalBody, ModalFooter, M
 import { BASE_URL } from '../../constants/api-routes';
 import { errorNotification } from '../error-notification';
 
+import buttonStyles from './UserInvite.module.scss';
+
 class UserInvite extends React.Component {
     static propTypes = {
         match: PropTypes.object.isRequired,
@@ -89,7 +91,7 @@ class UserInvite extends React.Component {
     render() {
         return (
             <>
-                <Button color="primary" onClick={this.toggleModal} style={{"width": "100%"}}>Invite Someone</Button>
+                <Button className={buttonStyles.button} color="primary" onClick={this.toggleModal} style={{"width": "100%"}}>Invite Someone</Button>
                 <Modal isOpen={this.state.modal} toggle={this.toggleModal}>
                     <ModalHeader toggle={this.toggleModal}>Invite Someone:</ModalHeader>
                     <Form onSubmit={this.inviteUser}>

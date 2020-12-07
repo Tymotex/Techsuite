@@ -113,19 +113,19 @@ class Channel extends React.Component {
                                         <br />
                                         <Row>
                                             <Col md={6}>
-                                                <ChannelUploadImage />
+                                                <ChannelEdit />
                                             </Col>
                                             <Col md={6}>
-                                                <ChannelUploadCover />
+                                                <ChannelSearchMessages />
                                             </Col>
                                         </Row>
                                         <br />
                                         <Row>
                                             <Col md={6}>
-                                                <ChannelEdit />
+                                                <ChannelUploadImage />
                                             </Col>
                                             <Col md={6}>
-                                                <ChannelSearchMessages />
+                                                <ChannelUploadCover />
                                             </Col>
                                         </Row>
                                     </CardBody>

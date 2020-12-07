@@ -6,6 +6,7 @@ import { withRouter } from 'react-router-dom';
 import { Button, Form, FormGroup, Input, Label, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
 import { BASE_URL } from '../../constants/api-routes';
 import { errorNotification } from '../error-notification';
+import buttonStyles from './UserRemoveOwner.module.scss';
 
 class UserRemoveOwner extends React.Component {
     static propTypes = {
@@ -89,7 +90,7 @@ class UserRemoveOwner extends React.Component {
     render() {
         return (
             <>
-                <Button color="danger" onClick={this.toggleModal} style={{"width": "100%"}}>Remove Owner</Button>
+                <Button className={buttonStyles.button} color="danger" onClick={this.toggleModal} style={{"width": "100%"}}>Remove Owner</Button>
                 <Modal isOpen={this.state.modal} toggle={this.toggleModal}>
                     <ModalHeader toggle={this.toggleModal}>Remove an owner:</ModalHeader>
                     <Form onSubmit={this.inviteUser}>

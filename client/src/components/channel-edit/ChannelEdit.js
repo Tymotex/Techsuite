@@ -8,6 +8,7 @@ import { BASE_URL } from '../../constants/api-routes';
 import { errorNotification } from '../error-notification';
 import { Notification } from '../notification';
 import InputSwitch from './InputSwitch';
+import buttonStyles from './ChannelEdit.module.scss';
 
 class ChannelEdit extends React.Component {
     static propTypes = {
@@ -56,6 +57,7 @@ class ChannelEdit extends React.Component {
         console.log("Token: " + currUserToken);
         console.log("ChannelID: " + this.state.channelID);
 
+        alert((fd.get("visibility") != null) ? true : false);
         if (currUserToken) {
             const postData = {
                 method: 'put',
@@ -89,7 +91,7 @@ class ChannelEdit extends React.Component {
         const { name, description, visibility } = this.state.channel;
         return (
             <>
-                <Button color="warning" onClick={this.toggleModal} style={{"width": "100%"}}>Edit Channel Info</Button>
+                <Button className={buttonStyles.button} color="warning" onClick={this.toggleModal} style={{"width": "100%"}}>Edit Channel Info</Button>
                 <Modal isOpen={this.state.modal} toggle={this.toggleModal}>
                     <ModalHeader toggle={this.toggleModal}>Editing Channel Info:</ModalHeader>
                     <ModalBody>

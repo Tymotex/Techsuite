@@ -6,6 +6,7 @@ import { withRouter } from 'react-router-dom';
 import { Button, Form, FormGroup, Input, Label, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
 import { BASE_URL } from '../../constants/api-routes';
 import { errorNotification } from '../error-notification';
+import buttonStyles from './UserAddOwner.module.scss';
 
 class UserAddOwner extends React.Component {
     static propTypes = {
@@ -87,7 +88,7 @@ class UserAddOwner extends React.Component {
     render() {
         return (
             <>
-                <Button color="primary" onClick={this.toggleModal} style={{"width": "100%"}}>Add Owner</Button>
+                <Button className={buttonStyles.button} color="primary" onClick={this.toggleModal} style={{"width": "100%"}}>Add Owner</Button>
                 <Modal isOpen={this.state.modal} toggle={this.toggleModal}>
                     <ModalHeader toggle={this.toggleModal}>Add an owner:</ModalHeader>
                     <Form onSubmit={this.addOwner}>

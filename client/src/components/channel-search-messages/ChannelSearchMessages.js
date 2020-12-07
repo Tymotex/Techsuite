@@ -9,6 +9,7 @@ import ChatBox from '../channel-messages/ChatBox';
 import { errorNotification } from '../error-notification';
 import { Notification } from '../notification';
 import './ChannelSearchMessages.scss';
+import buttonStyles from './ChannelSearchMessages.module.scss';
 
 class ChannelSearchMessages extends React.Component {
     static propTypes = {
@@ -72,7 +73,7 @@ class ChannelSearchMessages extends React.Component {
         const { messages, queryStr } = this.state;
         return (
             <>
-                <Button color="secondary" onClick={this.toggleModal} style={{"width": "100%"}}>Search Messages</Button>
+                <Button className={buttonStyles.button} color="primary" onClick={this.toggleModal} style={{"width": "100%"}}>Search Messages</Button>
                 <Modal isOpen={this.state.modal} toggle={this.toggleModal}>
                     <ModalHeader toggle={this.toggleModal}>Searching Channel Messages:</ModalHeader>
                     <ModalBody>

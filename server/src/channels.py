@@ -442,4 +442,9 @@ def channels_update_info(token, channel_id, name, description, visibility):
     channel.visibility = visibility
     db.session.commit()
 
+# TODO: unimplemented
+def channel_delete(token, channel_id):
+    """
 
+    """
+    pass
