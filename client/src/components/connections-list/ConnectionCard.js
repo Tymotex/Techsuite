@@ -91,8 +91,8 @@ class ConnectionCard extends React.Component {
         const { first_name, last_name, title, location } = user;
         return (
             <>
-                <article class="card">
-                    <header class="card-header">
+                <article className="card" style={{minWidth: "300px"}}>
+                    <header className="card-header">
                         <h2>
                             <Link to={`/user/profile/${user.user_id}`} style={{textDecoration: "none", color: "grey"}}>
                                 <strong>
@@ -113,24 +113,24 @@ class ConnectionCard extends React.Component {
                             Location: <em>{location ? (location) : "No location"}</em>
                         </p>
                     </div>
-                    <div class="card-author">
-                            <a class="author-avatar" href="/#">
+                    <div className="card-author">
+                            <a className="author-avatar" href="/#">
                                 <Link to={`/user/profile/${user.user_id}`}>
                                     <img src={user.profile_img_url} alt="user's profile"/>
                                 </Link>
                             </a>
-                            <svg class="half-circle" viewBox="0 0 106 57">
+                            <svg className="half-circle" viewBox="0 0 106 57">
                             <path d="M102 4c0 27.1-21.9 49-49 49S4 31.1 4 4"></path>
                             </svg>
                             
-                            <div class="author-name">
-                                <div class="author-name-prefix">
+                            <div className="author-name">
+                                <div className="author-name-prefix">
                                     {user.username}    
                                 </div>
-                                <span style={{"color": "darkslategrey"}}>{user.email}</span>
+                                <span className="card-field">{user.email}</span>
                             </div>
                     </div>
-                    <div class="tags">
+                    <div className="tags">
                         {(isOutgoing) ? (
                             <Button className="disabled" outline color="secondary" disabled={true}>Pending</Button>
                         ) : (

@@ -3,7 +3,7 @@ The file contains all the user functions
 """
 from database import db
 from exceptions import InputError, AccessError
-from util.util import email_is_legit, printColour, username_valid
+from util.util import email_is_legit, printColour, username_valid, get_user_from_id
 from util.token import verify_token, get_user_from_token
 from models import User, Channel, Bio, MemberOf, Connection
 
@@ -170,3 +170,40 @@ def users_profile_setemail(token, email):
 def users_profile_update(token, email, username):
     users_profile_set_username(token, username)
     users_profile_setemail(token, email)
+
+def user_channels_list(token, user_id):
+    """
+        Provide a list of all channels (and their associated details)
+        Parameters:
+            token   (str)
+            user_id (int)
+        Returns: 
+            { channels }
+        Where:
+            List of dictionaries: { channel_id, name, channel_img_url, description, visibility, member_of, owner_of }
+    """
+    verify_token(token)
+    user = get_user_from_id(user_id)
+    channels_list = []
+    all_channels = Channel.query.all()
+    for each_channel in all_channels:
+        curr_channel_data = {
+            "channel_id": each_channel.id,
+            "name": each_channel.name,
+            "channel_img_url": each_channel.channel_img_url,
+            "channel_cover_img_url": each_channel.channel_cover_img_url,
+            "description": each_channel.description,
+            "visibility": each_channel.visibility,
+            "member_of": False,
+            "owner_of": False
+        }
+        memberships = each_channel.channel_membership
+        for membership in memberships:
+            if membership.user_id == user.id:
+                curr_channel_data["member_of"] = True
+                if membership.is_owner:
+                    curr_channel_data["owner_of"] = True 
+        channels_list.append(curr_channel_data)
+    return {
+        "channels": channels_list
+    }

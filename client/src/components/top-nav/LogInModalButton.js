@@ -68,8 +68,6 @@ class LogInModal extends React.Component {
                                 <Label htmlFor="password">Password</Label>
                                 <Input type="password" name="password" id="password" />
                             </FormGroup>
-                            {/* TODO: Forgot password implementation in the backend */}
-                            <NavLink to="/">Forgot password?</NavLink>
                         </ModalBody>
                         {/* Buttons in the modal footer: */}
                         <ModalFooter>
