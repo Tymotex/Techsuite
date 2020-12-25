@@ -24,8 +24,9 @@ class UserChannels extends React.Component {
             isLoading: true
         });
         const currUserToken = Cookie.get("token");
+        const userID = this.props.userID;
         if (currUserToken) {
-            axios.get(`${BASE_URL}/channels/listall?token=${currUserToken}`)
+            axios.get(`${BASE_URL}/users/profile/channels?token=${currUserToken}&user_id=${userID}`)
                 .then((allChannels) => {
                     this.setState({
                         isLoading: false,

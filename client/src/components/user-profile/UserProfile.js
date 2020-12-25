@@ -238,7 +238,7 @@ class UserProfile extends React.Component {
                                 <Col xs={12} lg={8}>
                                     <Card className="main-card">
                                         <CardBody>
-                                            <UserChannels />
+                                            <UserChannels userID={this.props.userID} />
                                         </CardBody>
                                     </Card>
                                 </Col>

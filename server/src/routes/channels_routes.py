@@ -159,7 +159,6 @@ def handle_channel_remove_owner():
     ), colour="blue")
     return jsonify(channels.channels_removeowner(token, channel_id, user_id))
 
-# TODO: Is this deprecated?
 @channels_router.route("/channels/list", methods=['GET'])
 def handle_channels_list():
     """

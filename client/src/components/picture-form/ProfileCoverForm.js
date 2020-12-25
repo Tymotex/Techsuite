@@ -67,6 +67,7 @@ class ProfileCoverForm extends React.Component {
             <ImageCropper 
                 uploadEndpoint="users/profile/uploadcover" 
                 title="Update your cover image"
+                buttonText="Update Cover"
                 aspectRatio={16/9}
             />   
         );

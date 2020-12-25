@@ -1,7 +1,25 @@
 # Techsuite
-A collaboration and social networking app for developers. Built with React, Flask and PostgreSQL. 
+A collaboration and social networking application, built with React, Flask and PostgreSQL.  
 
-<img src="./images/techsuite-home-2.png"></img>
+<table>
+    <tr>
+        <td width="50%">            
+            <img src="./images/techsuite-channel-showcase.png"></img>
+        </td>
+        <td>
+            <img src="./images/techsuite-message-showcase.png"></img>
+        </td>
+    <tr>
+    <tr>
+        <td width="50%">            
+            <img src="./images/techsuite-news-showcase.png"></img>
+        </td>
+        <td>
+            <img src="./images/techsuite-home-showcase.png"></img>
+        </td>
+    <tr>
+</table>
+
 
 ## Features:
 - Standalone authentication system and support for one-click Google sign-in and registration

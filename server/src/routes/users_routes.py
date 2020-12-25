@@ -199,3 +199,19 @@ def handle_user_profile_update():
     username = request_data["username"]
     printColour(" ➤ User Profile Update: setting username to {}, email to {}".format(username, email), colour="blue")
     return jsonify(users.users_profile_update(token, email, username))
+
+@users_router.route("/users/profile/channels", methods=['GET'])
+def handle_user_get_channels():
+    """
+        HTTP Route: /users/profile/channels
+        HTTP Method: GET
+        Params: (token, user_id)
+        Returns JSON: {
+            channels: [{ channel_id, name, description, visibility, member_of, owner_of }, ...]
+        }
+    """
+    request_data = request.get_json()
+    token = request.args.get("token")
+    user_id = int(request.args.get("user_id"))
+    printColour(" ➤ User Profile Channels: getting channels", colour="blue")
+    return jsonify(users.user_channels_list(token, user_id))
