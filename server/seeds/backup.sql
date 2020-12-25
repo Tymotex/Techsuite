@@ -322,6 +322,8 @@ COPY public.bios (id, first_name, last_name, profile_img_url, cover_img_url, sum
 11	\N	\N	https://techsuite.dev/api/images/default.jpg	\N	\N	\N	Techsuite user	\N
 12	\N	\N	https://techsuite.dev/api/images/user_12_profile_1.jpg	\N	\N	\N	Techsuite user	\N
 6	Lex	Fridman	https://techsuite.dev/api/images/user_6_profile_1.jpg	https://techsuite.dev/api/images/user_6_profile_cover_1.jpg	I'm an AI researcher working on autonomous vehicles, human-robot interaction, and machine learning at MIT and beyond.	Massachusetts	Research Scientist	MIT
+13	\N	\N	https://techsuite.dev/api/images/default.jpg	\N	\N	\N	Techsuite user	\N
+14	\N	\N	https://lh3.googleusercontent.com/a-/AOh14GgQWlnSSx1NQV-EOB7q8d14tiHsaBEqc7EQPhnG-A=s96-c	\N	\N	\N	Techsuite user	\N
 \.
 
 
@@ -334,6 +336,8 @@ COPY public.channels (id, name, description, visibility, channel_img_url, channe
 2	Atlassian-Hackermen	Atlassian Corporation Plc is an Australian software company that develops products for software developers and project managers.	public	https://techsuite.dev/api/images/channel_2_profile_1.jpg	\N	2020-12-06 10:49:04.45371
 3	Deep-Learners	For neural network nerds and AI enthusiasts!	public	https://techsuite.dev/api/images/channel_3_profile_1.jpg	https://techsuite.dev/api/images/channel_3_profile_3.jpg	2020-12-06 10:51:37.43867
 4	Fullstack-Devs	A discussion group for anything fullstack related. Anyone is welcome, apart from Angular developers	public	https://techsuite.dev/api/images/channel_4_profile_1.jpg	https://techsuite.dev/api/images/channel_4_profile_2.jpg	2020-12-06 10:58:34.654114
+5	UNSW-Coders	UNSW's gang of computer nerds, hackers and software engineers.  	public	https://techsuite.dev/api/images/channel_5_profile_2.jpg	https://techsuite.dev/api/images/channel_5_profile_3.jpg	2020-12-07 08:49:23.650399
+6	Tesla-AI-Team	This is Tesla's top secret AI team!	private	https://techsuite.dev/api/images/channel_6_profile_1.jpg	\N	2020-12-07 09:08:57.51552
 \.
 
 
@@ -356,6 +360,8 @@ COPY public.connections (id, user_id, other_user_id, approved, is_requester) FRO
 12	10	11	t	f
 13	11	8	t	t
 14	8	11	t	f
+15	13	7	f	t
+16	7	13	f	f
 \.
 
 
@@ -388,6 +394,11 @@ COPY public.member_of (user_id, channel_id, is_owner) FROM stdin;
 9	4	f
 10	4	f
 12	3	f
+13	5	t
+7	2	f
+14	3	f
+14	6	t
+14	4	f
 \.
 
 
@@ -404,6 +415,7 @@ COPY public.messages (id, channel_id, user_id, message, time_created) FROM stdin
 6	3	8	How do you center a div	2020-12-06 11:05:50.464569
 7	4	10	Flask is hot garbage. Not even a real backend framework	2020-12-07 08:20:55.465622
 8	3	12	It's true, I'm the great-great-grandson of George Boole. Look it up	2020-12-07 08:31:48.939798
+9	5	13	I love Perl. Every computing student should learn Perl!	2020-12-07 08:52:39.470656
 \.
 
 
@@ -424,6 +436,8 @@ COPY public.techsuite_users (id, email, password, permission_id, username, bio_i
 10	djangoman@gmail.com	2413fb3709b05939f04cf2e92f7d0897fc2596f9ad0b8a9ea855c7bfebaae892	1	djangoman	10	2020-12-07 08:18:04.664646
 11	elon@gmail.com	2413fb3709b05939f04cf2e92f7d0897fc2596f9ad0b8a9ea855c7bfebaae892	1	ElongatedMuskrat	11	2020-12-07 08:25:15.982518
 12	geoffhinton@gmail.com	2413fb3709b05939f04cf2e92f7d0897fc2596f9ad0b8a9ea855c7bfebaae892	1	geoffhinton	12	2020-12-07 08:28:58.292885
+13	andrewtaylor@gmail.com	2413fb3709b05939f04cf2e92f7d0897fc2596f9ad0b8a9ea855c7bfebaae892	1	andrewtaylor	13	2020-12-07 08:47:47.831264
+14	timzhang3@gmail.com	2413fb3709b05939f04cf2e92f7d0897fc2596f9ad0b8a9ea855c7bfebaae892	1	Tim	14	2020-12-07 09:07:33.59839
 \.
 
 
@@ -431,21 +445,21 @@ COPY public.techsuite_users (id, email, password, permission_id, username, bio_i
 -- Name: bios_id_seq; Type: SEQUENCE SET; Schema: public; Owner: tim
 --
 
-SELECT pg_catalog.setval('public.bios_id_seq', 12, true);
+SELECT pg_catalog.setval('public.bios_id_seq', 14, true);
 
 
 --
 -- Name: channels_id_seq; Type: SEQUENCE SET; Schema: public; Owner: tim
 --
 
-SELECT pg_catalog.setval('public.channels_id_seq', 4, true);
+SELECT pg_catalog.setval('public.channels_id_seq', 6, true);
 
 
 --
 -- Name: connections_id_seq; Type: SEQUENCE SET; Schema: public; Owner: tim
 --
 
-SELECT pg_catalog.setval('public.connections_id_seq', 14, true);
+SELECT pg_catalog.setval('public.connections_id_seq', 16, true);
 
 
 --
@@ -459,14 +473,14 @@ SELECT pg_catalog.setval('public.direct_messages_id_seq', 2, true);
 -- Name: messages_id_seq; Type: SEQUENCE SET; Schema: public; Owner: tim
 --
 
-SELECT pg_catalog.setval('public.messages_id_seq', 8, true);
+SELECT pg_catalog.setval('public.messages_id_seq', 10, true);
 
 
 --
 -- Name: techsuite_users_id_seq; Type: SEQUENCE SET; Schema: public; Owner: tim
 --
 
-SELECT pg_catalog.setval('public.techsuite_users_id_seq', 12, true);
+SELECT pg_catalog.setval('public.techsuite_users_id_seq', 14, true);
 
 
 --
