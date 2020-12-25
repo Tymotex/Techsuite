@@ -34,24 +34,36 @@ A collaboration and social networking application, built with React, Flask and P
 
 #### Planned Features:
 - Connection recommendation system and users browsing page
-- Entertainment page hooked up to IGDB plus and embedded persistent audio player
+- Entertainment page hooked up to IGDB and an embedded persistent audio player
 - Automated email notification services
 
-# Setup Instructions:
+# Setup Instructions (Ubuntu 20.10):
 1. `git clone https://github.com/Tymotex/Techsuite.git`
 2. `cd util/setup && sudo sh setup.py` 
-3. `pip3 install -r server/requirements.txt` and [set up the database](#database-setup)
-4. `npm install --prefix ./client`
-5. Configure the `.env` file inside `server/src`: 
+3. [Set up the PostgreSQL database](#database-setup)
+4. Run the following:
+    ```
+        sudo apt-get install pkg-config
+        sudo apt-get install libcairo2-dev
+        sudo apt install libpq-dev python3-dev
+    ```
+5. `pip3 install -r server/requirements.txt`
+6. `npm install --prefix ./client`
+7. Configure the environment variables in the `.env` file at `server/src/.env`: 
     1. Set the formatted database URI connection string: `DATABASE_URI="postgresql://username:password@localhost/techsuite"`. See [how to create a role](#database-setup)
+    2. Register for the Google+ API and set the GOOGLE_AUTH_API_CLIENT_ID and GOOGLE_AUTH_API_CLIENT_SECRET fields
 
 ### For Development:
 1. Run `./techsuite` inside the `Techsuite/server` directory
 2. Run `npm start` inside the `Techsuite/client` directory
 
+Note: follow the comment instructions inside `client/src/constants/api-routes.js` for configuring routes. 
+
 ### For Production:
 1. Run `./techsuite` inside the `Techsuite/server` directory
 2. Run `npm run build` inside the `Techsuite/client` directory. The output is written into the `Techsuite/client/build` directory
+
+Note: follow the comment instructions inside `client/src/constants/api-routes.js` for configuring routes.
 
 ### Server Configuration:
 This project uses Nginx as a reverse proxy server. [This is an example configuration file](https://gist.github.com/Tymotex/f23a746727a26eff3c96132ce56d0038) used for deployment on a VPS.
@@ -98,6 +110,7 @@ Instructions for installing PostgreSQL, interfacing with the Techsuite database 
     ```
     DATABASE_URI="postgresql://me:1984@localhost/techsuite"
     ```
+6. Run `./techsuite --reset` to create the database instance and run the Flask server
 
 Note: to use psql to interface with the techsuite database instance, run `psql -d techsuite -U <username>` 
 
@@ -107,6 +120,3 @@ Psycopg2 is a necessary library for Flask-SQLAlchemy to work.
 2. `pip3 install psycopg2`
 
 > SQLAlchemy is a ORM, psycopg2 is a database driver. These are completely different things: SQLAlchemy generates SQL statements and psycopg2 sends SQL statements to the database. SQLAlchemy depends on psycopg2 or other database drivers to communicate with the database! [Source](https://stackoverflow.com/questions/8588126/sqlalchemy-or-psycopg2)
-
-
-
