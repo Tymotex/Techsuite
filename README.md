@@ -1,6 +1,8 @@
 # Techsuite
 A collaboration and social networking application, built with React, Flask and PostgreSQL.  
 
+Watch a video demo <strong><a href="https://www.youtube.com/watch?v=C4o2fOCq2cI">here</a></strong>.
+
 <table>
     <tr>
         <td width="50%">            
@@ -20,6 +22,7 @@ A collaboration and social networking application, built with React, Flask and P
     <tr>
 </table>
 
+<img src="./images/showcase.gif"></img>
 
 ## Features:
 - Standalone authentication system and support for one-click Google sign-in and registration
