@@ -56,7 +56,7 @@ class ConnectionChatBox extends React.Component {
             socket.emit("send_connection_message", currToken, userID, message, room);
             document.getElementById("message-field").value = "";
         } else {
-            // TODO
+            errorNotification(err, "You're not logged in");
         }
     }
 
@@ -74,7 +74,7 @@ class ConnectionChatBox extends React.Component {
                     errorNotification(err, "Failed to fetch messages");
                 });
         } else {
-            // TODO
+            errorNotification(err, "You're not logged in");
         }
     }
 

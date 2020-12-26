@@ -155,7 +155,7 @@ class UserProfile extends React.Component {
         if (currToken) {
             socket.emit("connection_user_leave", { token: currToken, room: room });
         } else {
-            // TODO
+            errorNotification(err, "You're not logged in");
         }
     }
 
@@ -165,7 +165,7 @@ class UserProfile extends React.Component {
         if (currToken) {
             socket.emit("connection_user_enter", { token: currToken, user_id: userID });
         } else {
-            // TODO
+            errorNotification(err, "You're not logged in");
         }
     }
 

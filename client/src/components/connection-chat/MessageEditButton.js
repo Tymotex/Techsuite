@@ -2,6 +2,7 @@ import Cookie from 'js-cookie';
 import React from 'react';
 import { SOCKET_URI } from '../../constants/api-routes';
 import { Button, Form, Input, InputGroup, InputGroupAddon, InputGroupText, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
+import { errorNotification } from '../error-notification';
 import io from 'socket.io-client';
 
 const socket = io(SOCKET_URI);
@@ -33,7 +34,7 @@ class MessageEditButton extends React.Component {
             socket.emit("edit_connection_message", currToken, this.props.messageID, newMessage, room);
             this.toggleModal();
         } else {
-            // TODO
+            errorNotification(err, "You're not logged in");
         }
     }
 
@@ -43,7 +44,7 @@ class MessageEditButton extends React.Component {
         if (currToken) {
             socket.emit("remove_connection_message", currToken, this.props.messageID, room);
         } else {
-            // TODO
+            errorNotification(err, "You're not logged in");
         }
     }
 

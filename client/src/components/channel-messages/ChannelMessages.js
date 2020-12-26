@@ -74,8 +74,6 @@ class ChannelMessages extends React.Component {
         if (currToken) {
             console.log(`Sending the message: ${messageData.get("message")}`);
             console.log(`Emitting send_message with params: ${currToken} ${this.props.channelID} ${messageData.get("message")}`);
-            // TODO: Move the event name 'send_message' to a constants file
-
             const { channelID: thisChannelID } = this.props;
             socket.emit(
                 "send_message", 

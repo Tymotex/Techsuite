@@ -57,7 +57,6 @@ app.register_blueprint(connection_router, url_prefix='/api')
 app.register_error_handler(Exception, error_handler)
 
 # ===== Google Auth Routes =====
-# TODO: Move this out of the server file
 
 # OAuth 2 client setup
 client = WebApplicationClient(GOOGLE_CLIENT_ID)
@@ -179,14 +178,13 @@ def allowed_file(filename):
            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 # ===== Web Socket Events =====
-# TODO: Move socket handling out of this file
 
 # Error event
 def emit_error(error, error_type="input_error"):
     if (isinstance(error, InputError)):
-        emit("input_error", error.get_message())   # TODO Need to selectively broadcast
+        emit("input_error", error.get_message())   
     else:
-        emit("input_error", error.__repr__())      # TODO Need to selectively broadcast
+        emit("input_error", error.__repr__())      
 
 # ===== Connect/Disconnect hooks =====
 
