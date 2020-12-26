@@ -3,6 +3,8 @@ A collaboration and social networking application, built with React, Flask and P
 
 Watch a video demo <strong><a href="https://www.youtube.com/watch?v=C4o2fOCq2cI">here</a></strong>.
 
+[![Techsuite demo video](https://img.youtube.com/vi/C4o2fOCq2cI/0.jpg)](https://www.youtube.com/watch?v=C4o2fOCq2cI)
+
 <table>
     <tr>
         <td width="50%">            
