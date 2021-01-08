@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactCrop from 'react-image-crop';
 import 'react-image-crop/dist/ReactCrop.css';
-// TODO: UNUSED?
+
 class PictureCropDisplay extends React.Component {
     constructor(props) {
         super(props);
@@ -31,3 +31,5 @@ class PictureCropDisplay extends React.Component {
         );
     }
 }
+
+export default PictureCropDisplay;

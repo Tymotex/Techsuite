@@ -3,6 +3,10 @@
 """
 # Standard libraries
 import functools, re, random, os
+import smtplib
+from string import Template
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
 
 # Third party libraries
 from dotenv import load_dotenv
@@ -165,9 +169,13 @@ def get_user_from_token(token):
         raise AccessError(description="Invalid token supplied")
     return User.query.filter_by(id=decoded_token["user_id"]).first()
 
-# TODO: Implement
 def user_is_admin(token):
-    return True
+    """
+        Determines whether or not the user associated with the given token
+        is a global admin.
+    """
+    user = get_user_from_token(token)
+    return user.permission_id == 1
 
 def user_is_owner(token, channel_id):
     channel_obj = Channel.query.filter_by(id=channel_id).first()
@@ -176,7 +184,6 @@ def user_is_owner(token, channel_id):
         if each_owner.user_id == user_obj.id:
             return True
     return False
-
 
 # ===== User Utilities =====
 def is_user_member(user, selected_channel):
@@ -207,43 +214,60 @@ def get_connection(this_user_id, other_user_id):
     """
         Gets the connection object between this_user and other_user, by ID
     """
-    connection_obj = Connection.query.filter_by(user_id=this_user_id, other_user_id=other_user_id).first()
+    connection_obj = Connection.query.filter_by(
+        user_id=this_user_id, 
+        other_user_id=other_user_id
+    ).first()
     return connection_obj
 
-# ===== Password Reset Utilities =====
-# TODO:
-def send_email(send_to, gmail_user, gmail_password, msg):
-    """
-        Function which sends mail from gmail account
-        Parameters (send_to, gmail_user, gmail_password, msg):
-        types:
-        send_to           string
-        gmail_user        string
-        gmail_password    string
-        msg               string
+# ===== SMTP Utilities =====
 
-        returns nothing
+def get_message_template(filename):
     """
-    smtpserver = smtplib.SMTP("smtp.gmail.com", 587)
-    smtpserver.ehlo()
-    smtpserver.starttls()
-    smtpserver.login(gmail_user, gmail_password)
-    smtpserver.sendmail(gmail_user, send_to, msg)
-    smtpserver.close()
+        Extracts the template plaintext message from the given file path
+        and returns a Template object (see the standard python string library)
+    """
+    with open(filename, mode="r") as message_template:
+        template = message_template.read()
+    return Template(template)
 
-# TODO:
-def email_message(email, reset_code, name_first, name_last):
+def generate_welcome_message(recipient):
     """
-        Message contents of email sent to reset password
+        Extracts the template plaintext message from 
+    """
+    template = get_message_template("welcome_message.txt")
+    template.substitute(
+        NAME=recipient.name.title(),
+        PREHEADER="Hey {}. This is a message from Techsuite".format(recipient.name.title()),
+        BIO_LINK="https://techsuite.dev/user/profile/{}/edit".format(recipient.id)
+    )
+    return template
+    
+def send_welcome_email(recipient, subject_title):
+    """
+        Sends an email to a specified Techsuite user from a designated 
+        email account. The SMTP host, port, sender and password are
+        configured in the .env file
+
         Parameters:
-            email       str
-            reset_code  str
-            name_first   str
-            name_last    str
-        Returns:
-            message str
+            recipient       (user model object) 
+            subject_title   (string)
     """
-    return "TODO"
+    try:
+        filled_template = generate_welcome_message(recipient)
+        message = MIMEMultipart("alternative")
+        sender_address = os.getenv("SENDER_EMAIL_ADDRESS")
+        message["From"] = sender_address
+        message["To"] = recipient.email
+        message["Subject"] = subject_title
+        smtpserver = smtplib.SMTP(os.getenv("SMTP_HOST_ADDRESS"), os.getenv("SMTP_PORT"))
+        smtpserver.starttls()
+        smtpserver.login(sender_address, os.getenv("SENDER_PASSWORD"))
+        message.attach(MIMEText(filled_template, "html"))
+        smtpserver.send_message(message)
+        smtpserver.close()
+    except Exception as err:
+        printColour("Failed to transmit SMTP message: {}".format(err), colour="red")
 
 # ===== Message Utilities =====
 def get_message(data, message_id):
@@ -296,7 +320,6 @@ def download_img_and_get_filename(url, user_id):
         pass
 
     # Fetching and saving the profile picture to server directory
-    print(url)
     res = requests.get(url)
     if res.status_code != 200:
         raise InputError(description="Request to image resource failed")

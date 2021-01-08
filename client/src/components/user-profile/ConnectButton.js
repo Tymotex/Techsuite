@@ -147,7 +147,6 @@ class ConnectButton extends React.Component {
                     )
                 ) : (
                     (isConnected) ? (
-                        // TODO: Add link here to get to private message page
                         <>
                             <Button outline color="primary" onClick={() => openMessage(userID)}>Message</Button>
                             <Button outline color="danger" onClick={this.removeConnection}>Remove</Button>

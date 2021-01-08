@@ -67,7 +67,6 @@ class ConnectionsList extends React.Component {
                     });
                     errorNotification(err, "Failed to add connection");
                 });
-            // TODO: Async refactor so that this.setState({ isloading, fetchsucceeded, ...}) works
             this.fetchConnections(currToken);
             this.fetchConnectionsIncoming(currToken);
             this.fetchConnectionsOutgoing(currToken);
@@ -143,7 +142,7 @@ class ConnectionsList extends React.Component {
         if (currToken) {
             socket.emit("connection_user_leave", { token: currToken, room: room });
         } else {
-            // TODO
+            errorNotification(err, "You're not logged in");
         }
     }
 
@@ -153,7 +152,7 @@ class ConnectionsList extends React.Component {
         if (currToken) {
             socket.emit("connection_user_enter", { token: currToken, user_id: userID });
         } else {
-            // TODO
+            errorNotification(err, "You're not logged in");
         }
     }
 

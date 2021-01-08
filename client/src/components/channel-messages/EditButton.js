@@ -2,6 +2,7 @@ import Cookie from 'js-cookie';
 import React from 'react';
 import { SOCKET_URI } from '../../constants/api-routes';
 import { Button, Form, Input, InputGroup, InputGroupAddon, InputGroupText, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
+import { errorNotification } from '../error-notification';
 import io from 'socket.io-client';
 import './EditButton.scss';
 
@@ -34,7 +35,7 @@ class EditButton extends React.Component {
             console.log(`Emitting edit_message with params: ${currToken} ${this.props.messageID}`);
             socket.emit("edit_message", currToken, this.props.messageID, newMessage, room);
         } else {
-
+            errorNotification(err, "You're not logged in");
         }
     }
 
@@ -44,9 +45,8 @@ class EditButton extends React.Component {
         if (currToken) {
             console.log(`Emitting remove_message with params: ${currToken} ${this.props.messageID}`);
             socket.emit("remove_message", currToken, this.props.messageID, room);
-            // TODO: What error handling options does socketio have?
         } else {
-            // TODO: notification for logging in here
+            errorNotification(err, "You're not logged in");
         }
     }
 
