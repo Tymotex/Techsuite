@@ -33,9 +33,7 @@ class MessageEditButton extends React.Component {
         if (currToken) {
             socket.emit("edit_connection_message", currToken, this.props.messageID, newMessage, room);
             this.toggleModal();
-        } else {
-            errorNotification(err, "You're not logged in");
-        }
+        } 
     }
 
     deleteMessage() {
@@ -43,9 +41,7 @@ class MessageEditButton extends React.Component {
         const { room } = this.props;
         if (currToken) {
             socket.emit("remove_connection_message", currToken, this.props.messageID, room);
-        } else {
-            errorNotification(err, "You're not logged in");
-        }
+        } 
     }
 
     render() {

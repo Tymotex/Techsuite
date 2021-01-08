@@ -141,9 +141,7 @@ class ConnectionsList extends React.Component {
         const currToken = Cookie.get("token");
         if (currToken) {
             socket.emit("connection_user_leave", { token: currToken, room: room });
-        } else {
-            errorNotification(err, "You're not logged in");
-        }
+        } 
     }
 
     joinConnectionRoom() {
@@ -151,8 +149,6 @@ class ConnectionsList extends React.Component {
         const userID = this.state.currentChatUser.user_id;
         if (currToken) {
             socket.emit("connection_user_enter", { token: currToken, user_id: userID });
-        } else {
-            errorNotification(err, "You're not logged in");
         }
     }
 
