@@ -269,6 +269,20 @@ def send_welcome_email(recipient, subject_title):
     except Exception as err:
         printColour("Failed to transmit SMTP message: {}".format(err), colour="red")
 
+# Password reset:
+# Token verification guide following Doobeh on https://stackoverflow.com/questions/14713757/what-is-the-best-way-to-generate-a-reset-token-in-python 
+# Trying to use ItsDangerous for handling token verification in a stateless manner. See https://itsdangerous.palletsprojects.com/en/1.1.x/
+# 1. Cryptographically sign the current timestamp with a secret key
+# 2. Sign the resultant string again with a second key
+# 3. Decrypt the string passed by the user. The TTL is enforced as max_age seconds
+from itsdangerous import TimestampSigner
+
+def generate_reset_token():
+    s = TimestampSigner("Secret")         # Creating a timestamp signer with an associated secret key
+    string = s.sign("foo")                # Attaches time information of the signing
+    print(s.unsign(string, max_age=20))   # Decrypts the received string with the timestamp signer 
+    return string
+
 # ===== Message Utilities =====
 def get_message(data, message_id):
     """
