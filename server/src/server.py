@@ -98,11 +98,11 @@ def callback():
     token_endpoint = google_provider_cfg["token_endpoint"]
 
     # Prepare and send a request to get tokens
-    request_url = request.url[:4] + "s" + request.url[4:]                # TODO: hacky https substitution
+    request_url = request.url[:4] + "s" + request.url[4:]                
     token_url, headers, body = client.prepare_token_request(
         token_endpoint,
         authorization_response=request_url,
-        redirect_url="https://techsuite.dev/api/google/login/callback",  # TODO: Hardcoded url
+        redirect_url="https://techsuite.dev/api/google/login/callback", 
         code=code
     )
     token_response = requests.post(
@@ -168,7 +168,7 @@ def index():
 from flask import flash, request, redirect, url_for
 from werkzeug.utils import secure_filename
 
-UPLOAD_FOLDER = os.getcwd() + r"/src/static/images/"        # TODO: Not robust? Cwd should always be project root
+UPLOAD_FOLDER = os.getcwd() + r"/src/static/images/"    
 ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg', 'gif'])
 
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
