@@ -5,6 +5,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React from 'react';
 import { Card, CardBody, Col, Row } from 'reactstrap';
 import { withRouter } from 'react-router-dom';
+import YouTube from 'react-youtube';
 
 import { matchPath } from 'react-router'
 import Cookie from 'js-cookie';
@@ -39,6 +40,13 @@ const Showcase = withRouter((props) => {
   const iconStyles = {
     width: "70px",
     height: "auto"
+  };
+
+  const opts = {
+    playerVars: {
+      // https://developers.google.com/youtube/player_parameters
+      autoplay: 0,
+    },
   };
 
   return (
@@ -138,6 +146,12 @@ const Showcase = withRouter((props) => {
           </Card>
         </Col>
       </Row>
+      <YouTube 
+        videoId="C4o2fOCq2cI" 
+        style={{paddingLeft: "100px"}}
+        opts={opts} 
+        onReady={e => e.target.pauseVideo()}
+      />
     </div>
   );
 });

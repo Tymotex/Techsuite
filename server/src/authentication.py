@@ -116,18 +116,3 @@ def auth_logout(token):
         return { "is_success": True }
     else:
         raise AccessError(description="Logout failed. Token is invalid")
-
-# ===== Password Reset Functions ======
-# TODO: Unimplemented
-def auth_password_reset_request(email):
-    """
-        
-    """
-    return {}
-
-# TODO: Unimplemented
-def auth_password_reset(reset_code, new_password):
-    """
-
-    """
-    return {}
