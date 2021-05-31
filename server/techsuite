@@ -7,7 +7,6 @@ while test $# -gt 0; do
     case "$1" in
         -h)
             echo "$helpLog"
-            shift
             exit 0
             ;;
         --setup)
@@ -22,9 +21,7 @@ while test $# -gt 0; do
         --wipe)
             (echo "drop_all()" | python3 -i src/db_manage.py 2> /dev/null) && echo "Done"
             exit 0
-            shift
             ;;
-        
         *)
             if echo $1 | egrep '[0-9]+' > /dev/null 2> /dev/null; then
                 targetPort=$1

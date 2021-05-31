@@ -235,13 +235,14 @@ def generate_welcome_message(recipient):
     """
         Extracts the template plaintext message from 
     """
-    template = get_message_template("welcome_message.txt")
-    template.substitute(
-        NAME=recipient.name.title(),
-        PREHEADER="Hey {}. This is a message from Techsuite".format(recipient.name.title()),
+    template = get_message_template("mail_templates/welcome_message.html")
+    print("https://techsuite.dev/user/profile/{}/edit".format(recipient.id))
+
+    return template.substitute(
+        NAME=recipient.username.title(),
+        PREHEADER="Hey {}. This is a message from Techsuite".format(recipient.username.title()),
         BIO_LINK="https://techsuite.dev/user/profile/{}/edit".format(recipient.id)
     )
-    return template
     
 def send_welcome_email(recipient, subject_title):
     """
@@ -253,21 +254,18 @@ def send_welcome_email(recipient, subject_title):
             recipient       (user model object) 
             subject_title   (string)
     """
-    try:
-        filled_template = generate_welcome_message(recipient)
-        message = MIMEMultipart("alternative")
-        sender_address = os.getenv("SENDER_EMAIL_ADDRESS")
-        message["From"] = sender_address
-        message["To"] = recipient.email
-        message["Subject"] = subject_title
-        smtpserver = smtplib.SMTP(os.getenv("SMTP_HOST_ADDRESS"), os.getenv("SMTP_PORT"))
-        smtpserver.starttls()
-        smtpserver.login(sender_address, os.getenv("SENDER_PASSWORD"))
-        message.attach(MIMEText(filled_template, "html"))
-        smtpserver.send_message(message)
-        smtpserver.close()
-    except Exception as err:
-        printColour("Failed to transmit SMTP message: {}".format(err), colour="red")
+    filled_template = generate_welcome_message(recipient)
+    message = MIMEMultipart("alternative")
+    sender_address = os.getenv("SENDER_EMAIL_ADDRESS")
+    message["From"] = sender_address
+    message["To"] = recipient.email
+    message["Subject"] = subject_title
+    smtpserver = smtplib.SMTP(os.getenv("SMTP_HOST_ADDRESS"), os.getenv("SMTP_PORT"))
+    smtpserver.starttls()
+    smtpserver.login(sender_address, os.getenv("SENDER_PASSWORD"))
+    message.attach(MIMEText(filled_template, "html"))
+    smtpserver.send_message(message)
+    smtpserver.close()
 
 # ===== Message Utilities =====
 def get_message(data, message_id):

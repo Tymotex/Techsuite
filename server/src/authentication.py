@@ -7,7 +7,7 @@ from dotenv import load_dotenv
 from extensions import db
 from models import User, Bio, Channel, Message, MemberOf
 from exceptions import InputError, AccessError
-from util.util import email_is_legit, send_email, email_message, printColour, username_valid, send_welcome_email
+from util.util import email_is_legit, printColour, username_valid, send_welcome_email
 from util.token import generate_token, verify_token
 import users
 
@@ -61,7 +61,7 @@ def auth_signup(email, password, username):
     db.session.add(new_user_bio)
     db.session.commit()
     generated_token = generate_token(new_user)
-    send_welcome_email(new_user)
+    send_welcome_email(new_user, "Welcome to Techsuite!")
     return {
         "user_id": new_user.id,
         "token": generated_token,

@@ -33,7 +33,7 @@ def generate_token(user_data):
         "username": user_data.username,
         "profile_img_url": user_data.bio.profile_img_url
     }
-    web_token = jwt.encode(payload, SECRET_MESSAGE, algorithm="HS256").decode("utf-8")
+    web_token = jwt.encode(payload, SECRET_MESSAGE, algorithm="HS256")
     return web_token
 
 def verify_token(token):
