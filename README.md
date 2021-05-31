@@ -56,7 +56,22 @@ Watch a video demo <strong><a href="https://www.youtube.com/watch?v=C4o2fOCq2cI"
 6. `npm install --prefix ./client`
 7. Configure the environment variables in the `.env` file at `server/src/.env`: 
     1. Set the formatted database URI connection string: `DATABASE_URI="postgresql://username:password@localhost/techsuite"`. See [how to create a role](#database-setup)
-    2. Register for the Google+ API and set the GOOGLE_AUTH_API_CLIENT_ID and GOOGLE_AUTH_API_CLIENT_SECRET fields
+    2. Register for the Google+ API and set the `GOOGLE_AUTH_API_CLIENT_ID` and `GOOGLE_AUTH_API_CLIENT_SECRET` fields
+    3. Set SMTP fields for email services: `SMTP_HOST_ADDRESS`, `SMTP_PORT`, `SENDER_EMAIL_ADDRESS`, `SENDER_PASSWORD`. See how to get a Google app password <a href="https://support.google.com/accounts/answer/185833">here</a>
+
+Example .env file:
+```shell
+    SECRET_MESSAGE="baldurs-gate-3"
+    PORT=5000
+    DATABASE_URI="postgresql://<username>:<password>@localhost/techsuite"
+    BASE_URI="https://techsuite.dev/api"
+    GOOGLE_AUTH_API_CLIENT_ID="123asd.apps.googleusercontent.com"
+    GOOGLE_AUTH_API_CLIENT_SECRET="ASDF1234"
+    SMTP_HOST_ADDRESS="smtp.gmail.com"
+    SMTP_PORT=587
+    SENDER_EMAIL_ADDRESS="your@gmail.com"
+    SENDER_PASSWORD="app password"
+```
 
 ### For Development:
 1. Run `./techsuite` inside the `Techsuite/server` directory
