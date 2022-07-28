@@ -53,6 +53,7 @@ class ChannelMessages extends React.Component {
       token: Cookie.get('token'),
       room: thisChannelID,
     };
+    Notification.spawnNotification('Joining Channel', "You're now connected!", 'success');
     socket.emit('user_enter', payload);
   }
 
