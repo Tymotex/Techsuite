@@ -57,7 +57,7 @@ const navData = {
     bottom: [
         {
             name: '',
-            url: 'https://github.com/Tymotex/DevMessenger',
+            url: 'https://github.com/Tymotex/Techsuite',
             icon: 'GitHub',
             external: true,
             target: '_blank',

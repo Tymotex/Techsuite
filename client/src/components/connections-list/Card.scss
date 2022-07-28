@@ -157,6 +157,7 @@
     color: white;
 
     &.approve {
+      margin-right: 12px;
       &:hover {
         background: limegreen;
         transition: all 0.2s;
@@ -165,6 +166,7 @@
     }
 
     &.reject {
+      margin-right: 12px;
       &:hover {
         background: crimson;
         color: white !important;
@@ -174,6 +176,7 @@
     }
 
     &.message {
+      margin-right: 12px;
       &:hover {
         background: deepskyblue;
         transition: all 0.2s;
@@ -182,6 +185,7 @@
     }
 
     &.profile {
+      margin-right: 12px;
       text-decoration: none;
       &:hover {
         background: gray;

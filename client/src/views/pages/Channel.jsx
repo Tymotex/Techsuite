@@ -21,137 +21,130 @@ import { errorNotification } from '../../components/error-notification';
 const socket = io(SOCKET_URI);
 
 class Channel extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {
+  constructor(props) {
+    super(props);
+    this.state = {
+      isLoading: false,
+      fetchSucceeded: false,
+      channel: {},
+    };
+    socket.on('user_entered', (message) => {
+      console.log(message);
+    });
+  }
+
+  componentDidMount() {
+    this.setState({
+      isLoading: true,
+    });
+    const currUserToken = Cookie.get('token');
+    if (currUserToken) {
+      axios
+        .get(`${BASE_URL}/channels/details?token=${currUserToken}&channel_id=${this.props.match.params.channelID}`)
+        .then((allChannels) => {
+          this.setState({
+            isLoading: false,
+            fetchSucceeded: true,
+            channel: allChannels.data,
+          });
+        })
+        .catch((err) => {
+          this.setState({
             isLoading: false,
             fetchSucceeded: false,
-            channel: {}
-        };
-        socket.on("user_entered", (message) => {
-            console.log(message);
+          });
+          errorNotification(err, 'Viewing channel failed');
         });
+    } else {
+      Notification.spawnNotification("Can't load channels", 'Please log in first', 'danger');
+      this.setState({
+        isLoading: false,
+        fetchSucceeded: false,
+      });
     }
+  }
 
-    componentDidMount() {
-        this.setState({
-            isLoading: true
-        });
-        const currUserToken = Cookie.get("token");
-        if (currUserToken) {
-            axios.get(`${BASE_URL}/channels/details?token=${currUserToken}&channel_id=${this.props.match.params.channelID}`)
-                .then((allChannels) => {
-                    this.setState({
-                        isLoading: false,
-                        fetchSucceeded: true,
-                        channel: allChannels.data
-                    });
-                })
-                .catch((err) => {
-                    this.setState({
-                        isLoading: false,
-                        fetchSucceeded: false
-                    });
-                    errorNotification(err, "Viewing channel failed");
-                });
-        } else {
-            Notification.spawnNotification("Can't load channels", "Please log in first", "danger");
-            this.setState({
-                isLoading: false,
-                fetchSucceeded: false
-            });
-        }
-    }
+  render() {
+    const cardHeaderStyle = {
+      textAlign: 'center',
+      fontSize: '150%',
+    };
+    const cardBodyStyle = {
+      padding: '5px',
+      'border-radius': '0%',
+      'box-shadow': '2px 2px 10px 0px rgba(0,0,0,0.3)',
+    };
 
-    render() {
-        const cardHeaderStyle = {
-            "textAlign": "center",
-            "fontSize": "150%"
-        };
-        const cardBodyStyle = {
-            "padding": "5px",
-            "border-radius": "0%",
-            "box-shadow": "2px 2px 10px 0px rgba(0,0,0,0.3)"
-        }
-    
-        return (
-            <div>
-                {(this.state.isLoading) ? (
-                    <LoadingSpinner /> 
-                ) : (
-                    (this.state.fetchSucceeded) ? (
-                        <Row>
-                            <Col md={12}>
-                                {/* Header card */}
-                                <Card>
-                                    <CardBody style={cardBodyStyle}>
-                                        <ChannelDetails />
-                                    </CardBody>
-                                </Card>
-                                <hr />
-                            </Col>
-                            <Col lg={12} xl={8}>
-                                {/* Message log and form */}
-                                <Card style={cardBodyStyle}>
-                                    <CardBody>
-                                        <ChannelMessages channelID={this.props.match.params.channelID} />
-                                    </CardBody>
-                                </Card>
-                            </Col>
-                            <Col lg={12} xl={4}>
-                                <Card style={cardBodyStyle}>
-                                    <CardHeader style={cardHeaderStyle}>Channel Functions</CardHeader>
-                                    <CardBody>
-                                        <Row>
-                                            <Col md={6}>
-                                                <UserInvite /> 
-                                            </Col>
-                                            <Col md={6}>
-                                                <ChannelLeave />
-                                            </Col>
-                                        </Row>
-                                        <br />
-                                        <Row>
-                                            <Col md={6}>
-                                                <ChannelEdit />
-                                            </Col>
-                                            <Col md={6}>
-                                                <ChannelSearchMessages />
-                                            </Col>
-                                        </Row>
-                                        <br />
-                                        <Row>
-                                            <Col md={6}>
-                                                <ChannelUploadImage />
-                                            </Col>
-                                            <Col md={6}>
-                                                <ChannelUploadCover />
-                                            </Col>
-                                        </Row>
-                                    </CardBody>
-                                </Card>
-                                <Card style={cardBodyStyle}>
-                                    <CardHeader style={cardHeaderStyle}>Modify Users</CardHeader>
-                                    <CardBody>
-                                        <Row>
-                                            <Col md={6}>
-                                                <UserAddOwner /> 
-                                            </Col>
-                                            <Col md={6}>
-                                                <UserRemoveOwner />
-                                            </Col>
-                                        </Row>
-                                    </CardBody>
-                                </Card>
-                            </Col>
-                        </Row>
-                    ) : (
-                        <></>
-                    )
-                )}
-            </div>
-        )
-    }
+    return (
+      <div>
+        {this.state.isLoading ? (
+          <LoadingSpinner />
+        ) : this.state.fetchSucceeded ? (
+          <>
+            <ChannelDetails />
+            <Row>
+              <Col lg={12} xl={8}>
+                {/* Message log and form */}
+                <Card style={cardBodyStyle}>
+                  <CardBody>
+                    <ChannelMessages channelID={this.props.match.params.channelID} />
+                  </CardBody>
+                </Card>
+              </Col>
+              <Col lg={12} xl={4}>
+                <Card style={cardBodyStyle}>
+                  <CardHeader style={cardHeaderStyle}>Channel Functions</CardHeader>
+                  <CardBody>
+                    <Row>
+                      <Col md={6}>
+                        <UserInvite />
+                      </Col>
+                      <Col md={6}>
+                        <ChannelLeave />
+                      </Col>
+                    </Row>
+                    <br />
+                    <Row>
+                      <Col md={6}>
+                        <ChannelEdit />
+                      </Col>
+                      <Col md={6}>
+                        <ChannelSearchMessages />
+                      </Col>
+                    </Row>
+                    <br />
+                    <Row>
+                      <Col md={6}>
+                        <ChannelUploadImage />
+                      </Col>
+                      <Col md={6}>
+                        <ChannelUploadCover />
+                      </Col>
+                    </Row>
+                  </CardBody>
+                </Card>
+                <Card style={cardBodyStyle}>
+                  <CardHeader style={cardHeaderStyle}>Modify Users</CardHeader>
+                  <CardBody>
+                    <Row>
+                      <Col md={6}>
+                        <UserAddOwner />
+                      </Col>
+                      <Col md={6}>
+                        <UserRemoveOwner />
+                      </Col>
+                    </Row>
+                  </CardBody>
+                </Card>
+              </Col>
+            </Row>
+          </>
+        ) : (
+          <></>
+        )}
+      </div>
+    );
+  }
 }
 
 export default Channel;

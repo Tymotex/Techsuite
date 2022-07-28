@@ -8,6 +8,7 @@ import { Notification } from '../../components/notification';
 import { BASE_URL } from '../../constants/api-routes';
 import Empty from './Empty';
 import { motion } from 'framer-motion';
+import ContentContainer from '../../components/container/ContentContainer';
 
 class ChannelsMy extends Component {
   constructor(props) {
@@ -55,7 +56,7 @@ class ChannelsMy extends Component {
 
   render() {
     return (
-      <div style={{ maxWidth: '1200px', width: '100%', margin: '0 auto' }}>
+      <ContentContainer>
         {this.state.myChannels && this.state.myChannels.length > 0 && (
           <>
             <h1>Your Channels</h1>
@@ -74,7 +75,7 @@ class ChannelsMy extends Component {
         ) : (
           <Empty />
         )}
-      </div>
+      </ContentContainer>
     );
   }
 }

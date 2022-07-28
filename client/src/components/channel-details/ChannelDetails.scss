@@ -1,40 +1,40 @@
-
 .secondary-title {
-    text-align: left;
+  text-align: left;
+  margin-bottom: 14px;
 }
 
-
 .channel-header-jumbotron {
-    background-size: cover;
-    background-position: center center;
-    margin: 0px auto!important;
-    border-radius: 0%!important;
-    
-    .channel-card {
-        box-shadow: 5px 5px 5px 4px rgba(0,0,0,0.4) !important;
-        max-width: 500px;
-        margin: 50px auto;
-        padding: 20px;
-        background-color: white;
-    
-        .channel-image {
-            display: block;
-            margin: 0 auto;
-        }
-    
-        .channel-name {
-            padding-top: 10px;
-            text-align: center;
-        }
-    
-        .channel-description {
-            text-align: center;
-        }
+  background-size: cover;
+  background-position: center center;
+  margin: 0px auto !important;
+  border-radius: 0% !important;
+  box-shadow: inset 0 -10px 10px -10px #00000055;
+
+  .channel-card {
+    box-shadow: 5px 5px 5px 4px rgba(0, 0, 0, 0.4) !important;
+    max-width: 500px;
+    margin: 50px auto;
+    padding: 20px;
+    background-color: white;
+
+    .channel-image {
+      display: block;
+      margin: 0 auto;
     }
 
-    .channel-divider {
-        height: 1px;
-        color: #333; /* old IE */
-        background-color: rgba(51, 51, 51, 0.212); 
+    .channel-name {
+      padding-top: 10px;
+      text-align: center;
     }
+
+    .channel-description {
+      text-align: center;
+    }
+  }
+
+  .channel-divider {
+    height: 1px;
+    color: #333; /* old IE */
+    background-color: rgba(51, 51, 51, 0.212);
+  }
 }

@@ -42,11 +42,11 @@
     "react-youtube": "^7.13.1",
     "reactstrap": "^8.5.1",
     "sass": "^1.54.0",
-    "socket.io-client": "^2.3.0"
+    "socket.io-client": "^4.5.1"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
+    "start": "NODE_ENV=development react-scripts start",
+    "build": "NODE_ENV=production react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },

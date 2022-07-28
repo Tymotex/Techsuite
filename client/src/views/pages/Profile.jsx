@@ -1,14 +1,15 @@
 import React, { Component } from 'react';
+import ContentContainer from '../../components/container/ContentContainer';
 import { UserProfile } from '../../components/user-profile';
 
 class Profile extends Component {
-	render() {
-		return (
-			<div>
-				<UserProfile userID={parseInt(this.props.match.params.userID)} />
-			</div>
-		);
-	}
+  render() {
+    return (
+      <ContentContainer>
+        <UserProfile userID={parseInt(this.props.match.params.userID)} />
+      </ContentContainer>
+    );
+  }
 }
 
 export default Profile;

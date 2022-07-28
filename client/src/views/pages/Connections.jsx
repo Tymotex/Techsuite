@@ -1,12 +1,13 @@
 import React from 'react';
 import { ConnectionsList } from '../../components/connections-list';
+import ContentContainer from '../../components/container/ContentContainer';
 
 class Connections extends React.Component {
   render() {
     return (
-      <div style={{ maxWidth: '1200px', width: '100%', margin: '0 auto' }}>
+      <ContentContainer>
         <ConnectionsList />
-      </div>
+      </ContentContainer>
     );
   }
 }

@@ -22,13 +22,14 @@
   }
 }
 #primary-content {
-  padding: $pageContentPadding;
-  padding-top: 40px;
+  //   padding: $pageContentPadding;
+  //   padding-top: 40px;
+
   &:focus {
-    outline : 0;
-    outline-color : invert;
-    outline-style : none;
-    outline-width : medium;
+    outline: 0;
+    outline-color: invert;
+    outline-style: none;
+    outline-width: medium;
   }
 }
 .page-container {

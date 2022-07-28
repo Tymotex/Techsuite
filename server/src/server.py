@@ -32,11 +32,11 @@ from users import users_profile_upload_photo
 
 # Globals and app configuration
 load_dotenv()
-socketio = SocketIO(app, cors_allowed_origins="*")
 app.config["SECRET_KEY"] = os.getenv("SECRET_MESSAGE")
 app.config["TRAP_HTTP_EXCEPTIONS"] = True
 # Allowing cross-origin resource sharing
 CORS(app)
+socketio = SocketIO(app, cors_allowed_origins="*")
 
 # Google auth configuration
 GOOGLE_CLIENT_ID = os.getenv("GOOGLE_AUTH_API_CLIENT_ID")

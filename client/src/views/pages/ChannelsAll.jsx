@@ -8,6 +8,7 @@ import { Notification } from '../../components/notification';
 import { BASE_URL } from '../../constants/api-routes';
 import Empty from './Empty';
 import { motion } from 'framer-motion';
+import ContentContainer from '../../components/container/ContentContainer';
 
 class ChannelsAll extends React.Component {
   constructor(props) {
@@ -55,29 +56,27 @@ class ChannelsAll extends React.Component {
 
   render() {
     return (
-      <>
-        <div style={{ maxWidth: '1200px', width: '100%', margin: '0 auto' }}>
-          <h1>Channels</h1>
-          <p style={{ paddingLeft: '6px', margin: '20px 0px' }}>
-            Meet new developers, grow your ideas and debate controversial topics 😉.
-          </p>
-          {this.state.isLoading ? (
-            <LoadingSpinner />
-          ) : !this.state.fetchSucceeded ? (
-            <Empty />
-          ) : (
-            <>
-              <aside style={{ paddingLeft: '6px', textAlign: 'center', color: 'grey', margin: '20px 0' }}>
-                Showing {this.state.allChannels && this.state.allChannels.length} channel
-                {this.state.allChannels && this.state.allChannels.length !== 1 && 's'}.
-              </aside>
-              <motion.div initial={{ y: 50, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ duration: 0.5 }}>
-                <ChannelList {...this.state} showPrompt={true} />
-              </motion.div>
-            </>
-          )}
-        </div>
-      </>
+      <ContentContainer>
+        <h1>Channels</h1>
+        <p style={{ paddingLeft: '6px', margin: '20px 0px' }}>
+          Meet new developers, grow your ideas and debate controversial topics 😉.
+        </p>
+        {this.state.isLoading ? (
+          <LoadingSpinner />
+        ) : !this.state.fetchSucceeded ? (
+          <Empty />
+        ) : (
+          <>
+            <aside style={{ paddingLeft: '6px', textAlign: 'center', color: 'grey', margin: '20px 0' }}>
+              Showing {this.state.allChannels && this.state.allChannels.length} channel
+              {this.state.allChannels && this.state.allChannels.length !== 1 && 's'}.
+            </aside>
+            <motion.div initial={{ y: 50, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ duration: 0.5 }}>
+              <ChannelList {...this.state} showPrompt={true} />
+            </motion.div>
+          </>
+        )}
+      </ContentContainer>
     );
   }
 }

@@ -8,6 +8,7 @@ import YouTube from 'react-youtube';
 import { matchPath } from 'react-router';
 import Cookie from 'js-cookie';
 import { motion } from 'framer-motion';
+import ContentContainer from '../../components/container/ContentContainer';
 
 // Feature showcase
 const Showcase = withRouter((props) => {
@@ -49,107 +50,105 @@ const Showcase = withRouter((props) => {
   };
 
   return (
-    <motion.div
-      style={{ maxWidth: 1200, margin: '0 auto' }}
-      initial={{ y: 50, opacity: 0 }}
-      animate={{ y: 0, opacity: 1 }}
-      transition={{ duration: 0.5 }}
-    >
-      {/* Welcome header: */}
-      <div className="home-hero" style={heroStyles}>
-        <h1>Welcome to Techsuite.</h1>
-        <p className="text-muted" style={{ marginTop: '12px' }}>
-          An app for collaborating, networking and sharing ideas{' '}
-          <span role="img" aria-label="unicode sprout">
-            🌱
-          </span>
-          .
-        </p>
-      </div>
+    <motion.div initial={{ y: 50, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ duration: 0.5 }}>
+      <ContentContainer>
+        {/* Welcome header: */}
+        <div className="home-hero" style={heroStyles}>
+          <h1>Welcome to Techsuite.</h1>
+          <p className="text-muted" style={{ marginTop: '12px' }}>
+            An app for collaborating, networking and sharing ideas{' '}
+            <span role="img" aria-label="unicode sprout">
+              🌱
+            </span>
+            .
+          </p>
+        </div>
 
-      {/* Cards: */}
-      <Row>
-        {/* Channels: */}
-        <Col md={6} style={{ margin: '10px 0px' }}>
-          <Card style={{ height: '100%' }}>
-            <CardBody className="display-flex" style={{ alignItems: 'center' }}>
-              <FontAwesomeIcon icon={faHubspot} style={iconStyles} />
-              <div className="m-l">
-                <h2 className="h4">Channels</h2>
-                <p className="text-muted">
-                  Create workspaces and invite other users to collaborate on group projects or discuss ideas.
-                </p>
-              </div>
-            </CardBody>
-          </Card>
-        </Col>
-        {/* Network */}
-        <Col md={6} style={{ margin: '10px 0px' }}>
-          <Card style={{ height: '100%' }}>
-            <CardBody className="display-flex" style={{ alignItems: 'center' }}>
-              <FontAwesomeIcon icon={faUsers} style={iconStyles} />
-              <div className="m-l">
-                <h2 className="h4">Networking</h2>
-                <p className="text-muted">Form and manage connections with other people and grow your network.</p>
-              </div>
-            </CardBody>
-          </Card>
-        </Col>
-        {/* Personalise: */}
-        <Col md={6} style={{ margin: '10px 0px' }}>
-          <Card style={{ height: '100%' }}>
-            <CardBody className="display-flex" style={{ alignItems: 'center' }}>
-              <FontAwesomeIcon icon={faPalette} style={iconStyles} />
-              <div className="m-l">
-                <h2 className="h4">Personalise</h2>
-                <p className="text-muted">Personalise your user profile, channels and user experience.</p>
-              </div>
-            </CardBody>
-          </Card>
-        </Col>
-        {/* Stay connected with the rapidly evolving software world */}
-        <Col md={6} style={{ margin: '10px 0px' }}>
-          <Card style={{ height: '100%' }}>
-            <CardBody className="display-flex" style={{ alignItems: 'center' }}>
-              <FontAwesomeIcon icon={faNewspaper} style={iconStyles} />
-              <div className="m-l">
-                <h2 className="h4">Stay tech-savvy</h2>
-                <p className="text-muted">Keep yourself updated with the rapidly evolving software world.</p>
-              </div>
-            </CardBody>
-          </Card>
-        </Col>
-        {/* Direct Messaging */}
-        <Col md={6} style={{ margin: '10px 0px' }}>
-          <Card style={{ height: '100%' }}>
-            <CardBody className="display-flex" style={{ alignItems: 'center' }}>
-              <FontAwesomeIcon icon={faComment} style={iconStyles} />
-              <div className="m-l">
-                <h2 className="h4">Direct messaging</h2>
-                <p className="text-muted">Privately message other collaborators.</p>
-              </div>
-            </CardBody>
-          </Card>
-        </Col>
-        {/* GitHub */}
-        <Col md={6} style={{ margin: '10px 0px' }}>
-          <Card style={{ height: '100%' }}>
-            <CardBody className="display-flex" style={{ alignItems: 'center' }}>
-              <FontAwesomeIcon icon={faGithub} style={iconStyles} />
-              <div className="m-l">
-                <h2 className="h4">Open-Source</h2>
-                <p className="text-muted">
-                  <a href="https://github.com/Tymotex/Techsuite">Techsuite GitHub</a>
-                </p>
-              </div>
-            </CardBody>
-          </Card>
-        </Col>
-      </Row>
-      <br />
-      <div className={'video-container'}>
-        <YouTube videoId="C4o2fOCq2cI" opts={opts} onReady={(e) => e.target.pauseVideo()} />
-      </div>
+        {/* Cards: */}
+        <Row>
+          {/* Channels: */}
+          <Col md={6} style={{ margin: '10px 0px' }}>
+            <Card style={{ height: '100%' }}>
+              <CardBody className="display-flex" style={{ alignItems: 'center' }}>
+                <FontAwesomeIcon icon={faHubspot} style={iconStyles} />
+                <div className="m-l">
+                  <h2 className="h4">Channels</h2>
+                  <p className="text-muted">
+                    Create workspaces and invite other users to collaborate on group projects or discuss ideas.
+                  </p>
+                </div>
+              </CardBody>
+            </Card>
+          </Col>
+          {/* Network */}
+          <Col md={6} style={{ margin: '10px 0px' }}>
+            <Card style={{ height: '100%' }}>
+              <CardBody className="display-flex" style={{ alignItems: 'center' }}>
+                <FontAwesomeIcon icon={faUsers} style={iconStyles} />
+                <div className="m-l">
+                  <h2 className="h4">Networking</h2>
+                  <p className="text-muted">Form and manage connections with other people and grow your network.</p>
+                </div>
+              </CardBody>
+            </Card>
+          </Col>
+          {/* Personalise: */}
+          <Col md={6} style={{ margin: '10px 0px' }}>
+            <Card style={{ height: '100%' }}>
+              <CardBody className="display-flex" style={{ alignItems: 'center' }}>
+                <FontAwesomeIcon icon={faPalette} style={iconStyles} />
+                <div className="m-l">
+                  <h2 className="h4">Personalise</h2>
+                  <p className="text-muted">Personalise your user profile, channels and user experience.</p>
+                </div>
+              </CardBody>
+            </Card>
+          </Col>
+          {/* Stay connected with the rapidly evolving software world */}
+          <Col md={6} style={{ margin: '10px 0px' }}>
+            <Card style={{ height: '100%' }}>
+              <CardBody className="display-flex" style={{ alignItems: 'center' }}>
+                <FontAwesomeIcon icon={faNewspaper} style={iconStyles} />
+                <div className="m-l">
+                  <h2 className="h4">Stay tech-savvy</h2>
+                  <p className="text-muted">Keep yourself updated with the rapidly evolving software world.</p>
+                </div>
+              </CardBody>
+            </Card>
+          </Col>
+          {/* Direct Messaging */}
+          <Col md={6} style={{ margin: '10px 0px' }}>
+            <Card style={{ height: '100%' }}>
+              <CardBody className="display-flex" style={{ alignItems: 'center' }}>
+                <FontAwesomeIcon icon={faComment} style={iconStyles} />
+                <div className="m-l">
+                  <h2 className="h4">Direct messaging</h2>
+                  <p className="text-muted">Privately message other collaborators.</p>
+                </div>
+              </CardBody>
+            </Card>
+          </Col>
+          {/* GitHub */}
+          <Col md={6} style={{ margin: '10px 0px' }}>
+            <Card style={{ height: '100%' }}>
+              <CardBody className="display-flex" style={{ alignItems: 'center' }}>
+                <FontAwesomeIcon icon={faGithub} style={iconStyles} />
+                <div className="m-l">
+                  <h2 className="h4">Open Source</h2>
+                  <p className="text-muted">
+                    An open-source full-stack project, built with React, Flask and PostgreSQL.{' '}
+                    <a href="https://github.com/Tymotex/Techsuite">Techsuite GitHub</a>.
+                  </p>
+                </div>
+              </CardBody>
+            </Card>
+          </Col>
+        </Row>
+        <br />
+        <div className={'video-container'}>
+          <YouTube videoId="C4o2fOCq2cI" opts={opts} onReady={(e) => e.target.pauseVideo()} />
+        </div>
+      </ContentContainer>
     </motion.div>
   );
 });
