@@ -14,13 +14,15 @@ class NeonButton extends React.Component {
     }
 
     render() {
-        const { toggleModal, children } = this.props;
+        const { toggleModal, children, padding, isPillShaped } = this.props;
         return (
             // Note that the 4 empty spans are for styling the 4 sides of the button
             <a className="neon-button" href="# " onClick={() => {
                 toggleModal();
                 this.playSFX();
-            }}>
+            }}
+                style={{ padding: padding ? padding: "10px", borderRadius: isPillShaped ? "100px" : '5px' }}
+            >
                 <span></span>
                 <span></span>
                 <span></span>

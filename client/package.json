@@ -16,6 +16,7 @@
     "classnames": "^2.2.6",
     "comma-number": "^2.0.1",
     "darkreader": "^4.9.17",
+    "framer-motion": "^6.5.1",
     "gsap": "^3.5.1",
     "html-react-parser": "^0.14.0",
     "js-cookie": "^2.2.1",

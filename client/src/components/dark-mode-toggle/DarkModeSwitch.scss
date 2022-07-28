@@ -1,8 +1,12 @@
-#darkModeButton button {
-    border: 1px solid whitesmoke!important;
-    border-radius: 100px!important;
-    background-color: whitesmoke!important;
-    margin-right: 30px!important; 
-    margin-left: 30px!important; 
-    margin-bottom: 10px;
+#darkModeButton {
+    cursor: pointer;
+    margin-right: 24px;
+
+    button {
+       border: 1px solid rgba(245, 245, 245, 0.5) !important;
+       background: rgba(245, 245, 245, 0.5) !important;
+       border-radius: 100px!important;
+       margin-right: 30px!important; 
+       margin-left: 30px!important; 
+   }
 }

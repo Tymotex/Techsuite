@@ -9,11 +9,13 @@ $hamburger-colour: darkslategrey;
   position: relative;
   z-index: 80;
   width: 100%;
+  padding-top: 5px;
 
   .top-nav {
     padding: 0 0px;
     width: 100%;
     box-shadow: 0 1px 0px rgba(0, 0, 0, 0.03), 0 1px 8px rgba(0, 21, 41, 0.12);
+
     > nav {
       padding: 5px 10px;
       > li {
@@ -48,7 +50,7 @@ $hamburger-colour: darkslategrey;
   }
 
   .sidebar-toggle {
-    background-color: $hamburger-colour!important;
+    background-color: $hamburger-colour !important;
     border: transparent;
 
     .fa {
@@ -136,14 +138,15 @@ $hamburger-colour: darkslategrey;
     .site-logo-bar {
       position: fixed;
     }
+    height: 76px;
   }
 }
 
 @media screen and (max-width: $breakPointSm) {
   .app-header {
     display: block;
-    height: inherit;
     position: fixed;
+    height: 76px;
     top: 0;
 
     .site-logo-bar {

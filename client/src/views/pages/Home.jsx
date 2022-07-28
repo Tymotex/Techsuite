@@ -1,14 +1,13 @@
 import { faGithub, faHubspot } from '@fortawesome/free-brands-svg-icons';
 import { faComment, faNewspaper, faPalette, faUsers } from '@fortawesome/free-solid-svg-icons';
-// Font-awesome icons:
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React from 'react';
 import { Card, CardBody, Col, Row } from 'reactstrap';
 import { withRouter } from 'react-router-dom';
 import YouTube from 'react-youtube';
-
-import { matchPath } from 'react-router'
+import { matchPath } from 'react-router';
 import Cookie from 'js-cookie';
+import { motion } from 'framer-motion';
 
 // Feature showcase
 const Showcase = withRouter((props) => {
@@ -17,29 +16,29 @@ const Showcase = withRouter((props) => {
   // Workaround for Google auth: the callback in the Flask server redirects back
   // to the homepage and embeds the token and id in the URL like this:
   //     /home/user_id/token
-  // The token and ID are extracted and removed out of the URL and saved to the 
-  // client's cookies 
+  // The token and ID are extracted and removed out of the URL and saved to the
+  // client's cookies
   const match = matchPath(props.history.location.pathname, {
     path: '/home/:id/:token',
     exact: true,
-    strict: false
-  });  
+    strict: false,
+  });
   if (match) {
     if (match.params.id && match.params.token) {
       userID = match.params.id;
       token = match.params.token;
-      Cookie.set("token", token);
-      Cookie.set("user_id", userID);
-      props.history.push("/home");
+      Cookie.set('token', token);
+      Cookie.set('user_id', userID);
+      props.history.push('/home');
     }
-  } 
+  }
   // Proceed with rendering the homepage
   const heroStyles = {
-    padding: '50px 0 70px'
+    padding: '50px 0 24px 0px',
   };
   const iconStyles = {
-    width: "70px",
-    height: "auto"
+    width: '70px',
+    height: 'auto',
   };
 
   const opts = {
@@ -50,21 +49,29 @@ const Showcase = withRouter((props) => {
   };
 
   return (
-    <div>
+    <motion.div
+      style={{ maxWidth: 1200, margin: '0 auto' }}
+      initial={{ y: 50, opacity: 0 }}
+      animate={{ y: 0, opacity: 1 }}
+      transition={{ duration: 0.5 }}
+    >
       {/* Welcome header: */}
       <div className="home-hero" style={heroStyles}>
         <h1>Welcome to Techsuite.</h1>
-        <p className="text-muted">
-          An app for collaborating, networking and sharing ideas <span role="img" aria-label="unicode sprout">🌱</span>
+        <p className="text-muted" style={{ marginTop: '12px' }}>
+          An app for collaborating, networking and sharing ideas{' '}
+          <span role="img" aria-label="unicode sprout">
+            🌱
+          </span>
         </p>
       </div>
-      
+
       {/* Cards: */}
       <Row>
         {/* Channels: */}
-        <Col md={6}>
-          <Card>
-            <CardBody className="display-flex">
+        <Col md={6} style={{ margin: '10px 0px' }}>
+          <Card style={{ height: '100%' }}>
+            <CardBody className="display-flex" style={{ alignItems: 'center' }}>
               <FontAwesomeIcon icon={faHubspot} style={iconStyles} />
               <div className="m-l">
                 <h2 className="h4">Channels</h2>
@@ -76,65 +83,57 @@ const Showcase = withRouter((props) => {
           </Card>
         </Col>
         {/* Network */}
-        <Col md={6}>
-          <Card>
-            <CardBody className="display-flex">
+        <Col md={6} style={{ margin: '10px 0px' }}>
+          <Card style={{ height: '100%' }}>
+            <CardBody className="display-flex" style={{ alignItems: 'center' }}>
               <FontAwesomeIcon icon={faUsers} style={iconStyles} />
               <div className="m-l">
                 <h2 className="h4">Networking</h2>
-                <p className="text-muted">
-                  Form and manage connections with other people and grow your network.
-                </p>
+                <p className="text-muted">Form and manage connections with other people and grow your network.</p>
               </div>
             </CardBody>
           </Card>
         </Col>
         {/* Personalise: */}
-        <Col md={6}>
-          <Card>
-            <CardBody className="display-flex">
+        <Col md={6} style={{ margin: '10px 0px' }}>
+          <Card style={{ height: '100%' }}>
+            <CardBody className="display-flex" style={{ alignItems: 'center' }}>
               <FontAwesomeIcon icon={faPalette} style={iconStyles} />
               <div className="m-l">
                 <h2 className="h4">Personalise</h2>
-                <p className="text-muted">
-                  Personalise your user profile, channels and user experience.
-                </p>
+                <p className="text-muted">Personalise your user profile, channels and user experience.</p>
               </div>
             </CardBody>
           </Card>
         </Col>
         {/* Stay connected with the rapidly evolving software world */}
-        <Col md={6}>
-          <Card>
-            <CardBody className="display-flex">
+        <Col md={6} style={{ margin: '10px 0px' }}>
+          <Card style={{ height: '100%' }}>
+            <CardBody className="display-flex" style={{ alignItems: 'center' }}>
               <FontAwesomeIcon icon={faNewspaper} style={iconStyles} />
               <div className="m-l">
                 <h2 className="h4">Stay tech-savvy</h2>
-                <p className="text-muted">
-                  Keep yourself updated with the rapidly evolving software world.
-                </p>
+                <p className="text-muted">Keep yourself updated with the rapidly evolving software world.</p>
               </div>
             </CardBody>
           </Card>
         </Col>
         {/* Direct Messaging */}
-        <Col md={6}>
-          <Card>
-            <CardBody className="display-flex">
+        <Col md={6} style={{ margin: '10px 0px' }}>
+          <Card style={{ height: '100%' }}>
+            <CardBody className="display-flex" style={{ alignItems: 'center' }}>
               <FontAwesomeIcon icon={faComment} style={iconStyles} />
               <div className="m-l">
                 <h2 className="h4">Direct messaging</h2>
-                <p className="text-muted">
-                  Privately message other collaborators.
-                </p>
+                <p className="text-muted">Privately message other collaborators.</p>
               </div>
             </CardBody>
           </Card>
         </Col>
         {/* GitHub */}
-        <Col md={6}>
-          <Card>
-            <CardBody className="display-flex">
+        <Col md={6} style={{ margin: '10px 0px' }}>
+          <Card style={{ height: '100%' }}>
+            <CardBody className="display-flex" style={{ alignItems: 'center' }}>
               <FontAwesomeIcon icon={faGithub} style={iconStyles} />
               <div className="m-l">
                 <h2 className="h4">Open-Source</h2>
@@ -146,13 +145,11 @@ const Showcase = withRouter((props) => {
           </Card>
         </Col>
       </Row>
-      <YouTube 
-        videoId="C4o2fOCq2cI" 
-        style={{paddingLeft: "100px"}}
-        opts={opts} 
-        onReady={e => e.target.pauseVideo()}
-      />
-    </div>
+      <br />
+      <div className={'video-container'}>
+        <YouTube videoId="C4o2fOCq2cI" opts={opts} onReady={(e) => e.target.pauseVideo()} />
+      </div>
+    </motion.div>
   );
 });
 

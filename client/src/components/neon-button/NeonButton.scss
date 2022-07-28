@@ -1,5 +1,5 @@
 
-$normal-background-colour: rgb(30, 51, 51);
+$normal-background-colour: rgb(21, 33, 33);
 $neon-background-colour: rgb(106, 155, 233);
 $neon-glow-colour: blueviolet;
 $normal-text-colour: whitesmoke;
@@ -15,10 +15,9 @@ $neon-text-colour: darkslategray;
     color: $normal-text-colour;
     background-color: $normal-background-colour;
     border-radius: 3%;
-    text-transform: uppercase;
-    letter-spacing: 4px;
+    // text-transform: uppercase;
+    letter-spacing: 2px;
     text-decoration: none!important;
-    font-size: 24px;
     overflow: hidden;
     transition: all 0.3s;
 

@@ -11,73 +11,78 @@ import { NeonButton } from '../neon-button';
 import externalAuthStyle from './ExternalAuth.module.scss';
 
 class LogInModal extends React.Component {
-    static propTypes = {
-        login: PropTypes.func.isRequired
-    }
+  static propTypes = {
+    login: PropTypes.func.isRequired,
+  };
 
-    constructor(props) {
-        super(props);
-        this.toggleModal = this.toggleModal.bind(this);
-        this.signinRedirect = this.signinRedirect.bind(this);
-        this.state = {
-            modal: false
-        };
-    }
+  constructor(props) {
+    super(props);
+    this.toggleModal = this.toggleModal.bind(this);
+    this.signinRedirect = this.signinRedirect.bind(this);
+    this.state = {
+      modal: false,
+    };
+  }
 
-    toggleModal() {
-        console.log("Toggling");
-        this.setState(prevState => ({
-            modal: !prevState.modal
-        }));
-    }
+  toggleModal() {
+    console.log('Toggling');
+    this.setState((prevState) => ({
+      modal: !prevState.modal,
+    }));
+  }
 
-    signinRedirect() {
-        axios(`${BASE_URL}/google/login`)
-            .then((res) => {
-                window.location.assign(res.data.google_uri);
-            })
-            .catch((err) => {
-                errorNotification(err, "Failed to redirect to Google auth page");
-            });
-    }
+  signinRedirect() {
+    axios(`${BASE_URL}/google/login`)
+      .then((res) => {
+        window.location.assign(res.data.google_uri);
+      })
+      .catch((err) => {
+        errorNotification(err, 'Failed to redirect to Google auth page');
+      });
+  }
 
-    render() {
-        return (
-            <>
-                <NeonButton toggleModal={this.toggleModal}>
-                    <LogIn /> Log In
-                </NeonButton>
-                <Modal isOpen={this.state.modal} toggle={this.toggleModal}>
-                    <ModalHeader toggle={this.toggleModal}>Welcome back</ModalHeader>
-                    <div className={externalAuthStyle.externalButton}>
-                        <Button color="info" onClick={this.signinRedirect}><FontAwesomeIcon icon={faGoogle} />&ensp; Sign In With Google</Button>
-                        <p className={externalAuthStyle.alternativeText}>
-                            <em>Or fill out the following</em>
-                        </p>
-                    </div>
-                    <Form onSubmit={this.props.login}>
-                        <ModalBody>
-                            {/* Email Address: */}
-                            <FormGroup>
-                                <Label htmlFor="email">Email</Label>
-                                <Input type="email" name="email" id="email" autoComplete="off"/>
-                            </FormGroup>
-                            {/* Password: */}
-                            <FormGroup>
-                                <Label htmlFor="password">Password</Label>
-                                <Input type="password" name="password" id="password" />
-                            </FormGroup>
-                        </ModalBody>
-                        {/* Buttons in the modal footer: */}
-                        <ModalFooter>
-                            <Button color="primary">Sign In</Button>
-                            <Button color="secondary" onClick={this.toggleModal}>Cancel</Button>
-                        </ModalFooter>
-                    </Form>
-                </Modal>
-            </>
-        );
-    }
+  render() {
+    return (
+      <>
+        <NeonButton toggleModal={this.toggleModal} padding={'6px 15px'} isPillShaped>
+          <LogIn /> Log In
+        </NeonButton>
+        <Modal isOpen={this.state.modal} toggle={this.toggleModal}>
+          <ModalHeader toggle={this.toggleModal}>
+            <h3>Welcome back.</h3>
+          </ModalHeader>
+          <br />
+          <div className={externalAuthStyle.externalButton}>
+            <Button color="info" onClick={this.signinRedirect}>
+              <FontAwesomeIcon icon={faGoogle} />
+              &ensp; Sign In With Google
+            </Button>
+          </div>
+          <Form onSubmit={this.props.login}>
+            <ModalBody>
+              {/* Email Address: */}
+              <FormGroup>
+                <Label htmlFor="email">Email</Label>
+                <Input type="email" name="email" id="email" autoComplete="off" />
+              </FormGroup>
+              {/* Password: */}
+              <FormGroup>
+                <Label htmlFor="password">Password</Label>
+                <Input type="password" name="password" id="password" />
+              </FormGroup>
+            </ModalBody>
+            {/* Buttons in the modal footer: */}
+            <ModalFooter>
+              <Button color="primary">Sign In</Button>
+              <Button color="secondary" onClick={this.toggleModal}>
+                Cancel
+              </Button>
+            </ModalFooter>
+          </Form>
+        </Modal>
+      </>
+    );
+  }
 }
 
 export default LogInModal;

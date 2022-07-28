@@ -36,6 +36,10 @@
     color: white;
     font-weight: bold;
     margin-right: 0;
+    height: 76px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 
     .keyboardActive &:focus {
       outline: none;
