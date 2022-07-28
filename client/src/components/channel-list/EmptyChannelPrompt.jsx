@@ -11,9 +11,9 @@ const EmptyChannelPrompt = (props) => {
     <p>
       {/* Welcome header: */}
       <div className="home-hero" style={heroStyles}>
-        <p>{header}</p>
+        <h2>{header}</h2>
         <Link to={linkTo}>
-          <Button className="text-muted" style={{ borderRadius: '100px' }}>
+          <Button className="text-muted" style={{ borderRadius: '100px', paddingLeft: '14px', paddingRight: '14px' }}>
             {buttonText}
           </Button>
         </Link>

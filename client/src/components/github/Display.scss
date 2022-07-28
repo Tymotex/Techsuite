@@ -1,23 +1,23 @@
 .spaced {
-    padding: 20px;
+  padding: 20px;
 }
 
 .flowRoot {
-    display: flow-root;
-    .leftContent {
-        float: left;
-    }
-    .rightContent {
-        float: right;
-    }
+  display: flow-root;
+  .leftContent {
+    float: left;
+  }
+  .rightContent {
+    float: right;
+  }
 }
 
 .owner-img {
-    border-radius: 10px;
+  border-radius: 10px;
+  max-height: 175px;
 }
 
 .search-form {
-    width: 70%;
-    margin: 0 auto;
+  width: 70%;
+  margin: 0 auto;
 }
-

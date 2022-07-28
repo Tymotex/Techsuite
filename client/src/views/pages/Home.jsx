@@ -63,6 +63,7 @@ const Showcase = withRouter((props) => {
           <span role="img" aria-label="unicode sprout">
             🌱
           </span>
+          .
         </p>
       </div>
 

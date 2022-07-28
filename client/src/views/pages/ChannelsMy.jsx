@@ -56,12 +56,14 @@ class ChannelsMy extends Component {
   render() {
     return (
       <div style={{ maxWidth: '1200px', width: '100%', margin: '0 auto' }}>
-        <h1>Your Channels</h1>
         {this.state.myChannels && this.state.myChannels.length > 0 && (
-          <p style={{ paddingLeft: '6px', margin: '20px 0px' }}>
-            You've joined {this.state.myChannels && this.state.myChannels.length} channel
-            {this.state.myChannels && this.state.myChannels.length !== 1 && 's'}. Here they are!
-          </p>
+          <>
+            <h1>Your Channels</h1>
+            <p style={{ paddingLeft: '6px', margin: '20px 0px' }}>
+              You've joined {this.state.myChannels && this.state.myChannels.length} channel
+              {this.state.myChannels && this.state.myChannels.length !== 1 && 's'}. Here they are!
+            </p>
+          </>
         )}
         {this.state.isLoading ? (
           <LoadingSpinner />
