@@ -47,13 +47,13 @@ class ChannelMessages extends React.Component {
 
   // Emits a socket event to enter this user to the channel's broadcast group
   joinChannelRoom() {
-    // socket.emit("user_enter", { user_id: 1, room: "Notification" })
     const { channelID: thisChannelID } = this.props;
     const payload = {
       token: Cookie.get('token'),
       room: thisChannelID,
     };
-    Notification.spawnNotification('Joining Channel', "You're now connected!", 'success');
+    Notification.spawnNotification('Joining Channel...', "You're now connected!", 'success');
+    console.log('Emitting user enter');
     socket.emit('user_enter', payload);
   }
 
@@ -64,8 +64,8 @@ class ChannelMessages extends React.Component {
   }
 
   componentDidMount() {
-    this.fetchMessages();
     this.joinChannelRoom();
+    this.fetchMessages();
   }
 
   sendMessage(event) {
@@ -73,6 +73,7 @@ class ChannelMessages extends React.Component {
     const messageData = new FormData(event.target);
     const currToken = Cookie.get('token');
     if (currToken) {
+      console.log(`Socket Server URI: ${SOCKET_URI}`);
       console.log(`Sending the message: ${messageData.get('message')}`);
       console.log(
         `Emitting send_message with params: ${currToken} ${this.props.channelID} ${messageData.get('message')}`
