@@ -1,27 +1,27 @@
 .connection-card {
+  margin: 0 auto;
+  border-radius: 20px !important;
+
+  .connection-card-image {
+    border-radius: 50%;
+    width: 50%;
+    display: block;
     margin: 0 auto;
-    border-radius: 20px!important;
-
-    .connection-card-image {
-        border-radius: 50%;
-        width: 50%;
-        display: block;
-        margin: 0 auto;
-        &:hover {
-            filter: grayscale(50%) blur(1px);
-            transition: all 0.2s;
-        }
+    &:hover {
+      filter: grayscale(50%) blur(1px);
+      transition: all 0.2s;
     }
+  }
 
-    .connection-card-header {
-        text-align: center;
-    }
-    
-    .connection-card-body {
-        margin: 0 auto;
-    }   
+  .connection-card-header {
+    text-align: center;
+  }
 
-    .card-field {
-        color: darkslategrey;
-    }
+  .connection-card-body {
+    margin: 0 auto;
+  }
+
+  .card-field {
+    color: darkslategrey;
+  }
 }

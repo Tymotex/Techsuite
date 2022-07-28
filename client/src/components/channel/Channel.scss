@@ -1,46 +1,70 @@
 $channelPictureLength: 175px;
 
 .channel-card {
-    border-radius: 0%;
-    box-shadow: 2px 2px 10px 0px rgba(0,0,0,0.3) !important;
-    min-height: 200px;
+  border-radius: 10px !important;
+  box-shadow: 2px 2px 10px 0px rgba(0, 0, 0, 0.1) !important;
+  min-height: 200px;
 
-    .channel-title {
-        text-decoration: none!important;
-        color: black;
-        text-align: left;
-        &:hover {
-            color: rgb(61, 102, 102);
-        }
+  .channel-title {
+    text-decoration: none !important;
+    color: black;
+    text-align: left;
+    &:hover {
+      color: rgb(61, 102, 102);
+    }
+  }
+
+  .channel-picture-section {
+    .channel-picture {
+      margin: auto;
+      padding: 0px;
+      box-shadow: 2px 2px 10px 0px rgba(0, 0, 0, 0.3);
+      border-radius: 50%;
+      vertical-align: middle;
+      &:hover {
+        transform: scale(1.2);
+        transition: all 0.2s;
+      }
+      transition: all 0.2s;
+    }
+    .frame {
+      height: 100%; /* Equals maximum image height */
+      white-space: nowrap; /* This is required unless you put the helper span closely near the img */
+      text-align: center;
     }
 
-    .channel-picture-section {
-
-        .channel-picture {
-            margin: auto;
-            padding: 0px;
-            width: 75%;
-            box-shadow: 2px 2px 10px 0px rgba(0,0,0,0.3);
-            border-radius: 50%;
-            vertical-align: middle;
-            &:hover {
-                transform: scale(1.2);
-                transition: all 0.2s;
-            }
-            transition: all 0.2s;
-        }
-        .frame {
-            height: 100%;      /* Equals maximum image height */
-            white-space: nowrap; /* This is required unless you put the helper span closely near the img */
-            text-align: center;
-        }
-        
-        .helper {
-            display: inline-block;
-            height: 100%;
-            vertical-align: middle;
-        }
+    .helper {
+      display: inline-block;
+      height: 100%;
+      vertical-align: middle;
     }
+  }
+
+  .channel-fields {
+    display: flex;
+    flex-direction: column;
+    row-gap: 14px;
+
+    .icon-container {
+      background: rgb(240, 241, 253);
+      display: inline-flex;
+      width: 32px;
+      height: 32px;
+      border-radius: 64px;
+
+      align-items: center;
+      justify-content: center;
+    }
+
+    .icon-text {
+      margin-left: 12px;
+      color: grey;
+    }
+  }
 }
 
-
+@media screen and (max-width: 1200px) {
+  .channel-card {
+    padding: 14px;
+  }
+}
