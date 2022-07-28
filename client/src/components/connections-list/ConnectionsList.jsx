@@ -10,7 +10,7 @@ import { EmptyFiller } from '../empty-filler';
 import { errorNotification } from '../error-notification';
 import { LoadingSpinner } from '../loading-spinner';
 import { Notification } from '../notification';
-import { ConnectionCard } from './';
+import { ConnectionCard } from '.';
 import cardStyles from './Card.module.scss';
 
 const socket = io(SOCKET_URI);

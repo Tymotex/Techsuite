@@ -4,7 +4,6 @@ import axios from 'axios';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { LogIn } from 'react-feather';
-import { NavLink } from 'react-router-dom';
 import { Button, Form, FormGroup, Input, Label, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
 import { BASE_URL } from '../../constants/api-routes';
 import { errorNotification } from '../error-notification';

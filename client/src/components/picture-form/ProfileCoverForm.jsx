@@ -1,7 +1,7 @@
 import axios from 'axios';
 import Cookie from 'js-cookie';
 import React from 'react';
-import { Notification } from '../../components/notification';
+import { Notification } from '../notification';
 import { BASE_URL } from '../../constants/api-routes';
 import { errorNotification } from '../error-notification';
 import ImageCropper from './ImageCropper';

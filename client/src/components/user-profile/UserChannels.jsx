@@ -1,8 +1,8 @@
 import axios from 'axios';
 import Cookie from 'js-cookie';
 import React from 'react';
-import { ChannelList } from '../../components/channel-list';
-import { Notification } from '../../components/notification';
+import { ChannelList } from '../channel-list';
+import { Notification } from '../notification';
 import { BASE_URL } from '../../constants/api-routes';
 import { errorNotification } from '../error-notification';
 import './BioEditForm.scss';

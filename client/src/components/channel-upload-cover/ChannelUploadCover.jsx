@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { withRouter } from 'react-router-dom';
 import { Button, Modal, ModalBody, ModalHeader } from 'reactstrap';
-import ImageCropper from '../../components/picture-form/ImageCropper';
+import ImageCropper from '../picture-form/ImageCropper';
 import buttonStyles from './ChannelUploadCover.module.scss';
 
 class ChannelUploadCover extends React.Component {

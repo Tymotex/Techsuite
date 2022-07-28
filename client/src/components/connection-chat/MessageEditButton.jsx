@@ -1,9 +1,8 @@
 import Cookie from 'js-cookie';
 import React from 'react';
-import { SOCKET_URI } from '../../constants/api-routes';
 import { Button, Form, Input, InputGroup, InputGroupAddon, InputGroupText, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
-import { errorNotification } from '../error-notification';
 import io from 'socket.io-client';
+import { SOCKET_URI } from '../../constants/api-routes';
 
 const socket = io(SOCKET_URI);
 

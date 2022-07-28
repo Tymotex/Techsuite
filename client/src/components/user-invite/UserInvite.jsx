@@ -91,20 +91,20 @@ class UserInvite extends React.Component {
     render() {
         return (
             <>
-                <Button className={buttonStyles.button} color="primary" onClick={this.toggleModal} style={{"width": "100%"}}>Invite Someone</Button>
+                <Button className={buttonStyles.button} color="primary" onClick={this.toggleModal} style={{ "width": "100%" }}>Invite Someone</Button>
                 <Modal isOpen={this.state.modal} toggle={this.toggleModal}>
                     <ModalHeader toggle={this.toggleModal}>Invite Someone:</ModalHeader>
                     <Form onSubmit={this.inviteUser}>
                         <ModalBody>
                             Select a user:
-                                <FormGroup>
-                                    <Label for="exampleSelect"></Label>
-                                    <Input type="select" name="user_id" id="exampleSelect">
-                                        {this.state.users.map((eachUser, i) => (
-                                            <option key={i} value={eachUser.user_id}>{`${eachUser.username}` }</option>
-                                        ))}
-                                    </Input>
-                                </FormGroup>
+                            <FormGroup>
+                                <Label for="exampleSelect"></Label>
+                                <Input type="select" name="user_id" id="exampleSelect">
+                                    {this.state.users.map((eachUser, i) => (
+                                        <option key={i} value={eachUser.user_id}>{`${eachUser.username}`}</option>
+                                    ))}
+                                </Input>
+                            </FormGroup>
                         </ModalBody>
                         {/* Buttons in the modal footer: */}
                         <ModalFooter>

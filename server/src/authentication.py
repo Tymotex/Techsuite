@@ -61,7 +61,9 @@ def auth_signup(email, password, username):
     db.session.add(new_user_bio)
     db.session.commit()
     generated_token = generate_token(new_user)
-    send_welcome_email(new_user, "Welcome to Techsuite!")
+
+    # send_welcome_email(new_user, "Welcome to Techsuite!")
+
     return {
         "user_id": new_user.id,
         "token": generated_token,

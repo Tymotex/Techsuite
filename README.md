@@ -1,4 +1,5 @@
 # Techsuite
+
 A collaboration and social networking application, built with React, Flask and PostgreSQL.  
 
 Watch a video demo <strong><a href="https://www.youtube.com/watch?v=C4o2fOCq2cI">here</a></strong>.
@@ -105,7 +106,12 @@ Instructions for installing PostgreSQL, interfacing with the Techsuite database 
     $ sudo apt update
     $ sudo apt install postgresql postgresql-contrib
     ```
-2. Create a new role
+2. Enable and start the `postgresql` service.
+    ```
+    sudo systemctl enable postgresql.service
+    sudo systemctl start postgresql.service
+    ```
+3. Create a new role
     ```
     $ sudo -u postgres createuser --interactive --pwprompt
     Enter name of role to add: me
@@ -113,16 +119,16 @@ Instructions for installing PostgreSQL, interfacing with the Techsuite database 
     Enter it again: 
     Shall the new role be a superuser? (y/n) y
     ```
-3. Create a new database instance with 
+4. Create a new database instance with 
     ```
     sudo -u postgres createdb techsuite
     ```
-4. Enter the ```psql``` interactive shell and grant privileges to the new role
+5. Enter the ```psql``` interactive shell and grant privileges to the new role
     ```
     $ sudo -u postgres psql
     psql=# GRANT ALL PRIVILEGES ON DATABASE techsuite TO me;
     ```
-5. Adjust the database URI string in ```server/src/.env```. The format is: 
+6. Adjust the database URI string in ```server/src/.env```. The format is: 
     ```
     DATABASE_URI="postgresql://<name>:<password>@<host>/<dbname>"
     ```
@@ -130,7 +136,7 @@ Instructions for installing PostgreSQL, interfacing with the Techsuite database 
     ```
     DATABASE_URI="postgresql://me:1984@localhost/techsuite"
     ```
-6. Run `./techsuite --reset` to create the database instance and run the Flask server
+7. Run `./techsuite --reset` to create the database instance and run the Flask server
 
 Note: to use psql to interface with the techsuite database instance, run `psql -d techsuite -U <username>` 
 
