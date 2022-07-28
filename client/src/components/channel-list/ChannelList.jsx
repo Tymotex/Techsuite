@@ -29,8 +29,8 @@ const ChannelList = ({ allChannels, myChannels, isLoading, fetchSucceeded, showA
           ))
         : showPrompt && (
             <EmptyChannelPrompt
-              header="You're not a part of any channel yet"
-              buttonText="Find a channel to join ⚡"
+              header="You're not a member of any channel yet."
+              buttonText="Join a Channel ⚡"
               linkTo="/channels/all"
             />
           )}

@@ -1,6 +1,5 @@
 import React from 'react';
 import { ConnectionsList } from '../../components/connections-list';
-import { motion } from 'framer-motion';
 
 class Connections extends React.Component {
   render() {
