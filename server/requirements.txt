@@ -15,7 +15,7 @@ colored==1.4.2
 ConfigArgParse==0.13.0
 configobj==5.0.6
 constantly==15.1.0
-cryptography==2.9.2
+cryptography==3.3.2
 dbus-python==1.2.16
 distlib==0.3.0
 distro==1.4.0
