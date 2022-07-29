@@ -1,4 +1,5 @@
-import { faGithub, faHubspot } from '@fortawesome/free-brands-svg-icons';
+import { faHubspot } from '@fortawesome/free-brands-svg-icons';
+import { faMobileAlt } from '@fortawesome/free-solid-svg-icons';
 import { faComment, faNewspaper, faPalette, faUsers } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React from 'react';
@@ -56,11 +57,14 @@ const Showcase = withRouter((props) => {
         <div className="home-hero" style={heroStyles}>
           <h1>Welcome to Techsuite.</h1>
           <p className="text-muted" style={{ marginTop: '12px' }}>
-            A platform for realtime group messaging, networking and sharing ideas{' '}
+            A platform for realtime group messaging, networking and sharing ideas, built with React, Flask and
+            PostgreSQL.
             <span role="img" aria-label="unicode sprout">
               🌱
             </span>
-            .
+          </p>
+          <p className="text-muted">
+            See <a href="https://github.com/Tymotex/Techsuite">Techsuite GitHub</a>.
           </p>
         </div>
 
@@ -132,12 +136,11 @@ const Showcase = withRouter((props) => {
           <Col md={6} style={{ margin: '10px 0px' }}>
             <Card style={{ height: '100%' }}>
               <CardBody className="display-flex" style={{ alignItems: 'center' }}>
-                <FontAwesomeIcon icon={faGithub} style={iconStyles} />
+                <FontAwesomeIcon icon={faMobileAlt} style={iconStyles} />
                 <div className="m-l">
-                  <h2 className="h4">Open Source</h2>
+                  <h2 className="h4">Mobile-Installable</h2>
                   <p className="text-muted">
-                    An open-source full-stack project, built with React, Flask and PostgreSQL.{' '}
-                    <a href="https://github.com/Tymotex/Techsuite">Techsuite GitHub</a>.
+                    Techsuite is PWA-compliant and is available for installation on mobile devices.
                   </p>
                 </div>
               </CardBody>

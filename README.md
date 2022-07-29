@@ -2,8 +2,6 @@
 
 A collaboration and social networking application, built with React, Flask and PostgreSQL.  
 
-Watch a video demo <strong><a href="https://www.youtube.com/watch?v=C4o2fOCq2cI">here</a></strong>.
-
 [![Techsuite demo video](https://img.youtube.com/vi/C4o2fOCq2cI/0.jpg)](https://www.youtube.com/watch?v=C4o2fOCq2cI)
 
 <table>
@@ -99,7 +97,7 @@ This project uses Nginx as a reverse proxy server. [This is an example configura
 
 <a name="database-setup">
 
-# Database Setup:
+# Database Setup
 Instructions for installing PostgreSQL, interfacing with the Techsuite database instance and hooking up Flask-SQLAlchemy.
 1. Install PostgreSQL
     ```
@@ -146,3 +144,23 @@ Psycopg2 is a necessary library for Flask-SQLAlchemy to work.
 2. `pip3 install psycopg2`
 
 > SQLAlchemy is a ORM, psycopg2 is a database driver. These are completely different things: SQLAlchemy generates SQL statements and psycopg2 sends SQL statements to the database. SQLAlchemy depends on psycopg2 or other database drivers to communicate with the database! [Source](https://stackoverflow.com/questions/8588126/sqlalchemy-or-psycopg2)
+
+## Development Notes
+
+#### Seeding Data
+There are `*.sql` files inside `server/seeds` which can be executed to populate
+the database instance with pre-existing data.
+
+To execute a seed file with a `psql` CLI command:
+```bash
+psql -U <db_user> -d techsuite -f <seed-file-path>
+```
+
+Alternatively, launch a `psql` shell with `psql -U <db_user> -d techsuite`, then
+run the command `\i <seed-file-path>` to execute the SQL commands in that file.
+
+These seeds should be run on an empty database instance. To drop all tables,
+run `DROP TABLE bios, channels, connections, direct_messages, member_of, messages, techsuite_users CASCADE;`
+in the `psql` shell.
+
+To produce new seed files, use the `pg_dump` CLI: `pg_dump techsuite -U <db_user>`.

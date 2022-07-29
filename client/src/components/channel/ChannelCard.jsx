@@ -56,20 +56,30 @@ class ChannelCard extends React.Component {
             <Col lg={12} xl={4} className="channel-picture-section">
               <div class="frame">
                 <span class="helper"></span>
-                <Link to={`/channel/${channel_id}`} style={{ textDecoration: 'none' }}>
+                <Link
+                  to={`/channel/${channel_id}`}
+                  style={{
+                    textDecoration: 'none',
+                    pointerEvents: (visibility !== 'public' || !(owner_of || member_of)) && 'none',
+                  }}
+                >
                   <img className="channel-picture" src={channel_img_url} alt="Responsive" aria-hidden={true} />
                 </Link>
               </div>
             </Col>
             <Col lg={12} xl={8} style={{ padding: '10px' }}>
               <h3 style={{ textAlign: 'left' }}>
-                <Link className="channel-title" to={`/channel/${channel_id}`}>
+                <Link
+                  className={`channel-title ${(visibility !== 'public' || !(owner_of || member_of)) && 'text-muted'}`}
+                  to={`/channel/${channel_id}`}
+                  style={{ pointerEvents: (visibility !== 'public' || !(owner_of || member_of)) && 'none' }}
+                >
                   {name}
                 </Link>
               </h3>
               <p className="text-muted">{description}</p>
               <div className="channel-fields">
-                {visibility === 'private' && (
+                {visibility !== 'public' && (
                   <div>
                     <div className="icon-container">
                       <FontAwesomeIcon icon={faLock} />
