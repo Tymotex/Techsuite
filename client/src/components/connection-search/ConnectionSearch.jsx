@@ -40,7 +40,7 @@ const SearchField = (props) => {
         </Input>
         <InputGroupButtonDropdown addonType="append" isOpen={dropdownOpen} toggle={toggleDropDown}>
           <Button style={{ borderRadius: '0 100px 100px 0' }} color="primary">
-            Send request
+            Connect
           </Button>
         </InputGroupButtonDropdown>
       </InputGroup>

@@ -2,6 +2,7 @@ import axios from 'axios';
 import Cookie from 'js-cookie';
 import PropTypes from 'prop-types';
 import React from 'react';
+import { motion } from 'framer-motion';
 import { Card, CardBody, Col, Row } from 'reactstrap';
 import io from 'socket.io-client';
 import { BASE_URL, SOCKET_URI } from '../../constants/api-routes';
@@ -210,12 +211,12 @@ class UserProfile extends React.Component {
 
                   <BioField
                     field="Name"
-                    value={first_name != null || last_name != null ? first_name + ' ' + last_name : 'not specified'}
+                    value={first_name != null || last_name != null ? first_name + ' ' + last_name : ''}
                   />
-                  <BioField field="Title" value={title != null ? title : 'Techsuite user'} />
-                  <BioField field="Education" value={education != null ? education : 'unset education'} />
-                  <BioField field="Location" value={location != null ? location : 'no location'} />
-                  <BioField field="Email" value={email} />
+                  <BioField field="Title" value={'💼 ' + (title != null ? title : 'Software Engineer')} />
+                  <BioField field="Education" value={'🎓 ' + (education != null ? education : 'Unknown education')} />
+                  <BioField field="Location" value={'� ' + (location != null ? location : '️Unknown location')} />
+                  <BioField field="Email" value={'📧 ' + email} />
                 </div>
                 {currentChatUser.user_id ? (
                   parseInt(user_id) === parseInt(Cookie.get('user_id')) ? (
@@ -229,22 +230,24 @@ class UserProfile extends React.Component {
               </div>
             </div>
             <ContentContainer>
-              <Row>
-                <Col xs={12} lg={4}>
-                  <Card className="main-card">
-                    <CardBody>
-                      <UserBio summary={summary} />
-                    </CardBody>
-                  </Card>
-                </Col>
-                <Col xs={12} lg={8}>
-                  <Card className="main-card">
-                    <CardBody>
-                      <UserChannels userID={this.props.userID} />
-                    </CardBody>
-                  </Card>
-                </Col>
-              </Row>
+              <motion.div initial={{ y: 50, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ duration: 0.5 }}>
+                <Row>
+                  <Col xs={12} lg={4}>
+                    <Card className="main-card">
+                      <CardBody>
+                        <UserBio summary={summary} />
+                      </CardBody>
+                    </Card>
+                  </Col>
+                  <Col xs={12} lg={8}>
+                    <Card className="main-card">
+                      <CardBody>
+                        <UserChannels userID={this.props.userID} />
+                      </CardBody>
+                    </Card>
+                  </Col>
+                </Row>
+              </motion.div>
             </ContentContainer>
           </div>
         ) : (

@@ -154,7 +154,7 @@ class BioEditForm extends React.Component {
 
         <Card style={{ padding: '28px' }}>
           <CardBody>
-            <Form onSubmit={this.updateBio} style={{ marginTop: '24px' }}>
+            <Form onSubmit={this.updateBio}>
               <h3 style={{ textAlign: 'left', marginBottom: '24px' }}>Update Bio.</h3>
               <FormGroup>
                 <InputGroup>
