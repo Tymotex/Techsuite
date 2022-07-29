@@ -56,7 +56,7 @@ const Showcase = withRouter((props) => {
         <div className="home-hero" style={heroStyles}>
           <h1>Welcome to Techsuite.</h1>
           <p className="text-muted" style={{ marginTop: '12px' }}>
-            An app for collaborating, networking and sharing ideas{' '}
+            A platform for realtime group messaging, networking and sharing ideas{' '}
             <span role="img" aria-label="unicode sprout">
               🌱
             </span>

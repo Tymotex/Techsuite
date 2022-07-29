@@ -62,7 +62,9 @@ class EditButton extends React.Component {
       <>
         <span className="message-popup" onClick={this.toggleModal} />
         <Modal isOpen={this.state.modal} toggle={this.toggleModal}>
-          <ModalHeader toggle={this.toggleModal}>Editing Message:</ModalHeader>
+          <ModalHeader toggle={this.toggleModal}>
+            <h3>Editing message</h3>
+          </ModalHeader>
           <ModalBody>
             <Form onSubmit={this.updateMessage}>
               <InputGroup>
@@ -78,9 +80,9 @@ class EditButton extends React.Component {
                 />
               </InputGroup>
               <ModalFooter>
-                <Button color="primary">Update Message</Button>
+                <Button color="primary">Update</Button>
                 <Button color="danger" onClick={this.deleteMessage}>
-                  Delete Message
+                  Delete
                 </Button>
                 <Button color="secondary" onClick={this.toggleModal} type="button">
                   Cancel

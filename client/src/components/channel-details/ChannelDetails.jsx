@@ -90,7 +90,7 @@ class ChannelDetails extends React.Component {
             {name + ' '}
             {visibility === 'public' ? <></> : <FontAwesomeIcon icon={faLock} />}
           </h1>
-          <p className="channel-description lead">{description}</p>
+          <p className="channel-description lead text-muted">{description}</p>
           {/* <hr className="channel-divider" /> */}
           <br />
           <Row>

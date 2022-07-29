@@ -121,7 +121,7 @@ class ChannelMessages extends React.Component {
     // const { thisUser } = this.state;
     const { channelID: thisChannelID } = this.props;
     return (
-      <>
+      <div>
         <Prompt when={true} message={this.exitChannelRoom} />
         <ChatBox room={thisChannelID} {...this.state} />
         {/* 'User is typing' prompt */}
@@ -141,7 +141,7 @@ class ChannelMessages extends React.Component {
             </InputGroup>
           </FormGroup>
         </Form>
-      </>
+      </div>
     );
   }
 }
