@@ -86,11 +86,17 @@ class ChannelDetails extends React.Component {
             style={{ width: '200px', height: '200px' }}
             alt="Channel profile"
           />
-          <h1 className="channel-name">
-            {name + ' '}
-            {visibility === 'public' ? <></> : <FontAwesomeIcon icon={faLock} />}
-          </h1>
+          <h1 className="channel-name">{name + ' '}</h1>
           <p className="channel-description lead text-muted">{description}</p>
+          <p className={'text-muted'} style={{ textAlign: 'center' }}>
+            {visibility === 'public' ? (
+              <></>
+            ) : (
+              <>
+                <FontAwesomeIcon icon={faLock} /> Private Channel.
+              </>
+            )}
+          </p>
           {/* <hr className="channel-divider" /> */}
           <br />
           <Row>
