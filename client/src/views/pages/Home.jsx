@@ -25,15 +25,15 @@ const Showcase = withRouter((props) => {
     exact: true,
     strict: false,
   });
-  if (match) {
-    if (match.params.id && match.params.token) {
-      userID = match.params.id;
-      token = match.params.token;
-      Cookie.set('token', token);
-      Cookie.set('user_id', userID);
-      props.history.push('/home');
-    }
-  }
+  //   if (match) {
+  //     if (match.params.id && match.params.token) {
+  //       userID = match.params.id;
+  //       token = match.params.token;
+  //       Cookie.set('token', token);
+  //       Cookie.set('user_id', userID);
+  //       props.history.push('/home');
+  //     }
+  //   }
   // Proceed with rendering the homepage
   const heroStyles = {
     padding: '50px 0 24px 0px',
