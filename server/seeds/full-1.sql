@@ -592,4 +592,3 @@ ALTER TABLE ONLY public.techsuite_users
 --
 -- PostgreSQL database dump complete
 --
-
