@@ -4,15 +4,16 @@ import 'react-image-crop/dist/ReactCrop.css';
 import ImageCropper from './ImageCropper';
 
 class ProfilePictureForm extends PureComponent {
-    render() {
-        return (
-            <ImageCropper 
-                uploadEndpoint="users/profile/uploadphoto" 
-                title="Update your profile picture"
-                aspectRatio={1}
-            />          
-        );
-    }
+  render() {
+    return (
+      <ImageCropper
+        uploadEndpoint="users/profile/uploadphoto"
+        title="Profile picture"
+        buttonText="Update"
+        aspectRatio={1}
+      />
+    );
+  }
 }
 
 export default ProfilePictureForm;
