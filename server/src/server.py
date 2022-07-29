@@ -88,6 +88,8 @@ def get_google_provider_configuration():
 
 @app.route("/api/google/login/callback")
 def callback():
+    printColour(" ➤ Google auth callback: someone is trying to sign up.", colour="blue")
+    
     # The provider gives US a unique authorisation code after we redirect to them
     # and after the user consents. Get authorization code Google sent back:
     code = request.args.get("code")
@@ -138,7 +140,9 @@ def callback():
         users_email = userinfo_response.json()["email"]
         picture = userinfo_response.json()["picture"]
         users_name = userinfo_response.json()["given_name"]
+        print("Got info: {},\n{},\n{},\n{}".format(unique_id, users_email, picture, users_name))
     else:
+        print("Problem: User email not available or not verified by Google.")
         return "User email not available or not verified by Google.", 400
 
     # Register the user, or log them in
