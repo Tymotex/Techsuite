@@ -1,64 +1,49 @@
 import { faFireAlt } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import React from 'react';
-import moment from 'moment-timezone';
-import { Card, CardBody } from 'reactstrap';
-import parse from 'html-react-parser';
 import capitalize from 'capitalize';
-import { ReactTinyLink } from 'react-tiny-link'
+import parse from 'html-react-parser';
+import moment from 'moment-timezone';
+import React from 'react';
+import { ReactTinyLink } from 'react-tiny-link';
+import { Card, CardBody } from 'reactstrap';
 
 class Article extends React.Component {
+  render() {
+    const { story } = this.props;
+    let { title, url, score, by, time, text } = story;
 
-    truncate(str, n, useWordBoundary){
-        if (str.length <= n) { return str; }
-        const subString = str.substr(0, n-1);
-        return (useWordBoundary 
-            ? subString.substr(0, subString.lastIndexOf(" ")) 
-            : subString) + "&hellip;";
-    };
+    const shortFormattedTime = moment.unix(time).tz('Australia/Sydney').format('DD/MM/YY, h:mm A');
 
-    render() {
-        const { story } = this.props;
-        let { title, url, score, by, time, text } = story;
-
-        const shortFormattedTime = moment.unix(time).tz("Australia/Sydney").format("DD/MM/YY, h:mm A");
-
-        if (text) {
-            text = capitalize(text);
-            text = this.truncate(text, 1000, true);
-        }
-
-        return (
-            <Card>
-                <CardBody>
-                    {/* HTTP link preview */}
-                    <div className="link-preview-card">
-                        <ReactTinyLink
-                            cardSize="small"
-                            showGraphic={true}
-                            maxLine={2}
-                            minLine={1}
-                            url={url}
-                        />
-                    </div>
-                    <div>
-                        <strong>{title}</strong>
-                    </div>
-                    {text && parse(`<div class='text-muted'>${text}</div>`)}
-                    <div>
-                        By: <em>{by}</em>
-                        <span style={{"float": "right"}}>
-                            <FontAwesomeIcon icon={faFireAlt} />
-                            {" " + score}
-                        </span>
-                    </div>
-                    <div>
-                        Posted: <p className="text-muted" style={{"display": "inline"}}>{shortFormattedTime}</p>
-                    </div>
-                </CardBody>
-            </Card>
-        );
+    if (text) {
+      text = capitalize(text);
     }
+
+    console.log(story);
+
+    return (
+      <Card style={{ marginBottom: '24px', boxShadow: 'rgba(0, 0, 0, 0.15) 0px 3px 8px' }}>
+        {/* HTTP link preview */}
+        <CardBody style={{ margin: '10px 24px' }}>
+          <span style={{ float: 'right' }}>
+            <FontAwesomeIcon icon={faFireAlt} />
+            {' ' + score}
+          </span>
+          <div>
+            <h4>{title}</h4>
+            <p style={{ maxHeight: '100px', overflow: 'auto', margin: 0 }}>
+              {text && parse(`<div class='text-muted'>${text}</div>`)}
+            </p>
+            <p className="text-muted" style={{ margin: '10px 0 0 0' }}>
+              By <em>{by}</em>
+            </p>
+            <p className="text-muted" style={{ display: 'inline' }}>
+              Posted: {shortFormattedTime}
+            </p>
+          </div>
+        </CardBody>
+      </Card>
+    );
+  }
 }
 
 export default Article;

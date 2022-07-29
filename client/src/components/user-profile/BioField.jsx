@@ -1,6 +1,4 @@
 import React from 'react';
-import { Row, Col } from 'reactstrap';
-import fieldStyles from './BioField.module.scss';
 
 const BioField = ({ field, value }) => {
   return (

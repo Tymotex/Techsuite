@@ -125,7 +125,7 @@ class GitHubTrendingDisplay extends React.Component {
     const numPages = numRepos / numResults;
 
     return (
-      <Card>
+      <Card style={{ padding: '24px', borderRadius: '10px' }}>
         <CardBody>
           <h3 className="spaced">GitHub Trending Projects</h3>
 

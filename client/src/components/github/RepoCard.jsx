@@ -10,7 +10,7 @@ class RepoCard extends React.Component {
     const { repo } = this.props;
     console.log(repo);
     return (
-      <Card>
+      <Card style={{ marginBottom: '24px', boxShadow: 'rgba(0, 0, 0, 0.15) 0px 3px 8px' }}>
         <CardBody>
           <Row style={{ maxHeight: '175px' }}>
             <Col md={3}>

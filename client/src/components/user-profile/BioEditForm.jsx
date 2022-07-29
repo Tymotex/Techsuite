@@ -16,7 +16,6 @@ import { BASE_URL } from '../../constants/api-routes';
 import { errorNotification } from '../error-notification';
 import { Notification } from '../notification';
 import './BioEditForm.scss';
-import editFormStyles from './BioField.module.scss';
 
 class BioEditForm extends React.Component {
   constructor(props) {

@@ -1,5 +1,4 @@
-import React, { Component } from 'react';
-import ContentContainer from '../../components/container/ContentContainer';
+import { Component } from 'react';
 import { UserProfile } from '../../components/user-profile';
 
 class Profile extends Component {
