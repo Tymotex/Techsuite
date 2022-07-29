@@ -1,12 +1,18 @@
 #darkModeButton {
-    cursor: pointer;
-    margin-right: 24px;
+  cursor: pointer;
+  margin-right: 24px;
 
-    button {
-       border: 1px solid rgba(245, 245, 245, 0.5) !important;
-       background: rgba(245, 245, 245, 0.5) !important;
-       border-radius: 100px!important;
-       margin-right: 30px!important; 
-       margin-left: 30px!important; 
-   }
+  button {
+    border: 1px solid rgba(245, 245, 245, 0.5) !important;
+    background: rgba(245, 245, 245, 0.5) !important;
+    border-radius: 100px !important;
+    margin-right: 30px !important;
+    margin-left: 30px !important;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  #darkModeButton {
+    margin: 0px;
+  }
 }
