@@ -44,7 +44,12 @@ class RegisterModal extends React.Component {
   render() {
     return (
       <>
-        <NeonButton toggleModal={this.toggleModal} padding={'6px 15px'} isPillShaped>
+        <NeonButton
+          toggleModal={this.toggleModal}
+          padding={'6px 15px'}
+          isPillShaped
+          style={{ display: 'block', margin: '0px auto', width: 'fit-content' }}
+        >
           <UserPlus /> Register
         </NeonButton>
         <Modal isOpen={this.state.modal} toggle={this.toggleModal}>

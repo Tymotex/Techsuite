@@ -140,13 +140,13 @@ class TopNavItems extends React.Component {
         </NavItem>
         {/* Rendering the profile dropdown */}
         {loggedIn ? (
-          <>
+          <div>
             <NavItem className="navItemCenter">
               <AvatarDropdown profileImgURL={profileImgURL} userID={currUserID} logout={this.logout} />
             </NavItem>
-          </>
+          </div>
         ) : (
-          <>
+          <div style={{ display: 'inline-flex', alignItems: 'center', columnGap: '12px', justifyContent: 'center' }}>
             <NavItem>
               <LogInModalButton login={this.logInUser} />
               {/* <NavLink to="/auth/login"><Button color="primary"><LogIn /> Log In</Button></NavLink> */}
@@ -155,7 +155,7 @@ class TopNavItems extends React.Component {
               <RegisterModalButton register={this.registerUser} />
               {/* <NavLink to="/auth/register"><Button color="primary"><UserPlus /> Register</Button></NavLink> */}
             </NavItem>
-          </>
+          </div>
         )}
       </>
     );
