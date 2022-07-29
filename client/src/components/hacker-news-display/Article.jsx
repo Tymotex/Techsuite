@@ -4,13 +4,12 @@ import capitalize from 'capitalize';
 import parse from 'html-react-parser';
 import moment from 'moment-timezone';
 import React from 'react';
-import { ReactTinyLink } from 'react-tiny-link';
 import { Card, CardBody } from 'reactstrap';
 
 class Article extends React.Component {
   render() {
     const { story } = this.props;
-    let { title, url, score, by, time, text } = story;
+    let { title, score, by, time, text } = story;
 
     const shortFormattedTime = moment.unix(time).tz('Australia/Sydney').format('DD/MM/YY, h:mm A');
 
