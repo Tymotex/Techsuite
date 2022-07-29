@@ -47,7 +47,7 @@ class ChannelUploadImage extends React.Component {
             <ImageCropper
               uploadEndpoint="channels/uploadimage"
               title=""
-              buttonText="Upload Image"
+              buttonText="Upload"
               channelID={this.state.channelID}
               aspectRatio={1}
             />

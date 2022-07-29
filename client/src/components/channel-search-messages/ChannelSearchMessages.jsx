@@ -93,7 +93,7 @@ class ChannelSearchMessages extends React.Component {
           <FontAwesomeIcon icon={faSearch} size="lg" />
         </button>
         <HoverTooltip text={'Search for messages in this channel.'} targetId="channel-search-btn" />
-        <Modal isOpen={this.state.modal} toggle={this.toggleModal}>
+        <Modal isOpen={this.state.modal} toggle={this.toggleModal} size="xl">
           <ModalHeader toggle={this.toggleModal}>
             <h3>Searching channel messages.</h3>
           </ModalHeader>

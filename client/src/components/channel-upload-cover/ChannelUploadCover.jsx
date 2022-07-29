@@ -40,7 +40,7 @@ class ChannelUploadCover extends React.Component {
           <FontAwesomeIcon icon={faCamera} size="lg" />
         </button>
         <HoverTooltip text={'Upload a new cover image for this channel.'} targetId="channel-cover-image-upload-btn" />
-        <Modal isOpen={this.state.modal} toggle={this.toggleModal}>
+        <Modal isOpen={this.state.modal} toggle={this.toggleModal} size="xl">
           <ModalHeader toggle={this.toggleModal}>
             <h3>Uploading channel cover.</h3>
           </ModalHeader>
@@ -48,7 +48,7 @@ class ChannelUploadCover extends React.Component {
             <ImageCropper
               uploadEndpoint="channels/uploadcover"
               title=""
-              buttonText="Upload Cover"
+              buttonText="Upload"
               channelID={this.state.channelID}
               aspectRatio={16 / 9}
             />

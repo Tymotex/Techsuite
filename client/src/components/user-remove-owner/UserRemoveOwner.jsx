@@ -104,7 +104,6 @@ class UserRemoveOwner extends React.Component {
           </ModalHeader>
           <Form onSubmit={this.inviteUser}>
             <ModalBody>
-              Select a user:
               <FormGroup>
                 <Label for="exampleSelect"></Label>
                 <Input type="select" name="user_id" id="exampleSelect">
@@ -116,7 +115,7 @@ class UserRemoveOwner extends React.Component {
             </ModalBody>
             {/* Buttons in the modal footer: */}
             <ModalFooter>
-              <Button color="danger">Remove owner</Button>{' '}
+              <Button color="danger">Remove</Button>{' '}
               <Button color="secondary" onClick={this.toggleModal}>
                 Cancel
               </Button>

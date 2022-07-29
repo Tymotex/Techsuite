@@ -8,7 +8,7 @@ import dropdownStyles from './AvatarDropdown.module.scss';
 const AvatarDropdown = (props) => {
   const { profileImgURL, userID, logout } = props;
   return (
-    <UncontrolledDropdown nav inNavbar>
+    <UncontrolledDropdown nav inNavbar style={{ userSelect: 'none' }}>
       <DropdownToggle nav>
         <Avatar size="md" color="black" image={profileImgURL} />
       </DropdownToggle>

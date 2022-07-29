@@ -114,7 +114,7 @@ class UserAddOwner extends React.Component {
             </ModalBody>
             {/* Buttons in the modal footer: */}
             <ModalFooter>
-              <Button color="primary">Add owner</Button>{' '}
+              <Button color="primary">Add</Button>{' '}
               <Button color="secondary" onClick={this.toggleModal}>
                 Cancel
               </Button>

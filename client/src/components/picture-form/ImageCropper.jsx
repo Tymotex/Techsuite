@@ -204,7 +204,11 @@ class ImageCropper extends PureComponent {
               accept="image/*"
               onChange={this.onSelectFile}
             />
-            <Label className={fileInputStyles.uploadInputLabel} for={`file-upload-${id}`}>
+            <Label
+              className={fileInputStyles.uploadInputLabel}
+              for={`file-upload-${id}`}
+              style={{ display: 'block', width: 'fit-content', margin: '0 auto' }}
+            >
               <FontAwesomeIcon icon={faImage} style={{ marginRight: '8px' }} /> Select Image
             </Label>
           </FormGroup>
@@ -228,7 +232,9 @@ class ImageCropper extends PureComponent {
               {croppedImageUrl && <img className="cropped-image" alt="Crop" src={croppedImageUrl} />}
             </Col>
           </Row>
-          <Button color="primary">{buttonText != null ? buttonText : 'Update Profile Picture'}</Button>
+          <Button style={{ display: 'block', margin: '0 0 0 auto', borderRadius: '100px' }} color="primary">
+            {buttonText != null ? buttonText : 'Update Profile Picture'}
+          </Button>
         </Form>
       </>
     );
