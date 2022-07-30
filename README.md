@@ -2,7 +2,9 @@
 
 A collaboration and social networking application, built with React, Flask and PostgreSQL.  
 
-[![Techsuite demo video](https://img.youtube.com/vi/C4o2fOCq2cI/0.jpg)](https://www.youtube.com/watch?v=C4o2fOCq2cI)
+![Techsuite on mobile and desktop.](./images/techsuite-showcase.png)
+
+Watch a demo [here](https://www.youtube.com/watch?v=C4o2fOCq2cI).
 
 ### Core Features
 - **Channels**. These are groups that users can join and then send messages to each other in real time. Think of them like the text channels on Discord or Slack.
