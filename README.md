@@ -1,6 +1,6 @@
 # Techsuite
 
-A collaboration and social networking application, built with React, Flask and PostgreSQL.  
+A collaboration and social networking application, built with React, Flask and PostgreSQL. See my [blog post](https://timz.dev/blogs/projects/Techsuite) for details about the project's development.
 
 [![Techsuite demo video](https://img.youtube.com/vi/C4o2fOCq2cI/0.jpg)](https://www.youtube.com/watch?v=C4o2fOCq2cI)
 
