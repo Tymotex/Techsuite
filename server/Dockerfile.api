@@ -1,0 +1,30 @@
+# ----------------------------------- Setup ---------------------------------- #
+FROM python:3.10-alpine
+
+WORKDIR /api
+
+COPY requirements.txt .
+
+# There are issues with installing psycopg2 on Alpine Linux (and other Linux
+# distributions).
+# See a good discussion of dependency issues: https://github.com/psycopg/psycopg2/issues/684.
+RUN apk update \
+    && apk add postgresql-dev gcc python3-dev musl-dev \
+    && pip install psycopg2 \
+    && pip install gunicorn \
+    && pip install -r requirements.txt
+
+COPY . .
+
+# -------------------------------- Production -------------------------------- #
+# Create all tables
+RUN echo "create_all()" | python3 -i src/db_manage.py 2> /dev/null
+
+# Using Gunicorn and gevent-websocket server.
+# See: 
+#  - https://flask.palletsprojects.com/en/2.2.x/deploying/gunicorn/.
+#  - https://stackoverflow.com/questions/9444405/gunicorn-and-websockets.
+WORKDIR /api/src
+
+
+CMD gunicorn -k "geventwebsocket.gunicorn.workers.GeventWebSocketWorker" -b 0.0.0.0:5000 server:app

@@ -45,8 +45,9 @@
     "socket.io-client": "^2.3.0"
   },
   "scripts": {
-    "start": "NODE_ENV=development react-scripts start",
-    "build": "NODE_ENV=production react-scripts build",
+    "start": "REACT_APP_ENVIRONMENT=development react-scripts start",
+    "build": "REACT_APP_ENVIRONMENT=production react-scripts build",
+    "build-docker-compose": "REACT_APP_ENVIRONMENT=docker react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },

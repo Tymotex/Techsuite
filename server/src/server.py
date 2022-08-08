@@ -61,10 +61,6 @@ app.register_error_handler(Exception, error_handler)
 # OAuth 2 client setup
 client = WebApplicationClient(GOOGLE_CLIENT_ID)
 
-@app.route("/api/asstest", methods=["GET"])
-def asstest():
-    return "HELLO WORLD"
-
 @app.route("/api/google/login", methods=["GET"])
 def google_login_redirect():
     # Find out what URL to hit for Google login consent page
@@ -75,7 +71,7 @@ def google_login_redirect():
     # scopes that let you retrieve user's profile from Google
     request_uri = client.prepare_request_uri(
         authorization_endpoint,
-        redirect_uri="https://techsuite.dev/api/google/login/callback",  # TODO: Hardcoded url
+        redirect_uri="https://techsuite.dev/api/google/login/callback",
         scope=["openid", "email", "profile"],
     )
     print(" ➤ Redirecting user to Google auth page: {}".format(request_uri))
@@ -391,4 +387,4 @@ if __name__ == "__main__":
     port = int(sys.argv[1]) if len(sys.argv) > 1 else os.getenv("PORT")
     # The port is specified in the .env file (which is parsed and loaded by the python-dotenv module)
     printColour(" ➤ Server listening on port {}".format(port))
-    socketio.run(app, port=port, debug=True) 
+    socketio.run(app, host="0.0.0.0", port=port, debug=True) 
