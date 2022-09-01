@@ -310,17 +310,17 @@ ALTER TABLE ONLY public.techsuite_users ALTER COLUMN id SET DEFAULT nextval('pub
 --
 
 COPY public.bios (id, first_name, last_name, profile_img_url, cover_img_url, summary, location, title, education) FROM stdin;
-1	Swen	Vincke	https://techsuite.dev/api/images/user_1_profile_1.jpg	https://techsuite.dev/api/images/user_1_profile_cover_1.jpg	My name is Swen Vincke. I'm the founder of Larian Studios, an independent game developer based in Gent, Belgium. Larian Studios has been around since 1997 and I've been running it ever since, so it's fair to say that Larian is a large part of my life and that I take whatever happens to it quite personal.	Gent, Belgium	Game Developer	Bachelor of GameDev
-3	Astarion		https://techsuite.dev/api/images/user_3_profile_1.jpg	\N	Astarion prowled the night as a vampire spawn for centuries, serving a sadistic master until he was snatched away. Now he can walk in the light, but can he leave his wicked past behind?	Faerun	Arcane Trickster	
-2	Shadow	Heart	https://techsuite.dev/api/images/user_2_profile_1.jpg	\N	One of Shar's dark disciples, Shadowheart was sent on a suicide mission to steal an item of great power. While wrestling with her faith and strange, untamed magic, Shadowheart has enemies on all sides - and a long-buried secret to uncover	Faerun	Cleric of Shar	
-4	Gale		https://techsuite.dev/api/images/user_4_profile_1.jpg	\N	Gale has one ambition: to become the greatest wizard Faerûn has ever known. Yet his thirst for magic led to disaster. A Netherese Destruction Orb beats in his chest, counting down to an explosion that can level a city. Gale is confident he'll overcome it, but time is not on his side.	Faerun	Wizard	
-7	Joshua	Fluke	https://techsuite.dev/api/images/user_7_profile_1.jpg	\N	React is love. React is life.		YouTuber	
-8	Ben	Awad	https://techsuite.dev/api/images/user_8_profile_1.jpg	\N	Angular is love. Angular is life,		YouTuber	
-9	\N	\N	https://techsuite.dev/api/images/user_9_profile_1.jpg	\N	\N	\N	Techsuite user	\N
-10	Django		https://techsuite.dev/api/images/user_10_profile_1.jpg	\N			Software Engineer	
-11	\N	\N	https://techsuite.dev/api/images/default.jpg	\N	\N	\N	Techsuite user	\N
-12	\N	\N	https://techsuite.dev/api/images/user_12_profile_1.jpg	\N	\N	\N	Techsuite user	\N
-6	Lex	Fridman	https://techsuite.dev/api/images/user_6_profile_1.jpg	https://techsuite.dev/api/images/user_6_profile_cover_1.jpg	I'm an AI researcher working on autonomous vehicles, human-robot interaction, and machine learning at MIT and beyond.	Massachusetts	Research Scientist	MIT
+1	Swen	Vincke	https://techsuite.timz.dev/api/images/user_1_profile_1.jpg	https://techsuite.timz.dev/api/images/user_1_profile_cover_1.jpg	My name is Swen Vincke. I'm the founder of Larian Studios, an independent game developer based in Gent, Belgium. Larian Studios has been around since 1997 and I've been running it ever since, so it's fair to say that Larian is a large part of my life and that I take whatever happens to it quite personal.	Gent, Belgium	Game Developer	Bachelor of GameDev
+3	Astarion		https://techsuite.timz.dev/api/images/user_3_profile_1.jpg	\N	Astarion prowled the night as a vampire spawn for centuries, serving a sadistic master until he was snatched away. Now he can walk in the light, but can he leave his wicked past behind?	Faerun	Arcane Trickster	
+2	Shadow	Heart	https://techsuite.timz.dev/api/images/user_2_profile_1.jpg	\N	One of Shar's dark disciples, Shadowheart was sent on a suicide mission to steal an item of great power. While wrestling with her faith and strange, untamed magic, Shadowheart has enemies on all sides - and a long-buried secret to uncover	Faerun	Cleric of Shar	
+4	Gale		https://techsuite.timz.dev/api/images/user_4_profile_1.jpg	\N	Gale has one ambition: to become the greatest wizard Faerûn has ever known. Yet his thirst for magic led to disaster. A Netherese Destruction Orb beats in his chest, counting down to an explosion that can level a city. Gale is confident he'll overcome it, but time is not on his side.	Faerun	Wizard	
+7	Joshua	Fluke	https://techsuite.timz.dev/api/images/user_7_profile_1.jpg	\N	React is love. React is life.		YouTuber	
+8	Ben	Awad	https://techsuite.timz.dev/api/images/user_8_profile_1.jpg	\N	Angular is love. Angular is life,		YouTuber	
+9	\N	\N	https://techsuite.timz.dev/api/images/user_9_profile_1.jpg	\N	\N	\N	Techsuite user	\N
+10	Django		https://techsuite.timz.dev/api/images/user_10_profile_1.jpg	\N			Software Engineer	
+11	\N	\N	https://techsuite.timz.dev/api/images/default.jpg	\N	\N	\N	Techsuite user	\N
+12	\N	\N	https://techsuite.timz.dev/api/images/user_12_profile_1.jpg	\N	\N	\N	Techsuite user	\N
+6	Lex	Fridman	https://techsuite.timz.dev/api/images/user_6_profile_1.jpg	https://techsuite.timz.dev/api/images/user_6_profile_cover_1.jpg	I'm an AI researcher working on autonomous vehicles, human-robot interaction, and machine learning at MIT and beyond.	Massachusetts	Research Scientist	MIT
 5	Coffee	Monster	http://localhost:5000/api/images/user_5_profile_1.jpg	http://localhost:5000/api/images/user_5_profile_cover_1.jpg	I love good coffee, however I am a terrible JavaScript developer.	Sydney	Software Engineer	Bachelor of Coffee Science
 13	Edsger	Dijkstra	http://localhost:5000/api/images/user_13_profile_1.jpg	\N	A Dutch computer scientist, programmer, software engineer, systems scientist, and science essayist. 	Amsterdam	Software Engineer	Bachelor of Computer Science @ University of Amsterdam
 \.
@@ -331,9 +331,9 @@ COPY public.bios (id, first_name, last_name, profile_img_url, cover_img_url, sum
 --
 
 COPY public.channels (id, name, description, visibility, channel_img_url, channel_cover_img_url, time_created) FROM stdin;
-1	Larian-Studios	Larian Studios is a Belgian video game developer and publisher founded in 1996 by Swen Vincke.	true	https://techsuite.dev/api/images/channel_1_profile_5.jpg	https://techsuite.dev/api/images/channel_1_profile_4.jpg	2020-12-06 10:29:16.668685
-3	Deep-Learners	For neural network nerds and AI enthusiasts!	public	https://techsuite.dev/api/images/channel_3_profile_1.jpg	https://techsuite.dev/api/images/channel_3_profile_3.jpg	2020-12-06 10:51:37.43867
-4	Fullstack-Devs	A discussion group for anything fullstack related. Anyone is welcome, apart from Angular developers	public	https://techsuite.dev/api/images/channel_4_profile_1.jpg	https://techsuite.dev/api/images/channel_4_profile_2.jpg	2020-12-06 10:58:34.654114
+1	Larian-Studios	Larian Studios is a Belgian video game developer and publisher founded in 1996 by Swen Vincke.	true	https://techsuite.timz.dev/api/images/channel_1_profile_5.jpg	https://techsuite.timz.dev/api/images/channel_1_profile_4.jpg	2020-12-06 10:29:16.668685
+3	Deep-Learners	For neural network nerds and AI enthusiasts!	public	https://techsuite.timz.dev/api/images/channel_3_profile_1.jpg	https://techsuite.timz.dev/api/images/channel_3_profile_3.jpg	2020-12-06 10:51:37.43867
+4	Fullstack-Devs	A discussion group for anything fullstack related. Anyone is welcome, apart from Angular developers	public	https://techsuite.timz.dev/api/images/channel_4_profile_1.jpg	https://techsuite.timz.dev/api/images/channel_4_profile_2.jpg	2020-12-06 10:58:34.654114
 5	Coffee Lovers	Coffee is a brewed drink prepared from roasted coffee beans, the seeds of berries from certain flowering plants in the Coffea genus.	public	http://localhost:5000/api/images/channel_5_profile_14.jpg	http://localhost:5000/api/images/channel_5_profile_15.jpg	2022-07-29 16:24:42.097618
 6	Algorithm Fanatics	For those that love everything about writing and designing performant algorithms.	public	http://localhost:5000/api/images/channel_6_profile_3.jpg	http://localhost:5000/api/images/channel_6_profile_2.jpg	2022-07-29 16:39:40.515333
 \.

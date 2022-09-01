@@ -71,7 +71,7 @@ def google_login_redirect():
     # scopes that let you retrieve user's profile from Google
     request_uri = client.prepare_request_uri(
         authorization_endpoint,
-        redirect_uri="https://techsuite.dev/api/google/login/callback",
+        redirect_uri="https://techsuite.timz.dev/api/google/login/callback",
         scope=["openid", "email", "profile"],
     )
     print(" ➤ Redirecting user to Google auth page: {}".format(request_uri))
@@ -98,7 +98,7 @@ def callback():
     token_url, headers, body = client.prepare_token_request(
         token_endpoint,
         authorization_response=request_url,
-        redirect_url="https://techsuite.dev/api/google/login/callback", 
+        redirect_url="https://techsuite.timz.dev/api/google/login/callback", 
         code=code
     )
     token_response = requests.post(
@@ -148,11 +148,11 @@ def callback():
         if picture:
             users_profile_upload_photo(resp_data["token"], resp_data["user_id"], picture)
         printColour(" ➤ Google auth callback: Signed up: {}, {}".format(users_name, users_email), colour="blue")
-        return redirect("https://techsuite.dev/home/{}/{}".format(resp_data["user_id"], resp_data["token"]))
+        return redirect("https://techsuite.timz.dev/home/{}/{}".format(resp_data["user_id"], resp_data["token"]))
     except:
         resp_data = auth_login(users_email, "asdfasdf")
         printColour(" ➤ Google auth callback: Logged in: {}, {}".format(users_name, users_email))
-        return redirect("https://techsuite.dev/home/{}/{}".format(resp_data["user_id"], resp_data["token"]))
+        return redirect("https://techsuite.timz.dev/home/{}/{}".format(resp_data["user_id"], resp_data["token"]))
 
 # ===== Basic Routes (For Testing) =====
 # 'Landing' page:

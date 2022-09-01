@@ -236,12 +236,12 @@ def generate_welcome_message(recipient):
         Extracts the template plaintext message from 
     """
     template = get_message_template("mail_templates/welcome_message.html")
-    print("https://techsuite.dev/user/profile/{}/edit".format(recipient.id))
+    print("https://techsuite.timz.dev/user/profile/{}/edit".format(recipient.id))
 
     return template.substitute(
         NAME=recipient.username.title(),
         PREHEADER="Hey {}. This is a message from Techsuite".format(recipient.username.title()),
-        BIO_LINK="https://techsuite.dev/user/profile/{}/edit".format(recipient.id)
+        BIO_LINK="https://techsuite.timz.dev/user/profile/{}/edit".format(recipient.id)
     )
     
 def send_welcome_email(recipient, subject_title):

@@ -310,8 +310,8 @@ ALTER TABLE ONLY public.techsuite_users ALTER COLUMN id SET DEFAULT nextval('pub
 --
 
 COPY public.bios (id, first_name, last_name, profile_img_url, cover_img_url, summary, location, title, education) FROM stdin;
-1	\N	\N	https://techsuite.dev/api/images/default.jpg	\N	\N	\N	Techsuite user	\N
-2	\N	\N	https://techsuite.dev/api/images/default.jpg	\N	\N	\N	Techsuite user	\N
+1	\N	\N	https://techsuite.timz.dev/api/images/default.jpg	\N	\N	\N	Techsuite user	\N
+2	\N	\N	https://techsuite.timz.dev/api/images/default.jpg	\N	\N	\N	Techsuite user	\N
 \.
 
 
@@ -320,7 +320,7 @@ COPY public.bios (id, first_name, last_name, profile_img_url, cover_img_url, sum
 --
 
 COPY public.channels (id, name, description, visibility, channel_img_url, channel_cover_img_url, time_created) FROM stdin;
-1	Larian-Studios	Larian Studios is a Belgian video game developer and publisher founded in 1996 by Swen Vincke. It focuses on developing role-playing video games and has previously worked on educational games and a number of casino games.	public	https://techsuite.dev/api/images/default_channel.jpg	\N	2020-12-05 12:22:52.932397
+1	Larian-Studios	Larian Studios is a Belgian video game developer and publisher founded in 1996 by Swen Vincke. It focuses on developing role-playing video games and has previously worked on educational games and a number of casino games.	public	https://techsuite.timz.dev/api/images/default_channel.jpg	\N	2020-12-05 12:22:52.932397
 \.
 
 

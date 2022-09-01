@@ -71,7 +71,7 @@ Example `server/src/.env` file:
     SECRET_MESSAGE="baldurs-gate-3"
     PORT=5000
     DATABASE_URI="postgresql://<username>:<password>@localhost/techsuite"
-    BASE_URI="https://techsuite.dev/api"
+    BASE_URI="https://techsuite.timz.dev/api"
     GOOGLE_AUTH_API_CLIENT_ID="123asd.apps.googleusercontent.com"
     GOOGLE_AUTH_API_CLIENT_SECRET="ASDF1234"
     SMTP_HOST_ADDRESS="smtp.gmail.com"
