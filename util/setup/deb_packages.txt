@@ -1,6 +1,0 @@
-nginx
-npm
-python3-pip
-python3-virtualenv
-libpq-dev python3-dev
-postgresql postgresql-contrib
