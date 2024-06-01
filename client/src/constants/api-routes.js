@@ -1,7 +1,7 @@
-export const PORT = 5000;
+export const PORT = 9002;
 
 // Change back to "/api" on deployment. Change IP address between
-// http://localhost:5000/api and https://techsuite.timz.dev/api on dev/deployment
+// http://localhost:9002/api and https://techsuite.timz.dev/api on dev/deployment
 // export const BASE_URL = "https://techsuite.timz.dev/api";
 // export const BASE_URL = `http://localhost:${PORT}/api`;
 export const BASE_URL = process.env.REACT_APP_ENVIRONMENT === 'production' ? "https://techsuite.timz.dev/api" : `http://localhost:${PORT}/api`;

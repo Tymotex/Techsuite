@@ -1,7 +1,7 @@
 #!/bin/sh
 # Setup tool for starting the server and setting up the database
 
-targetPort=5000
+targetPort=9002
 helpLog="Usage: $0 [--setup | --reset | --wipe] <port>"
 while test $# -gt 0; do
     case "$1" in

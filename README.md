@@ -50,9 +50,8 @@ News page.
 
 ## Setup Instructions (Ubuntu):
 1. Get the repo: `git clone https://github.com/Tymotex/Techsuite.git`
-2. `cd util/setup && sudo sh setup.py` 
-3. [Set up the PostgreSQL database](#database-setup)
-4. Install backend server dependencies:
+2. [Set up the PostgreSQL database](#database-setup)
+3. Install backend server dependencies:
     ```bash
         sudo apt-get install pkg-config
         sudo apt-get install libcairo2-dev
@@ -60,8 +59,8 @@ News page.
         pip install -r server/requirements.txt
     ```
     Note: this project uses [psycopg2](https://www.psycopg.org/docs/) as the PostgreSQL database adapter. See [psycopg2 setup](#psycopg2-setup).
-5. Install client dependencies: `npm install --prefix ./client`
-6. Configure the environment variables in the `.env` file at `server/src/.env`: 
+4. Install client dependencies: `npm install --prefix ./client`
+5. Configure the environment variables in the `.env` file at `server/src/.env`: 
     1. Set the formatted database URI connection string: `DATABASE_URI="postgresql://username:password@localhost/techsuite"`. See [how to create a role](#database-setup)
     2. [Register for the Google+ API](https://developers.google.com/identity/sign-in/web/sign-in) and set the `GOOGLE_AUTH_API_CLIENT_ID` and `GOOGLE_AUTH_API_CLIENT_SECRET` fields.
     3. [Deprecated] For automated mailing in prodution, set SMTP fields for email services: `SMTP_HOST_ADDRESS`, `SMTP_PORT`, `SENDER_EMAIL_ADDRESS`, `SENDER_PASSWORD`. See how to get a Google app password <a href="https://support.google.com/accounts/answer/185833">here</a>.
@@ -69,7 +68,7 @@ News page.
 Example `server/src/.env` file:
 ```shell
     SECRET_MESSAGE="baldurs-gate-3"
-    PORT=5000
+    PORT=9002
     DATABASE_URI="postgresql://<username>:<password>@localhost/techsuite"
     BASE_URI="https://techsuite.timz.dev/api"
     GOOGLE_AUTH_API_CLIENT_ID="123asd.apps.googleusercontent.com"
@@ -174,3 +173,5 @@ run `DROP TABLE bios, channels, connections, direct_messages, member_of, message
 in the `psql` shell.
 
 To produce new seed files, use the `pg_dump` CLI: `pg_dump techsuite -U <db_user>`.
+
+> Note: Use `psql -U $DB_USER -h 127.0.0.1 techsuite` to launch the psql shell.

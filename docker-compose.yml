@@ -4,8 +4,8 @@ version: '3.8'
 
 # Techsuite consists of 3 services:
 #  1. React client at port 3000.
-#  2. Flask REST API and websocket server at port 5000.
-#  3. PostgreSQL database server at port 4000.
+#  2. Flask REST API and websocket server at port 9002.
+#  3. PostgreSQL database server at port 5432.
 services:
     client:
         build:
@@ -33,10 +33,10 @@ services:
         depends_on:
             - db
         environment:
-            PORT: 5000
+            PORT: 9002
             DATABASE_URI: postgresql://tim:1989@db:5432/techsuite
-            BASE_URI: http://localhost:5000/api
+            BASE_URI: http://localhost:9002/api
         ports:
-            - 5000:5000
+            - 9002:9002
 volumes:
     db-data:

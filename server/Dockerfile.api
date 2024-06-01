@@ -27,4 +27,4 @@ RUN echo "create_all()" | python3 -i src/db_manage.py 2> /dev/null
 WORKDIR /api/src
 
 
-CMD gunicorn -k "geventwebsocket.gunicorn.workers.GeventWebSocketWorker" -b 0.0.0.0:5000 server:app
+CMD gunicorn -k "geventwebsocket.gunicorn.workers.GeventWebSocketWorker" -b 0.0.0.0:9002 server:app
